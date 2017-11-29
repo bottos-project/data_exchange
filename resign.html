@@ -3,63 +3,101 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 	<link rel="stylesheet" href="css/resign.css" />
-	<title>注册</title>
+	<title>Bottos</title>
 </head>
 <body>
 	<div class="resign">
 		
 		<div class="resign_from">
+			<div class="logo"></div>
 			<h4>注册账号</h4>
 			<div class="resign_body">
-				<p class="error">错误提示信息</p>
+				<p class="error" style="position:relative;"></p>
 				<!-- 用户类型 -->
-				<div class="resign_div">
+				<div class="resign_div" style="margin-bottom: 10px">
 					<span class="fl">用户类型</span>
 					<div class="resign_dright fl">
-						<select name="" id="">
-							<option value="">数据清洗</option>
-							<option value="">申请委托人</option>
+						<select name="" id="select_style">
+							<option value="person">普通用户</option>
+							<option value="company">公司机构</option>
 						</select>
 					</div>
 				</div>
+				<!-- 角色类型 -->
+				<div class="resign_div" style="margin-bottom: 10px;">
+					<span class="fl">角色类型</span>
+					<div class="resign_dright fl">
+						<!-- 数据提供 -->
+						<input type="checkbox" class="fl" id="provide" value='0' checked />
+						<label for="provide" class="fl">数据提供</label>
+						<!-- 数据招募 -->
+						<input type="checkbox" value='1' id="recruit" class="fl" />
+						<label for="recruit" class="fl">数据招募</label>
+						<!-- 数据审核 -->
+						<input type="checkbox" value='2' id="audit" class="fl" />
+						<label for="audit" class="fl">数据审核</label>
+					</div>
+				</div>
+
 				<!-- 用户名 -->
-				<div class="resign_div">
+				<div class="resign_div" style="">
 					<span class="fl">用户名</span>
 					<div class="resign_dright fl">
-						<input type="text" />
+						<input type="text" id="register-phone" />
 					</div>
 				</div>
 				<!-- 密码 -->
 				<div class="resign_div">
 					<span class="fl">密码</span>
 					<div class="resign_dright fl">
-						<input type="text" />
+						<input type="password" id="register-password" />
 					</div>
 				</div>
 				<!-- 确认密码 -->
 				<div class="resign_div">
 					<span class="fl">确认密码</span>
 					<div class="resign_dright fl">
-						<input type="text" />
+						<input type="password" id="register-repassword"/>
 					</div>
 				</div>
 				<!-- 联系电话 -->
 				<div class="resign_div">
 					<span class="fl">联系电话</span>
 					<div class="resign_dright fl">
-						<input type="text" />
+						<input type="text" id="phone" />
 					</div>
 				</div>
 				<!-- 邮箱 -->
 				<div class="resign_div">
 					<span class="fl">邮箱</span>
 					<div class="resign_dright fl">
-						<input type="text" />
+						<input type="text" id="email"/>
+					</div>
+				</div>
+				<!-- 公司名称 -->
+				<div class="resign_div company_show">
+					<span class="fl">公司名称</span>
+					<div class="resign_dright fl">
+						<input type="text" id="companyName" />
+					</div>
+				</div>
+				<!-- 公司地址 -->
+				<div class="resign_div company_show">
+					<span class="fl">公司地址</span>
+					<div class="resign_dright fl">
+						<input type="text" id="companyAddr" />
+					</div>
+				</div>
+				<!-- 组织机构代码  -->
+				<div class="resign_div company_show">
+					<span class="fl">组织机构代码</span>
+					<div class="resign_dright fl">
+						<input type="text" id="orgCode" />
 					</div>
 				</div>
 				<!-- 图形验证 -->
 				<div class="resign_div">
-					<span class="fl">图形验证</span>
+					<span class="fl">验证码</span>
 					<div class="resign_dright fl">
 						<input class="msg fl" type="text" />
 						<span class="captcha fl">1111</span>
@@ -67,21 +105,16 @@
 					</div>
 				</div>
 				<div class="resign_submit">
-					<span class="resign_sure">确认</span>
-					<span class="resign_cancel">取消</span>
+					<button class="resign_sure">确认</button>
+					<a><button class="resign_cancel">取消</button></a>
 				</div>
 			</div>
 		</div>
 	</div>
-</body>
+<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
 <script src="plugin/jquery-1.11.3.js"></script>
-
-<script>
-// 让注册垂直居中
-		$('.resign').css({
-				position:"absolute",
-				left:($(window).width()-$('.resign').outerWidth())/2,
-				top:($(window).height()-$('.resign').outerHeight())/2
-			})
-</script>
+<script src="js/resign.js"></script>
+<script>if (window.module) module = window.module;</script>
+<input type="hidden" id="regType" value="0"/>
+</body>
 </html>

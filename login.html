@@ -3,36 +3,38 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 	<link rel="stylesheet" href="css/login.css" />
-	<title>登陆</title>
+	<title>Bottos</title>
 </head>
 <body>
 	<div class="login_bg">
 		<div class="login">
+			<!-- 登陆logo -->
+			<div class="logo"></div>
 			<div class="login_header">
 				账户登录
 			</div>
 			<div class="login_form">
 				<!-- 错误提示语 -->
-				<div class="error">错误信息提示</div>
+				<div class="error"></div>
 				<!-- 用户名 -->
 				<div class="input_content clearfix">
 					<span class="fl">用户名</span>
 					<div class="input_right fr">
-						<input type="text" placeholder="" />
+						<input type="text" id="userName" placeholder="" />
 					</div>
 				</div>
 				<!-- 密码 -->
 				<div class="input_content clearfix">
 					<span class="fl">密码</span>
 					<div class="input_right fr">
-						<input type="password" placeholder="" />
+						<input type="password" id="password" placeholder="" />
 					</div>
 				</div>
 				<!-- 图形验证 -->
 				<div class="input_content clearfix">
-					<span class="fl">图形验证</span>
+					<span class="fl">验证码</span>
 					<div class="input_right imgcode fr">
-						<input type="text" placeholder="" />
+						<input type="text" class="verificationCodes" placeholder="" />
 						<div class="img_change">
 							<i class="img1 fl">2222</i>
 							<i class="img2 fl"></i>
@@ -42,33 +44,34 @@
 				<!-- 记住登陆，忘记密码及注册 -->
 				<div class="renember clearfix">
 					<div class="renember_next fl">
-						<span class="renember_login"></span>
-						<span>下次继续登陆</span>
+						<!-- <span class="renember_login"></span> -->
+						<!-- <span>下次继续登陆</span> -->
 					</div>
 					<div class="forget_resign fr">
-						<a href="">忘记密码</a>
-						<span>|</span>
+						<!-- <a href="">忘记密码</a>
+						<span>|</span> -->
 						<a href="resign.html">注册</a>
 					</div>
 				</div>
 				<!-- 用户登陆 -->
 				<div class="submit clearfix">
 					<div class="submit_sure fl">确认</div>
-					<div class="submit_delete fl">清空</div>
+					<a><div class="submit_delete fl">清空</div></a>
 				</div>
 			</div>
 		</div>
 	</div>
-	
-</body>
-<script src="plugin/jquery-1.11.3.js"></script>
+	<!-- 底部部分 -->
+	<footer id="footer">
+		
+	</footer>
 
+</body>
+<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+<script src="plugin/jquery-1.11.3.js"></script>
+<script src="js/login.js"></script>
 <script>
-// 垂直居中
-		$('.login').css({
-				position:"absolute",
-				left:($(window).width()-$('.login').outerWidth())/2,
-				top:($(window).height()-$('.login').outerHeight())/2
-			})
 </script>
+<script>if (window.module) module = window.module;</script>
+
 </html>

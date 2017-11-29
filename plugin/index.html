@@ -1,0 +1,881 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<link rel="stylesheet" href="css/index.css" />
+	<title>我的钱包</title>
+</head>
+<body>
+	<!-- 头部部分 -->
+	<header id="header" class="clearfix">
+		<div class="header_logo fl">
+			<img src="" alt="" />
+		</div>
+		<div class="login_form fr">
+			<a href="login.html" class="login">登陆</a>
+			<span>|</span>
+			<a href="resign.html" class="resigner">注册</a>
+		</div>
+	</header>
+	<!--  -->
+	<div id="content clearfix">
+		<!-- 导航侧边栏 -->
+		<div class="content">
+
+			<div class="content_left fl">
+				<ul class="side_left">
+					<li onclick="tabchange('0',this)"  class="info_img active"><i></i><span>信息概括</span></li>
+					<li onclick="tabchange('1',this)" class="usermon_img"><i></i><span>账户钱包</span></li>
+					<li onclick="tabchange('2',this)"  class="datamon_img"><i></i><span>数据资产</span></li>
+					<li onclick="tabchange('3',this)" class="need_img"><i></i><span>需求信息</span></li>
+					<li onclick="tabchange('4',this)" class="change_img"><i></i><span>交易信息</span></li>
+					<li onclick="tabchange('5',this)" class="block_img"><i></i><span>区块浏览</span></li>
+				</ul>
+			</div>
+			<div class="content-main fr">
+				<!-- 信息概括 -->
+				<div class="information_summary con_content" id="con_content_0" style="display: block;">
+					<div>
+						<div class="information_header">
+							20天&nbsp;历史交易信息趋势图
+						</div>
+						<!-- 趋势图 -->
+						<div class="trend"></div>
+					</div>
+					<div class="information_table">
+						<ul class="infor_header">
+							<li class="trans_id">交易ID</li>
+							<li class="demand_side">需求方</li>
+							<li class="provider">提供方</li>
+							<li class="desir_require">需求描述</li>
+							<li class="data_content">数据内容</li>
+							<li class="trans_type">交易类型</li>
+							<li class="trans_money">金额</li>
+							<li class="finish_time">完成时间</li>
+						</ul>
+						<!-- 数据渲染列表 -->
+						<div class="data_table">
+							<ul class="infor_header">
+								<li class="trans_id">222432141fds</li>
+								<li class="demand_side">8092</li>
+								<li class="provider">空间</li>
+								<li class="desir_require">人脸识别</li>
+								<li class="data_content">100张不同人的照片</li>
+								<li class="trans_type">数据清洗</li>
+								<li class="trans_money bottos_money_icon">111</li>
+								<li class="finish_time">2017.10.31&nbsp;10:12:32</li>
+							</ul>
+							<ul class="infor_header">
+								<li class="trans_id">222432141fds</li>
+								<li class="demand_side">8092</li>
+								<li class="provider">空间</li>
+								<li class="desir_require">人脸识别</li>
+								<li class="data_content">100张不同人的照片</li>
+								<li class="trans_type">数据清洗</li>
+								<li class="trans_money bottos_money_icon">111</li>
+								<li class="finish_time">2017.10.31&nbsp;10:12:32</li>
+							</ul>
+							<ul class="infor_header">
+								<li class="trans_id">222432141fds</li>
+								<li class="demand_side">8092</li>
+								<li class="provider">空间</li>
+								<li class="desir_require">人脸识别</li>
+								<li class="data_content">100张不同人的照片</li>
+								<li class="trans_type">数据清洗</li>
+								<li class="trans_money bottos_money_icon">111</li>
+								<li class="finish_time">2017.10.31&nbsp;10:12:32</li>
+							</ul>
+							<ul class="infor_header">
+								<li class="trans_id">222432141fds</li>
+								<li class="demand_side">8092</li>
+								<li class="provider">空间</li>
+								<li class="desir_require">人脸识别</li>
+								<li class="data_content">100张不同人的照片</li>
+								<li class="trans_type">数据清洗</li>
+								<li class="trans_money bottos_money_icon">111</li>
+								<li class="finish_time">2017.10.31&nbsp;10:12:32</li>
+							</ul>
+							<ul class="infor_header">
+								<li class="trans_id">222432141fds</li>
+								<li class="demand_side">8092</li>
+								<li class="provider">空间</li>
+								<li class="desir_require">人脸识别</li>
+								<li class="data_content">100张不同人的照片</li>
+								<li class="trans_type">数据清洗</li>
+								<li class="trans_money bottos_money_icon">111</li>
+								<li class="finish_time">2017.10.31&nbsp;10:12:32</li>
+							</ul>
+							<ul class="infor_header">
+								<li class="trans_id">222432141fds</li>
+								<li class="demand_side">8092</li>
+								<li class="provider">空间</li>
+								<li class="desir_require">人脸识别</li>
+								<li class="data_content">100张不同人的照片</li>
+								<li class="trans_type">数据清洗</li>
+								<li class="trans_money bottos_money_icon">111</li>
+								<li class="finish_time">2017.10.31&nbsp;10:12:32</li>
+							</ul>
+							<ul class="infor_header">
+								<li class="trans_id">222432141fds</li>
+								<li class="demand_side">8092</li>
+								<li class="provider">空间</li>
+								<li class="desir_require">人脸识别</li>
+								<li class="data_content">100张不同人的照片</li>
+								<li class="trans_type">数据清洗</li>
+								<li class="trans_money bottos_money_icon">111</li>
+								<li class="finish_time">2017.10.31&nbsp;10:12:32</li>
+							</ul>
+							<ul class="infor_header">
+								<li class="trans_id">222432141fds</li>
+								<li class="demand_side">8092</li>
+								<li class="provider">空间</li>
+								<li class="desir_require">人脸识别</li>
+								<li class="data_content">100张不同人的照片</li>
+								<li class="trans_type">数据清洗</li>
+								<li class="trans_money bottos_money_icon">111</li>
+								<li class="finish_time">2017.10.31&nbsp;10:12:32</li>
+							</ul>
+
+						</div>
+						
+					</div>
+				</div>
+				<!-- 账户钱包 -->
+				<div class="wallet_user con_content" id="con_content_1" style="display:none;">
+					<!-- 钱包展示及添加钱包 -->
+					<div class="wallet_content clearfix">
+						<!-- 钱包展示 -->
+						<div class="wallet_shell fl">
+							<div class="wallet_shell_header">
+								<div class="shell_left fl">
+									<i class="fl"></i><span>357</span>
+								</div>
+								<div class="shell_right fr"></div>
+							</div>
+							
+								<ul class="wallet_data">
+									<li>
+										<span class="wallet_data1">钱包12345</span>
+										<span class="wallet_data2">ldajflskjdsafqwrHkjldsafjlsajffsadf</span>
+										<span class="wallet_data3">
+											22222
+										</span>
+									</li>
+									<li>
+										<span class="wallet_data1">钱包12345</span>
+										<span class="wallet_data2">fdsaferEdsfsadfsasafsdafsldajflskj</span>
+										<span class="wallet_data3">
+											22222
+										</span>
+									</li>
+									<li>
+										<span class="wallet_data1">钱包12345</span>
+										<span class="wallet_data2">fdsaferEdsfsadfsasafsdafsldajflskj</span>
+										<span class="wallet_data3">
+											22222
+										</span>
+									</li>
+									<li>
+										<span class="wallet_data1">钱包12345</span>
+										<span class="wallet_data2">fdsaferEdsfsadfsasafsdafsldajflskj</span>
+										<span class="wallet_data3">
+											22222
+										</span>
+									</li>
+									<li>
+										<span class="wallet_data1">钱包12345</span>
+										<span class="wallet_data2">fdsaferEdsfsadfsasafsdafsldajflskj</span>
+										<span class="wallet_data3">
+											22222
+										</span>
+									</li>
+									<li>
+										<span class="wallet_data1">钱包12345</span>
+										<span class="wallet_data2">fdsaferEdsfsadfsasafsdafsldajflskj</span>
+										<span class="wallet_data3">
+											22222
+										</span>
+									</li>
+									<li>
+										<span class="wallet_data1">钱包12345</span>
+										<span class="wallet_data2">fdsaferEdsfsadfsasafsdafsldajflskj</span>
+										<span class="wallet_data3">
+											22222
+										</span>
+									</li>
+									<li>
+										<span class="wallet_data1">钱包12345</span>
+										<span class="wallet_data2">fdsaferEdsfsadfsasafsdafsldajflskj</span>
+										<span class="wallet_data3">
+											22222
+										</span>
+									</li>
+									<li>
+										<span class="wallet_data1">钱包12345</span>
+										<span class="wallet_data2">fdsaferEdsfsadfsasafsdafsldajflskj</span>
+										<span class="wallet_data3">
+											22222
+										</span>
+									</li>
+								</ul>
+							
+						</div>
+						<!-- 添加钱包 -->
+						<div class="wallet_add fl">
+							<p>添加钱包</p>
+							<div class="wallet_add_content">
+								<div class="walletall clearfix">
+									<span class="fl">保护密钥</span>
+									<div class="walletall_input fl">
+										<input type="text" />
+									</div>
+								</div>
+								<div class="walletall clearfix">
+									<span class="fl">确认保护私钥</span>
+									<div class="walletall_input fl">
+										<input type="text" />
+									</div>
+								</div>
+								<div class="walletall clearfix">
+									<span class="fl">备份地址</span>
+									<div class="walletall_input fl">
+										<input type="text" />
+									</div>
+								</div>
+								<div class="walletall clearfix">
+									<span class="fl">账户别名</span>
+									<div class="walletall_input fl">
+										<input type="text" />
+									</div>
+								</div>
+
+							</div>
+							<!-- 提交钱包 -->
+							<div class="wallet_submit">
+								<span class="wallet_submit_add">提交</span>
+								<span class="wallet_submit_delet">取消</span>
+							</div>
+						</div>
+					</div>
+					<!-- 转账token -->
+					<div class="wallet_token">
+						<div class="wallet_token_header">
+							转账&nbsp;TOKEN
+						</div>
+						<!-- 转账内容部分 -->
+						<div class="wallet_token_content">
+							<div class="token_left fl">
+								<!-- 账户别名 -->
+								<div class="token_divl ">
+									<span class="fl">钱包别名</span>
+									<div class="tdiv_r fl">
+										<select name="" id="">
+											<option value="">1</option>
+											<option value="">2</option>
+											<option value="">3</option>
+										</select>
+									</div>
+								</div>
+								<!-- 账与余额 -->
+								<div class="token_divl ">
+									<span class="fl">账户余额</span>
+									<div class="tdiv_r tdiv_r_coin fl">
+										<input type="text" />
+										<span>转账金额</span>
+										<input type="text" />
+									</div>
+								</div>
+								<!-- 目的地址 -->
+								<div class="token_divl ">
+									<span class="fl">目的地址</span>
+									<div class="tdiv_r tdiv_spel fl">
+										
+										<input type="text" />
+									</div>
+								</div>
+								<!-- Gas -->
+								<div class="token_divl ">
+									<span class="fl">Gas</span>
+									<div class="tdiv_r tdiv_spel fl">
+										
+										<input type="text" />
+									</div>
+								</div>
+								<div class="token_submit">
+									<span class="token_submit_add">提交</span>
+									<span class="token_submit_delet">取消</span>
+								</div>
+							</div>
+
+							<div class="token_right fl">
+								<!-- 交易号 -->
+								<div class="token_show">
+									<span>交易号</span>
+									<input type="text" />
+								</div>
+								<!-- 区块 -->
+								<div class="token_show">
+									<span>区块</span>
+									<input type="text" />
+								</div>
+								<!-- 费用 -->
+								<div class="token_show token_show_spe1" >
+									<span>费用</span>
+									<input type="text" />
+								</div>
+								<!-- 交易时间 -->
+								<div class="token_show token_show_spe2">
+									<span>交易时间</span>
+									<input type="text" />
+								</div>
+								<!-- 结果 -->
+								<div class="token_show">
+									<span>结果</span>
+									<input type="text" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- 数据资产 -->
+				<div class="data_money con_content" id="con_content_2" style="display:none;">
+					<!-- 我的数据 -->
+					<div class="data_header">
+						<div class="data_left fl" style="display:block;">
+							<!-- 内容检索 -->
+							<div class="contain_search fl">	
+								<input type="text" /><i></i>
+							</div>
+							<!-- 各类型检索 -->
+							<div class="search_type fl">
+								<span class="type_data">不限类型</span>
+								<span class="type_data">不限大小</span>
+								<span class="type_data">不限状态</span>
+								<span class="type_data">不限日期</span>
+								
+							</div>
+						</div>
+						<div class="data_right fr" style="background-color:#dedede;">
+							<div class="data_icon fl">
+								
+							</div>
+							<p class="data_ds data_rubble fl" style="display:none;"></p>
+							<p class="data_ds data_goback fl" style="display:none;"></p>
+							<div class="mydata data_click active fl">我的数据</div>
+							<div class="updata data_click fl">上传数据</div>
+						</div>
+					</div>
+					<!-- 我的数据列表 -->
+				<div class="data_list" style="display:block;">
+					<div class="data_list_header">
+						<span class="data_id">资产ID <i></i></span>
+						<span class="data_type">资产类型<i></i></span>
+						<span class="data_cont">数据内容<i></i></span>
+						<span class="data_size">数据大小<i></i></span>
+						<span class="data_status">状态<i></i></span>
+						<span class="data_time">提交时间<i></i></span>
+						<span class="data_stay">存留时间<i></i></span>
+						<span class="exchange_id">交易ID链接<i></i></span>
+					</div>
+					<ul class="data_list_all date_list_i">
+						<li>
+							<i></i>
+							<span class="data_id">ieioae </span>
+							<span class="data_type">人脸识别</span>
+							<span class="data_cont">100张不同人的正面照片</span>
+							<span class="data_size">345K</span>
+							<span class="data_status">审核中</span>
+							<span class="data_time">2017.11.1</span>
+							<span class="data_stay">2017.11.19</span>
+							<span class="exchange_id">slajflsa</span>
+						</li>
+						<li>
+							<i class="active"></i>
+							<span class="data_id">ieioae </span>
+							<span class="data_type">美国亚马逊宠物狗</span>
+							<span class="data_cont">2010年-2017年照片</span>
+							<span class="data_size">345K</span>
+							<span class="data_status">审核中</span>
+							<span class="data_time">2017.11.1</span>
+							<span class="data_stay">2017.11.19</span>
+							<span class="exchange_id">slajflsa</span>
+						</li>
+						<li>
+							<i class="active"></i>
+							<span class="data_id">ieioae </span>
+							<span class="data_type">人脸识别</span>
+							<span class="data_cont">100张不同人的正面照片</span>
+							<span class="data_size">345K</span>
+							<span class="data_status">审核中</span>
+							<span class="data_time">2017.11.1</span>
+							<span class="data_stay">2017.11.19</span>
+							<span class="exchange_id">slajflsa</span>
+						</li>
+						<li>
+							<i></i>
+							<span class="data_id">ieioae </span>
+							<span class="data_type">人脸识别</span>
+							<span class="data_cont">100张不同人的正面照片</span>
+							<span class="data_size">345K</span>
+							<span class="data_status">审核中</span>
+							<span class="data_time">2017.11.1</span>
+							<span class="data_stay">2017.11.19</span>
+							<span class="exchange_id">slajflsa</span>
+						</li>  
+					</ul>
+				</div>
+				<!-- 上传数据 -->
+				<div class="updata_all" style="display: none;">
+					<!-- 数据信息 -->
+					<div class="updata_top">
+						<div class="updata_top_header">数据信息</div>
+						<div class="updata_top_content">
+							<div class="require_id">
+								<span class="require_id1">需求合约ID</span>
+								<input type="text" />
+								<span class="data_mtype">数据资产类型</span>
+								<select class="data_select1" name="" id=""></select>
+								<span class="require_id2">领域</span>
+								<select class="data_select1" name="" id=""></select>
+								<!-- <span class="require_id2">数据子类</span>
+								<select class="data_select1" name="" id=""></select> -->
+							</div>
+							<div class="require_price">
+								<span class="require_id1">期望价格</span>
+								<input class="require_price1" type="text" />~<input class="require_price1" type="text" />
+								<span class="require_price3">特征标签</span>
+								<input class="require_price4" type="text" /><input class="require_price4" type="text" /><input class="require_price4" type="text" />
+							</div>
+							<div class="desri_a">
+								<span>摘要描述</span>
+								<textarea name="" id="" cols="30" rows="10"></textarea>
+							</div>
+						</div>
+					</div>
+					<!-- 数据上传进度 -->
+					<div class="data_updata">
+						<div class="data_updata_header">
+							数据上传
+						</div>
+						<!-- 数据上传及状态 -->
+						<div class="data_updata_content">
+							<!-- 上传路径选择 -->
+							<div class="updata_url" style="display:block;">
+								<div class="select_url">
+									<span class="select_url_span fl">选择路径</span>
+									<div class="select_url_s fl">
+										<span class="fl"></span>
+										<input class="fl" type="text" />
+									</div>
+									<span class="select_url_submit fl">提交</span>
+									<span class="select_url_delete fl">取消</span>
+								</div>
+							</div>
+							<!-- 正在上传进度条 -->
+						</div>
+					</div>
+				</div>
+				</div>
+				<!-- 需求信息 -->
+				<div class="damand_information con_content" id="con_content_3" style="display:none;">
+					<div class="damand_header">
+						<div class="market fl" style="overflow: hidden;display:block;">
+							<span class="market1 active"></span>
+							<span class="market2"></span>
+						</div>
+						<div class="damand_select fr">
+							<span class="damand_select1 active">需求信息</span>
+							<span class="damand_select2">部署合约</span>
+						</div>
+					</div>
+					<!-- 需求信息————市场需求 -->
+					<div class="damand_content" style="display:block;">
+						<div class="damand_left">
+						<!-- 市场需求部分 -->
+							<div class="damand_market">
+								<div class="damand_search">
+									<!-- 搜索 -->
+									<div class="damand_search_left fl">
+										<input class="fl" type="text" />	<span class="fl"></span>
+									</div>
+									<!-- 筛选 -->
+									<div class="damand_search_right fl">
+										<span>不限类型</span>
+										<span>不限金额</span>
+										<span>不限状态</span>
+										<span>不限时间</span>
+									</div>
+								</div>
+								<!-- 市场需求body主题 -->
+								<div class="damand_market_body">
+									<div class="damand_market_bheader">
+										<div class="data_list_header1">
+											<span class="market_id">需求合约ID <i></i></span>
+											<span class="market_type">需求方<i></i></span>
+											<span class="market_cont">需求描述<i></i></span>
+											<span class="market_size">数据内容<i></i></span>
+											<span class="market_status">金额<i></i></span>
+											<span class="market_time">具体信息<i></i></span>
+											<span class="market_stay">状态<i></i></span>
+											<span class="mexchange_id">发布时间<i></i></span>
+											<span class="mexchange_id">截止时间<i></i></span>
+										</div>
+									</div>
+									<ul class="data_list_all">
+										<li>
+											<span class="market_id">32141324124 </span>
+											<span class="market_type">空间</span>
+											<span class="market_cont">亚马逊宠物猫、宠物狗的数据内容</span>
+											<span class="market_size">2012年10-12月份<i></i></span>
+											<span class="market_status">3214<i></i></span>
+											<span class="market_time">具体信息<i></i></span>
+											<span class="market_stay">我要提交<i></i></span>
+											<span class="mexchange_id">2016.11<i></i></span>
+											<span class="mexchange_id">2017.10<i></i></span>
+										</li>
+										<li>
+											<span class="market_id">32141324124 </span>
+											<span class="market_type">空间</span>
+											<span class="market_cont">亚马逊宠物猫、宠物狗的数据内容</span>
+											<span class="market_size">2012年10-12月份<i></i></span>
+											<span class="market_status">3214<i></i></span>
+											<span class="market_time">具体信息<i></i></span>
+											<span class="market_stay">我要提交<i></i></span>
+											<span class="mexchange_id">2016.11<i></i></span>
+											<span class="mexchange_id">2017.10<i></i></span>
+										</li>
+										<li>
+											<span class="market_id">32141324124 </span>
+											<span class="market_type">空间</span>
+											<span class="market_cont">亚马逊宠物猫、宠物狗的数据内容</span>
+											<span class="market_size">2012年10-12月份<i></i></span>
+											<span class="market_status">3214<i></i></span>
+											<span class="market_time">具体信息<i></i></span>
+											<span class="market_stay">我要提交<i></i></span>
+											<span class="mexchange_id">2016.11<i></i></span>
+											<span class="mexchange_id">2017.10<i></i></span>
+										</li>
+										<li>
+											<span class="market_id">32141324124 </span>
+											<span class="market_type">空间</span>
+											<span class="market_cont">亚马逊宠物猫、宠物狗的数据内容</span>
+											<span class="market_size">2012年10-12月份<i></i></span>
+											<span class="market_status">3214<i></i></span>
+											<span class="market_time">具体信息<i></i></span>
+											<span class="market_stay">我要提交<i></i></span>
+											<span class="mexchange_id">2016.11<i></i></span>
+											<span class="mexchange_id">2017.10<i></i></span>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 部署合约 -->
+					<div class="deploy" style="display:none;">
+						<!-- 基本信息和数据信息 -->
+						<div class="deploy_top">
+							<!-- 基本信息 -->
+							<div class="deploy_tleft fl">
+								<h4>基本信息</h4>
+								<div class="deploy_tleft_body">
+									<div class="de_all">
+										<span>需求名称</span>
+										<div class="de_all_b">
+											<input class="de_input1" type="text" />
+										</div>
+									</div>
+									<!-- 价格，有效期 -->
+									<div class="de_all">
+										<span>价格</span>
+										<div class="de_all_b">
+											<input class="de_input2" type="text" />
+											<span style="padding:0 7px 0 28px">有效期</span>
+											<input type="text" class="de_input3" />
+										</div>
+									</div>
+									<!-- 需求类型 -->
+									<div class="de_all">
+										<span>需求类型</span>
+										<div class="de_all_b">
+											<select name="" id="">
+												<option value=""></option>
+												<option value="">清算</option>
+													<option value="">222算</option>
+											</select>
+										</div>
+									</div>
+									<!-- 需求描述 -->
+									<div class="de_all de_all_spel">
+										<span>需求描述</span>
+										<div class="de_all_b">
+											<textarea name="" id="" cols="30" rows="10"></textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- 数据信息 -->
+							<div class="deploy_tright fl">
+								<h4>数据信息</h4>
+								<div class="deploy_tright_body">
+									<div class="de_all">
+										<span>需求描述</span>
+										<div class="de_all_b">
+											<select name="" id="">
+												<option value=""></option>
+												<option value="">清算</option>
+													<option value="">222算</option>
+											</select>
+											<span style="padding:0 7px 0 28px">数据应用</span>
+											<select name="" id="">
+												<option value=""></option>
+												<option value="">清算</option>
+													<option value="">222算</option>
+											</select>
+									</div>
+								</div>
+								<!-- 数据样例 -->
+								<div class="de_all">
+										<span>数据样例</span>
+										<div class="de_all_b">
+											<input class="de_input3" type="text" />
+											<input class="de_input3" type="text" />
+											<input class="de_input3" type="text" />
+										</div>
+								</div>
+								<!-- 数据规格 -->
+								<div class="de_all de_all_spe2">
+										<span>需求描述</span>
+										<div class="de_all_b">
+											<textarea name="" id="" cols="30" rows="10"></textarea>
+										</div>
+									</div>
+							</div>
+						</div>
+					</div>
+					<!-- 合约信息 -->
+					<div class="contract">
+						<h4>合约信息</h4>
+						<div class="contract_body">
+							<div class="contract_body_div">
+								<span class="fl">合约地址</span>
+								<input class="fl" type="text" />
+							</div>
+							<div class="contract_body_div">
+								<span class="fl">合约代码</span>
+								<textarea name="" id="" cols="30" rows="10"></textarea>
+							</div>
+						</div>
+					</div>
+					<!--创建和发布合约按钮  -->
+					<div class="rebuild_deploy">
+						<div>
+						<span>创建合约</span>
+						<span>发布合约</span>
+						</div>
+						
+					</div>
+				</div>
+			</div>
+			<!-- 交易信息 -->
+			<div class="con_content" id="con_content_4" style="display:none;">
+				<div class="transbuy_header">
+					<span class="transbuy1"></span>
+					<span class="transbuy2"></span>
+				</div>
+				<!-- 搜索部分 -->
+				<div class="transbuy_search">
+					<div class="data_left" style="display:block;height:30px">
+							<!-- 内容检索 -->
+							<div class="contain_search fl">	
+								<input type="text" /><i></i>
+							</div>
+							<!-- 各类型检索 -->
+							<div class="search_type fl">
+								<span class="type_data">不限类型</span>
+								<span class="type_data">不限大小</span>
+								<span class="type_data">不限状态</span>
+								<span class="type_data">不限日期</span>
+								
+							</div>
+						</div>
+				</div>
+				<!-- 交易内容信息部分 -->
+				<div class="trans_body">
+					<div class="trans_body_header">
+						<span class="t_id">交易ID <i></i></span>
+						<span class="t_coin">金额 <i></i></span>
+						<span class="t_time">交易时间 <i></i></span>
+						<span class="t_status">状态 <i></i></span>
+						<span class="t_provide">数据提供方 <i></i></span>
+						<span class="t_send">数据需要方 <i></i></span>
+					</div>
+					<ul class="trans_body_ul">
+						<li>
+							<span class="t_id">交易ID </span>
+							<span class="t_coin">金额 </span>
+							<span class="t_time">交易时间></span>
+							<span class="t_status">状态 </span>
+							<span class="t_provide">数据提供方 ></span>
+							<span class="t_send">数据需要方 </span>
+						</li>
+						<li>
+							<span class="t_id">交易ID </span>
+							<span class="t_coin">金额 </span>
+							<span class="t_time">交易时间></span>
+							<span class="t_status">状态 </span>
+							<span class="t_provide">数据提供方 ></span>
+							<span class="t_send">数据需要方 </span>
+						</li>
+						<li>
+							<span class="t_id">交易ID </span>
+							<span class="t_coin">金额 </span>
+							<span class="t_time">交易时间></span>
+							<span class="t_status">状态 </span>
+							<span class="t_provide">数据提供方 ></span>
+							<span class="t_send">数据需要方 </span>
+						</li>
+						<li>
+							<span class="t_id">交易ID </span>
+							<span class="t_coin">金额 </span>
+							<span class="t_time">交易时间></span>
+							<span class="t_status">状态 </span>
+							<span class="t_provide">数据提供方 ></span>
+							<span class="t_send">数据需要方 </span>
+						</li>
+						<li>
+							<span class="t_id"> </span>
+							<span class="t_coin"> </span>
+							<span class="t_time"></span>
+							<span class="t_status"> </span>
+							<span class="t_provide"> </span>
+							<span class="t_send"> </span>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 弹出框 -->
+					<div class="mbody" style="display:none;">
+						<div class="mymarket">
+							<div class="mymarket_header">
+								<span class="mymarket_1">提供方<i></i></span>
+								<span class="mymarket_2">资产ID <i></i></span>
+								<span class="mymarket_3">数据描述<i></i></span>
+								<span class="mymarket_4">数据内容<i></i></span>
+								<span class="mymarket_5">数据大小 <i></i></span>
+								<span class="mymarket_6">提交时间<i></i></span>
+								<span class="mymarket_7">感兴趣<i></i></span>
+								<span class="mymarket_8"><em class="mymarket_remove fr"></em></span>
+							</div>
+							<ul class="mymarket_body">
+								<li>
+									<span class="mymarket_1">提供方</span>
+									<span class="mymarket_2">资产ID </span>
+									<span class="mymarket_3">数据描述</span>
+									<span class="mymarket_4">数据内容</span>
+									<span class="mymarket_5">数据大小</span>
+									<span class="mymarket_6">提交时间</span>
+									<span class="mymarket_7">感兴趣</span>
+									<span class="mymarket_8">1</span>
+								</li>
+								<li>
+									<span class="mymarket_1">提供方</span>
+									<span class="mymarket_2">资产ID </span>
+									<span class="mymarket_3">数据描述</span>
+									<span class="mymarket_4">数据内容</span>
+									<span class="mymarket_5">数据大小</span>
+									<span class="mymarket_6">提交时间</span>
+									<span class="mymarket_7">感兴趣</span>
+									<span class="mymarket_8">1</span>
+								</li>
+								<li>
+									<span class="mymarket_1">提供方</span>
+									<span class="mymarket_2">资产ID </span>
+									<span class="mymarket_3">数据描述</span>
+									<span class="mymarket_4">数据内容</span>
+									<span class="mymarket_5">数据大小</span>
+									<span class="mymarket_6">提交时间</span>
+									<span class="mymarket_7">感兴趣</span>
+									<span class="mymarket_8">1</span>
+								</li>
+							</ul>
+						</div>
+						<div class="myfix"></div>
+					</div>
+</body>
+<!-- <script src="plugin/jquery-1.11.3.js"></script> -->
+<!-- Insert this line above script imports  -->
+<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+<!-- normal script imports etc  -->
+<script src="plugin/jquery-1.11.3.js"></script>    
+<!-- <script src="scripts/vendor.js"></script>     -->
+
+<!-- Insert this line after script imports -->
+<script src="js/index.js"></script>
+<script>
+// window.$ = window.jQuery = require('/path/to/jquery');
+function tabchange(num,obj){
+		 $(".side_left li").each(function(){
+            $(this).removeClass('active');
+        });
+        // obj.setAttribute("class", "active");
+        obj.classList.add('active')
+        $(".con_content").each(function(){
+            $(this).css('display','none');
+        });
+        $("#con_content_"+num).css('display','block');
+	}
+	// 数据资产————》我的数据和上传数据切换。
+	$('.mydata ').click(function(){
+		$('.data_header .data_left ').show();
+		$('.data_icon ').show();
+		$('.data_click ').each(function(){
+			$(this).removeClass('active')
+		})
+		$(this).addClass('active')
+		$('.data_list').show();
+		$('.updata_all').hide();
+
+	})
+	$('.updata').click(function(){
+		$('.data_header .data_left ').hide();
+		$('.data_icon ').hide();
+		$('.data_click').each(function(){
+			$(this).removeClass('active')
+		})
+		$(this).addClass('active');
+		$('.data_list').hide();
+		$('.updata_all').show();
+	});
+	// $('.data_list_all li i').css('display','none');
+	$(".data_icon").click(function(){
+		$(this).hide();
+		$('.data_ds').show();
+		$('.data_list_all li i').show();
+	})
+	// 需求信息部署合约——————》选择
+	$('.damand_select1').click(function(){
+		$('.damand_content').show()
+		$('.deploy').hide();
+		// 移除样式
+		$('.damand_select span').each(function(){
+			$(this).removeClass('active')
+		})
+		$(this).addClass('active')
+	})
+	$('.damand_select2').click(function(){
+		$('.damand_content').hide()
+		$('.deploy').show();
+		$('.damand_select span').each(function(){
+			$(this).removeClass('active')
+		})
+		$(this).addClass('active')
+
+	})
+</script>
+<script>if (window.module) module = window.module;</script>
+
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<link rel="stylesheet" href="css/resign.css" />
+	<title>注册</title>
+</head>
+<body>
+	<div class="resign">
+		
+		<div class="resign_from">
+			<h4>注册账号</h4>
+			<div class="resign_body">
+				<p class="error" style="position:relative;">错误提示信息</p>
+				<!-- 用户类型 -->
+				<div class="resign_div">
+					<span class="fl">用户类型</span>
+					<div class="resign_dright fl">
+						<select name="" id="">
+							<option value="">数据清洗</option>
+							<option value="">申请委托人</option>
+						</select>
+					</div>
+				</div>
+				<!-- 用户名 -->
+				<div class="resign_div">
+					<span class="fl">用户名</span>
+					<div class="resign_dright fl">
+						<input type="text" id="register-phone" />
+					</div>
+				</div>
+				<!-- 密码 -->
+				<div class="resign_div">
+					<span class="fl">密码</span>
+					<div class="resign_dright fl">
+						<input type="text" id="register-password" />
+					</div>
+				</div>
+				<!-- 确认密码 -->
+				<div class="resign_div">
+					<span class="fl">确认密码</span>
+					<div class="resign_dright fl">
+						<input type="text" id="register-repassword"/>
+					</div>
+				</div>
+				<!-- 联系电话 -->
+				<div class="resign_div">
+					<span class="fl">联系电话</span>
+					<div class="resign_dright fl">
+						<input type="text" />
+					</div>
+				</div>
+				<!-- 邮箱 -->
+				<div class="resign_div">
+					<span class="fl">邮箱</span>
+					<div class="resign_dright fl">
+						<input type="text" />
+					</div>
+				</div>
+				<!-- 图形验证 -->
+				<div class="resign_div">
+					<span class="fl">图形验证</span>
+					<div class="resign_dright fl">
+						<input class="msg fl" type="text" />
+						<span class="captcha fl">1111</span>
+						<i class="change_msg fl"></i>
+					</div>
+				</div>
+				<div class="resign_submit">
+					<span class="resign_sure">确认</span>
+					<span class="resign_cancel">取消</span>
+				</div>
+			</div>
+		</div>
+	</div>
+<script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
+
+<script src="plugin/jquery-1.11.3.js"></script>
+<script src="js/resign.js"></script>
+<script>
+// 让注册垂直居中
+		$('.resign').css({
+				position:"absolute",
+				left:($(window).width()-$('.resign').outerWidth())/2,
+				top:($(window).height()-$('.resign').outerHeight())/2
+			});
+		$.get("joke/content/list.from",null,function(data){
+			console.log(data);
+		},'JSON')
+</script>
+<script>if (window.module) module = window.module;</script>
+
+<input type="hidden" id="regType" value="0"/>
+</body>
+</html>
