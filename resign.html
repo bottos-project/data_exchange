@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<link rel = "Shortcut Icon" href="bottos.ico" type="image/x-icon">
 	<link rel="stylesheet" href="css/resign.css" />
 	<title>Bottos</title>
 </head>
@@ -99,9 +100,9 @@
 				<div class="resign_div">
 					<span class="fl">验证码</span>
 					<div class="resign_dright fl">
-						<input class="msg fl" type="text" />
-						<span class="captcha fl">1111</span>
-						<i class="change_msg fl"></i>
+						<input class="msg fl" id="validataCode" type="text" />
+						<img id="codeValidateImg" onclick="javascript:flushValidateCode()" src='http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/getSysManageLoginCode?time='+new Date() class="captcha fl">
+						<a class="change_msg fl" href="javascript:flushValidateCode()"></a>
 					</div>
 				</div>
 				<div class="resign_submit">
@@ -112,8 +113,16 @@
 		</div>
 	</div>
 <script>if (typeof module === 'object') {window.module = module; module = undefined;}</script>
-<script src="plugin/jquery-1.11.3.js"></script>
+<script src="plugin/jquery-1.11.3.resign.js"></script>
 <script src="js/resign.js"></script>
+<script>
+$(document).ready(function() {
+	flushValidateCode();//进入页面就刷新生成验证码
+});
+function flushValidateCode(){
+	$('#codeValidateImg').attr('src','http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/getSysManageLoginCode?time='+new Date());
+}
+</script>
 <script>if (window.module) module = window.module;</script>
 <input type="hidden" id="regType" value="0"/>
 </body>

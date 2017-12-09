@@ -112,15 +112,16 @@ body,html{
 	float:left;
 
 }
-.img_change i{
+.img_change i,.img_change img{
+	cursor:pointer;
 	display:inline-block;
 }
 .img1{
 	width:70px;
 	height:28px;
 	line-height: 28px;
+	cursor:pointer;
 	box-sizing: border-box;
-	border:1px solid #dedede;
 }
 .img2{
 	width:28px;
@@ -186,3 +187,5 @@ body,html{
 	cursor:pointer;
 	
 }
+
+

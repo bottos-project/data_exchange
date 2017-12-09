@@ -1,5 +1,9 @@
 //个人表示account
-var account=sessionStorage.getItem('account')
+var account=sessionStorage.getItem('account');
+var account=sessionStorage.getItem('account');
+var assetid;
+
+
 var demand={
 	//需求发布
 	damand_select2:function(){
@@ -8,6 +12,7 @@ var demand={
 	//点击需求提交
 	submit:function(){
 		var requireType,dataType,speciType;
+		var saveTo=sessionStorage.getItem('saveData')
 		//需求类型
 		var require=$('#needtype').find('option:selected').val();
 		var datat=$('#datatype').find('option:selected').val();
@@ -56,12 +61,12 @@ var demand={
 			"description":$('#textarea').val(),
 			"specifications":$('#datasize').val(),
 			"bidMoney":$('.de_input2').val(),
-			"dataSampleRef":"ref", 
-			"dataSample1":"cj1", 
+			"dataSampleRef":saveTo, 
+			"dataSample1":saveTo, 
 			"dataSample2":"cj2", 
 			"dataSample3":"cj3"
 		}
-	console.log(param)
+	// console.log(param)
 	var html='',html1='';
 	$.ajax({
 			type:'POST',
@@ -86,7 +91,8 @@ var demand={
 					//成功后清空发布需求的input内容。
 					$('.deploy_top').find('input').val('');
 					$('.deploy textarea').val('');
-					demand.market1();
+					demand.market1();//成功之后重新渲染市场需求和我的需求。
+					demand.market2();
 					// 选择需求信息
 					$('.damand_content').show()
 					$('.deploy').hide();
@@ -95,6 +101,11 @@ var demand={
 					$('.damand_select2').removeClass('active')
 					$('.need-in').show();
 					$('.success_buy').hide();//隐藏提示信息
+				}else if(res.retCode==-2){
+					$('.success_buy p').html('网络超时，请稍后再试')
+					$('.success_buy').show();
+					setTimeout("$('.success_buy').hide()",3000)
+
 				}else{
 					$('.success_buy').show();
 					$('.success_buy p').html('发布需求失败！')
@@ -105,11 +116,8 @@ var demand={
 				console.log(res)
 			}
 		})
-
 		$('.market_add').append(html);
 		$('.if_delete').append(html1);
-	
-		
 	},
 	//我的需求
 	market2:function(){
@@ -141,7 +149,7 @@ var demand={
 					var html='',status,time,zjtime,applicat,aa='lllwerojjfs';
 					var requ='';
 					var data=JSON.parse(res.retResult);
-					console.log(data);
+					// console.log(data);
 					for(var i=0;i<data.items.length;i++){
 						//状态判断
 						switch(data.items[i].status){
@@ -165,6 +173,7 @@ var demand={
 						time=new Date(data.items[i].publishedTimename).toLocaleDateString();
 						zjtime=new Date(data.items[i].expirationTime).toLocaleDateString();
 						requ=data.items[i].dataRequirementID;
+
 						html+='<li><i></i>'+
 									'<span class="market_id">'+requ+'</span>'+
 									'<span class="hidden">'+requ+'</span>'+
@@ -175,11 +184,11 @@ var demand={
 									'<span class="market_stay">'+data.items[i].collectionNum+'人提交<i></i></span>'+
 									'<span class="minchange_id">'+time+'<i></i></span>'+
 									'<span class="mexchange_id">'+zjtime+'<i></i></span>'+
-									'<span class="buy" onclick="buy(this,\''+requ+'\')"></span>'+
+									'<a class="buy" onclick="buy(this,\''+requ+'\')"></a>'+
 								'</li>';
 							
 					};
-					$('.if_delete').html(html);			
+					$('.if_delete').html(html);	
 				}
 			},
 			error:function(res){
@@ -216,16 +225,18 @@ var demand={
 			dataType:'json',
 			success:function(res){
 				// console.log(res)
+				
 				var html='';
 				if(res.retCode==0){
 					var data=JSON.parse(res.retResult).items;
-					// console.log(data)
+					var dataSample='';
+					console.log(data)
 					var commonTime,expireationTime;
 					var applica,applicationDomain;//应用领域
 					// debugger;
 					for(var i=0;i<data.length;i++){
 						var unixTimestamp=new Date(data[i].publishedTimename);
-						// debugger
+						dataSample=data[i].dataSample1;
 						commonTime=unixTimestamp.toLocaleDateString();
 						// debugger;
 						applica=data[i].applicationDomain;
@@ -241,20 +252,20 @@ var demand={
 						}
 						var nonce=new Date(data[i].expirationTime);
 						expireationTime=nonce.toLocaleDateString();
-						html+=`<li>
-								<span class="market_id">`+data[i].dataRequirementID+`</span>
-								<span class="hidden" style="display:none;">`+data[i].dataRequirementID+`</span>
-								<span class="market_type">`+applicationDomain+`</span>
-								<span class="market_cont">`+data[i].description+`</span>
-								<span class="market_size">`+data[i].specifications+`<i></i></span>
-								<span class="market_status"><i></i>`+data[i].bidMoney+`</span>
-								<!-- <span class="market_time">具体信息<i></i></span> -->
-								<span class="market_stay">`+data[i].collectionNum+`人提交<i></i></span>
-								<span class="minchange_id">`+commonTime+`<i></i></span>
-								<span class="mexchange_id">`+expireationTime+`<i></i></span>
-								<span class="xz" onclick='download(this)'></span>
-								<span class="gw"></span>
-							</li>`
+						html+='<li>'+
+								'<span class="market_id">'+data[i].dataRequirementID+'</span>'+
+								'<span class="hidden" style="display:none;">'+data[i].dataRequirementID+'</span>'+
+								'<span class="market_type">'+applicationDomain+'</span>'+
+								'<span class="market_cont">'+data[i].description+'</span>'+
+								'<span class="market_size">'+data[i].specifications+'<i></i></span>'+
+								'<span class="market_status"><i></i>'+data[i].bidMoney+'</span>'+
+								'<!-- <span class="market_time">具体信息<i></i></span> -->'+
+								'<span class="market_stay">'+data[i].collectionNum+'人提交<i></i></span>'+
+								'<span class="minchange_id">'+commonTime+'<i></i></span>'+
+								'<span class="mexchange_id">'+expireationTime+'<i></i></span>'+
+								'<a class="xz" onclick="download1(this,\''+dataSample+'\')"></a>'+
+								'<span class="gw"></span>'+
+							'</li>'
 					}
 					// debugger;
 					$('.market_add').html(html);
@@ -271,7 +282,7 @@ var demand={
 	}
 }
 //首次加载所有需求信息展示
-demand.market1();
+// demand.market1();
 //需求发布tab切换
 $('.damand_select2').on('click',function(){
 	demand.damand_select2();
@@ -591,20 +602,20 @@ $('.searall').on('click',function(){
 	}
 })
 //下载文件
-function download(that){
-	console.log($(that).parent())
-	// debugger;
+function download1(that,sam){
+	var text=$(that).parent().children().eq(0).text();
+	// console.log('/download?account='+account+'?requireID='+text+'?storeID='+sam)
+	$(that).attr('href','http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/download?account='+account+'&requireID='+text+'&storeID='+sam);
 }
 //购买信息
+var _this;
+var sstore='';
 function buy(that,requireid){//当前this，，需求id
-	console.log(that,requireid)
+	console.log(that,requireid);
 	var html='';
-	// requireID=id;
-	if($(that).has('.buy')){
-		$('.mbody').show();
-	}
-	// debugger;
-	$(that).addClass('buyback').removeClass('buy');
+	$('.mbody').show();
+	_this=that;
+	/*$(that).addClass('buyback').removeClass('buy');*/
 	//点击购买需求发送接口ajax
 	$.ajax({
 		url:'http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/requirement/listCart/'+account+'/'+requireid,
@@ -619,19 +630,21 @@ function buy(that,requireid){//当前this，，需求id
 					html='';
 				}else{
 					console.log(data);
+					var store='';
 					for(var i=0;i<data.length;i++){
 						switch(data[i].assetDataType){
 							case 0:stat='音频';break;
 							case 1:stat='文本';break;
 							case 2:stat='视频';break;
 						}
+						sstore=data[i].dataAssetInfo.dataStoreID;
 						time=new Date((data[i].dataAssetInfo.registerTime)*1000).toLocaleDateString();
 						html+='<li>'+
 							'<span class="mymarket_1">'+data[i].dataAssetInfo.owner+'</span>'+
 							'<span class="mymarket_2">'+data[i].dataAssetInfo.assetID+' </span>'+
 							'<span class="mymarket_3">'+stat+'</span>'+
 							'<span class="mymarket_4">'+data[i].description+'</span>'+
-							'<span class="mymarket_5">'+data[i].dataAssetInfo.size+'</span>'+
+							'<span class="mymarket_5">'+data[i].dataAssetInfo.size+'&nbsp;K</span>'+
 							'<span class="mymarket_6">'+time+'</span>'+
 							'<span class="mymarket_8" onclick="surebuy(this,\''+requireid+'\')">确认购买</span>'+
 							'</li>';
@@ -653,9 +666,10 @@ function buy(that,requireid){//当前this，，需求id
 	
 }
 //确认购买
-function surebuy(that,requireid,assetid){
-	var assetid=$(that).parent().children().eq(1).text();
-	console.log(assetid)
+var load='';
+function surebuy(that,requireid,store){
+	assetid=$(that).parent().children().eq(1).text();
+	load=assetid;
 	$.ajax({
 		url:'http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/requirement/buyAsset/'+account+'/'+requireid+'/'+assetid,
 		contentType:'application/json;charset=utf-8',
@@ -670,12 +684,25 @@ function surebuy(that,requireid,assetid){
 			setTimeout('$(".success_buy").fadeOut()', 1500);
 		},
 		success:function(res){
-			console.log(res)
 			// 购买成功显示框;
 			if(res.retCode==0){
 				$('.success_buy').show();
-				// $()
+				$(_this).addClass('buyback').removeClass('buy');
+				// $('.buyback').attr('href','/download');
 				$('.success_buy p').html('购买成功');
+				$('.mbody').hide();
+				setTimeout('$(".success_buy").fadeOut()', 1500);
+				// 按钮变色
+				if($(_this).has('.buyback')){
+					$(_this).removeAttr('onclick');
+					$(_this).attr('onclick','buyover(this,\''+requireid+'\')')
+				}else{
+					// $(that).bind('click');
+					$(_this).attr("onclick","buy(this,\''+requ+'\')")
+				}
+			}else if(res.retCode==-2){
+				$('.success_buy p').html('网络超时，请稍后再试');
+				$('.success_buy').show();
 				setTimeout('$(".success_buy").fadeOut()', 1500);
 			}else{
 				$('.success_buy').show();
@@ -689,6 +716,14 @@ function surebuy(that,requireid,assetid){
 			console.log(res)
 		}
 	})
+}
+//我的需求购买后可下载。
+function buyover(that,requireid,storeID){
+	String.prototype.trim = function() {
+  		return this.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+	}
+	var newload=load.trim();
+	$(that).attr('href','http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/download?account='+account+'&requireID='+requireid+'&storeID='+sstore);
 }
 //我的需求-->>>>>>>>>>>>>>>>>>确认购买
 /*$('.mymarket_body').on('click','.mymarket_8',function(e){
@@ -732,12 +767,11 @@ function surebuy(that,requireid,assetid){
 					//开始发送数据时在页面正在显示加载动画
 					$('body').append('<div id="pload"></div>');
 				},
-					//请求结束用complaste结束加载提示。
+				//请求结束用complaste结束加载提示。
 				complete:function(){
 					$('#pload').remove()
 				},
 				success:function(res){
-					console.log(res);
 					if(res.retCode==0){
 						// callBack(res);
 						var h=JSON.parse(res.retResult).items;

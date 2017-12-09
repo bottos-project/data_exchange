@@ -5,7 +5,7 @@ html,body,div,p,select,option,ul,dl,ol,li,h1,h2,h3,h4,h5,input,table,tr,td,tbody
 }
 ul,li{
 	list-style:none;
-}
+}l
 a{
 	text-decoration:none;
 }
@@ -23,9 +23,7 @@ height: 0;
 visibility:hidden;
 clear: both;
 }
-/* .clearfix {
-zoom: 1;
-} */
+
 .fl{
 	float:left;
 }
@@ -129,7 +127,7 @@ zoom: 1;
 .side_left li span{
 	color:#fff;
 }
-.side_left li.active{	
+.side_left li.active{
 	background:url('../images/index/sidebg.png') no-repeat center;
 	color:;
 }
@@ -384,7 +382,7 @@ zoom: 1;
 .p_span1{
 	width:80px;
 	padding-right:3px;
-	box-sizing: border-box; 
+	box-sizing: border-box;
 	text-align:right;
 }
 .p_span2{
@@ -507,7 +505,7 @@ zoom: 1;
 .wallet_submit_add{
 	width:160px;
 	margin-left: 90px;
-	background:#3fa9f5;	
+	background:#3fa9f5;
 }
 .wallet_submit_delet{
 	background:#c1272d;
@@ -525,7 +523,7 @@ zoom: 1;
 	color:#fff;
 	font-size: 16px;
 	background: linear-gradient(to right,#1c1565 0%,#662e93 100%);
-	
+
 }
 .wallet_token_content{
 	height:261px;
@@ -614,7 +612,7 @@ zoom: 1;
 .token_submit_add{
 	width:160px;
 	margin-left: 154px;
-	background:#3fa9f5;	
+	background:#3fa9f5;
 }
 .token_submit_delet{
 	background:#c1272d;
@@ -720,11 +718,14 @@ zoom: 1;
 	text-align:center;
 	line-height:43px;
 	color:#808080;
-	background:url('../images/index/select_delete.png') no-repeat center;;
+	background: #f2f2f2;
+	cursor:pointer;
+	/*background:url('../images/index/select_delete.png') no-repeat center;;*/
 }
 .data_right div.active{
 	color:#fff;
-	background:url('../images/index/select_finish.png') no-repeat center;;
+	background:#3fa9f5;
+	/*background:url('../images/index/select_finish.png') no-repeat center;;*/
 
 }
 .data_list_header{
@@ -762,15 +763,15 @@ zoom: 1;
 	border-right:none;
 }
 .data_list_header span i,.data_list_header1 span i,.mymarket_header span i{
- 	font-size: 0;  
-    line-height: 0;  
-    border-width: 5px;  
-    border-color: #fff;  
-    border-bottom-width: 0;  
-    border-style: dashed;  
-    border-top-style: solid;  
-    border-left-color: transparent;  
-    border-right-color: transparent; 
+ 	font-size: 0;
+    line-height: 0;
+    border-width: 5px;
+    border-color: #fff;
+    border-bottom-width: 0;
+    border-style: dashed;
+    border-top-style: solid;
+    border-left-color: transparent;
+    border-right-color: transparent;
 
 }
 .data_id{
@@ -977,7 +978,7 @@ resize: none;
 	top:0;left:0;
 	margin-top: 1px;
 	background:url('../images/index/select_url.png') no-repeat center;
-	background-size:100%; 
+	background-size:100%;
 }
 .data_example input{
 	position:absolute;
@@ -1012,7 +1013,7 @@ resize: none;
 .select_url{
 	overflow: hidden;
 	height:30px;
-	padding-top:50px 
+	padding-top:50px
 }
 .select_url>.select_url_span{
 	width:98px;
@@ -1039,7 +1040,10 @@ resize: none;
 	border:0;
 	box-sizing: border-box;border:1px solid #dedede;
 	outline: none;
-	width:calc(100% - 44px);
+	float: left;
+	box-sizing: border-box;
+	width:45%;
+	/*width:calc(100% - 44px);*/
 }
 
 .select_url_submit,.select_url_delete{
@@ -1054,7 +1058,7 @@ resize: none;
 .select_url_submit{
 	width:160px;
 	margin-left: 33px;
-	background:#3fa9f5;	
+	background:#3fa9f5;
 }
 .select_url_delete{
 	background:#c1272d;
@@ -1080,26 +1084,36 @@ resize: none;
 .market span{
 	width:70px;
 	height:20px;
+	line-height:20px;
+	font-size: 14px;
+	color:#3fa9f5;
+	text-align:center;
 	display:inline-block;
 	margin-right:5px;
 	margin-top: 13px;
+	border:1px solid #3fa9f5;
+	cursor:pointer;
+}
+.market span.active{
+	background:#3fa9f5;
+	color:#fff;
 }
 .market1{
-	background: url('../images/index/market1.png') no-repeat center;
-	background-size: 100%;
+	/*background: url('../images/index/market1.png') no-repeat center;
+	background-size: 100%;*/
 }
 .market1.active{
-	background: url('../images/index/market2.png') no-repeat center;
-	background-size: 100%;
+	/*background: url('../images/index/market2.png') no-repeat center;
+	background-size: 100%;*/
 
 }
 .market2{
-	background: url('../images/index/market3.png') no-repeat center;
-	background-size: 100%;
+	/*background: url('../images/index/market3.png') no-repeat center;
+	background-size: 100%;*/
 }
 .market2.active{
-	background: url('../images/index/market4.png') no-repeat center;
-	background-size: 100%;
+/*	background: url('../images/index/market4.png') no-repeat center;
+	background-size: 100%;*/
 }
 .damand_select span{
 	display: inline-block;
@@ -1108,15 +1122,18 @@ resize: none;
 	text-align: center;
 	line-height: 45px;
 	font-size: 16px;
-	background: url('../images/index/select_delete.png') no-repeat;
-	background-size: 100%;
+	background:#f2f2f2;
+	cursor: pointer;
+	/*background: url('../images/index/select_delete.png') no-repeat;*/
+	/*background-size: 100%;*/
 	color:#808080;
-	
+
 }
 .damand_select span.active{
 	color:#fff;
-	background: url('../images/index/select_finish.png') no-repeat;
-	background-size: 100%;
+	background: #3fa9f5;
+	/*background: url('../images/index/select_finish.png') no-repeat;
+	background-size: 100%;*/
 }
 .need-in{
 	width:calc(100% - 214px);
@@ -1221,7 +1238,7 @@ resize: none;
 	height:30px;
 	overflow: hidden;
 }
-.market_alert tr span,.market_alert li span{
+.market_alert tr span,.market_alert li span,.market_alert li a{
 	float: left;
 	padding:0 6px;
 	height:30px;
@@ -1261,6 +1278,7 @@ resize: none;
 }
 .xz{
 	display: inline-block;
+	cursor: pointer;
 	width:44px;
 	height:30px;
 	background: url('../images/index/buy1 (6).png') no-repeat center;
@@ -1272,7 +1290,7 @@ resize: none;
 	background: url('../images/index/buy1 (4).png') no-repeat center;
 }
 .buy{
-	width:34px;
+	width:17px;
 	height: 30px;
 	background: url('../images/index/buy1 (2).png') no-repeat center;
 	cursor: pointer;
@@ -1281,7 +1299,7 @@ resize: none;
 	background: url('../images/index/buy1 (6).png') no-repeat center
 } */
 .market_alert .buyback{
-	width:34px;
+	width:17px;
 	height:30px;
 	background: url('../images/index/buy1 (6).png') no-repeat center;
 	cursor: pointer;
@@ -1361,9 +1379,10 @@ resize: none;
 .mymarket_8{
 	width:72px;
 	overflow: hidden;
+	cursor: pointer;
 }
 .market_alert .market_status{
-	padding-left:18px; 
+	padding-left:18px;
 }
 .mymarket_body .mymarket_7{
 	display: inline-block;
@@ -1376,7 +1395,7 @@ resize: none;
 	color:#c1272d;
 }
 .mymarket_remove{
-	
+
 }
 .mymarket_body li{
 line-height: 30px;
@@ -1454,13 +1473,13 @@ background:#e6e6e6;
 	height:28px;
 }
 .de_input1{
-	width:243px;	
+	width:243px;
 }
 .de_input2{
-	width:50px;	
+	width:50px;
 }
 .de_input3{
-	width:116px;	
+	width:116px;
 }
 .de_all_b select{
 	width:118px;
@@ -1597,15 +1616,15 @@ padding-left:14px;
 	float: left;
 }
 .trans_body_header span i{
-	font-size: 0;  
-    line-height: 0;  
-    border-width: 5px;  
-    border-color: #fff;  
-    border-bottom-width: 0;  
-    border-style: dashed;  
-    border-top-style: solid;  
-    border-left-color: transparent;  
-    border-right-color: transparent; 
+	font-size: 0;
+    line-height: 0;
+    border-width: 5px;
+    border-color: #fff;
+    border-bottom-width: 0;
+    border-style: dashed;
+    border-top-style: solid;
+    border-left-color: transparent;
+    border-right-color: transparent;
 }
 .t_id{
 	width:176px;
@@ -1637,6 +1656,7 @@ padding-left:14px;
 	background: #f2f2f2;
 }
 .trans_body_ul li span{
+	height:26px;
 	float:left;
 	display:inline-block;
 	color:#808080;
@@ -1754,7 +1774,7 @@ padding-left:14px;
 .add_return{
 	width:160px;
 	margin-left: 90px;
-	background:#3fa9f5;	
+	background:#3fa9f5;
 }
 .add_back{
 	background:#c1272d;
@@ -1811,6 +1831,7 @@ padding-left:14px;
 	color:#fff;
 	background:#3fa9f5;
 	margin-right: 20px;
+	cursor: pointer;
 }
 .loginoutbody span:last-child{
 	background: #c1282d;margin-right: 0;
@@ -1868,9 +1889,6 @@ li .hidden:nth-of-type(even){
 	line-height: 30px;
 	height: 30px;
 	padding:0 100px;
-	text-align:center;
-	margin:0 auto;
-	font-size: 16px;
 }
 .success_buy img{
 	margin:0 auto 20px;
@@ -1878,16 +1896,73 @@ li .hidden:nth-of-type(even){
 	text-align: center;
 	display: block;
 }
+/*需求发布新增form表单样式*/
+.upload11{
+	float: left;
+	height:28px;
+}
+.upload11 input[type="file"]{
+	width:280px;
+	float: left;
+}
+.upload11 input[type="submit"]{
+	padding:0 35px;
+}
+.bottos_icon{
+	width:28px;
+	height:28px;
+	background:url('../images/index/wallet2.png') no-repeat center center;
+}
 
+#form2 input{
+	width:50%;
+	float: left;
+}
+/*文件上传成功的样式*/
+.filesuccess{
+	background: absolute;
+	top:0;
+	width:100%;
+	display: none;
+}
+.fileoutbg{
+	width:100%;
+	height:100%;
+	opacity: 0.3;
+	background: #000;
+	position: fixed;
+	top:0;
+	left:0;
+	z-index:99;
+}
+.filesucc{
+	width:280px;
+	height:80px;
+	position: absolute;
+	left:50%;
+	top:50%;
+	margin-left:-80px;
+	margin-top:-40px;
+	z-index: 9999;
+	background:#fff;
 
-
-
-
-
-
-
-
-
-
-
-
+}
+.filesucc p{
+	line-height:30px;
+	height:30px;
+	text-align:center;
+	font-size: 16px;
+	color:#333;
+}
+.filesucc h4{
+	margin:0 auto;
+	margin-top: 14px;
+	height:20px;
+	width:60px;
+	text-align: center;
+	line-height: 20px;
+	font-size: 16px;
+	background:#3fa9f5;
+	cursor:pointer;
+	color: #fff;
+}

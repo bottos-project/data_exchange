@@ -19,7 +19,6 @@ function ajax(url,param,type,dataType,callBack){
 					$('#pload').remove()
 				},
 				success:function(res){
-					console.log(res)
 					if(res.retCode==0){
 						callBack(res);
 						
@@ -34,13 +33,12 @@ var param={
 	"actionAccount":account,
  	"exchangeID":"",
  	"requirementID":"",
- 	"requirementOwnerAccount":"",
+ 	"requirementOwnerAccount":account,
  	"assetOwnerAccount":account, 
   	"status":3
 };
 ajax('http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/exchange/query',param,null,null,function(res){
 	var data=JSON.parse(res.retResult).items;
-	console.log(data)
 	var html='',time,status;
 	for(var i=0;i<data.length;i++){
 		switch(data[i].status){
@@ -55,8 +53,8 @@ ajax('http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/exchange/query',param,n
 					<span class="t_coin">`+data[i].amout+` </span>
 					<span class="t_time">`+time+`</span>
 					<span class="t_status">`+status+`</span>
-					<span class="t_provide">`+data[i].firstParty+` </span>
-					<span class="t_send">`+data[i].secondParty+` </span>
+					<span class="t_provide">`+data[i].secondParty+` </span>
+					<span class="t_send">`+data[i].firstParty+` </span>
 				</li>`
 	}
 	// debugger;

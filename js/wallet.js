@@ -1,5 +1,6 @@
-//   ----账户钱包-------
+﻿//   ----账户钱包-------
 var name=sessionStorage.getItem('name');//当前账户姓名;
+name=sessionStorage.getItem('login');
 function ajax(url,param,type,dataType,callBack){
 	var html='';
 	var type=type || 'post';
@@ -11,14 +12,9 @@ function ajax(url,param,type,dataType,callBack){
 		type:type,
 		dataType:dataType,
 		beforeSend:function(){
-			//开始发送数据时在页面正在显示加载动画
-			// before();
-			
-			// $('.token_submit_add').css('background','#f3f3f3')
 		},
 		//请求结束用complaste结束加载提示。
 		complete:function(){
-			// compl();
 		},
 		success:function(res){
 			if(res.retCode==0){
@@ -26,7 +22,6 @@ function ajax(url,param,type,dataType,callBack){
 			}
 		},
 		error:function(res){
-			// console.log(1,res);
 		}
 	})
 }
@@ -47,7 +42,6 @@ var wallet={
 
 		
 		ajax('http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/wallet/queryAccountInfo?random='+Math.round(Math.random()*100),param,null,null,function(res){
-			console.log(res);
 			var title=JSON.parse(res.retResult).totalTokenInfo;
 			var data=JSON.parse(res.retResult).accountInfoList;
 			//我的总额；res.totalTokenInfo
@@ -168,7 +162,7 @@ function queryTransferInfo(){
 	var html='',htmlfirst='',time,alltime;
 	var param={'name':name}
 	ajax('http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/wallet/queryTransferInfo',param,null,null,function(res){
-		console.log(res);
+		// console.log(res);
 		if(res.retCode==0){
 			for(var i=0;i<res.data.length;i++){
 				time=Date.parse(new Date(res.data[0].transferTime)).toLocaleString();//交易时间time
@@ -190,7 +184,7 @@ function queryTransferInfo(){
 	})
 }
 $(function(){
-	wallet.payinfo()
+	// wallet.payinfo()
 	$('.zh_add').click(function(){
 		wallet.add();
 	})

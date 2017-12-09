@@ -1,34 +1,10 @@
-/*$.ajax({
-    type: "POST",
-    url: "/user/login",
-    data:{"name":"wcj","passwd":"1","verificationCode":"123456"},
-    beforeSend: function(request) {
-        request.setRequestHeader("Test", "Chenxizhang");
-    },
-    success: function(result) {
-        alert(result);
-    }
-});*/
-
-// var DataDeal = {
-//           formToJson: function (data) {
-//               data=data.replace(/&/g,"\",\"");
-//               data=data.replace(/=/g,"\":\"");
-//               data="{\""+data+"\"}";
-//               return data;
-//            },
-// };
-
-
 var userType=0;//userType用户类型判断;
 $('#select_style').on('change',function(){
 	$(this).val()=='person' ? $('.company_show').hide() : $('.company_show').show();
 	type=$('#select_style').find('option:selected').text()
 	$(this).val()=='person' ? userType=0 : userType=1;
-	console.log($(this).val());
 
 })
-console.log(userType);
 
 	// 角色类型选中\
 	// $('.resign_drigh t input[type=checkbox]').is(':checked')
@@ -109,38 +85,16 @@ var register={
 	checkRegUsername:function(){
 		var regType=document.getElementById('regType').value;
 		regUserName=$('#register-phone').val();
-		// var regUserName=''; //用户名
-		// regUserName=util.trim(document.getElementById("register-phone").value)
-		// 
-		// var desc='';//错误提示语
-		// 使用手机号注册
-		/*if(regType==0){
-			regUserName=util.trim(document.getElementById("register-phone").value)
-			if(regUserName.indexOf(' ') > -1){
-				desc='手机号不能包含空格';
-				// alert(desc)
-			}else{
-				if (regUserName == '') {
-					desc = "请输入手机号";
-
-				} else if (!util.checkMobile(regUserName)) {
-					desc ='手机号格式不正确';
-				}else{
-					desc='';
-				}
-			}
-
-		}*/
-		/*if(!regType){
-			return;
-		}*/
+		var a= new RegExp("^[0-9a-zA-Z_]{1,}$")
+		if(!a.test(regUserName)){
+			desc='用户名格式是数字、字母、下划线'
+			// $('.error').html(desc)
+		}else{
+			desc=''
+		}
 		var url='';
-		//判断手机号是否存在调用ajax。
-		/*$.get(url,{regType:regType},function(data){
-
-		},"json")*/
+	
 		$('.error').html(desc)
-		// return console.log(desc);
 	},
 	//密码判断
 	checkPassword:function(){
@@ -211,21 +165,24 @@ var register={
 		var data={
 			"name":regUserName,
 			"passwd":pwd,
-			"mobile":phone,
+			"mobile":$('#phone').val(),
 			"email":email,	
 			"userType":userType,
 			"roleType":0,
 			"companyName":$('#companyName').val(),
 			"companyAddr":$('#companyAddr').val(),
 			"orgCode":$('#orgCode').val(),
-			"verificationCode":"123456"
+			"verificationCode":$('#validataCode').val()
 		}
-		console.log(data)
+		// console.log(data)
 		$.ajax({
 			type:'POST',
 			contentType:'application/json;charset=utf-8',
 			// url:'http://10.104.11.235:8080/user/register?random='+Math.round(Math.random()*100),
 			url:'http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/user/register?random='+Math.round(Math.random()*100),
+			timeout:0,
+			async:true,
+			cache:false,
 			data:JSON.stringify(data),
 			dataType:'json',
 			beforeSend:function(){
@@ -234,14 +191,16 @@ var register={
 				$('.resign_sure').css('cursor','not-allowed');
 				$('.resign_sure').addClass('active')
 			},
-			complete:function(){
+			complete:function(rml,starus){
+				if(status=='timeout'){//超时,status还有success,error等值的情况
+　　　　　　	}
 				$('.resign_sure').removeAttr('disabled')
 				$('.resign_sure').css('cursor','pointer');
 				$('.resign_sure').removeClass('active')
 			},
 			success:function(res){
 				if(res.returnCode==0){ //注册成功0
-					console.log(res);
+					// console.log(res);
 					$('.error').html('');
 					sessionStorage.setItem('account',res.items[0].account);
 					sessionStorage.setItem('login',regUserName);
@@ -250,8 +209,10 @@ var register={
 					$('.error').html('用户名已存在')
 					setTimeout("$('.error').html('')",3000)
 					// $('.error').html('用户名已存在')
+				}else if(res.returnCode==-2){
+					$('.error').html('验证码错误，请重新输入')
 				}else{ //注册失败
-					$('.error').html('注册失败，请稍后再试')
+					$('.error').html('注册失败，请检查网络，稍后再试')
 					setTimeout("$('.error').html('')",3000);
 				}
 			},
@@ -272,9 +233,7 @@ $(function(){
 	// 密码
 	$('#register-password').on('blur',function(){
 		register.checkPassword();
-		console.log(desc)
 		$('.error').html(desc);
-
 	})
 	// 重新输入密码
 	$('#register-repassword').on('blur',function(){
@@ -282,11 +241,11 @@ $(function(){
 		$('.error').html(desc);
 	})
 	//手机号
-	$('#phone').on('blur',function(){
-		register.checkPhone();
+	/*$('#phone').on('blur',function(){
+		register.();
 		$('.error').html(desc);
 
-	})
+	})*/
 	$('#email').on('blur',function(){
 		register.checkEmail();
 		$('.error').html(desc);
@@ -310,8 +269,9 @@ $(function(){
             }
         });    
       $('.resign_cancel').click(function(){
-      	$('.resign_body input').val('')	;
-      	$('.error').html('')
+      	window.location='index.html';
+      	// $('.resign_body input').val('')	;
+      	// $('.error').html('')
       })                                                          
 });
 

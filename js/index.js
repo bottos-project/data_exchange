@@ -119,7 +119,6 @@ $('.add_return').on('click',function(){
 	$('.safe_pw').val();//保护密钥
 	account=$('.account_alias').val();//账户别名
 	var html;
-	console.log(account)
 	$('.add_box').hide();
 
 	setTimeout(function(){
@@ -224,7 +223,7 @@ $('.select_url_submit').click(function(){
 $('.add_input').on('click',function(){
 	// console.log(111)
 	var element=document.createElement('input');
-	console.log(element)
+	// console.log(element)
 	$('.add').append(element)
 	// element.attr('class','require_price4')
 })
@@ -243,8 +242,6 @@ $('.mymarket_remove').on('click',function(){
 	
 $('.market_alert li').on("click",'.buy',function(){
 	$('.mbody').show();
-
-	$(this)
 })
 //点击确认购买
 var num =0;//临时存储变量
@@ -252,30 +249,9 @@ $('.mymarket_body').on('click','.mymarket_8',function(e){
 	num+=1;
 	var data1=new Date();
 	var time=data1.toLocaleString()
-	// console.log($(this).parent().html())
-	$(this).parent().remove();
-	/*var text='<li>'+
-				'<span class="t_id">'+'HuowRufnvhglwefga'+' </span>'+
-				'<span class="t_coin">'+20+' </span>'+
-				'<span class="t_time">'+'2017-11-13'+'</span>'+
-				'<span class="t_status">'+'已完成'+' </span>'+
-				'<span class="t_provide">icco  </span>'+
-				'<span class="t_send">111 </span>'+
-			'</li>';
-	var index='<li class="infor_header">'+
-				'<span class="trans_id">'+'YuiiuYfnvhgitusga'+'</span>'+
-				'<span class="demand_side">8092</span>'+
-				'<span class="provider">机器学习</span>'+
-				'<span class="desir_require">人脸识别</span>'+
-				'<span class="data_content">100张不同人的照片</span>'+
-				'<span class="trans_type">实时交易</span>'+
-				'<span class="trans_money bottos_money_icon">20</span>'+
-				'<span class="finish_time">'+time+'</span>'+
-				'</li>'*/
-	console.log($(this).parent());
-	// $('.trans_body_ul').append(text);
-	// $('.data_table').prepend(index);
-	// $('.buy').eq(0).addClass('active');
+
+	// console.log($(this).parent());
+	
 })
 // 需求信息
 $('.market1').click(function(){
@@ -288,7 +264,7 @@ $('.market1').click(function(){
 $('.market2').on('click',function(){
 	$(this).addClass('active');
 	$('.market1').removeClass('active')
-	$('.sel-ture').show();
+	// $('.sel-ture').show();
 	$('.alldamand').hide();
 	$('.mydamand').show();
 })

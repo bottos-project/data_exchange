@@ -1,11 +1,11 @@
 // 登陆逻辑
 var desc='';//错误提示语;
-var uName,password;//登陆用户名，密码全局声明。
+var uName='',password='';//登陆用户名，密码全局声明。
 var login = {
 	// 用户名判断
 	loginName:function(){
 		uName=document.getElementById("userName").value;
-
+		
 		// 判断登陆用户是否为注册过的账户;
 		/*var url='';
 		$.get('json.json',{nName:uName},function(data){
@@ -16,7 +16,7 @@ var login = {
 			return false;
 		}else{
 			desc=''
-		}*/
+		}	·*/
 	},
 	password:function(){
 		password=$('#password').val();
@@ -26,8 +26,29 @@ var login = {
 		}else{
 			desc=""
 		}*/
-	}
+	},
 	// 图形验证码
+	imgcode:function(){
+		var url='http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/checkimgcode';
+		var data={"validataCode":$('#validataCode').val}
+		$.ajax({
+				type:'POST',
+				contentType:'application/json;charset=utf-8',
+				url:'/checkimagecode?random='+Math.round(Math.random()*100),
+				data:JSON.stringify(data),
+				dataType:'json',
+				success:function(res){
+					if(res==0){
+						$('.error').html('')
+					}else{
+						desc="验证码错误，请重新输入";
+						$('.error').html(desc)
+					}
+				}
+		})
+	}
+
+
 
 }
 
@@ -41,55 +62,59 @@ $(function(){
 	$('#password').on('blur',function(){
 		login.password();
 	});
+
 	$('.submit_sure').on('click',function(){
 		if(uName==''||password==''){
 			desc='请填写用户名或密码';
+			$('.error').html(desc);
 			return;
-		}else{
+		}else if($('#validataCode').val == ''){
+			$('.error').html('请输入验证码')
+			return;
+		}else{  
+			//用户名或密码需非空
 			desc=''
-		}
-		$('.error').html(desc);
-		var data={
-			name:uName,
-			passwd:password,
-			verificationCode:$('.verificationCodes').html()
-		}
-		//登陆ajax接口.
-		$.ajax({
-			type:'POST',
-			contentType:'application/json;charset=utf-8',
-			url:'http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/user/login?random='+Math.round(Math.random()*100),
-			data:JSON.stringify(data),
-			dataType:'json',
-			beforeSend:function(){
-				$('.error').html('正在登录中...')
-			},
-			success:function(res){
-				if(res.returnCode==0){
-					$('.error').html('');
-					// console.log(res);
-					sessionStorage.setItem('name',res.items[0].name);
-					sessionStorage.setItem('account',res.items[0].account)
-					sessionStorage.setItem('login',uName);
-					window.location='index.html';
-					
-				}else{
-					$('.error').html('用户名或密码错误')
-					// console.log('用户名或密码错误')
-				}
-			},
-			complete:function(){
-				// $('.error').html('')
-			},
-			error:function(res){
-				$('.error').html('请检查网络，稍后再试')
-				console.log(res)
+			
+
+			var data={
+				name:uName,
+				passwd:password,
+				verificationCode:$('#validataCode').val()
 			}
-		})
-		// $.post(url,{login:$("#userName"),password:$('#password')},function(data){
-
-
-		// },"JSON")
+			//登陆ajax接口.
+			$.ajax({
+				type:'POST',
+				contentType:'application/json;charset=utf-8',
+				url:'http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/user/login?random='+Math.round(Math.random()*100),
+				data:JSON.stringify(data),
+				dataType:'json',
+				beforeSend:function(){
+					$('.error').html('正在登录中...')
+				},
+				success:function(res){
+					if(res.returnCode==0){
+						$('.error').html('');
+						// console.log(res);
+						sessionStorage.setItem('name',res.items[0].name);
+						sessionStorage.setItem('account',res.items[0].account)
+						sessionStorage.setItem('login',uName);
+						window.location='index.html';
+						
+					}else if(res.returnCode==-2){
+						$('.error').html('验证码错误，请重新输入')
+					}else{
+						$('.error').html('用户名或密码错误')
+					}
+				},
+				complete:function(){
+				},
+				error:function(res){
+					$('.error').html('请检查网络，稍后再试')
+					// console.log(res)
+				}
+			})
+		}
+		
 	});
 	$('.submit_sure').click(function(){
 		var username=$("#userName").val()
@@ -97,7 +122,8 @@ $(function(){
 		// window.location='index.html';
 	})
 	$('.submit_delete').click(function(){//清空input框;
-		$('input').val('')
+		$('input').val('');
+		$('.error').html('')
 	})
 
 })
