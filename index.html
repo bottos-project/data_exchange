@@ -111,13 +111,6 @@
 										180
 									</span> -->
 								</li>
-								<!-- <li>
-									<span class="wallet_data1">我的账户2</span>
-									<span class="wallet_data2">EHNsre9suUYWj2Qlzex8d3dfa348RguYk9</span>
-									<span class="wallet_data3">
-										256
-									</span>
-								</li> -->
 							</ul>
 						</div>
 						<!-- 转账token -->
@@ -144,7 +137,7 @@
 									<div class="token_divl ">
 										<span class="fl">转账金额</span>
 										<div class="tdiv_r tdiv_r_coin fl">
-											<input type="text" id="zzje" />
+											<input type="number" id="zzje" />
 
 										</div>
 									</div>
@@ -171,20 +164,11 @@
 						<h4>转账记录</h4>
 						<!-- 转账显示最新记录 -->
 						<div class="new_exchange">
-							<!-- <p><span class="p_span1 fl">交易号</span><span class="p_span2 fl" style="width:calc(100% - 80px)">ce4bb43e0x5b92a3dace1a39d3e48ea4f90d175af48d</span></p>
-							<p><span class="p_span1 fl">区块</span><span class="p_span2 fl">0x128</span></p>
-
-							<p><span class="p_span1 fl">交易号</span><span class="p_span3 fl"></span><span class="p_span4 fl"></span><span class="p_span2 fl">617</span><span class="p_span5" style="padding:0 10px 0 10px">交易时间</span><span>2017 1103 12:03</span></p>
-							<p><span class="p_span1 fl">打款方:</span><span class="fl">我的账号1</span><span class="p_span1 fl">收款方:</span><span class="fl"></span></p> -->
+							
 						</div>
 						<!-- 转账全部记录 -->
 						<ul class="new_all">
-							<!-- <li>
-								<span class="new_all1">ce4bb43e0x5b92a3dace1a39d3e48ea4f90d175af48d</span>
-								<span class="new_all2">b39d3e48ea4f92a3dace1a343e0x</span>
-								<span class="new_all3">2017 1103 12:03</span>
-								<span class="new_all4"><i></i> <i></i>35</span>
-							</li> -->
+							
 						</ul>
 						<!-- 分页 -->
 					</div>
@@ -201,7 +185,7 @@
 							<div class="damand_search fl" style="border:none;margin:0;">
 								<!-- 搜索 -->
 								<div class="damand_search_left fl">
-									<span class="tj_style fl"><span class="">不同类型</span>
+									<span class="tj_style fl"><span class="">全部数据</span>
 										<!-- <div class="search_show" style="display:none;">
 											<p>全部需求</p>
 											<p>需求ID</p>
@@ -258,7 +242,7 @@
 						<div class="updata_top_content">
 							<div class="require_id">
 								<span class="require_id1" style="padding-right: 2px;">需求ID</span>
-								<input type="text" id="require" />
+								<input type="text" class='updata_input' id="require" />
 								<span class="data_mtype">数据资产类型</span>
 								<select class="data_select1" name="" id="zc1">
 									<option value="0">音频</option>
@@ -266,14 +250,8 @@
 									<option value="1">文本</option>
 									<option value="2">视频</option>
 								</select>
-								<!-- <span class="require_id2">应用领域</span>
-								<select class="data_select1" name="" id="zc2">
-									<option value="">人脸识别</option>
-									<option value="">机器语言</option>
-									<option value="">智能语音交互</option>
-									<option value="">机器翻译</option>
-								</select> -->
-								<span class="require_id3">数据子类</span>
+								
+								<span class="require_id3">数据领域</span>
 								<select class="data_select1" name="" id="zc3">
 									<option value="0">人脸识别</option>
 									<option value="1">机器语言</option>
@@ -284,8 +262,8 @@
 							</div>
 							<div class="require_price">
 								<span class="require_id1 fl" style="padding-right: 6px;">期望价格</span>
-								<input class="require_price1 price fl" type="text" /><span class="fl" style="padding:0 5px;">~</span><input class="require_price1 price1 fl" type="text" /><span  class="bottos_icon fl"></span><span class="fl" style="padding:0 14px 0 154px">存留时间</span>
-								<input style="padding-left:14px;height: 24px" type="text" class="de_input3 ctime Wdate fl" onfocus="WdatePicker({minDate:'%y/%M/#{%d}'})" />
+								<input class="require_price1 price fl updata_input" type="number" /><span class="fl" style="padding:0 5px;">~</span><input class="require_price1 price1 fl updata_input" type="number" /><span  class="bottos_icon fl"></span><span class="fl" style="padding:0 14px 0 154px">存留时间</span>
+								<input style="padding-left:14px;height: 24px" type="text" class="de_input3 ctime Wdate fl updata_input" onfocus="WdatePicker({minDate:'%y/%M/#{%d}'})" />
 
 							</div>
 							<div class="require_price">
@@ -316,7 +294,7 @@
 								<div class="select_url">
 									<span class="select_url_span fl">选择路径</span>
 									<form class="select_url_s fl" id="form2" method="post" enctype="multipart/form-data" onsubmit="return saveReport1()">
-										<input type="file" name="file" />
+										<input type="file" name="file" onchange="fileChange(this)" />
 										<input type="submit" value="上传文件" style="background: #3fa9f5;cursor: pointer;" />
 									</form>
 									<button class="select_url_submit fl">提交</button>
@@ -336,7 +314,7 @@
 							<div class="damand_search fl">
 								<!-- 搜索 -->
 								<div class="damand_search_left fl">
-									<span class="tj_style xuqiu fl"><span class="search">不同类型</span>
+									<span class="tj_style xuqiu fl"><span class="search">全部需求</span>
 										<div class="search_show" id="all_se" style="display:none;">
 											<p>全部需求</p>
 											<p>需求ID</p>
@@ -431,18 +409,6 @@
 										</div>
 									</div>
 									<ul class="data_list_all market_alert if_delete" style="height: 662px;overflow-y: auto;">
-										<!-- <li>
-											<i></i>
-											<span class="market_id">Hwerffdsawfckoier</span>
-											<span class="market_type">机器学习</span>
-											<span class="market_cont">亚马逊宠物猫、宠物狗的数据内容</span>
-											<span class="market_size">2012年10-12月份<i></i></span>
-											<span class="market_status"><i></i>3214</span>
-											<span class="market_stay">1人提交<i></i></span>
-											<span class="minchange_id">2016-11-1<i></i></span>
-											<span class="mexchange_id">2017-10-4<i></i></span>
-											<span class="buy"></span>
-										</li> -->
 									</ul>
 								</div>
 							</div>
@@ -451,7 +417,7 @@
 					<!-- 部署合约 -->
 					<div class="deploy" style="display:none;">
 						<!-- 基本信息和数据信息 -->
-						<div class="deploy_top">
+						<div class="deploy_top" style="position: relative;">
 							<!-- 基本信息 -->
 							<div class="deploy_tleft fl">
 								<h4>基本信息</h4>
@@ -466,7 +432,7 @@
 									<div class="de_all">
 										<span>价格</span>
 										<div class="de_all_b">
-											<input class="de_input2 fl" type="text" />
+											<input class="de_input2 fl" type="number" />
 											<span class="bottos_icon fl"></span>
 											<span style="padding:0 7px 0 0px" class="fl">有效期</span>
 											<input style="padding-left:14px;" type="text" class="de_input3 yxq Wdate fl" onfocus="WdatePicker({minDate:'%y/%M/#{%d}'})" />
@@ -519,8 +485,8 @@
 										<span>数据样例</span>
 										<div class="de_all_b">
 										 <form  id="form1" method="post" enctype="multipart/form-data" class="upload11" onsubmit="return saveReport()">
-													<input type="file" name="file" />
-													<input type="submit"  value="提交文件上传" onchange="fileChange(this)" />
+													<input type="file" name="file" onchange="fileChange(this)" />
+													<input type="submit"  value="提交文件上传"  />
 												</form>
 										</div>
 								</div>
@@ -531,15 +497,18 @@
 										<div class="de_all_b">
 											<textarea name="" id="datasize" cols="30" rows="10"></textarea>
 										</div>
-									</div>
+								</div>
 							</div>
 						</div>
+
+						<!-- 发布需求提示语 -->
+						
 					</div>
 					<!--创建和发布合约按钮  -->
 					<div class="rebuild_deploy">
 						<div>
 						<!-- <span>创建合约</span> -->
-						<button class="submit-info">提交需求</botton>
+							<button class="submit-info">提交需求</botton>
 						</div>
 
 					</div>
@@ -551,7 +520,7 @@
 					<div class="damand_search fl" style="border:none;margin:0;">
 								<!-- 搜索 -->
 						<div class="damand_search_left fl">
-							<span class="tj_style fl"><span>不同类型</span>
+							<span class="tj_style fl"><span>全部记录</span>
 							</span>
 							<input type="text" class="fl" />
 							<!-- 左侧筛选栏 -->
@@ -596,17 +565,6 @@
 								<span class="mymarket_8"><em class="mymarket_remove fr"></em></span>
 							</div>
 							<ul class="mymarket_body">
-								<!-- <li>
-									<span class="mymarket_1">icco</span>
-									<span class="mymarket_2">cojkjHslwsae </span>
-									<span class="mymarket_3">人脸识别</span>
-									<span class="mymarket_4">1000张不同人正面照片</span>
-									<span class="mymarket_5">234k</span>
-									<span class="mymarket_6">2017.11.12 21:23</span>
-									<span class="mymarket_7">&nbsp;</span>
-									<span class="mymarket_8">确认购买</span>
-								</li> -->
-
 							</ul>
 						</div>
 						<div class="myfix"></div>
@@ -663,13 +621,16 @@
 		<p>购买成功</p>
 		<img src="images/index/loading.gif" alt="" />
 	</div>
+<div class="tips">
+	请把信息完善再提交需求
+</div>
 <div class="filesuccess">
-		<div class="filesucc">
-			<p></p>
-			<h4>关闭</h4>
-		</div>
-		<div class="fileoutbg"></div>
+	<div class="filesucc">
+		<p></p>
+		<h4>关闭</h4>
 	</div>
+	<div class="fileoutbg"></div>
+</div>
 </body>
 <!-- <script src="plugin/jquery-1.11.3.js"></script> -->
 <!-- Insert this line above script imports  -->
@@ -708,35 +669,47 @@ function tabchange(num,obj){
 			};
 			ajax('http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/exchange/query',param,null,null,function(res){
 				var data=JSON.parse(res.retResult).items;
-				console.log(data)
+				var dlength=JSON.parse(res.retResult).totalNum;
 				var html='',time,status;
-				for(var i=0;i<data.length;i++){
-					switch(data[i].status){
-						case 0:status='无效';break;
-						case 1:status='已提交';break;
-						case 2:status='完成交易';break;
-						case 3:status='空';break;
+				// 存在数据totalNum大于0;
+				if(dlength>0){
+					for(var i=0;i<data.length;i++){
+						switch(data[i].status){
+							case 0:status='无效';break;
+							case 1:status='已提交';break;
+							case 2:status='完成交易';break;
+							case 3:status='空';break;
+						}
+						time=new Date(data[i].exchangeTime*1000).toLocaleString();
+						html+=`<li>
+									<span class="t_id">`+data[i].exchangeID+`</span>
+									<span class="t_coin">`+data[i].amout+` </span>
+									<span class="t_time">`+time+`</span>
+									<span class="t_status">`+status+`</span>
+									<span class="t_provide">`+data[i].secondParty+` </span>
+									<span class="t_send">`+data[i].firstParty+` </span>
+								</li>`
 					}
-					time=new Date(data[i].exchangeTime*1000).toLocaleString();
-					html+=`<li>
-								<span class="t_id">`+data[i].exchangeID+`</span>
-								<span class="t_coin">`+data[i].amout+` </span>
-								<span class="t_time">`+time+`</span>
-								<span class="t_status">`+status+`</span>
-								<span class="t_provide">`+data[i].secondParty+` </span>
-								<span class="t_send">`+data[i].firstParty+` </span>
-							</li>`
+					$('.trans_body_ul').html(html);
 				}
-				$('.trans_body_ul').html(html);
 			})
 		};
 		//需求管理展现时候调取ajax
 		if(document.getElementById("con_content_3").style.display=='block'){
-			demand.market1();
+			$('.market2').addClass('active');
+			$('.market1').removeClass('active')
+			$('.alldamand').hide();
+			$('.mydamand').show();
+			demand.market2(); 
+
 		};
+		//账户钱包
 		if(document.getElementById('con_content_1').style.display=='block'){
-			wallet.payinfo();
+			if(sessionStorage.getItem('login')){
+				wallet.payinfo();
+			}
 		}
+		//数据资产
 		if(document.getElementById('con_content_2').style.display=='block'){
 			asset.allData();
 		}
@@ -829,6 +802,11 @@ function tabchange(num,obj){
 	}
 var saveData='';
 function saveReport(){
+	if($('#form1').find('input[type=file]').val()==''){
+		$('.filesuccess p').html('请选择上传文件')
+		$('.filesuccess').show();
+		return false;
+	}
 	$('#form1').attr('action','http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/upload?account='+sessionStorage.getItem('account'));
 	//jquery表单提交
 	$('#form1').ajaxSubmit(function(message){
@@ -846,7 +824,8 @@ function saveReport(){
 	return false;//防止页面跳转。
 }
 //文件
-/*function fileChange(target) {
+var isIE = /msie/i.test(navigator.userAgent) && !window.opera;
+function fileChange(target) {
      var fileSize = 0;         
      if (isIE && !target.files) {     
        var filePath = target.value;     
@@ -856,15 +835,25 @@ function saveReport(){
      } else {    
       fileSize = target.files[0].size;     
       }   
-      var size = fileSize / 1024;    
-      if(size>20000){  
-       alert("附件不能大于20M");
+      var size = fileSize / 1024 / 1024;    
+      if(size>20){  
+       // alert("附件不能大于20M");
+       $('.tips').html('上传文件不能大于20M')
+       $('.tips').show()
+       setTimeout("$('.tips').hide()",2000)
        target.value="";
        return
+      }else{
+      
       }
-   }*/
+   }
 var saveData1='',size1='';
 function saveReport1(){
+	if($('#form2').find('input[type=file]').val()==''){
+		$('.filesuccess p').html('请选择上传文件')
+		$('.filesuccess').show();
+		return false;
+	}
 	$('#form2').attr('action','http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/upload?account='+sessionStorage.getItem('account'));
 	//jquery表单提交
 	$('#form2').ajaxSubmit(function(message){
@@ -874,10 +863,7 @@ function saveReport1(){
 			size1=JSON.parse(mess.retResult).size;
 			sessionStorage.setItem('saveData1',saveData1);
 			sessionStorage.setItem('size1',size1);
-			// $('.success_buy').show();
-			// $('.success_buy p').html('文件提交成功');
-			// setTimeout('$(".success_buy").hide()',3000)
-			$('.filesuccess p').html('上传文件成功！请继续资产注册')
+			$('.filesuccess p').html('上传文件成功！请继续资产注册');
 			$('.filesuccess').show();
 		}else{
 			console.log(message)
@@ -890,6 +876,182 @@ function saveReport1(){
 $('.filesucc h4').click(function(){
 	$('.filesuccess').hide();
 })
+</script>
+
+<script>
+const remote = require('electron').remote;
+const Menu = remote.Menu;
+const MenuItem = remote.MenuItem;
+
+var menu = new Menu();
+menu.append(new MenuItem({ label: 'MenuItem1', click: function() { console.log('item 1 clicked'); } }));
+menu.append(new MenuItem({ type: 'separator' }));
+menu.append(new MenuItem({ label: 'MenuItem2', type: 'checkbox', checked: true }));
+
+window.addEventListener('contextmenu', function (e) {
+  e.preventDefault();
+  menu.popup(remote.getCurrentWindow());
+}, false);
+var template = [
+  {
+    label: 'Edit',
+    submenu: [
+     /* {
+        label: 'Undo',
+        accelerator: 'CmdOrCtrl+Z',
+        role: 'undo'
+      },
+      {
+        label: 'Redo',
+        accelerator: 'Shift+CmdOrCtrl+Z',
+        role: 'redo'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Cut',
+        accelerator: 'CmdOrCtrl+X',
+        role: 'cut'
+      },*/
+      {
+        label: 'Copy',
+        accelerator: 'CmdOrCtrl+C',
+        role: 'copy'
+      },
+      {
+        label: 'Paste',
+        accelerator: 'CmdOrCtrl+V',
+        role: 'paste'
+      },
+    ]
+  },
+  {
+    label: 'View',
+    submenu: [
+      {
+        label: 'Reload',
+        accelerator: 'CmdOrCtrl+R',
+        click: function(item, focusedWindow) {
+          if (focusedWindow)
+            focusedWindow.reload();
+        }
+      },
+      {
+        label: 'Toggle Full Screen',
+        accelerator: (function() {
+          if (process.platform == 'darwin')
+            return 'Ctrl+Command+F';
+          else
+            return 'F11';
+        })(),
+        click: function(item, focusedWindow) {
+          if (focusedWindow)
+            focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
+        }
+      },
+      {
+        label: 'Toggle Developer Tools',
+        accelerator: (function() {
+          if (process.platform == 'darwin')
+            return 'Alt+Command+I';
+          else
+            return 'Ctrl+Shift+I';
+        })(),
+        click: function(item, focusedWindow) {
+          if (focusedWindow)
+            focusedWindow.toggleDevTools();
+        }
+      },
+    ]
+  },
+ /* {
+    label: 'Window',
+    role: 'window',
+    submenu: [
+      {
+        label: 'Minimize',
+        accelerator: 'CmdOrCtrl+M',
+        role: 'minimize'
+      },
+      {
+        label: 'Close',
+        accelerator: 'CmdOrCtrl+W',
+        role: 'close'
+      },
+    ]
+  },
+  {
+    label: 'Help',
+    role: 'help',
+    submenu: [
+      {
+        label: 'Learn More',
+        click: function() { require('electron').shell.openExternal('http://electron.atom.io') }
+      },
+    ]
+  },*/
+];
+
+if (process.platform == 'darwin') {
+  var name = require('electron').remote.app.getName();
+  template.unshift({
+    label: name,
+    submenu: [
+      {
+        label: 'About ' + name,
+        role: 'about'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Services',
+        role: 'services',
+        submenu: []
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Hide ' + name,
+        accelerator: 'Command+H',
+        role: 'hide'
+      },
+      {
+        label: 'Hide Others',
+        accelerator: 'Command+Alt+H',
+        role: 'hideothers'
+      },
+      {
+        label: 'Show All',
+        role: 'unhide'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Quit',
+        accelerator: 'Command+Q',
+        click: function() { app.quit(); }
+      },
+    ]
+  });
+  // Window menu.
+  template[3].submenu.push(
+    {
+      type: 'separator'
+    },
+    {
+      label: 'Bring All to Front',
+      role: 'front'
+    }
+  );
+}
+
+var menu = Menu.buildFromTemplate(template);
+Menu.setApplicationMenu(menu);
+</script>
 </script>
 <script>if (window.module) module = window.module;</script>
 </html>

@@ -82,16 +82,30 @@ $('.roll_out').click(function(){
 $('.login_s').click(function(){
 	$('#loginout').hide();
 	sessionStorage.clear();
+	
 	// 检测是否登陆
 	if(!sessionStorage.getItem('login')){
-	$('.login_form').show();
-	$('.user').hide();
-}else{
-	
-	$('.login_form').hide();
-	$('.user').show();
-	$('.user_preson p:first-child').html(sessionStorage.getItem('login'))
-}
+		$('.login_form').show();
+		$('.user').hide();
+		wallet.payinfo();
+		$('.wallet_data').hide();
+		$('#mywallet').html('')
+		$('.title').html('');
+		$('.address').hide();
+
+		//需求管理和我的需求隐藏
+		$('.if_delete').html('');
+		$('.market_add').html('');
+		//数据资产注册
+		$('.date_list_i').html('');
+		//历史数据
+		$('.trans_body_ul').html('');
+	}else{
+		
+		$('.login_form').hide();
+		$('.user').show();
+		$('.user_preson p:first-child').html(sessionStorage.getItem('login'))
+	}
 })
 $('.login_return').click(function(){
 	$('#loginout').hide();
@@ -131,63 +145,6 @@ $('.add_return').on('click',function(){
 		$('#mywallet').append('<option value="">'+account+'</option>');
 	},2000)
 })
-// 转账钱包
-/*$('.token_submit_add').on('click',function(){
-	//时间转换方式
-	//获取当前时间
-	// 清空目的地址
-	$('#address').val('')
-	var zzje=$('#zzje').val();//转账金额
-	var sy=$('.zzje').html()-zzje;
-	$('.zzje').html(sy);
-	$('.add_wall').html(zzje)
-	$('#zzje').val('');//清空转账余额
-
-	var time=new Date().toLocaleString();
-	// var data=new Date().toLocaleString();
-	// console.log(data)
-	var html,html1;
-	setTimeout(function(){
-		html='<li>'+
-			'<span class="new_all1">'+'0x5b92a3dace4bb43e1a39d3e48ea4f90d175af48d'+'</span>'+
-			'<span class="new_all2">'+'0x2d178268629da47a394dad542438463c397289c7'+'</span>'+
-			'<span class="new_all3">'+time+'</span>'+
-			'<span class="new_all4"><i></i> <i></i>'+zzje+'</span>'+
-		'</li>'
-		$('.new_all').prepend(html);
-		html1='<p><span class="p_span1 fl">交易号</span><span class="p_span2 fl">0x5b92a3dace4bb43e1a39d3e48ea4f90d175af48d</span></p>'+
-				'<p><span class="p_span1 fl">区块</span><span class="p_span2 fl">0x140</span></p>'+
-				'<p><span class="p_span1 fl">交易号</span><span class="p_span3 fl"></span><span class="p_span4 fl"></span>'+
-				'<span class="p_span2 fl">'+zzje+'</span>'+
-				'<span class="p_span5" style="padding:0 10px 0 10px">交易时间</span><span>'+time+'</span></p>'+
-				'<p><span class="p_span1 fl">收款方:</span><span class="fl">我的账号1</span><span class="p_span1 fl">打款方:</span><span class="fl">'+account+'</span></p>'
-		$('.new_exchange').html(html1)
-	},10000)
-	
-})*/
-
-//数据资产
-//数据资产--》我的数据
-// $('.')
-//资产注册
-/*var asset={
-	submit:function(){
-		//提交的参数
-		var param={
-			needid:$('#require').val(),//需求id
-			zc1:$('#zc1 option:checked').text(),//数据资产类型
-			zc2:$('#zc1 option:checked').text(),//应用领域
-			zc3:$('#zc1 option:checked').text(),//数据子类
-			price:$('.price').val(),//期望起始价格
-			price1:$('.price1').val(),//期望截至价格
-									//特殊标签
-			
-			require_about:$('#require_about')
-		};
-
-	 console.log(param)
-	}
-}*/
 //数据上传
 $('.select_url_submit').click(function(){
 	var param={
@@ -238,6 +195,7 @@ $('.market_alert').on('click','li',function(e){
 // 弹出框
 $('.mymarket_remove').on('click',function(){
 	$('.mbody').hide();
+	$('.mymarket_body').html('');
 })
 	
 $('.market_alert li').on("click",'.buy',function(){
@@ -264,7 +222,6 @@ $('.market1').click(function(){
 $('.market2').on('click',function(){
 	$(this).addClass('active');
 	$('.market1').removeClass('active')
-	// $('.sel-ture').show();
 	$('.alldamand').hide();
 	$('.mydamand').show();
 })

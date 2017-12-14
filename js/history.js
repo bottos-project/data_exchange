@@ -39,26 +39,29 @@ var param={
 };
 ajax('http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/exchange/query',param,null,null,function(res){
 	var data=JSON.parse(res.retResult).items;
+	var dlength=JSON.parse(res.retResult).totalNum;
 	var html='',time,status;
-	for(var i=0;i<data.length;i++){
-		switch(data[i].status){
-			case 0:status='无效';break;
-			case 1:status='已提交';break;
-			case 2:status='完成交易';break;
-			case 3:status='空';break;
+	if(dlength>0){
+		for(var i=0;i<data.length;i++){
+			switch(data[i].status){
+				case 0:status='无效';break;
+				case 1:status='已提交';break;
+				case 2:status='完成交易';break;
+				case 3:status='空';break;
+			}
+			time=new Date(data[i].exchangeTime*1000).toLocaleString();
+			html+=`<li>
+						<span class="t_id">`+data[i].exchangeID+`</span>
+						<span class="t_coin">`+data[i].amout+` </span>
+						<span class="t_time">`+time+`</span>
+						<span class="t_status">`+status+`</span>
+						<span class="t_provide">`+data[i].secondParty+` </span>
+						<span class="t_send">`+data[i].firstParty+` </span>
+					</li>`
 		}
-		time=new Date(data[i].exchangeTime*1000).toLocaleString();
-		html+=`<li>
-					<span class="t_id">`+data[i].exchangeID+`</span>
-					<span class="t_coin">`+data[i].amout+` </span>
-					<span class="t_time">`+time+`</span>
-					<span class="t_status">`+status+`</span>
-					<span class="t_provide">`+data[i].secondParty+` </span>
-					<span class="t_send">`+data[i].firstParty+` </span>
-				</li>`
+		$('.trans_body_ul').html(html);
 	}
-	// debugger;
-	$('.trans_body_ul').html(html);
+	
 
 })
 /*if(document.getElementById("con_content_4").style.display=='block'){

@@ -101,15 +101,15 @@ body,html{
 }
 .resign_dright input[type="checkbox"]{
 	margin-top: 7px;
-	margin-right: 5px;
- -webkit-appearance: none;  /*清除复选框默认样式*/
-  background:url("../images/index/unselect.png") no-repeat center;   /*复选框的背景图，就是上图*/
+	margin-right: 5px;/* 
+	 -webkit-appearance: none;  清除复选框默认样式
+	  background:url("../images/index/unselect.png") no-repeat center; */   /*复选框的背景图，就是上图*/
   height: 13px;   /*高度*/
   vertical-align: middle;
   width: 13px;
 }
 .resign_dright input[type="checkbox"]:checked {
-  background:url("../images/index/unselect1.png") no-repeat center;   /*复选框的背景图，就是上图*/
+  /*background:url("../images/index/unselect1.png") no-repeat center;   /*复选框的背景图，就是上图*/*/
 }
 .resign_dright select{
 	width:127px;

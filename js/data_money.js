@@ -27,6 +27,48 @@ function ajax(url,param,type,dataType,callBack){
 var asset={
 	// 注册资产
 	submit:function(){
+		// 必要的input
+		var updata_input=$('.updata_top_content').find('.updata_input');
+		var require_about=$('#require_about');
+		for(var i=0;i<updata_input.length;i++){
+			if(updata_input.val()==''){
+				$('.tips').html('请把信息完善再注册资产');
+				$('.tips').show();
+				setTimeout("$('.tips').hide()",2000)
+				return false;
+			}
+		}
+		//数据合理地价格
+		if($('.price').val() <= 0 || $('.price1').val() <= 0){
+			$('.tips').html('请输入合理的价格');
+			$('.tips').show();
+			setTimeout("$('.tips').hide()",2000)
+			return false;
+		}else if($('.price').val() > $('.price1').val()){
+			$('.tips').html('请输入合理的价格');
+			$('.tips').show();
+			setTimeout("$('.tips').hide()",2000)
+			return false;
+		}
+		//资产不能为空
+		if(require_about.val()==''){
+			$('.tips').html('请填写资产求描述');
+			$('.tips').show();
+			setTimeout("$('.tips').hide()",2000)
+			return false;
+		}else if(require_about.val().length>=256){
+			$('.tips').html('资产描述输入内容不得超过256个字符');
+			$('.tips').show();
+			setTimeout("$('.tips').hide()",2000)
+			return false;
+		}else{}
+		// 资产注册之前是否提交文件
+		if(!sessionStorage.getItem('saveData1')){
+			$('.tips').html('请选择提交上传文件');
+			$('.tips').show();
+			setTimeout("$('.tips').hide()",2000)
+			return false;
+		}
 		var applicationDomain,assetType1;
 		var assetType=$('#zc1').find('option:selected').val();
 		var specit=$('#zc3').find('option:selected').val();
@@ -79,13 +121,18 @@ var asset={
 				$('.success_buy p').html('正在注册资产中...');
 				//注册成功之前禁用按钮
 				$('.select_url_submit').attr('disabled',true);
+				$('.updata_all input').attr({disabled:"disabled"});
+				$('.updata_all textarea').attr({disabled:"disabled"});
 			},
 			complete:function(){
 				setTimeout('$(".success_buy").hide()', 1500);
 				$('.select_url_submit').attr('disabled',false);
+				$('.updata_all input').removeAttr('disabled');
+				$('.updata_all textarea').removeAttr('disabled');
 			},
 			success:function(res){
 				if(res.retCode==0){
+					sessionStorage.removeItem('saveData1')
 					$('.success_buy').hide();
 					asset.allData();
 					$('.data_header .data_left ').show();
@@ -96,6 +143,9 @@ var asset={
 					$('.mydata').addClass('active')
 					$('.data_list').show();
 					$('.updata_all').hide();	
+					//数据清空
+					$('.updata_top_content').find('input').val('');
+					$('#require_about').val('');
 				}else if(res.retCode==-2){
 					$('.success_buy p').html('网络超时，请稍后再试');
 					$('.success_buy').show();

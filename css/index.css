@@ -310,13 +310,13 @@ clear: both;
 }
 .wallet_data li .wallet_data1{
 	padding-left:12px;
-	width:87px;
+	width:115px;
 	box-sizing: border-box;
 	border-right:1px solid #ddd;
 }
 .wallet_data li .wallet_data2{
 	padding-left:27px;
-	width:409px;
+	width:375px;
 	box-sizing: border-box;
 
 	border-right:1px solid #ddd;
@@ -650,10 +650,10 @@ clear: both;
 }
 /*数据资产部分*/
 .data_header{
-	height:43px;
+	height:45px;
 	overflow: hidden;
-	padding-bottom:2px;
-	border-bottom:1px solid #ddd;
+	/*padding-bottom:2px;*/
+	/*border-bottom:1px solid #ddd;*/
 }
 .data_left{
 	height:20px;
@@ -701,7 +701,6 @@ clear: both;
 	height:43px;
 	background:#fff url('../images/index/more.png') no-repeat center;
 }
-
 .data_rubble{
 	width:40px;
 	height:40px;
@@ -715,18 +714,16 @@ clear: both;
 .mydata,.updata{
 	width:105px;
 	height:43px;
+	font-size: 16px;
 	text-align:center;
 	line-height:43px;
 	color:#808080;
 	background: #f2f2f2;
 	cursor:pointer;
-	/*background:url('../images/index/select_delete.png') no-repeat center;;*/
 }
 .data_right div.active{
 	color:#fff;
 	background:#3fa9f5;
-	/*background:url('../images/index/select_finish.png') no-repeat center;;*/
-
 }
 .data_list_header{
 	height:38px;
@@ -1600,7 +1597,9 @@ padding-left:14px;
 	background: url('../images/index/market4.png') no-repeat center;
 	background-size: 100%;
 }
-
+.trans_body{
+	width:calc(100% + 20px);
+}
 .trans_body_header{
 	height:38px;
 	overflow: hidden;
@@ -1643,6 +1642,10 @@ padding-left:14px;
 }
 .t_send{
 	width:172px;
+}
+.trans_body_ul{
+	height:670px;
+	overflow-y: auto;
 }
 .trans_body_ul li{
 	height:26px;
@@ -1966,3 +1969,20 @@ li .hidden:nth-of-type(even){
 	cursor:pointer;
 	color: #fff;
 }
+.tips{
+	height:80px;
+	width:260px;
+	line-height: 80px;
+	text-align:center;
+	font-size: 14px;
+	background: #dedede;
+	position:absolute;
+	z-index:999;
+	top:calc(50% - 40px);
+	left:calc(50% - 65px);
+	display: none;
+}
+
+
+
+

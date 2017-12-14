@@ -29,12 +29,12 @@ var login = {
 	},
 	// 图形验证码
 	imgcode:function(){
-		var url='http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/checkimgcode';
+		var url='/checkimgcode';
 		var data={"validataCode":$('#validataCode').val}
 		$.ajax({
 				type:'POST',
 				contentType:'application/json;charset=utf-8',
-				url:'/checkimagecode?random='+Math.round(Math.random()*100),
+				url:'http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/checkimagecode?random='+Math.round(Math.random()*100),
 				data:JSON.stringify(data),
 				dataType:'json',
 				success:function(res){

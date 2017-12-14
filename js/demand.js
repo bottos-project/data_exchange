@@ -2,8 +2,6 @@
 var account=sessionStorage.getItem('account');
 var account=sessionStorage.getItem('account');
 var assetid;
-
-
 var demand={
 	//需求发布
 	damand_select2:function(){
@@ -68,6 +66,63 @@ var demand={
 		}
 	// console.log(param)
 	var html='',html1='';
+	// 判断需求提交input是否有空值；
+	var ifinput=$('.deploy_top input');
+	var textarea0=$('.deploy_top textarea')[0];
+	var textarea1=$('.deploy_top textarea')[1];
+	for(var i=0;i<ifinput.length;i++){
+		// console.log(ifinput.val())
+		if(ifinput.val()==''){
+			$('.tips').html('请把信息完善再提交需求');
+			$('.tips').show();
+			setTimeout("$('.tips').hide()",2000)
+			return false;
+		}
+	}
+	//需求描述
+	if(textarea0.value==''){
+		$('.tips').html('请填写需求描述');
+		$('.tips').show();
+		setTimeout("$('.tips').hide()",2000)
+		return false;
+	}else if(textarea0.value.length>=256){
+		// alert('输入内容过长')
+		$('.tips').html('需求描述输入内容不得超过256个字符');
+		$('.tips').show();
+		setTimeout("$('.tips').hide()",2000)
+		return false;
+	}else{
+
+	}
+	//数据规格
+		if(textarea1.value==''){
+			$('.tips').html('请填写数据规格');
+			$('.tips').show();
+			setTimeout("$('.tips').hide()",2000)
+			return false;
+		}else if(textarea1.value.length>=256){
+			// alert('输入内容过长')
+			$('.tips').html('数据规格输入内容不得超过256个字符');
+			$('.tips').show();
+			setTimeout("$('.tips').hide()",2000)
+			return false;
+		}else{
+
+		}
+	//输入价格判断不能小于0
+	if($('.de_input2').val()<=0){
+			$('.tips').html('输入价格需大于0');
+			$('.tips').show();
+			setTimeout("$('.tips').hide()",2000)
+			return false;
+	}
+	// 是否上传文件
+	if(!sessionStorage.getItem('saveData')){
+			$('.tips').html('请选择提交上传文件');
+			$('.tips').show();
+			setTimeout("$('.tips').hide()",2000)
+			return false;
+	}
 	$.ajax({
 			type:'POST',
 			contentType:'application/json;charset=utf-8',
@@ -78,19 +133,30 @@ var demand={
 				$('.success_buy').show();
 				$('.success_buy p').html('正在发布需求...');
 				$('.submit-info').attr('disabled',true);
-				$('.submit-info').css('cursor','not-allowed')
+				$('.submit-info').css('cursor','not-allowed');
+				$('.deploy_top input').attr({disabled:"disabled"});
+				$('.deploy_top textarea').attr({disabled:"disabled"});
 			},
 			complete:function(){
-				$('.success_buy p').html('发布需求成功')
-				setTimeout("$('.success_buy').hide()",2000)
+				/*$('.success_buy p').html('发布需求成功')
+				setTimeout("$('.success_buy').hide()",2000)*/
 				$('.submit-info').attr('disabled',false);
-				$('.submit-info').css('cursor','pointer')
+				$('.submit-info').css('cursor','pointer');
+				
+				$('.deploy_top input').removeAttr('disabled');
+				$('.deploy_top textarea').removeAttr('disabled');
 			},
 			success:function(res){
 				if(res.retCode==0){
 					//成功后清空发布需求的input内容。
+					// 清除上传文件
+					sessionStorage.removeItem('saveData');
+					$('.success_buy p').html('发布需求成功')
+					setTimeout("$('.success_buy').hide()",2000);
+					// 清空信息
 					$('.deploy_top').find('input').val('');
-					$('.deploy textarea').val('');
+					$('.deploy_top').find('input[type=submit]').val('提交文件上传');
+					$('.deploy_top').find('textarea').val('')
 					demand.market1();//成功之后重新渲染市场需求和我的需求。
 					demand.market2();
 					// 选择需求信息
@@ -113,6 +179,9 @@ var demand={
 				}
 			},
 			error:function(res){
+				$('.success_buy').show();
+					$('.success_buy p').html('发布需求失败！')
+					setTimeout("$('.success_buy').hide()",2000)
 				console.log(res)
 			}
 		})
@@ -149,46 +218,48 @@ var demand={
 					var html='',status,time,zjtime,applicat,aa='lllwerojjfs';
 					var requ='';
 					var data=JSON.parse(res.retResult);
-					// console.log(data);
-					for(var i=0;i<data.items.length;i++){
-						//状态判断
-						switch(data.items[i].status){
-							case 0:status='有效';break;
-							case 1:status='无效';break;
-							// case 2:status='完成交易';break;
-							// case 3:status='空';break;
-						};
-						// 领域
-						switch(data.items[i].applicationDomain){
-							case 'FACIAL_RECOGNITION':applicat='人脸识别';
-							break;
-							case 'MACHINE_LEARNING':applicat='机器语言';
-							break;
-							case 'VOICE_INTERACTION':applicat='智能语音交互';
-							break;
-							case 'MACHINE_TRANSLATION':applicat='机器翻译';
-							break;
-						}
-						//时间戳转换为yy-mm-dd时间
-						time=new Date(data.items[i].publishedTimename).toLocaleDateString();
-						zjtime=new Date(data.items[i].expirationTime).toLocaleDateString();
-						requ=data.items[i].dataRequirementID;
+					if(data.totalNum>0){
+						for(var i=0;i<data.items.length;i++){
+							//状态判断
+							switch(data.items[i].status){
+								case 0:status='有效';break;
+								case 1:status='无效';break;
+								// case 2:status='完成交易';break;
+								// case 3:status='空';break;
+							};
+							// 领域
+							switch(data.items[i].applicationDomain){
+								case 'FACIAL_RECOGNITION':applicat='人脸识别';
+								break;
+								case 'MACHINE_LEARNING':applicat='机器语言';
+								break;
+								case 'VOICE_INTERACTION':applicat='智能语音交互';
+								break;
+								case 'MACHINE_TRANSLATION':applicat='机器翻译';
+								break;
+							}
+							//时间戳转换为yy-mm-dd时间
+							time=new Date(data.items[i].publishedTimename).toLocaleDateString();
+							zjtime=new Date(data.items[i].expirationTime).toLocaleDateString();
+							requ=data.items[i].dataRequirementID;
 
-						html+='<li><i></i>'+
-									'<span class="market_id">'+requ+'</span>'+
-									'<span class="hidden">'+requ+'</span>'+
-									'<span class="market_type">'+applicat+'</span>'+
-									'<span class="market_cont">'+data.items[i].description+'</span>'+
-									'<span class="market_size">'+data.items[i].specifications+'<i></i></span>'+
-									'<span class="market_status"><i></i>'+data.items[i].bidMoney+'</span>'+
-									'<span class="market_stay">'+data.items[i].collectionNum+'人提交<i></i></span>'+
-									'<span class="minchange_id">'+time+'<i></i></span>'+
-									'<span class="mexchange_id">'+zjtime+'<i></i></span>'+
-									'<a class="buy" onclick="buy(this,\''+requ+'\')"></a>'+
-								'</li>';
-							
-					};
-					$('.if_delete').html(html);	
+							html+='<li><i></i>'+
+										'<span class="market_id">'+requ+'</span>'+
+										'<span class="hidden">'+requ+'</span>'+
+										'<span class="market_type">'+applicat+'</span>'+
+										'<span class="market_cont">'+data.items[i].description+'</span>'+
+										'<span class="market_size">'+data.items[i].specifications+'<i></i></span>'+
+										'<span class="market_status"><i></i>'+data.items[i].bidMoney+'</span>'+
+										'<span class="market_stay">'+data.items[i].collectionNum+'人提交<i></i></span>'+
+										'<span class="minchange_id">'+time+'<i></i></span>'+
+										'<span class="mexchange_id">'+zjtime+'<i></i></span>'+
+										'<a class="buy" onclick="buy(this,\''+requ+'\')"></a>'+
+									'</li>';
+								
+						};
+						$('.if_delete').html(html);	
+					}
+					
 				}
 			},
 			error:function(res){
@@ -291,17 +362,22 @@ $('.damand_select2').on('click',function(){
 $('.submit-info').on('click',function(){
 	demand.submit();
 })
+$('.market1').click(function(){
+	demand.market1();
+});
 $('.market2').click(function(){
-	demand.market2();
+	// demand.market2();
 })
 $('.damand_select1').on('click',function(){
-	demand.market1();
+	demand.market2();
 })
 // 不同类型筛选
 $('.search').on('click',function(){
 	$('.search_show').toggle();
-
 })
+/*$('.search_show').on('mouseout',function(){
+	$('.search_show').hide();
+})*/
 var data1={
 			"actionAccount":account,
 			"ownerAccount":account,
@@ -612,7 +688,6 @@ var _this;
 var sstore='';
 function buy(that,requireid){//当前this，，需求id
 	console.log(that,requireid);
-	var html='';
 	$('.mbody').show();
 	_this=that;
 	/*$(that).addClass('buyback').removeClass('buy');*/
@@ -623,6 +698,7 @@ function buy(that,requireid){//当前this，，需求id
 		contentType:'application/json;charset=utf-8',
 		dataType:'json',
 		success:function(res){
+			var html='';
 			console.log(res)
 			if(res.retCode==0){
 				var data=JSON.parse(res.retResult).items,time,stat;
@@ -725,32 +801,7 @@ function buyover(that,requireid,storeID){
 	var newload=load.trim();
 	$(that).attr('href','http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/download?account='+account+'&requireID='+requireid+'&storeID='+sstore);
 }
-//我的需求-->>>>>>>>>>>>>>>>>>确认购买
-/*$('.mymarket_body').on('click','.mymarket_8',function(e){
-	$(this).parent().children().eq(1).text();
-	console.log($(this).parent().children().eq(1).text() )
-	var param={
-		"account":'0xfe67c5731484b044de64a620db511dbdd44201e8',
-		"requirementID":requireID,
-		"assetID":$(this).parent().children().eq(1).text(),
-	};
-	console.log(param)
-	$.ajax({
-		url:'/requirement/buyAsset'+'/'+param.account+'/'+param.requirementID+'/'+param.assetID,
-		contentType:'application/json;charset=utf-8',
-		data:'',
-		// type:type||'',
-		dataType:dataType||'json',
-		success:function(res){
-			console.log(res)
-		},
-		error:function(res){
-			console.log(res)
-		}
-	})
-	debugger;
 
-})*/
 
 //需求ID查询 封装ajax(简易版----后期需要加动画效果)
 		function ajax(param,type,dataType,callBack){

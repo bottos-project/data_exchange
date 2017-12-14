@@ -6,23 +6,51 @@ $('#select_style').on('change',function(){
 
 })
 
-	// 角色类型选中\
-	// $('.resign_drigh t input[type=checkbox]').is(':checked')
-	/*var groupCheckbox=$('.resign_dright input[type=checkbox]')
-	for(var i=0;i<groupCheckbox;i++){
-		if(groupCheckbox[i].checked){
-			var val=groupCheckbox[i].value;
-			alert(val)
-		}
-	}*/
-$('.resign_dright input[type=checkbox]:checked').each(function(value,index){
-	// console.log(value,index)
-	// console.log($(this).value);
-})
+//至少一个复选框；
+
+/*var len;
+$('.checkbox').on('change','input',function(){
+len=$('input[type=checkbox]:checked').length;
+if(len<1){
+	$(this).attr('checked','checked');
+	return false;
+	console.log(len)
+}else{
+
+}
+})*/
+
+/*if ($(":checkbox:checked").size() == 0)
+{
+  alert("最少选择一个");
+}*/
+
+
+/*$('.resign_dright input[type=checkbox]:checked').each(function(value,index){
+
+})*/
 //角色类型
 var regUserName,pwd;
 // console.log($('#select_style option:checked').html())
 var desc='';
+var SelectFalse = false; //用于判断是否被选择条件
+function Submit(){
+	var chboxValue = [];
+	var CheckBox = $('input[type = checkbox]');//得到所的复选框
+
+	for(var i = 0; i < CheckBox.length; i++){
+		if(CheckBox[i].checked){//如果有1个被选中时
+			SelectFalse = true;
+			// chboxValue.push(CheckBox[i].value)//将被选择的值追加到
+		}
+	}
+
+	if(!SelectFalse){
+		desc='至少选择一个角色类型';
+		$('.error').html(error)
+		return false
+	}
+}
 //可调用的对象函数。
 var util = {
 	ltrim : function(s) {
@@ -93,7 +121,6 @@ var register={
 			desc=''
 		}
 		var url='';
-	
 		$('.error').html(desc)
 	},
 	//密码判断
@@ -159,6 +186,7 @@ var register={
 			}
 	},
 	submit:function(){
+		Submit()
 		if(desc!=''){
 			return;
 		}
@@ -179,8 +207,7 @@ var register={
 			type:'POST',
 			contentType:'application/json;charset=utf-8',
 			// url:'http://10.104.11.235:8080/user/register?random='+Math.round(Math.random()*100),
-			url:'http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/user/register?random='+Math.round(Math.random()*100),
-			timeout:0,
+			url:'http://47.96.180.164:8080/bottosapp-0.0.1-SNAPSHOT/user/register?random='+Math.round(Math.random()*100), timeout:0,
 			async:true,
 			cache:false,
 			data:JSON.stringify(data),
@@ -254,9 +281,6 @@ $(function(){
 	//注册
 	$('.resign_sure').on('click',function(){
 		register.submit();
-		// var username=$("#register-phone").val()
-		// sessionStorage.setItem('login',username)
-		// window.location='index.html'
 	})  
 	// 点击确认按钮时   
 	$(".user-content").keyup(function(e){
