@@ -6,7 +6,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: {
-    app: path.resolve(__dirname, 'app/index.jsx'),
+    app: path.resolve(__dirname, 'app/index.js'),
     // 将 第三方依赖（node_modules中的） 单独打包
     vendor: Object.keys(pkg.dependencies)
   },
@@ -22,8 +22,8 @@ module.exports = {
   module: {
     loaders: [
         { test: /\.(js|jsx)$/, exclude: /node_modules/, loader: 'babel' },
-        { test: /\.less$/, exclude: /node_modules/, loader: ExtractTextPlugin.extract('style', 'css!postcss!less') },
-        { test: /\.css$/, exclude: /node_modules/, loader: ExtractTextPlugin.extract('style', 'css!postcss') },
+        { test: /\.less$/, loader: ExtractTextPlugin.extract('style', 'css!postcss!less') },
+        { test: /\.css$/, loader: ExtractTextPlugin.extract('style', 'css!postcss') },
         { test:/\.(png|gif|jpg|jpeg|bmp)$/i, loader:'url-loader?limit=5000&name=img/[name].[chunkhash:8].[ext]' },
         { test:/\.(png|woff|woff2|svg|ttf|eot)($|\?)/i, loader:'url-loader?limit=5000&name=fonts/[name].[chunkhash:8].[ext]'}
     ]
