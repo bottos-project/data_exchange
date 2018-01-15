@@ -8,6 +8,10 @@ import BTAccount from '../containers/Profile/Account'
 import BTWallet from '../containers/Profile/Wallet'
 import BTHistory from '../containers/Profile/History'
 
+import BTCollect from '../containers/Profile/Collect'
+import BTCheck from '../containers/Profile/Check'
+import BTAsset from '../containers/Profile/Asset'
+
 
 export default class RouterMap extends PureComponent{
     constructor(props){
@@ -23,6 +27,9 @@ export default class RouterMap extends PureComponent{
                     <Route path="/profile/account" component={BTAccount}/>
                     <Route path="/profile/wallet" component={BTWallet}/>
                     <Route path="/profile/history" component={BTHistory}/>
+                    <Route path="/profile/asset" component={BTAsset}/>
+                    <Route path="/profile/check" component={BTCheck}/>
+                    <Route path="/profile/collect" component={BTCollect}/>
                 </Route>
             </Router>
         )
