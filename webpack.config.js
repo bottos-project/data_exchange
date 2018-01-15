@@ -37,9 +37,9 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
 
         // 打开浏览器
-        new OpenBrowserPlugin({
-          url: 'http://localhost:3000'
-        }),
+        // new OpenBrowserPlugin({
+        //   url: 'http://localhost:3000'
+        // }),
 
         // 可在业务 js 代码中使用 __DEV__ 判断是否是dev模式（dev模式下可以提示错误、测试报告等, production模式不提示）
         new webpack.DefinePlugin({
