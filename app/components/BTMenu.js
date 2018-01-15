@@ -46,15 +46,28 @@ export default class BTMenu extends PureComponent{
                         {/* <Icon type="pie-chart" /> */}
                         <span><MenuLink style={{color:'white'}} to="/dashbord">Dashbord</MenuLink></span>
                     </Menu.Item>
+                    <Menu.Item key="11">
+                        {/* <Icon type="pie-chart" /> */}
+                        <span><MenuLink style={{color:'white'}} to="/dashbord">区块浏览</MenuLink></span>
+                    </Menu.Item>
+                    <Menu.Item key="12">
+                        {/* <Icon type="pie-chart" /> */}
+                        <span><MenuLink style={{color:'white'}} to="/dashbord">需求浏览</MenuLink></span>
+                    </Menu.Item>
+                    <Menu.Item key="13">
+                        {/* <Icon type="pie-chart" /> */}
+                        <span><MenuLink style={{color:'white'}} to="/dashbord">钱包管理</MenuLink></span>
+                    </Menu.Item>
+                   
                     <Menu.Item key="1">
                         {/* <Icon type="pie-chart" /> */}
                         <span><MenuLink style={{color:'white'}} to="/">Bottos</MenuLink></span>
                     </Menu.Item>
-                    {/* <SubMenu key="sub1" title={<span><Icon type="mail" /><span>我的</span></span>}> */}
+                    <SubMenu key="sub1" title={<span><Icon type="mail" /><span>个人中心</span></span>}>
                         <Menu.Item key="5"><MenuLink to="/profile/wallet">钱包管理</MenuLink></Menu.Item>
                         <Menu.Item key="7"><MenuLink to="/profile/account">资产管理</MenuLink></Menu.Item>
                         <Menu.Item key="8"><MenuLink to="/profile/history">交易历史</MenuLink></Menu.Item>
-                    {/* </SubMenu> */}
+                    </SubMenu>
                 </Menu>
             </div>
         )

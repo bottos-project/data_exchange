@@ -64,9 +64,6 @@ class BTHeader extends PureComponent{
 
                 <div className="logoMenuStyle">
                     <div className="logoStyle">BOTTOS</div>
-                    <div style={{alignSelf:'flex-end'}}>
-                        <BTRowMenu/>
-                    </div>
                 </div>
                 <div className="loginBtnStyle">
                     <div style={{backgroundColor:'green',padding:10,borderRadius:10}}>发布需求</div>
