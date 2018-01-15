@@ -1,7 +1,14 @@
 import React,{PureComponent} from 'react'
 import './styles.less'
 
-import {Button} from 'antd'
+import {Button,Icon} from 'antd'
+
+const IconText = ({ type, text }) => (
+    <span>
+      <Icon type={type} style={{ marginRight: 8 }} />
+      {text}
+    </span>
+  );
 
 export default class BTHomeCell extends PureComponent{
     constructor(props){
@@ -11,21 +18,33 @@ export default class BTHomeCell extends PureComponent{
     render(){
         return(
             <div className="listCellStyle">
-                <div className="iconStyle">image</div>
+                <div className="ant-list-item-extra" style={{backgroundColor:'red'}}>
+                    <img src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" alt="logo" width="272"/>
+                </div>
                 <div className="cellContentStyle">
-                    <div className="cellIntroStyle">
-                        <p>需求:复杂道路状况</p>
-                        <p>张数:150~900张</p>
-                        <p>发布时间:2017-10-29</p>
-                        <p>资产介绍:这是一个用于自动驾驶的机器学习的素材资料</p>
-                    </div>
-                    <div className="cellOptionStyle">
-                        <p style={{fontSize:20,color:'red'}}>价格:0.51gas</p>
-                        <div className="optionStyle">
-                        <div style={{marginLeft:10}}><Button type="primary">购买</Button></div>
-                        <div style={{marginLeft:10}}><Button type="primary">关注</Button></div>
-                        <div style={{marginLeft:10}}><Button type="primary">收藏</Button></div>
+                    <div className="cellMainContent">
+                        <h4><a href="">ant design part 4</a></h4>
+                        <div className="ant-list-item-meta-description">
+                        Ant Design, a design language for background applications, is refined by Ant UED Team.
                         </div>
+                        <div className="ant-list-item-content" style={{marginTop:20}}>
+                        We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.
+                        </div>
+                    </div>
+                    <div className="cellBottomIcon">
+                        <ul className="ant-list-item-action" style={{marginLeft:0}}>
+                            <li>
+                            <IconText type="star-o" text="156" />
+                            </li>
+
+                            <li>
+                            <IconText type="like-o" text="156" />
+                            </li>
+
+                            <li>
+                            <IconText type="message" text="2" />
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>

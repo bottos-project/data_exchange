@@ -7,8 +7,6 @@
 
 .listCellStyle {
     display: flex;
-    background-color: aqua;
-    margin: 15px;
     align-items: center;
     flex-direction: row;
 }
@@ -22,24 +20,22 @@
 }
 
 .cellContentStyle {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     height: @iconH;
     margin: @margin;
     justify-content: space-between;
 
-    .cellIntroStyle {
-
+    .cellMainContent {
+        display: flex;
+        flex-direction: column;
     }
 
-    .cellOptionStyle {
-        flex: 1;
+    .cellBottomIcon {
         display: flex;
-        flex-direction: row;
-    }
-
-    .optionStyle {
-        display: flex;
-        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
     }
 
 }

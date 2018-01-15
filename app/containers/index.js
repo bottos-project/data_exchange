@@ -1,8 +1,9 @@
 import React,{PureComponent} from 'react'
 import BTHeader from '../components/BTHeader'
 import BTMenu from '../components/BTMenu'
+import BTRowMenu from '../components/BTRowMenu'
 
-// import './styles.less'
+import './styles.less'
 
 export default class App extends PureComponent{
     constructor(props){
