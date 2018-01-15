@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import './style.less'
+import './styles.less'
 
 import {bindActionCreators} from 'redux'
 import * as headerActions from '../redux/actions/HeaderAction'

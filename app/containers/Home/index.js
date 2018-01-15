@@ -5,6 +5,8 @@ import BTHomeCell from './subviews/BTHomeCell'
 
 import BTMyTag from '../../components/BTMyTag'
 
+import BTList from '../../components/BTList'
+
 
 const listData = [];
 for (let i = 0; i < 5; i++) {
@@ -74,6 +76,7 @@ export default class BTHome extends PureComponent {
 
 
                 <div style={{padding:20}}>
+                <BTList/>
                     {/* <List
                         itemLayout="vertical"
                         size="large"
@@ -94,7 +97,7 @@ export default class BTHome extends PureComponent {
                         </List.Item>
                         )}
                     /> */}
-                    <ul className="listStyle">
+                    {/* <ul className="listStyle">
                         <li><BTHomeCell/></li>
                         <li><BTHomeCell/></li>
                         <li><BTHomeCell/></li>
@@ -119,7 +122,7 @@ export default class BTHome extends PureComponent {
                         <li><BTHomeCell/></li>
                         <li><BTHomeCell/></li>
                         <li><BTHomeCell/></li>
-                    </ul>
+                    </ul> */}
                 </div>
             </div>
         )
