@@ -12,7 +12,7 @@ const IconText = ({ type, text }) => (
     </span>
   );
 
-export default class BTListCell extends PureComponent{
+export default class BTShopListCell extends PureComponent{
     constructor(props){
         super(props)
     }
@@ -20,7 +20,7 @@ export default class BTListCell extends PureComponent{
     render(){
         let linkto = this.props.linkto || '/'
         return(
-            <div className="listCellStyle">
+            <div className="listCellStyle" style={{marginLeft:40}}>
                 <div className="ant-list-item-extra" style={{backgroundColor:'red'}}>
                     <img src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" alt="logo" width="272"/>
                 </div>
@@ -46,14 +46,6 @@ export default class BTListCell extends PureComponent{
 
                             <li>
                             <IconText type="message" text="2" />
-                            </li>
-
-                            <li>
-                                <Button type="primary" size="small">购买</Button>
-                            </li>
-
-                            <li>
-                                <Button type="danger" size="small">加入购物车</Button>
                             </li>
                         </ul>
                     </div>

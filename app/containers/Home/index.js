@@ -76,7 +76,7 @@ export default class BTHome extends PureComponent {
 
 
                 <div style={{padding:20}}>
-                <BTList/>
+                <BTList linkto='/assetdetail'/>
                     {/* <List
                         itemLayout="vertical"
                         size="large"

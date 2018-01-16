@@ -1,4 +1,7 @@
 import React,{PureComponent} from 'react'
+import BTDashbordChart from './subviews/BTDashbordChart'
+import BTDashbordTable from './subviews/BTDashbordTable'
+
 
 export default class BTDashbord extends PureComponent{
     constructor(props){
@@ -7,7 +10,12 @@ export default class BTDashbord extends PureComponent{
 
     render(){
         return(
-            <div>BTDashbord</div>
+            <div>
+                <BTDashbordChart/>
+                <div style={{padding:20}}>
+                <BTDashbordTable/>
+                </div>
+            </div>
         )
     }
 }
