@@ -1,0 +1,227 @@
+ul,li{
+  list-style:none;
+}
+.toggle{
+  span{
+    display: inline-block;
+    padding:5px 10px;
+    background:#00b1a9;
+    //border:1px solid red;
+    margin-bottom:10px;
+    margin-right:10px;
+    cursor:pointer;
+  }
+}
+.all{
+  overflow: hidden;
+}
+.wallet_all{
+  //width:40%;
+  float:left;
+  //margin-left:4%;
+  min-width: 600px;
+  .wallet{
+    min-width: 600px;
+  }
+}
+.wallet{
+  width:60%;
+  height:325px;
+  margin-left:2%;
+  background:#e6e6e6;
+  overflow:hidden;
+  header{
+    width:100%;
+    height:40px;
+    line-height: 40px;
+    font-size: 12px;
+    padding-left:15px;
+    color:#fff;
+    background:linear-gradient(to right,#1c1565 0%,#662e93 100%);
+    span{
+      float:right;
+      padding-right:15px;
+      font-size: 20px;
+      cursor:pointer;
+    }
+  }
+  .wallet_data{
+    width:100%;
+    overflow:hidden;
+    li{
+      display:flex;
+      height:30px;
+      line-height: 30px;
+      color: #333;
+      >span{
+        text-align:center;
+        box-sizing: border-box;
+      }
+      .account{
+        width:15%;
+        border-right:1px solid #eee
+      }
+      .address{
+        width:75%;
+        border-right:1px solid #eee
+      }
+      .total{
+        width:10%;
+      }
+    }
+    li:nth-child(odd){
+      background: #dedede;
+    }
+  }
+
+}
+.transfer{
+  width:60%;
+  min-width:600px;
+  padding-top:16px;
+  padding-bottom:14px;
+  header{
+    height: 40px;
+    text-align: center;
+    line-height: 40px;
+    color: #fff;
+    font-size: 16px;
+    background: linear-gradient(to right,#1c1565 0%,#662e93 100%);
+  }
+  .transfer-content{
+    //height: 261px;
+    background: #f2f2f2;
+    box-sizing: border-box;
+    padding-top: 29px;
+    padding-bottom: 29px;
+  }
+  .transfer-from{
+    margin-bottom: 14px;
+    overflow: hidden;
+    >span{
+      width:94px;
+      float:left;
+      text-align:right;
+      color:#808080;
+    }
+    .transfer-right{
+      height: 26px;
+      float:left;
+      margin-left:10px;
+      >select,input{
+        width:240px;
+        height:26px;
+        padding-left:12px;
+        border:1px solid #dedede
+
+      }
+      select{
+        width:180px;
+      }
+    }
+
+  }
+  .token-submit{
+    height:71px;
+    background:#e6e6e6;
+    //margin-top:24px;
+    display:flex;
+    align-items:center;
+    justify-content: center;
+    button{
+      height: 26px;
+      text-align: center;
+      line-height: 26px;
+      color: #fff;
+      cursor: pointer;
+      border: 0;
+      outline: none;
+      display: inline-block;
+    }
+    .add{
+      width:160px;
+      //margin-left:154px;
+      background:#3fa9f5;
+    }
+    .cancel{
+      background: #c1272d;
+      width: 68px;
+      margin-left: 16px;
+    }
+  }
+
+
+}
+.history{
+  width: 42%;
+  position:relative;
+  min-width:400px;
+  height: 627px;
+  float:left;
+  background: #f2f2f2;
+  margin-left: 2%;
+  font-size: 14px;
+  header{
+    width:100%;
+    box-sizing: border-box;
+    padding-left:20px;
+    height: 40px;
+    line-height: 40px;
+    color: #fff;
+    font-size: 16px;
+    background: linear-gradient(to right,#1c1565 0%,#662e93 100%);
+  }
+  .content{
+    padding-bottom:10px;
+    background: #e6e6e6;
+    padding-top:10px;
+    .exchange{
+      ovarflow:hidden;
+      height:30px;
+      span{
+        float:left;
+      }
+      .number{
+        width:80px;
+        text-align:right;
+        margin-right:20px;
+      }
+    }
+
+  }
+  .ul li:nth-child(odd){
+    background: #fff;
+  }
+  .ul li{
+    width:100%;
+    height:30px;
+    line-height: 30px;
+    overflow: hidden;
+    border-bottom:1px solid #d4cedd;
+    span{
+      float:left;
+      text-align: center;
+      padding:0 5px;
+      box-sizing: border-box;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      border-right:1px solid #ddd;
+    }
+    .one,.two{
+      width:35%;
+    }
+    .three{
+      width:20%;
+    }
+    .four{
+      width:10%;
+      border:0
+    }
+  }
+  .ant-pagination{
+    position: absolute;
+    bottom:10px;
+    left:20px;
+    margin:0 auto;
+  }
+}

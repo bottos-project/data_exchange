@@ -1,6 +1,7 @@
 import React,{PureComponent} from 'react'
 import BTList from '../../../components/BTList'
 
+
 export default class BTCollect extends PureComponent{
     constructor(props){
         super(props)
@@ -8,7 +9,9 @@ export default class BTCollect extends PureComponent{
 
     render(){
         return(
-            <div><BTList/></div>
+            <div>
+                <BTList/>
+            </div>
         )
     }
 }
