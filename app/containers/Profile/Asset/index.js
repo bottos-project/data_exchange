@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import { Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input, DatePicker,Cascader  } from 'antd';
+import { Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input,Cascader  } from 'antd';
 import moment from 'moment';
 import './styles.less';
 import BTList from '../../../components/BTList'
@@ -46,7 +46,6 @@ Action 2
 </Menu.Item>
 </Menu>
 );
-const RangePicker = DatePicker.RangePicker;
 
 
 const options = [{
@@ -75,28 +74,14 @@ const props = {
         status: 'done',
         reponse: 'Server Error 500', // custom error message to show
         url: 'http://www.baidu.com/xxx.png',
-    }, {
-        uid: 2,
-        name: 'yyy.png',
-        status: 'done',
-        url: 'http://www.baidu.com/yyy.png',
-    }, {
-        uid: 3,
-        name: 'zzz.png',
-        status: 'error',
-        reponse: 'Server Error 500', // custom error message to show
-        url: 'http://www.baidu.com/zzz.png',
-    }],
+    },],
 };
 
 function onChange(value) {
     console.log(value);
 }
 
-function onChange(dates, dateStrings) {
-    console.log('From: ', dates[0], ', to: ', dates[1]);
-    console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
-}
+
 function callback(key) {
     console.log(key);
 }
@@ -199,11 +184,13 @@ export default class BTAsset extends PureComponent{
                                 <span>RequirementID:</span>
                                 <Input placeholder="RequirementID" />
                             </div>
+                            <div className="Title">
+                                <span>Title:</span>
+                                <Input placeholder="Title" />
+                            </div>
                             <div className="price">
                                 <span>Expect Price:</span>
                                 <Input/>
-                                <span>-</span>
-                                <Input />
                                 <Icon type="pay-circle" style={{ fontSize: 16,margin:'5px' }}></Icon>
                             </div>
                             <div className="featureTag" >
@@ -212,13 +199,6 @@ export default class BTAsset extends PureComponent{
                                 <Input/>
                                 <Input/>
                                 <Icon type="plus-circle-o" style={{ fontSize: 16,margin:'5px' }}></Icon>
-                            </div>
-                            <div className="dateSelect">
-                                <span>Expire Time:</span>
-                                <RangePicker
-                                    ranges={{ Today: [moment(), moment()], 'This Month': [moment(), moment().endOf('month')] }}
-                                    onChange={onChange}
-                                />
                             </div>
                             <div className="dataAssetType">
                                 <span>Data Asset Type: </span>
@@ -232,9 +212,12 @@ export default class BTAsset extends PureComponent{
                         <div className="upLoad">
                             <Upload {...props}>
                                 <Button>
-                                    <Icon type="upload" /> Upload
+                                    <Icon type="upload" /> 本地资源
                                 </Button>
                             </Upload>
+                            <Button style={{marginTop:"20px"}}>
+                                <Icon type="upload" /> 数据库资源
+                            </Button>
                             <div className="submit">
                                 <Button type="submit">submit</Button>
                             </div>

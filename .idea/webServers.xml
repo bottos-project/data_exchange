@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="58c70a87-4b0f-4c76-b991-2e90425c975d" name="ftp" url="http://10.104.14.170">
+        <fileTransfer host="10.104.14.170" port="21" rootFolder="/home/bot">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
