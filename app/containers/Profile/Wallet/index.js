@@ -16,7 +16,7 @@ export default class BTWallet extends PureComponent{
         }
     }
 
-    test(){
+    test2(){
         
     }
 
