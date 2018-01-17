@@ -15,6 +15,11 @@ export default class BTWallet extends PureComponent{
             flag:true
         }
     }
+
+    test(){
+        
+    }
+
     callback(e){
         console.log(key);
     }
