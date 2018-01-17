@@ -1,3 +1,6 @@
 node_modules/
 build/
 npm-debug.log
+./git
+./idea
+./vscode
