@@ -5,7 +5,7 @@
       <paths name="ftp">
         <serverdata>
           <mappings>
-            <mapping deploy="/react_workspace/yuanjunliang" local="$PROJECT_DIR$" web="/react_workspace/yuanjunliang" />
+            <mapping deploy="/react_workspace/yuanjia" local="$PROJECT_DIR$" web="/react_workspace/yuanjia" />
           </mappings>
         </serverdata>
       </paths>

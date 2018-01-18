@@ -14,14 +14,15 @@ const columns = [
     { title: 'From', dataIndex: 'from', key: 'from' },
     { title: 'Action', dataIndex: '', key: 'x', render: () =>
             <div>
+                <a href="#">Cancel </a>
                 <a href="#">Agree </a>
-                <a href="#">reject</a>
+                <a href="#">Reject</a>
             </div>
 },
 ];
 
 const data = [
-    { key: 1, introduction:'i want to buy some Audios',state:'checking', bid:'200',count: 50, from: 'Tom', description: 'My name is John ,i want to buy some Audios' },
+    { key: 1, introduction:'i want to buy some Audios',state:'checked', bid:'200',count: 50, from: 'Tom', description: 'My name is John ,i want to buy some Audios' },
     { key: 2, introduction:'i want to buy some Videos',state:'checking',bid:'150',count: 50, from: 'Tom', description: 'My name is Jim i want to buy some Videos' },
     { key: 3, introduction:'i want to buy some Pictures',state:'checking',bid:'120',count: 50, from: 'Tom', description: 'My name is Joe i want to buy some Pictures' },
 ];
