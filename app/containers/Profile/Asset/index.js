@@ -29,12 +29,7 @@ function handleClick(event) {
 //     },
 // ];
 
-const data = [
-    { key: 1, introduction: 'Audio', count: 32, description: 'the cat is singing' },
-    { key: 2, introduction: 'Audio', count: 32, description: 'the cat is singing' },
-    { key: 3, introduction: 'Audio', count: 32, description: 'the cat is singing' },
 
-];
 
 const menu = (
     <Menu>
@@ -160,15 +155,23 @@ export default class BTAsset extends PureComponent{
     }
 
     render(){
-        const columns = [
-            { title: 'introduction', dataIndex: 'introduction', key: 'introduction' },
-            { title: 'count', dataIndex: 'count', key: 'count' },
+        const data = [
+            { key: 1, assetName:'catsSet', money:'100',fileName:'cats.zip', fileSize:'150MB', date:'2018-01-15' },
+            { key: 2, assetName:'dogsSet', money:'130',fileName:'dogs.zip', fileSize:'123MB', date:'2018-01-15' },
+            { key: 3, assetName:'pandasSet', money:'150',fileName:'pandas.zip', fileSize:'172MB', date:'2018-01-15' },
 
+        ];
+        const columns = [
+            { title: 'assetName', dataIndex: 'assetName', key: 'assetName' },
+            { title: 'money', dataIndex: 'money', key: 'money' },
+            { title: 'fileName', dataIndex: 'fileName', key: 'fileName' },
+            { title: 'fileSize', dataIndex: 'fileSize', key: 'fileSize' },
+            { title: 'date', dataIndex: 'date', key: 'date' },
             { title: 'Action', dataIndex: '', key: 'x', render: () =>
                     <ul>
-                        <a href="#" onClick={(e)=>this.handleClick(e)}>edit </a>
-                        <a href="#">Delete </a>
-                        <a href="#">publish</a>
+                        {/*<a href="#" onClick={(e)=>this.handleClick(e)}>edit </a>*/}
+                        <a href="#">DownLoad </a>
+                        <a href="#">Delete</a>
                     </ul>,
             },
         ];
@@ -214,15 +217,15 @@ export default class BTAsset extends PureComponent{
                                 <Button>
                                     <Icon type="upload" /> 本地资源
                                 </Button>
+                                <Button style={{marginLeft:"20px"}}>
+                                    <Icon type="upload" /> 数据库资源
+                                </Button>
                             </Upload>
-                            <Button style={{marginTop:"20px"}}>
-                                <Icon type="upload" /> 数据库资源
-                            </Button>
+
                             <div className="submit">
                                 <Button type="submit">submit</Button>
                             </div>
                         </div>
-
                     </TabPane>
                     <TabPane tab="资产详情页" key="2">
                         <Table
