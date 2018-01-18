@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import { Modal ,Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input, DatePicker,Cascader  } from 'antd';
+import { Select, Modal ,Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input, DatePicker,Cascader  } from 'antd';
 const RangePicker = DatePicker.RangePicker;
 import moment from 'moment';
 
@@ -24,76 +24,52 @@ const props = {
             console.log(file, fileList);
         }
     },
-    defaultFileList: [{
-        uid: 1,
-        name: 'xxx.png',
-        status: 'done',
-        reponse: 'Server Error 500', // custom error message to show
-        url: 'http://www.baidu.com/xxx.png',
-    }, {
-        uid: 2,
-        name: 'yyy.png',
-        status: 'done',
-        url: 'http://www.baidu.com/yyy.png',
-    }, {
-        uid: 3,
-        name: 'zzz.png',
-        status: 'error',
-        reponse: 'Server Error 500', // custom error message to show
-        url: 'http://www.baidu.com/zzz.png',
-    }],
+
 };
 
-const     onChange = (dates, dateStrings)=> {
+const onChange = (dates, dateStrings)=> {
     console.log('From: ', dates[0], ', to: ', dates[1]);
     console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+}
+
+const children = [];
+for (let i = 10; i < 36; i++) {
+    children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
+}
+
+function handleChange(value) {
+    console.log(`selected ${value}`);
 }
 
 export default class BTUploadAsset extends PureComponent{
     constructor(props){
         super(props)
-
-        this.state = {
-            isVisible :false
-        }
     }
 
-    handleCancel(){
-        this.setState({
-            isVisible: false,
-        });
-    }
 
     render(){
         return(
-            <Modal visible={this.state.isVisible}
-                   onCancel={()=>this.handleCancel()}
-            >
+            <div>
                 <div className="upLoadForm">
-                    <div className="ID">
-                        <span>RequirementID:</span>
-                        <Input placeholder="RequirementID" />
+                    <div className="Title">
+                        <span>Title:</span>
+                        <Input placeholder="Title" />
                     </div>
                     <div className="price">
                         <span>Expect Price:</span>
                         <Input/>
-                        <span>-</span>
-                        <Input />
                         <Icon type="pay-circle" style={{ fontSize: 16,margin:'5px' }}></Icon>
                     </div>
                     <div className="featureTag" >
                         <span>Feature Tag:</span>
-                        <Input/>
-                        <Input/>
-                        <Input/>
-                        <Icon type="plus-circle-o" style={{ fontSize: 16,margin:'5px' }}></Icon>
-                    </div>
-                    <div className="dateSelect">
-                        <span>Expire Time:</span>
-                        <RangePicker
-                            ranges={{ Today: [moment(), moment()], 'This Month': [moment(), moment().endOf('month')] }}
-                            onChange={onChange}
-                        />
+                        <Select
+                            mode="tags"
+                            style={{ width: '50%'}}
+                            placeholder="Tags Mode"
+                            onChange={handleChange}
+                        >
+                            {children}
+                        </Select>
                     </div>
                     <div className="dataAssetType">
                         <span>Data Asset Type: </span>
@@ -107,14 +83,17 @@ export default class BTUploadAsset extends PureComponent{
                 <div className="upLoad">
                     <Upload {...props}>
                         <Button>
-                            <Icon type="upload" /> Upload
+                            <Icon type="upload" /> 本地上传
+                        </Button>
+                        <Button>
+                            <Icon type="upload" /> 数据库上传
                         </Button>
                     </Upload>
                     <div className="submit">
                         <Button type="submit">submit</Button>
                     </div>
                 </div>
-            </Modal>
+            </div>
         )
     }
 }
