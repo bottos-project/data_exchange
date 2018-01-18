@@ -13,7 +13,7 @@ const data = [
 ];
 
 
-export default class BTDashbordChart extends PureComponent{
+export default class BTDashboardChart extends PureComponent{
     constructor(props){
         super(props)
     }

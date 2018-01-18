@@ -1,11 +1,52 @@
 @sideWidth:200px;
+@marginLeft:20px;
+@marginRight:20px;
 
-.headerStyle {
+.container {
+    display: flex;
     flex: 1;
-    // display: flex;
-    // justify-content: space-between;
-    background-color: white
 }
+
+.column {
+    flex-direction: column;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.marginLeft {
+    margin-left: @marginLeft;
+}
+
+.marginRight {
+    margin-right: @marginRight;
+}
+
+.header {
+    flex: 1;
+    height: 50px;
+}
+
+.content {
+    flex-direction: row;
+
+    .menu {
+        width: @sideWidth;
+    }
+
+    .contentbody {
+        margin-left: @marginLeft;
+        margin-right: @marginRight;
+    }
+}
+
+// .headerStyle {
+//     flex: 1;
+//     // display: flex;
+//     // justify-content: space-between;
+//     background-color: white
+// }
 
 // .logoStyle {
 //     display: flex;
@@ -23,20 +64,20 @@
 //     background-color: bisque
 // }
 
-.categoryStyle {
-    display: flex;
-    flex: 1;
-    height: 850px;
-    flex-direction: row;
-}
+// .categoryStyle {
+//     display: flex;
+//     flex: 1;
+//     height: 850px;
+//     flex-direction: row;
+// }
 
-.categorySelectStyle {
-    width: @sideWidth;
-    background-color: aqua
-}
+// .categorySelectStyle {
+//     width: @sideWidth;
+//     background-color: aqua
+// }
 
-.cardListStyle {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap
-}
+// .cardListStyle {
+//     display: flex;
+//     flex-direction: row;
+//     flex-wrap: wrap
+// }

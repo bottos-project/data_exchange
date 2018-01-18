@@ -16,8 +16,8 @@ export default class BTList extends PureComponent{
 
     render(){
         return(
-            <div>
-                <ul style={{listStyle:'none'}}>
+            <div className="listContent">
+                <ul className="list">
                     <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
                     <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
                     <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>

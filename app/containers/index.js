@@ -12,15 +12,15 @@ export default class App extends PureComponent{
 
     render(){
         return(
-            <div className="container">
-               <div className="headerStyle">
+            <div className="container column">
+               <div className="header">
                     <BTHeader/>
                </div>
-               <div className="contentStyle">
-                   <div className="menuStyle">
+               <div className="container content">
+                   <div className="menu">
                     <BTMenu/>
                    </div>
-                   <div className="content">
+                   <div className="container contentbody">
                     {this.props.children}
                    </div>
                </div>

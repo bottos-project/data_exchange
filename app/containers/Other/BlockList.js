@@ -1,6 +1,6 @@
 import React,{PureComponent} from 'react'
 
-import BTDashbordChart from '../Dashbord/subviews/BTDashbordChart'
+import BTDashboardChart from '../Dashboard/subviews/BTDashboardChart'
 
 export default class BTBlockList extends PureComponent{
     constructor(props){
@@ -9,8 +9,8 @@ export default class BTBlockList extends PureComponent{
 
     render(){
         return(
-            <div>
-                <BTDashbordChart/>
+            <div className="container">
+                <BTDashboardChart/>
             </div>
         )
     }

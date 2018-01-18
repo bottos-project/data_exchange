@@ -137,7 +137,7 @@ function NestedTable() {
         />
     );
     }
-export default class BTAsset extends PureComponent{
+export default class BTProfileAsset extends PureComponent{
     constructor(props){
         super(props)
 

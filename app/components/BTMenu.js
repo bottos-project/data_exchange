@@ -44,26 +44,38 @@ export default class BTMenu extends PureComponent{
                 >
                     <Menu.Item key="10">
                         {/* <Icon type="pie-chart" /> */}
-                        <span><MenuLink style={{color:'white'}} to="/dashbord">Dashbord</MenuLink></span>
+                        <span><MenuLink style={{color:'white'}} to="/dashboard">Dashboard</MenuLink></span>
                     </Menu.Item>
-                    <Menu.Item key="11">
+                    <Menu.Item key="20">
                         {/* <Icon type="pie-chart" /> */}
                         <span><MenuLink style={{color:'white'}} to="/other/blocklist">区块浏览</MenuLink></span>
                     </Menu.Item>
-                    <Menu.Item key="12">
+                    <Menu.Item key="30">
                         {/* <Icon type="pie-chart" /> */}
-                        <span><MenuLink style={{color:'white'}} to="/">需求资产</MenuLink></span>
+                        <span><MenuLink style={{color:'white'}} to="/demand">需求</MenuLink></span>
                     </Menu.Item>
-                    <Menu.Item key="13">
+                    <Menu.Item key="40">
+                        {/* <Icon type="pie-chart" /> */}
+                        <span><MenuLink style={{color:'white'}} to="/assets">资产</MenuLink></span>
+                    </Menu.Item>
+                    <Menu.Item key="50">
                         {/* <Icon type="pie-chart" /> */}
                         <span><MenuLink style={{color:'white'}} to="/profile/wallet">钱包管理</MenuLink></span>
                     </Menu.Item>
-                    <SubMenu key="sub1" title={<span><Icon type="mail" /><span>个人中心</span></span>}>
-                        <Menu.Item key="8"><MenuLink to="/profile/asset">资产管理</MenuLink></Menu.Item>
+                    <Menu.Item key="60">
+                        {/* <Icon type="pie-chart" /> */}
+                        <span><MenuLink style={{color:'white'}} to="/profile/check">审核</MenuLink></span>
+                    </Menu.Item>
+                    <Menu.Item key="70">
+                        {/* <Icon type="pie-chart" /> */}
+                        <span><MenuLink style={{color:'white'}} to="/profile/history">交易历史</MenuLink></span>
+                    </Menu.Item>
+                    {/* <SubMenu key="sub1" title={<span><Icon type="mail" /><span>个人中心</span></span>}> */}
+                        {/* <Menu.Item key="8"><MenuLink to="/profile/asset">资产管理</MenuLink></Menu.Item>
                         <Menu.Item key="9"><MenuLink to="/profile/shopcart">购物车</MenuLink></Menu.Item>
                         <Menu.Item key="5"><MenuLink to="/profile/collect">收藏</MenuLink></Menu.Item>
-                        <Menu.Item key="7"><MenuLink to="/profile/check">审核</MenuLink></Menu.Item>
-                    </SubMenu>
+                        <Menu.Item key="7"><MenuLink to="/profile/check">审核</MenuLink></Menu.Item> */}
+                    {/* </SubMenu> */}
                 </Menu>
             </div>
         )

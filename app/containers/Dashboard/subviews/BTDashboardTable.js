@@ -27,7 +27,7 @@ const columns = [{
     age: 32,
     address: 'Sidney No. 1 Lake Park',
   }, {
-    key: '4',
+    key: '9',
     name: 'Joe Black',
     age: 32,
     address: 'Sidney No. 1 Lake Park',
@@ -62,7 +62,7 @@ const columns = [{
 
 
 
-export default class BTDashbordTable extends PureComponent{
+export default class BTDashboardTable extends PureComponent{
     constructor(props){
         super(props)
     }

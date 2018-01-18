@@ -34,6 +34,22 @@ const IconText = ({ type, text }) => (
 );
 
 
+const BTHeaderSearch = () => (
+    <div className="searchViewStyle">
+        <BTMyTag>全部</BTMyTag>
+        <BTMyTag>数据挖掘</BTMyTag>
+        <BTMyTag>图像</BTMyTag>
+        <BTMyTag>数据清洗</BTMyTag>
+
+        <div></div>
+        <p></p>
+        <BTMyTag>全部</BTMyTag>
+        <BTMyTag>视频</BTMyTag>
+        <BTMyTag>音频</BTMyTag>
+        <BTMyTag>图片</BTMyTag>
+    </div>
+)
+
 
 export default class BTHome extends PureComponent {
     constructor(props) {
@@ -53,76 +69,9 @@ export default class BTHome extends PureComponent {
         const { mode } = this.state;
         return (
             <div className="container">
-            <div className="headerTagStyle">
-                <Radio.Group onChange={(e)=>this.handleModeChange(e)} value={mode} style={{ marginBottom: 8}}>
-                    <Radio.Button value="top">资产需求</Radio.Button>
-                    <Radio.Button value="left">数据资产</Radio.Button>
-                </Radio.Group>
-            </div>
-
-                <div className="searchViewStyle">
-                    <BTMyTag>全部</BTMyTag>
-                    <BTMyTag>数据挖掘</BTMyTag>
-                    <BTMyTag>图像</BTMyTag>
-                    <BTMyTag>数据清洗</BTMyTag>
-
-                    <div></div>
-                    <p></p>
-                    <BTMyTag>全部</BTMyTag>
-                    <BTMyTag>视频</BTMyTag>
-                    <BTMyTag>音频</BTMyTag>
-                    <BTMyTag>图片</BTMyTag>
-                </div>
-
-
-                <div style={{padding:20}}>
-                <BTList linkto='/assetdetail'/>
-                    {/* <List
-                        itemLayout="vertical"
-                        size="large"
-                        pagination={pagination}
-                        dataSource={listData}
-                        renderItem={item => (
-                        <List.Item
-                            key={item.title}
-                            actions={[<IconText type="star-o" text="156" />, <IconText type="like-o" text="156" />, <IconText type="message" text="2" />]}
-                            extra={<img width={272} alt="logo" src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />}
-                        >
-                            <List.Item.Meta
-                            avatar={<Avatar src={item.avatar} />}
-                            title={<a href={item.href}>{item.title}</a>}
-                            description={item.description}
-                            />
-                            {item.content}
-                        </List.Item>
-                        )}
-                    /> */}
-                    {/* <ul className="listStyle">
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                        <li><BTHomeCell/></li>
-                    </ul> */}
+                <BTHeaderSearch/>
+                <div className="homeList">
+                    <BTList linkto='/assetdetail'/>
                 </div>
             </div>
         )
