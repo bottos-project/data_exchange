@@ -35,7 +35,7 @@ export default class RouterMap extends PureComponent{
                     <IndexRoute component={BTDashboard}/>
                     <Route path="/demand" component={BTDemand}/>
                     <Route path="/demand/detail" component={BTDemandDetail}/>
-                    
+
                     <Route path="/assets" component={BTAssets}/>
                     <Route path="/assets/detail" component={BTAssetDetail}/>
                     <Route path="/dashbord" component={BTDashboard}/>
