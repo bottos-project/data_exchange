@@ -14,7 +14,7 @@ export default class Transfer extends PureComponent{
                         <span>From</span>
                         <div className="transfer-right">
                             <select name="" id=""></select>
-                            <span style={{paddingLeft}}>0x03f2b4d813cf2813813cf2cf2d97</span>
+                            <span style={{paddingLeft}}>0x479973e3c24e1D5368868e69e23d1EsafqWd</span>
                         </div>
                     </div>
                     <div className="transfer-from">
