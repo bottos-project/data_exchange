@@ -16,6 +16,10 @@ function handleChange(value) {
 export default class BTAccount extends PureComponent{
     constructor(props){
         super(props)
+
+        // this.state = {
+        //     address:''
+        // }
     }
 
     render(){
@@ -26,7 +30,7 @@ export default class BTAccount extends PureComponent{
                         <div className="personalInformation">
                             <div className="UserName">
                                 <span>UserName:</span>
-                                <Input style={{width:"80px",height:"20px"}} value="Jack" />
+                                <Input style={{width:"80px",height:"20px"}} defaultValue="Jack" />
                                 <Button>modify</Button>
                             </div>
                             <div className="realName">
@@ -44,27 +48,29 @@ export default class BTAccount extends PureComponent{
                             </div>
                             <div className="phoneNumber">
                                 <span>phoneNumber:</span>
-                                <Input style={{width:"120px",height:"20px"}} value="13761234905" />
+                                <Input style={{width:"120px",height:"20px"}} defaultValue="13761234905" />
                                 <Button>modify</Button>
                             </div>
                             <div className="mailBox">
                                 <span>mailBox:</span>
-                                <Input style={{width:"160px",height:"20px"}} value="cnyuanjia@gmail.com" />
+                                <Input style={{width:"160px",height:"20px"}} defaultValue="cnyuanjia@gmail.com" />
                                 <Button>modify</Button>
                             </div>
                             <div className="address">
                                 <span>address:</span>
-                                <Input style={{width:"160px",height:"20px"}} value="" />
+                                <Input style={{width:"160px",height:"20px"}} defaultValue="" />
                                 <Button>modify</Button>
                             </div>
                             <div className="submit" style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
                                 <Button>submit</Button>
                             </div>
                         </div>
+                    </TabPane>
+                    <TabPane tab="公司资料" key="2">
                         <div className="enterpriseInformation">
                             <div className="UserName">
                                 <span>UserName:</span>
-                                <Input style={{width:"80px",height:"20px"}} value="Jack" />
+                                <Input style={{width:"80px",height:"20px"}} defaultValue="Jack" />
                                 <Button>modify</Button>
                             </div>
                             <div className="enterpriseName">
@@ -82,17 +88,17 @@ export default class BTAccount extends PureComponent{
                             </div>
                             <div className="phoneNumber">
                                 <span>enterprisePhoneNumber:</span>
-                                <Input style={{width:"120px",height:"20px"}} value="888-888-888" />
+                                <Input style={{width:"120px",height:"20px"}} defaultValue="888-888-888" />
                                 <Button>modify</Button>
                             </div>
                             <div className="mailBox">
                                 <span>enterpriseMailBox:</span>
-                                <Input style={{width:"160px",height:"20px"}} value="cn@gmail.com" />
+                                <Input style={{width:"160px",height:"20px"}} defaultValue="cn@gmail.com" />
                                 <Button>modify</Button>
                             </div>
                             <div className="address">
                                 <span>enterpriseAddress:</span>
-                                <Input style={{width:"160px",height:"20px"}} value="" />
+                                {<Input style={{width:"160px",height:"20px"}} defaultValue="google" /*onChange={(e)=>this.setState({address:e.target.value})}*/ />}
                                 <Button>modify</Button>
                             </div>
                             <div className="code">
