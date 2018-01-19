@@ -101,8 +101,10 @@ export default class BTShopCart extends PureComponent{
         onSelection: this.onSelection,
         };
         return (
-            <div style={{padding:20}}>
-                <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+            <div className="container column">
+                <div>
+                    <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+                </div>
                 <div>
                     <Button type="primary">结算</Button>
                 </div>
@@ -111,24 +113,4 @@ export default class BTShopCart extends PureComponent{
     }
 }
 
-
-const test = ()=>{
-    // <div style={{padding:20}}>
-            //     <div>
-            //     <Checkbox.Group style={{ width: '100%' }} onChange={(e)=>this.onChange(e)}>
-            //         <Col>
-            //         <Row span={8}><Checkbox value="A"><span><BTShopListCell/></span></Checkbox></Row>
-            //         <Row span={8}><Checkbox value="B"><BTShopListCell/></Checkbox></Row>
-            //         <Row span={8}><Checkbox value="C"><BTShopListCell/></Checkbox></Row>
-            //         <Row span={8}><Checkbox value="D"><BTShopListCell/></Checkbox></Row>
-            //         <Row span={8}><Checkbox value="E"><BTShopListCell/></Checkbox></Row>
-            //         </Col>
-            //     </Checkbox.Group>
-            //     </div>
-
-            //     <div>
-            //         <Button type="primary">结算</Button>
-            //     </div>
-            // </div>
-}
 

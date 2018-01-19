@@ -15,7 +15,7 @@ import BTHome from '../containers'
 import BTCollect from '../containers/Profile/Collect'
 import BTCheck from '../containers/Profile/Check'
 import BTProfileAsset from '../containers/Profile/Asset'
-import BTAccount from '../containers/Profile/Account'
+// import BTAccount from '../containers/Profile/Account'
 import BTWallet from '../containers/Profile/Wallet'
 import BTHistory from '../containers/Profile/History'
 import BTShopCart from '../containers/Profile/ShopCart'
@@ -42,7 +42,7 @@ export default class RouterMap extends PureComponent{
 
                     <Route path="/other/blocklist" component={BTBlockList}/>
 
-                    <Route path="/profile/account" component={BTAccount}/>
+                    {/* <Route path="/profile/account" component={BTAccount}/> */}
                     <Route path="/profile/wallet" component={BTWallet}/>
                     <Route path="/profile/history" component={BTHistory}/>
                     <Route path="/profile/asset" component={BTProfileAsset}/>

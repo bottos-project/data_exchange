@@ -1,5 +1,6 @@
 import React,{PureComponent} from 'react'
 import { Carousel,Button,Tag } from 'antd';
+import BTAssetList from '../../../components/BTAssetList'
 
 import './styles.less'
 
@@ -8,9 +9,17 @@ export default class BTDemanDetail extends PureComponent{
         super(props)
     }
 
+    commitAsset(){
+        this.assetListModal.setState({
+            visible:true
+        })
+    }
+
     render(){
         return(
             <div>
+
+                <BTAssetList ref={(ref)=>this.assetListModal = ref}/>
             <div className="detailContentStyle">
                 {/* <div style={{width:300,height:300}}>
                     <Carousel autoplay>
@@ -35,7 +44,7 @@ export default class BTDemanDetail extends PureComponent{
                     <div className="detailOptions">
                         <ul>
                             {/* <li><Button type="primary" className="buyButton">购买</Button></li> */}
-                            <li><Button type="primary">提交样例</Button></li>
+                            <li><Button type="primary" onClick={()=>this.commitAsset()}>提交样例</Button></li>
                         </ul>
                     </div>
                     

@@ -8,6 +8,8 @@ import {connect} from 'react-redux'
 import {Button,Modal,Menu, Dropdown, Icon} from 'antd'
 import BTRowMenu from '../components/BTRowMenu'
 
+import BTPublishDemand from '../containers/Demand/subviews/PublishDemand'
+
 const menu = (
     <Menu>
         <Menu.Item key="0">
@@ -66,12 +68,17 @@ class BTHeader extends PureComponent{
     }
 
     handlePublishDemand(){
-        alert('发布需求')
+        this.publishModal.setState({
+            visible:true
+        })
     }
 
     render(){
         return(
             <div className="container header">
+                <BTPublishDemand ref={(ref)=>this.publishModal = ref}/>
+
+
                 <Modal
                     title="Basic Modal"
                     visible={this.props.headerState.isShow}
@@ -87,8 +94,8 @@ class BTHeader extends PureComponent{
                     <div className="logoStyle">BOTTOS</div>
                 </div>
                 <div className="loginBtnStyle">
-                    <Button>发布需求</Button>
-                    <div className="marginLeft marginRight"><Icon type="shopping-cart" style={{fontSize:30}}/></div>
+                    <Button onClick={()=>this.handlePublishDemand()}>发布需求</Button>
+                    <div className="marginLeft marginRight"><Link to="/profile/shopcart"><Icon type="shopping-cart" style={{fontSize:30,color:'black'}}/></Link></div>
                     <div>
                         <Dropdown overlay={menu}>
                             <img className="userIcon" 
