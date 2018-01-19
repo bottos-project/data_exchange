@@ -12,9 +12,9 @@ export default class BTWallet extends PureComponent{
     render(){
 
         return (
-            <div>
+            <divz>
                 <Walletall />
-            </div>
+            </divz>
         )
 
     }
