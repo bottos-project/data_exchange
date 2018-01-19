@@ -8,12 +8,31 @@ import {connect} from 'react-redux'
 import {Button,Modal,Menu, Dropdown, Icon} from 'antd'
 import BTRowMenu from '../components/BTRowMenu'
 
+class MenuLink extends PureComponent{
+    constructor(props){
+        super(props)
+    }
+
+    render(){
+        return(
+            <Link style={{color:'white'}} {...this.props}/>
+        )
+    }
+}
+
+
 import BTPublishDemand from '../containers/Demand/subviews/PublishDemand'
 
 const menu = (
     <Menu>
         <Menu.Item key="0">
             <Link to="/profile/asset">资产</Link>
+        </Menu.Item>
+        <Menu.Item key="50">
+            <Link to="/profile/wallet">钱包</Link>
+        </Menu.Item>
+        <Menu.Item key="60">
+            <Link to="/profile/check">审核</Link>
         </Menu.Item>
         <Menu.Item key="1">
             <Link to="/profile/collect">收藏</Link>

@@ -34,7 +34,7 @@ export default class BTMenu extends PureComponent{
 
     render(){
         return(
-            <div>
+            <div style={{backgroundColor:'black',height:800}}>
                 <Menu
                     defaultSelectedKeys={['1']}
                     defaultOpenKeys={['sub1']}
@@ -44,31 +44,28 @@ export default class BTMenu extends PureComponent{
                 >
                     <Menu.Item key="10">
                         {/* <Icon type="pie-chart" /> */}
-                        <span><MenuLink style={{color:'white'}} to="/">Dashboard</MenuLink></span>
+                        <MenuLink style={{color:'white'}} to="/">Dashboard</MenuLink>
                     </Menu.Item>
                     <Menu.Item key="20">
                         {/* <Icon type="pie-chart" /> */}
-                        <span><MenuLink style={{color:'white'}} to="/other/blocklist">区块浏览</MenuLink></span>
+                        <MenuLink style={{color:'white'}} to="/other/blocklist">区块浏览</MenuLink>
                     </Menu.Item>
                     <Menu.Item key="30">
                         {/* <Icon type="pie-chart" /> */}
-                        <span><MenuLink style={{color:'white'}} to="/demand">需求</MenuLink></span>
+                        <MenuLink style={{color:'white'}} to="/demand">需求</MenuLink>
                     </Menu.Item>
                     <Menu.Item key="40">
-                        {/* <Icon type="pie-chart" /> */}
-                        <span><MenuLink style={{color:'white'}} to="/assets">资产</MenuLink></span>
+                        <MenuLink style={{color:'white'}} to="/assets">资产</MenuLink>
                     </Menu.Item>
-                    <Menu.Item key="50">
-                        {/* <Icon type="pie-chart" /> */}
-                        <span><MenuLink style={{color:'white'}} to="/profile/wallet">钱包管理</MenuLink></span>
-                    </Menu.Item>
-                    <Menu.Item key="60">
-                        {/* <Icon type="pie-chart" /> */}
-                        <span><MenuLink style={{color:'white'}} to="/profile/check">审核</MenuLink></span>
-                    </Menu.Item>
+                    {/* <Menu.Item key="50">
+                        <MenuLink style={{color:'white'}} to="/profile/wallet">钱包管理</MenuLink>
+                    </Menu.Item> */}
+                    {/* <Menu.Item key="60">
+                        <MenuLink style={{color:'white'}} to="/profile/check">审核</MenuLink>
+                    </Menu.Item> */}
                     <Menu.Item key="70">
                         {/* <Icon type="pie-chart" /> */}
-                        <span><MenuLink style={{color:'white'}} to="/profile/history">交易历史</MenuLink></span>
+                        <MenuLink style={{color:'white'}} to="/profile/history">交易历史</MenuLink>
                     </Menu.Item>
                     {/* <SubMenu key="sub1" title={<span><Icon type="mail" /><span>个人中心</span></span>}> */}
                         {/* <Menu.Item key="8"><MenuLink to="/profile/asset">资产管理</MenuLink></Menu.Item>

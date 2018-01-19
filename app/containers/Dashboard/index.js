@@ -2,8 +2,6 @@ import React,{PureComponent} from 'react'
 import BTDashboardChart from './subviews/BTDashboardChart'
 import BTDashboardTable from './subviews/BTDashboardTable'
 
-import biticon from '../../static/img/biticon.png'
-
 
 export default class BTDashboard extends PureComponent{
     constructor(props){

@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "server": "NODE_ENV=dev webpack-dev-server --progress --colors --port 3000 --host 10.104.14.170",
-    "start": "NODE_ENV=dev webpack-dev-server --progress --colors --port 3001 --host 10.104.14.170",
+    "start": "NODE_ENV=dev webpack-dev-server --progress --colors --port 3000 --host 10.104.10.61",
     "build": "rm -rf ./build && NODE_ENV=production webpack --config ./webpack.production.config.js --progress --colors"
   },
   "author": "",
