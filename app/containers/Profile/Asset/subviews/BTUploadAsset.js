@@ -1,7 +1,11 @@
 import React,{PureComponent} from 'react'
-import { Select, Modal ,Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input, DatePicker,Cascader  } from 'antd';
+import { Radio,Select, Modal ,Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input, DatePicker,Cascader  } from 'antd';
 const RangePicker = DatePicker.RangePicker;
-import moment from 'moment';
+const { TextArea } = Input;
+const RadioGroup = Radio.Group;
+
+
+
 
 
 const options = [{
@@ -44,12 +48,21 @@ function handleChange(value) {
 export default class BTUploadAsset extends PureComponent{
     constructor(props){
         super(props)
+
+        this.state = {
+            value:1
+        }
+    }
+
+    onChange(e){
+        this.setState({
+            value:e.target.value
+        })
     }
 
 
     render(){
         return(
-            <div>
                 <div className="upLoadForm">
                     <div className="Title">
                         <span>Title:</span>
@@ -58,7 +71,6 @@ export default class BTUploadAsset extends PureComponent{
                     <div className="price">
                         <span>Expect Price:</span>
                         <Input/>
-                        <Icon type="pay-circle" style={{ fontSize: 16,margin:'5px' }}></Icon>
                     </div>
                     <div className="featureTag" >
                         <span>Feature Tag:</span>
@@ -75,18 +87,38 @@ export default class BTUploadAsset extends PureComponent{
                         <span>Data Asset Type: </span>
                         <Cascader options={options} onChange={onChange} placeholder="Please select" />
                     </div>
-                    <div className="description">
-                        <span>Description: </span>
-                        <textarea></textarea>
+                    <div className="OriginPicture">
+                        <span style={{marginRight:"5px"}}>choose the files' type:</span>
+                        <RadioGroup onChange={(e)=>this.onChange(e)}>
+                            <Radio value={1} name={7}>
+                                <span>picture</span>
+                                <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2923044583,1199382580&fm=27&gp=0.jpg"/>
+                            </Radio>
+                            <Radio value={2} name={7}>
+                                <span>video</span>
+                                <img style={{width:"25px",height:"25px",margin:"5px"}} src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1516356357863&di=465aa41cb29668df4bec2c8336c62ab7&imgtype=0&src=http%3A%2F%2Fqstatic.zuimeia.com%2Fimg%2Ficons%2Fcld%2F2014091823070062554_318x318.png"/>
+                            </Radio>
+                            <Radio value={3} name={7}>
+                                <span>music</span>
+                                <img style={{width:"80px",height:"60px",marginTop:"10px"}} src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1516356702691&di=a8fe4add2ce9f1b04bfa8ed20e524102&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F015c9d5542c6b50000019ae92982a8.jpg"/>
+                            </Radio>
+                        </RadioGroup>
                     </div>
-                </div>
+                    <div className="description">
+                        <div>
+                            <span>Description: </span>
+                        </div>
+                        <div className="textarea">
+                            <TextArea rows={4} />
+                        </div>
+                    </div>
                 <div className="upLoad">
                     <Upload {...props}>
                         <Button>
                             <Icon type="upload" /> 本地上传
                         </Button>
                         <Button>
-                            <Icon type="upload" /> 数据库上传
+                            <Icon type="upload" /> 资源库筛选
                         </Button>
                     </Upload>
                     <div className="submit">
@@ -94,6 +126,7 @@ export default class BTUploadAsset extends PureComponent{
                     </div>
                 </div>
             </div>
+
         )
     }
 }

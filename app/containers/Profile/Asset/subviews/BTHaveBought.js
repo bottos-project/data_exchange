@@ -1,8 +1,8 @@
 import React,{PureComponent} from 'react'
-import { Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input,Cascader  } from 'antd';
+import { Table, } from 'antd';
 
 const data = [];
-for (let i = 0; i < 5; ++i) {
+for (let i = 0; i < 7; ++i) {
     data.push({
         key: i,
         price: '150',
