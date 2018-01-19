@@ -44,7 +44,7 @@ export default class BTMenu extends PureComponent{
                 >
                     <Menu.Item key="10">
                         {/* <Icon type="pie-chart" /> */}
-                        <span><MenuLink style={{color:'white'}} to="/dashboard">Dashboard</MenuLink></span>
+                        <span><MenuLink style={{color:'white'}} to="/">Dashboard</MenuLink></span>
                     </Menu.Item>
                     <Menu.Item key="20">
                         {/* <Icon type="pie-chart" /> */}
