@@ -71,7 +71,6 @@ export default class BTUploadAsset extends PureComponent{
                     <div className="price">
                         <span>Expect Price:</span>
                         <Input/>
-                        <img src='./static/img/bottosMoney.png' />
                     </div>
                     <div className="featureTag" >
                         <span>Feature Tag:</span>
