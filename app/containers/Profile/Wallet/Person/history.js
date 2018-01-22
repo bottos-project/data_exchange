@@ -1,6 +1,7 @@
 import React,{PureComponent} from 'react'
 import { Pagination } from 'antd';
 import {Table} from 'antd'
+import {Icon} from 'antd'
 const list=[{
     'id':1,
     'exhash':'0xb084f732047fe39a2efc610cc9db603f88c7c81fdb45c67e40685928ed150cc7',
@@ -89,10 +90,10 @@ export default class History extends PureComponent{
                 <ul className='ul' style={{height:'210px',overflow:'hidden'}}>
                     <li style={{background:'#00b1a9'}}>
                         <span className='exhash'>交易号</span>
-                        <span className='in_out'>进出</span>
                         <span className='age'>时间</span>
                         <span className='coin'>金额</span>
                         <span className='from'>From</span>
+                        <span className='in_out'>&nbsp;</span>
                         <span className='to'>To</span>
                         {/*<span className='account'>账户名称</span>*/}
                         <span className="account_address">账户详细地址</span>
@@ -105,10 +106,12 @@ export default class History extends PureComponent{
                             return (
                                 <li key={data.id} onClick={()=>this.handleOver()}>
                                     <span className="exhash">{data.exhash}</span>
-                                    <span className='in_out'>{data.in_out}</span>
                                     <span className='age'>{date1}</span>
                                     <span className='coin'>{data.coin}</span>
                                     <span className='from'>{data.from}</span>
+                                    <span className='in_out'>
+                                        <Icon type="arrow-right" style={{ fontSize: 16, color: '#00b1a9' }} />
+                                    </span>
                                     <span className='to'>{data.to}</span>
                                     {/*<span className='account'>{data.account}</span>*/}
                                     <span className='account_address'>{data.account_address}</span>
@@ -139,7 +142,7 @@ export default class History extends PureComponent{
                         <span style={{paddingLeft:20}}>金额:&nbsp;&nbsp;</span>
                         <span style={{color:'red',fontSize:14,paddingRight:10}}>20</span>
                         <span>转入</span>
-                        <span className='number'>账户详细地址&nbsp;:</span>
+                        {/*<span className='number'>账户详细地址&nbsp;:</span>*/}
                     </div>
                 </div>
 
