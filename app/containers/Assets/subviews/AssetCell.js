@@ -24,14 +24,18 @@ export default class BTAssetCell extends PureComponent{
                     <img src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" alt="logo" width="272"/>
                 </div>
                 <div className="cellContentStyle">
-                    <div className="cellMainContent">
+                    <div>
                         <h4><Link to={linkto}>年轻人表情图标</Link></h4>
                         <div className="cellItemContent">
-                            <div><span>发布人:</span>John</div>
-                            <div className="cellPriceContent">价格:300</div>
+                            <span><i>发布人:</i>John</span>
+                            <span><i>分类:</i><Tag>数据清洗</Tag></span>
+                            <span className="price"><i>价格:</i>
+                                300
+                                <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,marginLeft:5}} alt=""/>
+                            </span>
                         </div>
-                        <div><span>分类</span><Tag>数据清洗</Tag></div>
-                        <div>
+                        
+                        <div style={{marginTop:10}}>
                             <Tag color="cyan">数据清洗</Tag>
                             <Tag color="cyan">挖掘</Tag>
                             <Tag color="cyan">表情</Tag>

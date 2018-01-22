@@ -98,7 +98,9 @@ class BTHeader extends PureComponent{
     }
 
     handlePublishAsset(){
-
+        this.publishAssetModal.setState({
+            visible:true
+        })
     }
 
     render(){
@@ -106,7 +108,7 @@ class BTHeader extends PureComponent{
             <div className="container header">
                 <BTPublishDemand ref={(ref)=>this.publishModal = ref}/>
 
-                {/* <BTPublishAssetModal/> */}
+                <BTPublishAssetModal ref={(ref)=>this.publishAssetModal = ref}/>
 
                 <Modal
                     title="Basic Modal"
