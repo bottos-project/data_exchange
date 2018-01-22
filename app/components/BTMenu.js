@@ -67,12 +67,13 @@ export default class BTMenu extends PureComponent{
                         {/* <Icon type="pie-chart" /> */}
                         <MenuLink style={{color:'white'}} to="/profile/history">交易历史</MenuLink>
                     </Menu.Item>
-                    {/* <SubMenu key="sub1" title={<span><Icon type="mail" /><span>个人中心</span></span>}> */}
+                    <SubMenu key="sub1" title={<span><Icon type="mail" /><span>个人中心</span></span>}>
                         {/* <Menu.Item key="8"><MenuLink to="/profile/asset">资产管理</MenuLink></Menu.Item>
                         <Menu.Item key="9"><MenuLink to="/profile/shopcart">购物车</MenuLink></Menu.Item>
-                        <Menu.Item key="5"><MenuLink to="/profile/collect">收藏</MenuLink></Menu.Item>
-                        <Menu.Item key="7"><MenuLink to="/profile/check">审核</MenuLink></Menu.Item> */}
-                    {/* </SubMenu> */}
+                        <Menu.Item key="5"><MenuLink to="/profile/collect">收藏</MenuLink></Menu.Item> */}
+                        <Menu.Item key="sub1"><MenuLink to="/profile/check">审核</MenuLink></Menu.Item>
+                        <Menu.Item key="sub2"><MenuLink to="/profile/wallet">钱包</MenuLink></Menu.Item>
+                    </SubMenu>
                 </Menu>
             </div>
         )
