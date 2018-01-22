@@ -46,10 +46,6 @@ export default class BTMenu extends PureComponent{
                         {/* <Icon type="pie-chart" /> */}
                         <MenuLink style={{color:'white'}} to="/">Dashboard</MenuLink>
                     </Menu.Item>
-                    <Menu.Item key="20">
-                        {/* <Icon type="pie-chart" /> */}
-                        <MenuLink style={{color:'white'}} to="/other/blocklist">区块浏览</MenuLink>
-                    </Menu.Item>
                     <Menu.Item key="30">
                         {/* <Icon type="pie-chart" /> */}
                         <MenuLink style={{color:'white'}} to="/demand">需求</MenuLink>
@@ -67,6 +63,10 @@ export default class BTMenu extends PureComponent{
                         {/* <Icon type="pie-chart" /> */}
                         <MenuLink style={{color:'white'}} to="/profile/history">交易历史</MenuLink>
                     </Menu.Item>
+                    <Menu.Item key="20">
+                        {/* <Icon type="pie-chart" /> */}
+                        <MenuLink style={{color:'white'}} to="/other/blocklist">区块浏览</MenuLink>
+                    </Menu.Item>
                     <SubMenu key="sub1" title={<span><Icon type="mail" /><span>个人中心</span></span>}>
                         {/* <Menu.Item key="8"><MenuLink to="/profile/asset">资产管理</MenuLink></Menu.Item>
                         <Menu.Item key="9"><MenuLink to="/profile/shopcart">购物车</MenuLink></Menu.Item>
@@ -74,6 +74,7 @@ export default class BTMenu extends PureComponent{
                         <Menu.Item key="sub1"><MenuLink to="/profile/check">审核</MenuLink></Menu.Item>
                         <Menu.Item key="sub2"><MenuLink to="/profile/wallet">钱包</MenuLink></Menu.Item>
                     </SubMenu>
+
                 </Menu>
             </div>
         )
