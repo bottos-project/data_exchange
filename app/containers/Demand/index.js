@@ -8,18 +8,17 @@ import BTMyTag from '../../components/BTMyTag'
 
 const BTHeaderSearch = () => (
     <div className="searchViewStyle">
-        <BTMyTag>全部</BTMyTag>
-        <BTMyTag>图像</BTMyTag>
-        <BTMyTag>数据清洗</BTMyTag>
+        <div>
+            <BTMyTag>全部</BTMyTag>
+            <BTMyTag>图像</BTMyTag>
+            <BTMyTag>数据清洗</BTMyTag>
 
-        <BTMyTag>全部</BTMyTag>
-        <BTMyTag>视频</BTMyTag>
-        <BTMyTag>音频</BTMyTag>
-        <BTMyTag>图片</BTMyTag>
-
-        <div></div>
-        <p></p>
-
+            <BTMyTag>全部</BTMyTag>
+            <BTMyTag>视频</BTMyTag>
+            <BTMyTag>音频</BTMyTag>
+            <BTMyTag>图片</BTMyTag>
+        </div>
+        <div style={{marginTop:20}}>
         <BTMyTag>全部</BTMyTag>
         <BTMyTag>数据挖掘</BTMyTag>
         <BTMyTag>图像</BTMyTag>
@@ -28,6 +27,7 @@ const BTHeaderSearch = () => (
         <BTMyTag>全部</BTMyTag>
         <BTMyTag>视频</BTMyTag>
         <BTMyTag>音频</BTMyTag>
+        </div>
     </div>
 ) 
 
