@@ -92,7 +92,7 @@ export default class BTUploadAsset extends PureComponent{
                         <RadioGroup onChange={(e)=>this.onChange(e)}>
                             <Radio value={1} name={7}>
                                 <span>picture</span>
-                                <img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2923044583,1199382580&fm=27&gp=0.jpg"/>
+                                <img style={{width:"50",height:"50"}} src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2923044583,1199382580&fm=27&gp=0.jpg"/>
                             </Radio>
                             <Radio value={2} name={7}>
                                 <span>video</span>
