@@ -17,10 +17,6 @@ const BTHeaderSearch = () => (
             <BTMyTag>音频</BTMyTag>
             <BTMyTag>图片</BTMyTag>
         </div>
-
-        {/* <div style={{marginTop:15}}></div>
-        <p></p> */}
-
         <div style={{marginTop:20}}>
         <BTMyTag>全部</BTMyTag>
         <BTMyTag>数据挖掘</BTMyTag>

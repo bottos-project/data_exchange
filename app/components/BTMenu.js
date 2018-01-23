@@ -34,7 +34,7 @@ export default class BTMenu extends PureComponent{
 
     render(){
         return(
-            <div style={{backgroundColor:'black',height:800}}>
+            <div>
                 <Menu
                     defaultSelectedKeys={['1']}
                     defaultOpenKeys={['sub1']}

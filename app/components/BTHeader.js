@@ -9,6 +9,8 @@ import {Button,Modal,Menu, Dropdown, Icon} from 'antd'
 import BTRowMenu from '../components/BTRowMenu'
 
 import BTPublishAssetModal from '../containers/Profile/Asset/subviews/BTPublishAssetModal'
+import BTIcon from '../components/BTIcon'
+
 
 class MenuLink extends PureComponent{
     constructor(props){
@@ -131,6 +133,12 @@ class BTHeader extends PureComponent{
                     {/* <Icon type="picture" style={{fontSize:30,color:'black'}}/>
                     <Icon type="video-camera" style={{fontSize:30,color:'black'}}/>
                     <Icon type="remind" style={{fontSize:30,color:'black'}}/> */}
+                    
+                    {/* <i className="iconfont icon-picture"></i> */}
+
+                    {/* <i className="iconfont icon-picture"></i> */}
+
+                    {/* <BTIcon type="icon-picture" style={{fontSize:50}}/> */}
 
                     <div className="marginLeft marginRight"><Link to="/profile/shopcart"><Icon type="shopping-cart" style={{fontSize:30,color:'black'}}/></Link></div>
                     <div>
