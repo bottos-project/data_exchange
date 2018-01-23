@@ -32,13 +32,16 @@ const menu = (
         <Menu.Item key="0">
             <Link to="/profile/asset">资产</Link>
         </Menu.Item>
+        <Menu.Item key="1">
+            <Link to="profile/need">需求</Link>
+        </Menu.Item>
         {/* <Menu.Item key="50">
             <Link to="/profile/wallet">钱包</Link>
         </Menu.Item>
         <Menu.Item key="60">
             <Link to="/profile/check">审核</Link>
         </Menu.Item> */}
-        <Menu.Item key="1">
+        <Menu.Item key="2">
             <Link to="/profile/collect">收藏</Link>
         </Menu.Item>
         <Menu.Item key="3" disabled>
