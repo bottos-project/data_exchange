@@ -29,6 +29,7 @@ export default class BTProfileAsset extends PureComponent{
                     <TabPane tab="已购买资产" key="3">
                         <BTHaveBought/>
                     </TabPane>
+
                     <TabPane tab="我的资产库" key="4">
                         <BTMyAssetSet/>
                     </TabPane>
