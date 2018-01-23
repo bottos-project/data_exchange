@@ -4,7 +4,7 @@ import {Provider} from 'react-redux'
 import {hashHistory} from 'react-router'
 import configureStore from './redux/store/ConfigureStore'
 import 'antd/dist/antd.less';
-import './static/css/iconfont.css'
+import './static/iconfont/iconfont.css'
 
 const store = configureStore()
 // 通用样式

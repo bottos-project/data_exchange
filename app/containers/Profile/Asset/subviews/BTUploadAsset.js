@@ -1,9 +1,7 @@
 import React,{PureComponent} from 'react'
 import { Radio,Select, Modal ,Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input, DatePicker,Cascader  } from 'antd';
-
-import picture from "../pictures/picture.png"
-import video from "../pictures/video.png"
-import voice from "../pictures/voice.png"
+// import BTIcon from "app/components/BTIcon"
+import BTIcon from '../../../../components/BTIcon'
 
 const RangePicker = DatePicker.RangePicker;
 const { TextArea } = Input;
@@ -92,23 +90,23 @@ export default class BTUploadAsset extends PureComponent{
                         <span>Data Asset Type: </span>
                         <Cascader options={options} onChange={onChange} placeholder="Please select" />
                     </div>
-                    <div className="OriginPicture">
-                        <span style={{marginRight:"5px"}}>choose the files' type:</span>
-                        <RadioGroup onChange={(e)=>this.onChange(e)}>
-                            <Radio value={1} name={7}>
-                                <span>picture</span>
-                                <BTIcon type="icon-tupian"/>
-                            </Radio>
-                            <Radio value={2} name={7}>
-                                <span>video</span>
-                                <BTIcon type="icon-11"/>
-                            </Radio>
-                            <Radio value={3} name={7}>
-                                <span>music</span>
-                                <BTIcon type="icon-voice"/>
-                            </Radio>
-                        </RadioGroup>
-                    </div>
+                    {/*<div className="OriginPicture">*/}
+                        {/*<span style={{marginRight:"5px"}}>choose the files' type:</span>*/}
+                        {/*<RadioGroup onChange={(e)=>this.onChange(e)}>*/}
+                            {/*<Radio value={1} name={7}>*/}
+                                {/*<span>picture</span>*/}
+                                {/*<BTIcon type="icon-tupian" />*/}
+                            {/*</Radio>*/}
+                            {/*<Radio value={2} name={7}>*/}
+                                {/*<span>video</span>*/}
+                                {/*<BTIcon type="icon-11"/>*/}
+                            {/*</Radio>*/}
+                            {/*<Radio value={3} name={7}>*/}
+                                {/*<span>music</span>*/}
+                                {/*<BTIcon type="icon-voice"/>*/}
+                            {/*</Radio>*/}
+                        {/*</RadioGroup>*/}
+                    {/*</div>*/}
                     <div className="description">
                         <div>
                             <span>Description: </span>
