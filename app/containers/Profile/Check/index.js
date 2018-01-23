@@ -34,7 +34,7 @@ export default class BTCheck extends PureComponent{
 
     render(){
         return(
-            <div className="container">
+            <div style={{width:"90%",height:"100%"}}>
                 <Table
                     columns={columns}
                     expandedRowRender={record => <p style={{ margin: 0 }}>{record.description}</p>}

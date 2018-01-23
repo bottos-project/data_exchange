@@ -50,10 +50,8 @@ export default class BTHistory extends PureComponent{
     }
     render(){
         return(
-            <div>
-                <div>
+            <div className="assetTagPage">
                     <Table columns={columns} dataSource={data} size="middle" />
-                </div>
             </div>
         )
     }

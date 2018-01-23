@@ -1,7 +1,14 @@
 import React,{PureComponent} from 'react'
-import { Select, Modal ,Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input, DatePicker,Cascader  } from 'antd';
+import { Radio,Select, Modal ,Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input, DatePicker,Cascader  } from 'antd';
+// import BTIcon from "app/components/BTIcon"
+import BTIcon from '../../../../components/BTIcon'
+
 const RangePicker = DatePicker.RangePicker;
-import moment from 'moment';
+const { TextArea } = Input;
+const RadioGroup = Radio.Group;
+
+
+
 
 
 const options = [{
@@ -44,12 +51,21 @@ function handleChange(value) {
 export default class BTUploadAsset extends PureComponent{
     constructor(props){
         super(props)
+
+        this.state = {
+            value:1
+        }
+    }
+
+    onChange(e){
+        this.setState({
+            value:e.target.value
+        })
     }
 
 
     render(){
         return(
-            <div>
                 <div className="upLoadForm">
                     <div className="Title">
                         <span>Title:</span>
@@ -58,7 +74,6 @@ export default class BTUploadAsset extends PureComponent{
                     <div className="price">
                         <span>Expect Price:</span>
                         <Input/>
-                        <Icon type="pay-circle" style={{ fontSize: 16,margin:'5px' }}></Icon>
                     </div>
                     <div className="featureTag" >
                         <span>Feature Tag:</span>
@@ -75,18 +90,38 @@ export default class BTUploadAsset extends PureComponent{
                         <span>Data Asset Type: </span>
                         <Cascader options={options} onChange={onChange} placeholder="Please select" />
                     </div>
+                    {/*<div className="OriginPicture">*/}
+                        {/*<span style={{marginRight:"5px"}}>choose the files' type:</span>*/}
+                        {/*<RadioGroup onChange={(e)=>this.onChange(e)}>*/}
+                            {/*<Radio value={1} name={7}>*/}
+                                {/*<span>picture</span>*/}
+                                {/*<BTIcon type="icon-tupian" />*/}
+                            {/*</Radio>*/}
+                            {/*<Radio value={2} name={7}>*/}
+                                {/*<span>video</span>*/}
+                                {/*<BTIcon type="icon-11"/>*/}
+                            {/*</Radio>*/}
+                            {/*<Radio value={3} name={7}>*/}
+                                {/*<span>music</span>*/}
+                                {/*<BTIcon type="icon-voice"/>*/}
+                            {/*</Radio>*/}
+                        {/*</RadioGroup>*/}
+                    {/*</div>*/}
                     <div className="description">
-                        <span>Description: </span>
-                        <textarea></textarea>
+                        <div>
+                            <span>Description: </span>
+                        </div>
+                        <div className="textarea">
+                            <TextArea rows={4} />
+                        </div>
                     </div>
-                </div>
                 <div className="upLoad">
                     <Upload {...props}>
                         <Button>
                             <Icon type="upload" /> 本地上传
                         </Button>
                         <Button>
-                            <Icon type="upload" /> 数据库上传
+                            <Icon type="upload" /> 资源库筛选
                         </Button>
                     </Upload>
                     <div className="submit">
@@ -94,6 +129,7 @@ export default class BTUploadAsset extends PureComponent{
                     </div>
                 </div>
             </div>
+
         )
     }
 }
