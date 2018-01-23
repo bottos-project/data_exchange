@@ -36,7 +36,7 @@ const columns = [
 ];
 
 const data = [];
-for (let i = 0; i < 3; ++i) {
+for (let i = 0; i < 5; ++i) {
     data.push({
         key: i,
         assetName: 'pandas',
@@ -63,11 +63,11 @@ export default class BTMyAssetSet extends PureComponent{
                     <p className="ant-upload-text">Click or drag file to this area to upload</p>
                     <p className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
                 </Dragger>
-                <Table
-                    className="components-table-demo-nested"
-                    columns={columns}
-                    dataSource={data}
-                />
+                    <Table
+                        className="components-table-demo-nested"
+                        columns={columns}
+                        dataSource={data}
+                    />
             </div>
         )
     }
