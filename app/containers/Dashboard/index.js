@@ -10,8 +10,10 @@ export default class BTDashboard extends PureComponent{
 
     render(){
         return(
-            <div className="container column">
-                <div><BTDashboardChart/></div>
+            <div>
+                <div style={{width:800}}>
+                    <BTDashboardChart/>
+                </div>
                 <div style={{padding:20}}>
                     <BTDashboardTable/>
                 </div>

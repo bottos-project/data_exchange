@@ -2,62 +2,82 @@ import React,{PureComponent} from 'react'
 import { Table } from 'antd';
 
 const columns = [{
-    title: 'Name',
-    dataIndex: 'name',
-  }, {
-    title: 'Age',
-    dataIndex: 'age',
-  }, {
-    title: 'Address',
-    dataIndex: 'address',
-  }];
-  const data = [{
+    title: 'TransactionID',
+    dataIndex: 'id',
+}, {
+    title: 'Price',
+    dataIndex: 'price',
+}, {
+    title: 'Type',
+    dataIndex: 'type',
+}, {
+    title: 'From',
+    dataIndex: 'from',
+}, {
+    title: 'To',
+    dataIndex: 'to',
+}, {
+    title: 'Date',
+    dataIndex: 'date',
+}, {
+    title: 'Block',
+    dataIndex: 'block',
+}];
+const data = [{
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  }, {
+    id: '345231',
+    price:"200",
+    type:"数据清洗",
+    from:"8x3454****1212",
+    to:"0k4343****6473",
+    date:"2018-01-22",
+    block:"8494083904"
+},{
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  }, {
+    id: '345231',
+    price:"200",
+    type:"数据清洗",
+    from:"8x3454****1212",
+    to:"0k4343****6473",
+    date:"2018-01-22",
+    block:"8494083904"
+},{
     key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  }, {
-    key: '9',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  }, {
+    id: '345231',
+    price:"200",
+    type:"数据清洗",
+    from:"8x3454****1212",
+    to:"0k4343****6473",
+    date:"2018-01-22",
+    block:"8494083904"
+},{
     key: '4',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  }, {
+    id: '345231',
+    price:"200",
+    type:"数据清洗",
+    from:"8x3454****1212",
+    to:"0k4343****6473",
+    date:"2018-01-22",
+    block:"8494083904"
+},{
     key: '5',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  }, {
-    key: '6',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  }, {
-    key: '7',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  }, {
-    key: '8',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park',
-  }
-
+    id: '345231',
+    price:"200",
+    type:"数据清洗",
+    from:"8x3454****1212",
+    to:"0k4343****6473",
+    date:"2018-01-22",
+    block:"8494083904"
+},{
+    key: '1',
+    id: '345231',
+    price:"200",
+    type:"数据清洗",
+    from:"8x3454****1212",
+    to:"0k4343****6473",
+    date:"2018-01-22",
+    block:"8494083904"
+},
 ];
 
 
@@ -69,8 +89,7 @@ export default class BTDashboardTable extends PureComponent{
 
     render(){
         return(
-            <div>
-                <h4>Middle size table</h4>
+            <div style={{width:"100%"}}>
                 <Table columns={columns} dataSource={data} size="middle" />
             </div>
         )
