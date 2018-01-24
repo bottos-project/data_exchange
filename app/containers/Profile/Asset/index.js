@@ -19,7 +19,7 @@ export default class BTProfileAsset extends PureComponent{
 
         return(
             <div className="assetTagPage">
-                <Tabs>
+                <Tabs style={{width:"950px"}}>
                     <TabPane tab="发布资产" key="1">
                         <BTUploadAsset/>
                     </TabPane>
@@ -29,7 +29,6 @@ export default class BTProfileAsset extends PureComponent{
                     <TabPane tab="已购买资产" key="3">
                         <BTHaveBought/>
                     </TabPane>
-
                     <TabPane tab="我的资产库" key="4">
                         <BTMyAssetSet/>
                     </TabPane>
