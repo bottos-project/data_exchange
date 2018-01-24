@@ -5,33 +5,33 @@ import BTShopListCell from './subviews/BTShopListCell'
 import { Checkbox,Row,Col,Button,Table } from 'antd';
 const CheckboxGroup = Checkbox.Group;
 
-const plainOptions = ['Apple', 'Pear', 'Orange'];
-const defaultCheckedList = ['Apple', 'Orange'];
 
 
-const columns = [{
-  title: '资产名称',
-  dataIndex: 'name',
-}, {
-  title: '价格',
-  dataIndex: 'age',
-}, {
-  title: '数量',
-  dataIndex: 'address',
-},
-{
-    title: '类型',
-    dataIndex: 'dataType',
-  }];
+const columns = [
+    { title: 'title', dataIndex: 'title', key: 'title' },
+    { title: 'price', dataIndex: 'price', key: 'price' },
+    { title: 'fileName', dataIndex: 'fileName', key: 'fileName' },
+    { title: 'fileSize', dataIndex: 'fileSize', key: 'fileSize' },
+    { title: 'date', dataIndex: 'date', key: 'date' },
+    { title: 'From', dataIndex: 'from', key: 'from'},
+    { title: 'Action', dataIndex: '', key: 'x', render: () =>
+            <ul>
+                <a href="#">Delete</a>
+            </ul>,
+    },
+
+];
 
 const data = [];
 for (let i = 0; i < 46; i++) {
   data.push({
-    key: i,
-    name: `Edward King ${i}`,
-    age: 32,
-    address: `London, Park Lane no. ${i}`,
-    dataType:'数据清洗'
+      key: i,
+      title:"pandas",
+      price: '150',
+      fileName:"pandas.zip",
+      fileSize:"123M",
+      date: '2018-01-15 23:12:00',
+      from:"Jack",
   });
 }
 
@@ -41,7 +41,7 @@ export default class BTShopCart extends PureComponent{
         super(props)
 
         this.state = {
-            checkedList: defaultCheckedList,
+            filterMultiple:false ,
             indeterminate: true,
             checkAll: false,
             selectedRowKeys: []
@@ -63,6 +63,7 @@ export default class BTShopCart extends PureComponent{
         selectedRowKeys,
         onChange: (e)=>this.onSelectChange(e),
         hideDefaultSelections: true,
+        type:"radio",  //单选
         selections: [{
             key: 'all-data',
             text: 'Select All Data',
@@ -103,7 +104,8 @@ export default class BTShopCart extends PureComponent{
         return (
             <div className="container column">
                 <div>
-                    <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+                    <Table rowSelection={rowSelection}  columns={columns} dataSource={data}
+                    />
                 </div>
                 <div>
                     <Button type="primary">结算</Button>
@@ -112,5 +114,6 @@ export default class BTShopCart extends PureComponent{
         );
     }
 }
+
 
 
