@@ -11,7 +11,7 @@ export default class BTDashboard extends PureComponent{
     render(){
         return(
             <div style={{width:"100%"}}>
-                <div style={{width:800}}>
+                <div style={{width:900}}>
                     <BTDashboardChart/>
                 </div>
                 <div style={{padding:20,width:"100%"}}>
