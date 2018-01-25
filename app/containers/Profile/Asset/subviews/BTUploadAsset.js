@@ -39,6 +39,8 @@ const onChange = (dates, dateStrings)=> {
     console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
 }
 
+const Option = Select.Option;
+
 const children = [];
 for (let i = 10; i < 36; i++) {
     children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
@@ -75,12 +77,12 @@ export default class BTUploadAsset extends PureComponent{
                         <span>Expect Price:</span>
                         <Input/>
                     </div>
-                    <div className="featureTag" >
-                        <span>Feature Tag:</span>
+                    <div className="featureTag">
+                        <span>featureTag:</span>
                         <Select
-                            mode="tags"
-                            style={{ width: '50%'}}
-                            placeholder="Tags Mode"
+                            mode="multiple"
+                            placeholder="Please select"
+                            defaultValue={['a10', 'c12']}
                             onChange={handleChange}
                         >
                             {children}
@@ -117,6 +119,7 @@ export default class BTUploadAsset extends PureComponent{
                     </div>
                 <div className="upLoad">
                     <Upload {...props}>
+                        <span>上传样例</span>
                         <Button>
                             <Icon type="upload" /> 本地上传
                         </Button>
@@ -124,10 +127,19 @@ export default class BTUploadAsset extends PureComponent{
                             <Icon type="upload" /> 资源库筛选
                         </Button>
                     </Upload>
+                    <Upload {...props}>
+                        <span>上传资产</span>
+                        <Button>
+                            <Icon type="upload" /> 本地上传
+                        </Button>
+                        <Button>
+                            <Icon type="upload" /> 资源库筛选
+                        </Button>
+                    </Upload>
+                </div>
                     <div className="submit">
                         <Button type="submit">submit</Button>
                     </div>
-                </div>
             </div>
 
         )

@@ -2,16 +2,24 @@ import React,{PureComponent} from 'react'
 import { Table, Icon } from 'antd'
 
 const columns = [
-    { title: 'Name', dataIndex: '', key: 'y', render: ()=>
+    { title: 'To', dataIndex: '', key: 'y', render: ()=>
             <div>
                 <a href="#">John</a>
             </div>
     },
-    { title: 'Introduction', dataIndex: 'introduction', key: 'introduction' },
     { title: 'State', dataIndex: 'state', key:'state' },
-    { title: 'Count', dataIndex: 'count', key: 'count' },
-    { title: 'Bid', dataIndex: 'bid', key: 'bid' },
-    { title: 'From', dataIndex: 'from', key: 'from' },
+    { title: 'Price', dataIndex: 'price', key: 'price' },
+    { title: 'Sample', dataIndex: 'sample', key: 'sample',render:() =>
+            <div>
+                <a href="#">download</a>
+            </div>
+    },
+    { title: 'SampleSize',dataIndex:'sampleSize',key:'sampleSize'},
+    { title: 'From', dataIndex: 'from', key: 'from',render:() =>
+            <div>
+                <a href="#">Tom</a>
+            </div>
+    },
     { title: 'Action', dataIndex: '', key: 'x', render: () =>
             <div>
                 <a href="#">Cancel </a>
@@ -19,13 +27,23 @@ const columns = [
                 <a href="#">Reject</a>
             </div>
 },
+    { title: 'Date', dataIndex: 'date', key: 'date' },
+
 ];
 
-const data = [
-    { key: 1, introduction:'i want to buy some Audios',state:'checked', bid:'200',count: 50, from: 'Tom', description: 'My name is John ,i want to buy some Audios' },
-    { key: 2, introduction:'i want to buy some Videos',state:'checking',bid:'150',count: 50, from: 'Tom', description: 'My name is Jim i want to buy some Videos' },
-    { key: 3, introduction:'i want to buy some Pictures',state:'checking',bid:'120',count: 50, from: 'Tom', description: 'My name is Joe i want to buy some Pictures' },
-];
+const data = [];
+for (let i = 0; i < 5; ++i) {
+    data.push({
+        key: i,
+        to:"jack",
+        state:"checking",
+        price:"200",
+        sample:"samples.zip",
+        sampleSize:"3M",
+        date: '2018-01-15 23:12:00',
+        description:"pictures of pandas"
+    });
+}
 
 export default class BTCheck extends PureComponent{
     constructor(props){

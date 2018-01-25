@@ -125,9 +125,7 @@ export default class BTAssetDetail extends PureComponent{
         { title: 'FileName', dataIndex: 'fileName', key: 'fileName' },
         { title: 'FileSize', dataIndex: 'fileSize', key: 'fileSize' },
         { title: 'Date', dataIndex: 'date', key: 'date'},
-            {
-            title: 'operation',
-            dataIndex: 'operation',
+        { title: 'operation', dataIndex: 'operation',
             render: (text, record) => {
                 return (
                     // this.state.dataSource.length > 1 ?

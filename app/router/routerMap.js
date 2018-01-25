@@ -8,7 +8,7 @@ import BTAssets from '../containers/Assets'
 import BTAssetDetail from '../containers/Assets/subviews/AssetDetail'
 import BTDemand from '../containers/Demand'
 import BTDemandDetail from '../containers/Demand/subviews/DemanDetail'
-import BTBlockList from '../containers/Other/BlockList'
+import BTBlockList from '../containers/Other'
 
 /***************个人中心部分*************** */
 import BTHome from '../containers'
@@ -41,7 +41,7 @@ export default class RouterMap extends PureComponent{
                     <Route path="/assets/detail" component={BTAssetDetail}/>
                     <Route path="/dashbord" component={BTDashboard}/>
 
-                    <Route path="/other/blocklist" component={BTBlockList}/>
+                    <Route path="/other" component={BTBlockList}/>
 
                     {/* <Route path="/profile/account" component={BTAccount}/> */}
                     <Route path="/profile/wallet" component={BTWallet}/>

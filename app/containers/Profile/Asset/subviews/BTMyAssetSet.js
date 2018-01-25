@@ -24,6 +24,8 @@ const props = {
 const columns = [
     { title: 'FileName', dataIndex: 'fileName', key: 'fileName' },
     { title: 'FileSize', dataIndex: 'fileSize', key: 'fileSize' },
+    { title: 'sampleName', dataIndex: 'sampleName', key: 'sampleName' },
+    { title: 'sampleSize', dataIndex: 'sampleSize', key: 'sampleSize' },
     { title: 'Action', dataIndex: '', key: 'x', render: () =>
             <ul>
                 <a href="#">DownLoad </a>
@@ -39,6 +41,8 @@ for (let i = 0; i < 5; ++i) {
         key: i,
         fileName:"pandas.zip",
         fileSize:"123M",
+        sampleName:"samples.zip",
+        sampleSize:"3M",
         date: '2018-01-15 23:12:00',
     });
 }
