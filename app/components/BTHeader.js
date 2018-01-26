@@ -33,7 +33,7 @@ const menu = (
             <Link to="/profile/asset">资产</Link>
         </Menu.Item>
         <Menu.Item key="1">
-            <Link to="profile/need">需求</Link>
+            <Link to="/profile/need">需求</Link>
         </Menu.Item>
         {/* <Menu.Item key="50">
             <Link to="/profile/wallet">钱包</Link>

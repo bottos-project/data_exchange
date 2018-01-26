@@ -76,6 +76,8 @@ export default class BTUploadAsset extends PureComponent{
                     <div className="price">
                         <span>Expect Price:</span>
                         <Input/>
+                        <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
+
                     </div>
                     <div className="featureTag">
                         <span>featureTag:</span>

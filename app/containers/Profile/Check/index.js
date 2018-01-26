@@ -8,7 +8,12 @@ const columns = [
             </div>
     },
     { title: 'State', dataIndex: 'state', key:'state' },
-    { title: 'Price', dataIndex: 'price', key: 'price' },
+    { title: 'price', dataIndex: 'price', key: 'price',render:()=>
+            <div>
+                <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
+                <span>200</span>
+            </div>
+    },
     { title: 'Sample', dataIndex: 'sample', key: 'sample',render:() =>
             <div>
                 <a href="#">download</a>

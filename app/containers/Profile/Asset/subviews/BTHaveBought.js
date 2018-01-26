@@ -6,7 +6,6 @@ for (let i = 0; i < 7; ++i) {
     data.push({
         key: i,
         title:"pandas",
-        price: '150',
         fileName:"pandas.zip",
         fileSize:"123M",
         date: '2018-01-15 23:12:00',
@@ -15,7 +14,12 @@ for (let i = 0; i < 7; ++i) {
 }
 const columns = [
     { title: 'title', dataIndex: 'title', key: 'title' },
-    { title: 'price', dataIndex: 'price', key: 'price' },
+    { title: 'price', dataIndex: 'price', key: 'price',render:()=>
+            <div>
+                <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
+                <span>200</span>
+            </div>
+    },
     { title: 'fileName', dataIndex: 'fileName', key: 'fileName' },
     { title: 'fileSize', dataIndex: 'fileSize', key: 'fileSize' },
     { title: 'date', dataIndex: 'date', key: 'date' },

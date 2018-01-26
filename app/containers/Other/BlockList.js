@@ -10,7 +10,7 @@ export default class BTBlockList extends PureComponent{
     render(){
         return(
             <div className="container">
-                <BTDashboardChart/>
+                {/*<BTDashboardChart/>*/}
             </div>
         )
     }

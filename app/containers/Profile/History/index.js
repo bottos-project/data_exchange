@@ -3,46 +3,32 @@ import { Table } from 'antd';
 
 const columns = [
     { title: 'TradingID', dataIndex: 'tradingId',},
-    { title: 'price', dataIndex: 'price',},
+    { title: 'price', dataIndex: 'price', key: 'price',render:()=>
+            <div>
+                <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
+                <span>200</span>
+            </div>
+    },
     { title: 'To', dataIndex: 'to',},
     { title: 'From', dataIndex: 'from',},
     { title: 'fileName', dataIndex: 'fileName', key: 'fileName' },
     { title: 'fileSize', dataIndex: 'fileSize', key: 'fileSize' },
     { title: 'Date', dataIndex: 'date',},
-    { title: 'Action', dataIndex: '', key: 'x', render: () =>
-        <div>
-            <a href="#">more</a>
-        </div>
-}];
-const data = [{
-    key: '1',
-    tradingId:"576879fr79",
-    price:"200",
-    to:"Tom",
-    from:"John",
-    fileName:"pandas.zip",
-    fileSize:"127M",
-    date: '2018-1-16',
-}, {
-    key: '2',
-    tradingId:"67867hd79",
-    price:"100",
-    to:"John",
-    from:"Tom",
-    fileName:"cats.zip",
-    fileSize:"179M",
-    date: '2018-1-16',
-}, {
-    key: '3',
-    tradingId:"54547rg69",
-    price:"120",
-    to:"Tom",
-    from:"John",
-    fileName:"dogs.zip",
-    fileSize:"167M",
-    date: '2018-1-16',
-}];
+];
 
+const data = [];
+for (let i = 0; i < 7; ++i) {
+    data.push({
+        key: i,
+        tradingId:"576879fr79",
+        price:"200",
+        to:"Tom",
+        from:"John",
+        fileName:"pandas.zip",
+        fileSize:"127M",
+        date: '2018-1-16',
+    });
+}
 
 export default class BTHistory extends PureComponent{
     constructor(props){
