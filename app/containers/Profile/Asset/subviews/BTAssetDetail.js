@@ -74,6 +74,7 @@ import React,{PureComponent} from 'react'
 import BTEditableCell from "./BTEditableCell"
 import { Table, Input, Icon, Button, Popconfirm,Menu, Dropdown, Select } from 'antd';
 const { Option, OptGroup } = Select;
+import "./styles.less"
 const menu = (
     <Menu>
         <Menu.Item key="0">
@@ -102,7 +103,8 @@ export default class BTAssetDetail extends PureComponent{
                     onChange={()=>this.onCellChange(record.key, 'assetName')}
                 />
             ),
-        }, { title: 'Type', dataIndex: 'type', key: 'type',
+        },
+            { title: 'Type', dataIndex: 'type', key: 'type',
                 render:() =>(
                     <Select
                         defaultValue="数据清洗"
@@ -128,15 +130,13 @@ export default class BTAssetDetail extends PureComponent{
         { title: 'FileName', dataIndex: 'fileName', key: 'fileName' },
         { title: 'FileSize', dataIndex: 'fileSize', key: 'fileSize' },
         { title: 'Date', dataIndex: 'date', key: 'date'},
-            {
-            title: 'operation',
-            dataIndex: 'operation',
+        { title: 'operation', dataIndex: 'operation',
             render: (text, record) => {
                 return (
                     // this.state.dataSource.length > 1 ?
                     //     (
                             <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
-                                <a href="#">Delete</a>
+                                <a href="#" style={{color:"#6d6df5"}}>Delete</a>
                             </Popconfirm>
                         // ) : null
                 );

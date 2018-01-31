@@ -1,5 +1,6 @@
 import React,{PureComponent} from 'react'
-import { Table, } from 'antd';
+import { Table, Icon} from 'antd';
+import "./styles.less"
 
 const data = [];
 for (let i = 0; i < 7; ++i) {
@@ -24,12 +25,12 @@ const columns = [
     { title: 'fileSize', dataIndex: 'fileSize', key: 'fileSize' },
     { title: 'date', dataIndex: 'date', key: 'date' },
     { title: 'Action', dataIndex: '', key: 'x', render: () =>
-            <ul>
-                <a href="#">DownLoad </a>
-            </ul>,
-    },    { title: 'From', dataIndex: '', key: 'y', render: ()=>
+            <a>
+                <Icon type="download" style={{color:"black",fontWeight:900}}/>
+            </a>
+    },    { title: 'From', dataIndex: '', key: 'y', render:() =>
             <div>
-                <a href="#">John</a>
+                <a href="#" style={{color:"#6d6df5"}}>Jack</a>
             </div>
     },
 
@@ -45,6 +46,7 @@ export default class BTHaveBought extends PureComponent{
             <Table
                 columns={columns}
                 dataSource={data}
+                bordered
             />
         )
     }

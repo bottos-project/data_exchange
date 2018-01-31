@@ -17,7 +17,7 @@ export default class BTProfileNeed extends PureComponent{
     render(){
 
         return(
-            <div className="assetTagPage">
+            <div style={{width:"90%"}}>
                 <Tabs>
                     <TabPane tab="发布需求" key="1">
                         <BTUploadAsset/>

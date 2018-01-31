@@ -44,7 +44,7 @@ export default class BTDashboardChart extends PureComponent{
                     {/*</TabPane>*/}
                 {/*</Tabs>*/}
                 <div style={{display:"flex", flexDirection: "row",flexWrap: "nowrap",alignItems:"center"}}>
-                    <LineChart width={730} height={250} data={data}
+                    <LineChart width={820} height={250} data={data}
                                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                     >
                         <CartesianGrid strokeDasharray="3 3" />
@@ -57,9 +57,9 @@ export default class BTDashboardChart extends PureComponent{
                     </LineChart>
                     <div style={{fontSize:16}}>
                         <div>注册人数：1000000</div>
-                        <div style={{display:"flex", flexDirection: "row",flexWrap: "nowrap",alignItems:"center"}}>
-                            <span>交易总金额：</span>
-                            <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
+                        <div>
+                            <span>交易金额：</span>
+                            <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20}} alt=""/>
                             <span>30000</span>
                         </div>
                     </div>

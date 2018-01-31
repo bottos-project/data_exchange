@@ -1,5 +1,4 @@
 import React,{PureComponent} from 'react'
-
 import {Modal} from 'antd'
 
 import BTUploadAsset from './BTUploadAsset'

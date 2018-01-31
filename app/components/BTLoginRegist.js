@@ -8,7 +8,7 @@ export default class BTLoginRegist extends PureComponent{
     render(){
         return(
             <div>
-BTLoginRegist
+
 
             </div>
         )

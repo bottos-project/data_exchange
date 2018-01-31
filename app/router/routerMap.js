@@ -9,6 +9,9 @@ import BTAssetDetail from '../containers/Assets/subviews/AssetDetail'
 import BTDemand from '../containers/Demand'
 import BTDemandDetail from '../containers/Demand/subviews/DemanDetail'
 import BTBlockList from '../containers/Other'
+import BTSignIn from '../containers/SignIn'
+import BTSignUp from '../containers/SignUp'
+
 
 /***************个人中心部分*************** */
 import BTHome from '../containers'
@@ -36,6 +39,9 @@ export default class RouterMap extends PureComponent{
                     <IndexRoute component={BTDashboard}/>
                     <Route path="/demand" component={BTDemand}/>
                     <Route path="/demand/detail" component={BTDemandDetail}/>
+
+                    <Route path="/signIn" component = {BTSignIn}/>
+                    <Route path="/signUp" component = {BTSignUp}/>
 
                     <Route path="/assets" component={BTAssets}/>
                     <Route path="/assets/detail" component={BTAssetDetail}/>

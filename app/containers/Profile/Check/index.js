@@ -1,10 +1,11 @@
 import React,{PureComponent} from 'react'
 import { Table, Icon } from 'antd'
+import "./style.less"
 
 const columns = [
-    { title: 'To', dataIndex: '', key: 'y', render: ()=>
+    { title: 'To', dataIndex: 'to', key: 'to',render:() =>
             <div>
-                <a href="#">John</a>
+                <a href="#" style={{color:"#6d6df5"}}>Jack</a>
             </div>
     },
     { title: 'State', dataIndex: 'state', key:'state' },
@@ -15,21 +16,21 @@ const columns = [
             </div>
     },
     { title: 'Sample', dataIndex: 'sample', key: 'sample',render:() =>
-            <div>
-                <a href="#">download</a>
-            </div>
+            <a>
+                <Icon type="download" style={{color:"black",fontWeight:900}}/>
+            </a>
     },
     { title: 'SampleSize',dataIndex:'sampleSize',key:'sampleSize'},
     { title: 'From', dataIndex: 'from', key: 'from',render:() =>
             <div>
-                <a href="#">Tom</a>
+                <a href="#" style={{color:"#6d6df5"}}>Tom</a>
             </div>
     },
     { title: 'Action', dataIndex: '', key: 'x', render: () =>
             <div>
-                <a href="#">Cancel </a>
-                <a href="#">Agree </a>
-                <a href="#">Reject</a>
+                <a href="#" style={{backgroundColor:"black",color:"white",margin:"2px",padding:"1px 5px",borderRadius:"3px"}}>Cancel</a>
+                <a href="#" style={{backgroundColor:"black",color:"white",margin:"2px",padding:"1px 5px",borderRadius:"3px"}}>Agree</a>
+                <a href="#" style={{backgroundColor:"black",color:"white",margin:"2px",padding:"1px 5px",borderRadius:"3px"}}>Reject</a>
             </div>
 },
     { title: 'Date', dataIndex: 'date', key: 'date' },
@@ -59,6 +60,7 @@ export default class BTCheck extends PureComponent{
         return(
             <div style={{width:"90%",height:"100%"}}>
                 <Table
+                    bordered
                     columns={columns}
                     expandedRowRender={record => <p style={{ margin: 0 }}>{record.description}</p>}
                     dataSource={data}

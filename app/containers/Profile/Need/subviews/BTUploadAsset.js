@@ -2,9 +2,10 @@ import React,{PureComponent} from 'react'
 import {Radio,Select, Modal ,Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input, DatePicker,Cascader  } from 'antd';
 // import BTIcon from "app/components/BTIcon"
 import BTIcon from '../../../../components/BTIcon'
-
+import "../styles.less"
 const { TextArea } = Input;
 const RadioGroup = Radio.Group;
+
 
 const options = [{
     value: 'Video',
