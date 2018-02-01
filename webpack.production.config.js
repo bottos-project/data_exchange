@@ -6,7 +6,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: {
-    app: path.resolve(__dirname, 'app/index.js'),
+    app: path.resolve(__dirname, 'index.js'),
     // 将 第三方依赖（node_modules中的） 单独打包
     vendor: Object.keys(pkg.dependencies)
   },
@@ -38,7 +38,7 @@ module.exports = {
 
     // html 模板插件
     new HtmlWebpackPlugin({
-        template: __dirname + '/app/index.tmpl.html'
+        template: __dirname + '/index.tmpl.html'
     }),
 
     // 定义为生产环境，编译 React 时压缩到最小

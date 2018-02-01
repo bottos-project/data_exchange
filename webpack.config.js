@@ -4,7 +4,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 module.exports = {
-    entry: path.resolve(__dirname, 'app/index.js'),
+    entry: path.resolve(__dirname, 'index.js'),
     output: {
         filename: "bundle.js"
     },
@@ -30,7 +30,7 @@ module.exports = {
     plugins: [
         // html 模板插件
         new HtmlWebpackPlugin({
-            template: __dirname + '/app/index.tmpl.html'
+            template: __dirname + '/index.tmpl.html'
         }),
 
         // 热加载插件
