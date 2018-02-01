@@ -2,7 +2,131 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d10706b2-5f7d-434d-a1b8-12836197b45f" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.babelrc" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/deployment.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/react.iml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/webServers.xml" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/.vscode/sftp.json" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/README.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTAssetList.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTCardPage.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTHeader.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTIcon.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTList.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTListCell.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTLoginRegist.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTMenu.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTMyTag.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTRowMenu.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTTable.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/components/styles.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Assets/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Assets/subviews/AssetCell.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Assets/subviews/AssetDetail.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Assets/subviews/styles.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/BTDashboardChart.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/BTDashboardChartData.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/BTDashboardChartDemand.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/BTDashboardChartPopular.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/BTDashboardChartPrice.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/BTDashboardTable.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/dashboardStyle.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Demand/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Demand/styles.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Demand/subviews/DemanDetail.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Demand/subviews/DemandCell.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Demand/subviews/PublishDemand.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Demand/subviews/styles.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/BlockList.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/BlockView/blockHeader.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/BlockView/blockList.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/BlockView/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/BlockView/map.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/styles.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Account/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/pictures/picture.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/pictures/video.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/pictures/voice.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/styles.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTAssetDetail.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTAssetSearch.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTCardStyleAsset.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTCardStyleRequirement.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTEditableCell.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTHaveBought.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTMyAssetSet.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTPublishAssetModal.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTUploadAsset.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/styles.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Attention/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Check/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Check/style.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Collect/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/History/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/History/style.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/pictures/picture.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/pictures/video.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/pictures/voice.png" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/styles.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/AssetCell.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/AssetDetail.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTAssetDetail.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTAssetSearch.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTCardStyleAsset.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTCardStyleRequirement.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTHaveBought.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTMyAssetSet.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTPublishAssetModal.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTUploadAsset.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Setting/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Setting/styles.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/ShopCart/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/ShopCart/subviews/BTShopListCell.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/ShopCart/subviews/styles.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Wallet/Person/history.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Wallet/Person/tranfer.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Wallet/Person/wallet.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Wallet/Person/walletall.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Wallet/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Wallet/styles.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/SignIn/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/SignIn/subviews/NormalLoginForm.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/SignUp/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/containers/styles.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/index.tmpl.html" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/package-lock.json" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/package.json" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/redux/actions/HeaderAction.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/redux/consts/HeaderConst.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/redux/reducers/HeaderReducer.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/redux/reducers/index.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/redux/store/ConfigureStore.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/router/routerMap.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/static/README.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/static/css/common.less" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/static/iconfont/iconfont.css" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/static/iconfont/iconfont.eot" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/static/iconfont/iconfont.svg" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/static/iconfont/iconfont.ttf" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/static/iconfont/iconfont.woff" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/tools/README.md" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/tools/localStore.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/utils/BTFetch.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/utils/config.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/webpack.config.js" />
+      <change beforePath="" afterPath="$PROJECT_DIR$/webpack.production.config.js" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -36,8 +160,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="624" />
-    <option name="y" value="94" />
+    <option name="x" value="18" />
+    <option name="y" value="23" />
     <option name="width" value="1444" />
     <option name="height" value="834" />
   </component>
@@ -102,7 +226,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1517481508061</updated>
-      <workItem from="1517481510245" duration="2052000" />
+      <workItem from="1517481510245" duration="2215000" />
     </task>
     <task id="LOCAL-00001" summary="add files">
       <created>1517483805802</created>
@@ -129,10 +253,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2052000" />
+    <option name="totallyTimeSpent" value="2215000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="624" y="94" width="1444" height="834" extended-state="0" />
+    <frame x="18" y="23" width="1444" height="834" extended-state="0" />
     <layout>
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24947295" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -162,7 +286,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="add files" />
-    <option name="LAST_COMMIT_MESSAGE" value="add files" />
+    <MESSAGE value="Merge branch 'project' of 10.104.14.169:yuanjunliang/react into githubmaster&#10;&#10;# Please enter a commit message to explain why this merge is necessary,&#10;# especially if it merges an updated upstream into a topic branch.&#10;#&#10;# Lines starting with '#' will be ignored, and an empty message aborts&#10;# the commit." />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'project' of 10.104.14.169:yuanjunliang/react into githubmaster&#10;&#10;# Please enter a commit message to explain why this merge is necessary,&#10;# especially if it merges an updated upstream into a topic branch.&#10;#&#10;# Lines starting with '#' will be ignored, and an empty message aborts&#10;# the commit." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />

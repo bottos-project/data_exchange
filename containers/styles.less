@@ -1,0 +1,42 @@
+@sideWidth:200px;
+@marginLeft:20px;
+@marginRight:20px;
+
+.container {
+    display: flex;
+    flex: 1;
+}
+
+.column {
+    flex-direction: column;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.marginLeft {
+    margin-left: @marginLeft;
+}
+
+.marginRight {
+    margin-right: @marginRight;
+}
+
+.header {
+    flex: 1;
+    height: 50px;
+}
+
+.content {
+    flex-direction: row;
+
+    .menu {
+        min-width: @sideWidth;
+    }
+
+    .contentbody {
+        margin-left: @marginLeft;
+        margin-right: @marginRight;
+    }
+}
