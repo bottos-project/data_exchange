@@ -6,7 +6,7 @@ import configureStore from './redux/store/ConfigureStore'
 import 'antd/dist/antd.less';
 import './static/iconfont/iconfont.css'
 
-const store = configureStore()
+const store = configureStore();
 // 通用样式
 import './static/css/common.less'
 import RouterMap from './router/routerMap'
