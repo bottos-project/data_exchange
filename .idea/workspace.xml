@@ -2,130 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d10706b2-5f7d-434d-a1b8-12836197b45f" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/.babelrc" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/deployment.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/react.iml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.idea/webServers.xml" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/.vscode/sftp.json" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/README.md" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTAssetList.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTCardPage.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTHeader.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTIcon.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTList.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTListCell.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTLoginRegist.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTMenu.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTMyTag.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTRowMenu.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/components/BTTable.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/components/styles.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Assets/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Assets/subviews/AssetCell.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Assets/subviews/AssetDetail.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Assets/subviews/styles.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/BTDashboardChart.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/BTDashboardChartData.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/BTDashboardChartDemand.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/BTDashboardChartPopular.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/BTDashboardChartPrice.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/BTDashboardTable.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Dashboard/subviews/dashboardStyle.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Demand/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Demand/styles.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Demand/subviews/DemanDetail.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Demand/subviews/DemandCell.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Demand/subviews/PublishDemand.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Demand/subviews/styles.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/BlockList.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/BlockView/blockHeader.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/BlockView/blockList.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/BlockView/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/BlockView/map.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Other/styles.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Account/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/pictures/picture.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/pictures/video.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/pictures/voice.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/styles.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTAssetDetail.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTAssetSearch.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTCardStyleAsset.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTCardStyleRequirement.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTEditableCell.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTHaveBought.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTMyAssetSet.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTPublishAssetModal.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/BTUploadAsset.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Asset/subviews/styles.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Attention/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Check/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Check/style.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Collect/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/History/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/History/style.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/pictures/picture.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/pictures/video.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/pictures/voice.png" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/styles.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/AssetCell.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/AssetDetail.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTAssetDetail.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTAssetSearch.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTCardStyleAsset.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTCardStyleRequirement.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTHaveBought.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTMyAssetSet.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTPublishAssetModal.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Need/subviews/BTUploadAsset.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Setting/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Setting/styles.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/ShopCart/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/ShopCart/subviews/BTShopListCell.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/ShopCart/subviews/styles.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Wallet/Person/history.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Wallet/Person/tranfer.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Wallet/Person/wallet.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Wallet/Person/walletall.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Wallet/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/Wallet/styles.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/Profile/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/SignIn/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/SignIn/subviews/NormalLoginForm.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/SignUp/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/containers/styles.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/index.tmpl.html" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/package-lock.json" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/package.json" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/redux/actions/HeaderAction.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/redux/consts/HeaderConst.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/redux/reducers/HeaderReducer.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/redux/reducers/index.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/redux/store/ConfigureStore.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/router/routerMap.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/static/README.md" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/static/css/common.less" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/static/iconfont/iconfont.css" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/static/iconfont/iconfont.eot" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/static/iconfont/iconfont.svg" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/static/iconfont/iconfont.ttf" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/static/iconfont/iconfont.woff" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/tools/README.md" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/tools/localStore.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/utils/BTFetch.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/utils/config.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/webpack.config.js" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/webpack.production.config.js" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -139,7 +15,18 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="BTFetch.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/utils/BTFetch.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="210">
+              <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -160,10 +47,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="18" />
-    <option name="y" value="23" />
-    <option name="width" value="1444" />
-    <option name="height" value="834" />
+    <option name="x" value="643" />
+    <option name="y" value="548" />
+    <option name="width" value="1140" />
+    <option name="height" value="824" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -187,6 +74,11 @@
             <path>
               <item name="react" type="b2602c69:ProjectViewProjectNode" />
               <item name="react" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="react" type="b2602c69:ProjectViewProjectNode" />
+              <item name="react" type="462c0819:PsiDirectoryNode" />
+              <item name="utils" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -226,7 +118,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1517481508061</updated>
-      <workItem from="1517481510245" duration="2215000" />
+      <workItem from="1517481510245" duration="2370000" />
     </task>
     <task id="LOCAL-00001" summary="add files">
       <created>1517483805802</created>
@@ -253,20 +145,21 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2215000" />
+    <option name="totallyTimeSpent" value="2370000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="18" y="23" width="1444" height="834" extended-state="0" />
+    <frame x="643" y="548" width="1140" height="824" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24947295" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31724754" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960895" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -298,6 +191,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/BTFetch.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
           <folding />
         </state>
       </provider>
