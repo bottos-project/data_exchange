@@ -2,6 +2,7 @@ import React,{PureComponent} from 'react'
 import {Popconfirm,Table, Upload, Icon, message} from 'antd';
 import "./styles.less"
 const Dragger = Upload.Dragger;
+import BTFetch from "../../../../utils/BTFetch"
 
 const props = {
     name: 'file',
@@ -30,12 +31,12 @@ export default class BTMyAssetSet extends PureComponent{
             { title: 'FileSize', dataIndex: 'fileSize', key: 'fileSize' },
             { title: 'sampleName', dataIndex: 'sampleName', key: 'sampleName' },
             { title: 'sampleSize', dataIndex: 'sampleSize', key: 'sampleSize' },
+            { title: 'Date', dataIndex: 'date', key: 'date' },
             { title: "Download", dataIndex: '', key: 'x', render: () =>
                     <a>
                         <Icon type="download" style={{color:"black",fontWeight:900}}/>
                     </a>
             },
-            { title: 'Date', dataIndex: 'date', key: 'date' },
             { title: 'Delete', dataIndex: 'delete',
                 render: (text, record) => {
                     return (
@@ -64,7 +65,6 @@ export default class BTMyAssetSet extends PureComponent{
 
         this.state = {
             data,
-            count:7
         }
     }
 
@@ -72,11 +72,17 @@ export default class BTMyAssetSet extends PureComponent{
         const data = [...this.state.data];
         this.setState({ data: data.filter(item => item.key !== key) });
     }
+    componentDidMount() {
+        BTFetch("","post",{}).then(data=>{
+            console.log(data)
+        })
+    }
+
     render(){
         const { data } = this.state;
         const columns = this.columns;
         return(
-            <div>
+            <div className="set">
                 <Dragger {...props}>
                     <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />

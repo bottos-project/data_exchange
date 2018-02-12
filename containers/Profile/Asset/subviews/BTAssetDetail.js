@@ -71,10 +71,10 @@
 // }
 
 import React,{PureComponent} from 'react'
-import BTEditableCell from "./BTEditableCell"
 import { Table, Input, Icon, Button, Popconfirm,Menu, Dropdown, Select } from 'antd';
 const { Option, OptGroup } = Select;
 import "./styles.less"
+import BTFetch from "../../../../utils/BTFetch"
 const menu = (
     <Menu>
         <Menu.Item key="0">
@@ -88,8 +88,17 @@ const menu = (
     </Menu>
 );
 
+
+const EditableCell = ({ editable, value, onChange }) => (
+    <div>
+        {editable
+            ? <Input style={{ margin: '-5px 0' }} value={value} onChange={e => onChange(e.target.value)} />
+            : value
+        }
+    </div>
+);
 function handleChange(value) {
-    console.log(`selected ${value}`);
+    console.log(`selected $(value)`);
 }
 
 export default class BTAssetDetail extends PureComponent{
@@ -97,12 +106,7 @@ export default class BTAssetDetail extends PureComponent{
         super(props);
         this.columns = [
             {title: 'assetName', dataIndex: 'assetName',
-            render: (text, record) => (
-                <BTEditableCell
-                    value={text}
-                    onChange={()=>this.onCellChange(record.key, 'assetName')}
-                />
-            ),
+                render: (text, record) => this.renderColumns(text, record, 'assetName'),
         },
             { title: 'Type', dataIndex: 'type', key: 'type',
                 render:() =>(
@@ -117,20 +121,17 @@ export default class BTAssetDetail extends PureComponent{
 
             },
         { title: 'Price', dataIndex: 'price', key: 'price',
-                render: (text, record) => (
-                    <div style={{display:"flex",flexDirection:"row"}}>
-                        <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
-                        <BTEditableCell
-                            value={text}
-                            onChange={()=>this.onCellChange(record.key, 'type')}
-                        />
-                          </div>
-                ),
+            render: (text, record) => this.renderColumns(text, record, 'price')
             },
         { title: 'FileName', dataIndex: 'fileName', key: 'fileName' },
         { title: 'FileSize', dataIndex: 'fileSize', key: 'fileSize' },
-        { title: 'Date', dataIndex: 'date', key: 'date'},
-        { title: 'operation', dataIndex: 'operation',
+        { title: 'Date', dataIndex: 'date', key: 'date',
+            render: (text, record) => this.renderColumns(text, record, 'date'),
+        },
+        { title: 'Description', dataIndex: 'description', key: 'description',
+            render: (text, record) => this.renderColumns(text, record, 'description'),
+        },
+        { title: 'Delete', dataIndex: 'delete',
             render: (text, record) => {
                 return (
                     // this.state.dataSource.length > 1 ?
@@ -141,10 +142,30 @@ export default class BTAssetDetail extends PureComponent{
                         // ) : null
                 );
             },
-        }];
-        const dataSource = [];
+        },
+        { title: 'operation', dataIndex: 'operation',
+                render: (text, record) => {
+                    const { editable } = record;
+                    return (
+                        <div className="editable-row-operations">
+                            {
+                                editable ?
+                                    <span>
+                  <a onClick={() => this.save(record.key)}>Save</a>
+                  <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
+                    <a>Cancel</a>
+                  </Popconfirm>
+                </span>
+                                    : <a onClick={() => this.edit(record.key)}>Edit</a>
+                            }
+                        </div>
+                    );
+                },
+            }];
+        const data = [];
+        this.cacheData = data.map(item => ({ item }));
         for (let i = 0; i < 7; ++i) {
-            dataSource.push({
+            data.push({
                 key: i,
                 assetName: 'pandas',
                 type:'数据清洗',
@@ -156,32 +177,83 @@ export default class BTAssetDetail extends PureComponent{
             });
         }
         this.state = {
-            dataSource,
-            count:7
+            data,
+        }
+    }
+    //删除数据后的操作
+    onDelete(key){
+        const dataSource = [...this.state.data];
+        this.setState({ data: dataSource.filter(item => item.key !== key) });
+        const deleteDataSource = this.state.data[key];//被删除的一行的数据
+        BTFetch("","post",deleteDataSource).then((data)=>{
+            console.log(data)
+        })
+    }
+    renderColumns(text, record, column) {
+        return (
+            <EditableCell
+                editable={record.editable}
+                value={text}
+                onChange={value => this.handleChange(value, record.key, column)}
+            />
+        );
+    }
+    handleChange(value, key, column) {
+        const newData = [...this.state.data];
+        const target = newData.filter(item => key === item.key)[0];
+        if (target) {
+            target[column] = value;
+            this.setState({ data: newData });
+        }
+    }
+    edit(key) {
+        const newData = [...this.state.data];
+        const target = newData.filter(item => key === item.key)[0];
+        if (target) {
+            target.editable = true;
+            this.setState({ data: newData });
+        }
+
+    }
+    //修改数据后点击保存
+    save(key) {
+                const newData = [...this.state.data];
+                const target = newData.filter(item => key === item.key)[0];
+                if (target) {
+                    delete target.editable;
+                    this.setState({ data: newData });
+                    this.cacheData = newData.map(item => ({ item }));
+                }
+                const postNewData = newData[key];
+                BTFetch("","post",postNewData).then(data=>{
+                    console.log(data)
+                })
+    }
+    cancel(key) {
+        const newData = [...this.state.data];
+        const target = newData.filter(item => key === item.key)[0];
+        if (target) {
+            Object.assign(target, this.cacheData.filter(item => key === item.key)[0]);
+            delete target.editable;
+            this.setState({ data: newData });
         }
     }
 
-    onCellChange(key, dataIndex){
-        return (value) => {
-            const dataSource = [...this.state.dataSource];
-            const target = dataSource.find(item => item.key === key);
-            if (target) {
-                target[dataIndex] = value;
-                this.setState({ dataSource });
-            }
-        };
-    };
-
-    onDelete(key){
-        const dataSource = [...this.state.dataSource];
-        this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+    //进入页面开始加载数据
+    componentDidMount() {
+        BTFetch("url","post",JSON.stringify({sessionID:"lalala"})).then(data=>{
+            const response = JSON.parse(data);
+            this.setState({
+                data:response
+            });
+        }).catch(error=>{
+            console.log(error)
+        })
     }
     render() {
-        const { dataSource } = this.state;
-        const columns = this.columns;
         return (
             <div>
-                <Table bordered dataSource={dataSource} columns={columns} />
+                <Table bordered dataSource={this.state.data} columns={this.columns} />
             </div>
         );
     }

@@ -9,11 +9,13 @@ import BTAssetDetail from './subviews/BTAssetDetail'
 import BTUploadAsset from './subviews/BTUploadAsset'
 import BTHaveBought from "./subviews/BTHaveBought"
 import BTMyAssetSet from "./subviews/BTMyAssetSet"
+import BTFetch from "../../../utils/BTFetch";
 
 export default class BTProfileAsset extends PureComponent{
     constructor(props){
         super(props)
     }
+
 
     render(){
 

@@ -2,46 +2,89 @@
   margin: 0;
   padding: 0;
 }
-.assetTagPage {
-  width: 100%;
-  height: 100%;
+.asset{
+  width: 700px;
+  display: flex;
+}
   .upLoadForm {
+    width: 700px;
+    span {
+      display: inline-flex;
+      min-width: 100px;
+      flex-direction: row-reverse;
+      height: 25px;
+      margin: 5px 0;
+    }
+    input, select {
+      display: flex;
+      height: 25px;
+      margin: 5px 0 5px 10px;
+    }
     .Title {
-      padding: 0;
-      margin: 0;
       span {
-        margin: 0 10px;
+        display: flex;
+        flex-direction: row-reverse;
       }
-      input {
-        height: 28px;
-        width: 150px;
-        margin: 15px 0;
-      }
+      display: flex;
+      flex-direction: row;
+      align-items: center;
     }
-    .price {
-      margin-top: -2px;
-      span {
-        margin: 0 10px;
-      }
-      input {
-        width: 80px;
-        height: 25px;
-        margin: 15px 0;
-      }
-    }
-
     .featureTag {
+      display: flex;
+      margin: 5px 0;
+      align-content: center;
+      height: 25px;
       span {
-        margin: 10px;
+        margin: 0;
+        height: 25px;
+        display: flex;
+        flex-direction: row-reverse;
       }
-      select {
-        width: 200px;
+      div {
+        height: 25px;
+        min-height: 25px;
+      }
+      .ant-select-selection, .ant-select-selection--single {
+        background-color: #fff;
+        border: 1px solid #d9d9d9;
+        margin-left: 10px;
+        width: 210px;
+        li {
+          height: 20px;
+        }
+      }
+    }
+    .priceAndData {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      .price {
+        display: flex;
+        flex: 1;
+        align-content: center;
+        justify-content: center;
+        span {
+          display: inline-flex;
+          flex-direction: row-reverse;
+        }
+      }
+      .dataAssetType {
+        height: 35px;
+        display: flex;
+        flex: 1;
+        .ant-cascader-picker {
+          display: inline-flex;
+          flex: 1;
+        }
       }
     }
 
     .dateSelect {
       margin-left: 8px;
       margin-top: 5px;
+
       span {
         margin: 3px;
         span {
@@ -51,56 +94,89 @@
     }
 
     .dataAssetType {
-      margin: 10px;
+      display: flex;
+      flex-direction: row;
+      height: 25px;
+      margin: 0;
+
+      .ant-cascader-picker {
+        .ant-cascader-input.ant-input {
+          background-color: #fff;
+          border: 1px solid #d9d9d9;
+        }
+        .ant-cascader-input.ant-input {
+
+          margin: 0;
+        }
+      }
+      span {
+        width: 120px;
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+      }
     }
 
     .description {
-      margin: 10px;
       display: flex;
       flex: 1;
       flex-direction: row;
 
       .textarea {
-       margin: 10px;
-        width: 90%;
-        textarea{
-          width: 90%;
-          height: 100px;
+        margin: 10px 0 10px 10px;
+        display: flex;
+        flex: 1;
+        textarea {
+          height: 150px;
+          display: flex;
+          flex: 1;
         }
       }
     }
-    .OriginPicture{
-      margin: 0 10px;
-
-      img{
-        width: 50px;
-        height: 50px;
+    .upLoadAndSubmit{
+      span{
+        margin-right: 0 5px;
       }
+      button{
+        background-color: #808080;
+        margin: 0 5px;
+        color:white;
+        width: 130px;
+        padding: 0;
+        span{
+          justify-content: center;
+        }
+      }
+      .submit{
+        display: flex;
+        flex-direction: row-reverse;
+        button{
+          display: flex;
+          flex-direction: row-reverse;
+          background-color: black;
+          color: #fff;
+          width: 100px;
+          span{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      }
+
     }
+
+  }
+.set{
+  .ant-upload.ant-upload-drag p.ant-upload-text{
+    color:white;
+  }
+  .ant-upload.ant-upload-drag p.ant-upload-hint{
+    color: white;
   }
 }
 
-.upLoad{
-  margin: 20px;
-  button{
-    margin: 20px;
-    width: 130px;
-    height: 40px;
-  }
-}
-.submit{
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-    button{
-      height: 40px;
-      width: 90px;
-      font-size: 18px;
-      background-color: darkslategrey;
-      color: white;
-      padding-bottom: 2px;
-    }
-}
+
 .ant-table-thead > tr > th, .ant-table-tbody > tr > td{
   padding: 3px;
 }
@@ -117,4 +193,12 @@
 .ant-upload.ant-upload-drag p.ant-upload-drag-icon .anticon{
   color:white;
 }
-.ant-upload-drag-container{}
+.modalAsset .asset{
+  width: 460px;
+}
+.modalAsset .asset .upLoadForm{
+  width: 460px;
+}
+.modalAsset .upLoadForm .upLoadAndSubmit .submit button{
+  display: none;
+}
