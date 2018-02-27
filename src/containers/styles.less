@@ -1,0 +1,61 @@
+@sideWidth:200px;
+@marginLeft:20px;
+@marginRight:20px;
+@marginTop:20px;
+@marginBottom:20px;
+
+
+.container {
+    display: flex;
+    flex: 1;
+}
+
+.column {
+    flex-direction: column;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.marginLeft {
+    margin-left: @marginLeft;
+}
+
+.marginRight {
+    margin-right: @marginRight;
+}
+
+.marginTop {
+    margin-top: @marginTop;
+}
+
+.marginBotton {
+    margin-bottom: @marginBottom;
+}
+
+.header {
+    flex: 1;
+    height: 80px;
+}
+
+.content {
+    flex-direction: row;
+
+    .menu {
+        min-width: @sideWidth;
+        background-color: #1a1a1a;
+    }
+
+    .contentbody {
+        margin-left: @marginLeft;
+        margin-right: @marginRight;
+        margin-top:@marginTop;
+    }
+}
+.register .ant-modal-body{
+    padding: 0 30px;
+}
+.register .ant-input{
+    width: 50%;
+}
