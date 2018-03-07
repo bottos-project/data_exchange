@@ -10,10 +10,10 @@ import appLocale from './locales'
 // 通用样式
 import './static/css/common.less'
 import RouterMap from './router/routerMap'
-// 将config文件设置为全局window对象
-window.config = require('./utils/config')
 
 const store = configureStore();
+
+
 export default class App extends Component {
   constructor(props){
     super(props)

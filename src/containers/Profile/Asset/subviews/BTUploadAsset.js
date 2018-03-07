@@ -24,11 +24,22 @@ const options = [{
 }];
 
 const props = {
-    action: '//jsonplaceholder.typicode.com/posts/',
+    name:'file',
+    action: 'http://10.104.10.152:8080/v2/asset/upload',
+    multiple: false,
+    data:{
+
+    },
     onChange({ file, fileList }) {
+        // console.log(file,fileList)
         if (file.status !== 'uploading') {
             console.log(file, fileList);
         }
+        if(file.status==='down'){
+            message.success(`${file.name} file uploaded successfully`);
+        }else if (file.status === 'error') {
+            message.error(`${file.name} file upload failed.`);
+          }
     },
 
 };
@@ -69,14 +80,24 @@ export default class BTUploadAsset extends PureComponent{
             title:e.target.value
         })
     }
-
+    updata(){
+        var param={
+            username:'btd121' ,
+            sessionID:'',
+            fileSize:''  ,
+            fileName:'' ,
+            filePolicy:'',
+            numOfFiles:'',
+            signature :''
+        }
+    }
     render(){
         return(
             <div className="asset">
                 <div className="upLoadForm">
                     <div className="Title">
                         <span>名称:</span>
-                        <Input placeholder="名称" value={this.state.title} onChange={()=>this.title()} />
+                        <Input placeholder="名称" defaultValue={this.state.title} onChange={(e)=>this.title(e)} />
                     </div>
                     <div className="priceAndData">
                         <div className="price">
@@ -131,9 +152,9 @@ export default class BTUploadAsset extends PureComponent{
                             <div>
                                 <span>上传样例</span>
                                 <Upload {...props}>
-                                    <Button>
+                                    {/* <Button>
                                         <Icon type="upload" /> 本地上传
-                                    </Button>
+                                    </Button> */}
                                     <Button>
                                         <Icon type="upload" /> 资源库筛选
                                     </Button>
@@ -142,9 +163,9 @@ export default class BTUploadAsset extends PureComponent{
                             <div>
                                 <span>上传资产</span>
                                 <Upload {...props}>
-                                    <Button>
+                                    {/* <Button>
                                         <Icon type="upload" /> 本地上传
-                                    </Button>
+                                    </Button> */}
                                     <Button>
                                         <Icon type="upload" /> 资源库筛选
                                     </Button>
@@ -152,7 +173,7 @@ export default class BTUploadAsset extends PureComponent{
                             </div>
                         </div>
                         <div className="submit">
-                            <Button type="submit">OK</Button>
+                            <Button type="submit" >OK</Button>
                         </div>
                     </div>
             </div>
