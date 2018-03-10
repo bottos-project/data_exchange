@@ -8,14 +8,14 @@ const FormItem = Form.Item;
 const { TextArea } = Input;
 const formItemLayout = {
     labelCol: {
-      xs: { span: 24 },
-      sm: { span: 5 },
+        xs: { span: 24 },
+        sm: { span: 5 },
     },
     wrapperCol: {
-      xs: { span: 24 },
-      sm: { span: 12 },
+        xs: { span: 24 },
+        sm: { span: 12 },
     },
-  };
+};
 const props = {
     action: '//jsonplaceholder.typicode.com/posts/',
     onChange({ file, fileList }) {
@@ -166,8 +166,8 @@ export default class BTPublishDemand extends PureComponent{
     render(){
         return(
             <Modal visible={this.state.visible}
-                onOk={()=>this.handleOk()}
-                onCancel={()=>this.handleCancel()}
+                   onOk={()=>this.handleOk()}
+                   onCancel={()=>this.handleCancel()}
             >
                 <div>
                     <div>

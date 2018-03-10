@@ -1,7 +1,6 @@
 import React,{PureComponent} from 'react'
 import BTHeader from '../components/BTHeader'
 import BTMenu from '../components/BTMenu'
-import BTRowMenu from '../components/BTRowMenu'
 import * as homeActions from '../redux/actions/HomeAction'
 import {bindActionCreators} from 'redux'
 import {connect} from 'react-redux'

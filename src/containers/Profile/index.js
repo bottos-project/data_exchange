@@ -7,7 +7,7 @@ export default class BTProfile extends PureComponent{
 
     render(){
         return(
-            <div>TZProfile</div>
+            <div className="container">TZProfile</div>
         )
     }
 }

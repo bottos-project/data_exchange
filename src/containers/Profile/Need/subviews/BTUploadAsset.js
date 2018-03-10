@@ -1,65 +1,59 @@
 import React,{PureComponent} from 'react'
-import {Radio,Select, Modal ,Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input, DatePicker,Cascader  } from 'antd';
-// import BTIcon from "app/components/BTIcon"
-import BTIcon from '../../../../components/BTIcon'
-import BTFetch from "../../../../utils/BTFetch"
-import "../styles.less"
+import moment from "moment"
+import {Upload,Modal,Form, Icon, Input, Button,DatePicker,TimePicker} from 'antd'
+import {getBlockInfo, getDataInfo} from "../../../../utils/BTCommonApi";
+
+const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
+const FormItem = Form.Item;
 const { TextArea } = Input;
-const RadioGroup = Radio.Group;
-
-
-const options = [{
-    value: 'Video',
-    label: 'Video',
-    children: [{
-        value: 'FacialRecognition',
-        label: 'FacialRecognition',
-        children: [{
-            value: 'Person',
-            label: 'Person',
-        }],
-    }],
-}];
-
-const onChange = (dates, dateStrings)=> {
-    console.log('From: ', dates[0], ', to: ', dates[1]);
-    console.log('From: ', dateStrings[0], ', to: ', dateStrings[1]);
+const formItemLayout = {
+    labelCol: {
+        xs: { span: 24 },
+        sm: { span: 5 },
+    },
+    wrapperCol: {
+        xs: { span: 24 },
+        sm: { span: 12 },
+    },
 };
-const Option = Select.Option;
-const children = [];
-for (let i = 10; i < 36; i++) {
-    children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-}
+const props = {
+    action: '//jsonplaceholder.typicode.com/posts/',
+    onChange({ file, fileList }) {
+        if (file.status !== 'uploading') {
+            console.log(file, fileList);
+        }
+    },
 
+};
 
-
-
-export default class BTUploadAsset extends PureComponent{
+export default class BTPublishDemand extends PureComponent{
     constructor(props){
         super(props)
+        const value = this.props.value || {};
+
         this.state = {
-            value:1,
             title:"",
-            price:"",
-            spanDate:"",
             textArea:"",
-            featureTag:"",
+            number: value.number || 0,
+            date:"",
+            dateString:""
         }
     }
-
-    onChangeDate(dateString,date) {
-        this.setState({
-            spanDate:date
-        })
-    }
-    handleChange(value) {
-        this.setState({
-            featureTag:`${value}`
-        })
+    componentWillReceiveProps(nextProps) {
+        // Should be a controlled component.
+        if ('value' in nextProps) {
+            const value = nextProps.value;
+            this.setState(value);
+        }
     }
     onChange(e){
         this.setState({
             value:e.target.value
+        })
+    }
+    handleCancel(){
+        this.setState({
+            visible:false
         })
     }
     onChangeTitle(e){
@@ -67,75 +61,148 @@ export default class BTUploadAsset extends PureComponent{
             title:e.target.value
         })
     }
-    onChangePrice(e){
+    handleNumberChange = (e) => {
+        const number = parseInt(e.target.value || 0, 10);
+        if (isNaN(number)) {
+            return;
+        }
+        if (!('value' in this.props)) {
+            this.setState({ number });
+        }
+        this.triggerChange({ number });
+    }
+    triggerChange = (changedValue) => {
+        // Should provide an event to pass value to Form.
+        const onChange = this.props.onChange;
+        if (onChange) {
+            onChange(Object.assign({}, this.state, changedValue));
+        }
+    }
+    //datePicker
+    onChangeDate(date,dateString) {
         this.setState({
-            price:e.target.value
+            date:date,
+            dateString:dateString,
         })
     }
+    disabledDate(current) {
+        // Can not select days before today and today
+        return current && current < moment().endOf('day');
+    }
+
     onChangeTextArea(e){
         this.setState({
             textArea:e.target.value
         })
     }
-    //点击传输数据
-    onClick(){
-        BTFetch("","post",{
+
+    //点击后数据收集、fetch
+    async handleOk(){
+        console.log({
             title:this.state.title,
-            price:this.state.price,
-            spanDate:this.state.spanDate,
+            number: this.state.number,
+            date:this.state.date,
+            dateString:(new Date(this.state.dateString).getTime())/1000, //时间戳
             textArea:this.state.textArea,
-            featureTag:this.state.featureTag
-        }).then((data)=>{
-            console.log(data)
+        })
+        //链的data
+        let blockData = {
+            code: "datareqmng",
+            action: "datareqreg",
+            args: {
+                data_req_id: "idtest12",
+                basic_info: {
+                    user_name: "nametest22",
+                    session_id: "sessidtest232",
+                    requirement_name: this.state.title,
+                    feature_tag: 111,
+                    sample_path: "pathtest",
+                    sample_hash: "hashtest",
+                    expire_time: (new Date(this.state.dateString).getTime())/1000,//截止时间时间戳
+                    price: this.state.number,
+                    description: this.state.textArea,
+                    publish_date: Date.parse(new Date()),//当前时间戳
+                    signature: "sigtest"
+                }
+            }
+        }
+
+        let blockInfo = await getBlockInfo(blockData);
+        blockData = await getDataInfo(blockData);
+        var myHeaders = new Headers();
+        myHeaders.append('Content-Type','text/plain');
+        fetch("http://10.104.10.152:8080/v2/requirement/Publish",{
+            method:"post",
+            header:myHeaders,
+            body:JSON.stringify({
+                ref_block_num: blockInfo.data.ref_block_num,
+                ref_block_prefix: blockInfo.data.ref_block_prefix,
+                expiration: blockInfo.data.expiration,
+                scope: ["datareqmng"],
+                read_scope: [],
+                messages: [{
+                    code: "datareqmng",
+                    type: "datareqreg",
+                    authorization: [],
+                    data: blockData.data.bin
+                }],
+                signatures: []
+            })
+        }).then(response=>response.json())
+            .then(res=>{
+                //成功时返回的code,并隐藏弹框
+                if(res.code==0) {
+                    alert("successful")
+                    this.setState({
+                        visible: false,
+                    });
+                }else{
+                    alert("failed")
+                }
+            }).catch(error=>{
+            console.log(error)
         })
     }
     render(){
         return(
-            <div className="need">
-                <div className="upLoadForm">
-                    <div className="Title">
+                <div>
+                    <div>
                         <span>Title:</span>
                         <Input value={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
                     </div>
-                    <div className="priceAndData">
-                        <div className="price">
-                            <span>Expect Price:</span>
-                            <Input value={this.state.price} onChange={(e)=>this.onChangePrice(e)}  />
-                            <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
-                        </div>
-                        <div className="dataAssetType">
-                            <span>Data Asset Type: </span>
-                            <Cascader style={{marginLeft:"10px"}} options={options} onChange={onChange} placeholder="Please select" />
-                        </div>
+                    <div>
+                        <span>Expect Price:</span>
+                        <Input
+                            type="text"
+                            value={this.state.number}
+                            onChange={this.handleNumberChange}
+                        /> </div>
+                    <div>
+                        <span>Deadline:</span>
+                        <br/>
+                        <DatePicker
+                            onChange={(date,dateString)=>this.onChangeDate(date,dateString)}
+                            style={{width:"100%"}}
+                            disabledDate = {(current)=>this.disabledDate(current)}
+                        />
                     </div>
-                    <div className="featureTag">
-                        <span>FeatureTag:</span>
-                        <Select
-                            mode="multiple"
-                            placeholder="Please select"
-                            onChange={(value)=>this.handleChange(value)}
-                        >
-                            {children}
-                        </Select>
+                    <div>
+                        <span>Description: </span>
                     </div>
-                    <div className="dateSelect">
-                            <span className="dateSelectSpan" style={{margin:0}}>Deadline:</span>
-                        <DatePicker onChange={(dateString,date)=>this.onChangeDate(dateString,date)} className="datePicker" />
+                    <div>
+                        <TextArea rows={4} value={this.state.textArea} onChange={(e)=>this.onChangeTextArea(e)} />
                     </div>
-                    <div className="description">
-                        <div>
-                            <span>Description: </span>
-                        </div>
-                        <div className="textarea">
-                            <TextArea rows={4} value={this.state.textArea} onChange={(e)=>this.onChangeTextArea(e)} />
-                        </div>
+                    <div>
+                        <span>Upload some samples:</span>
+                        <br/>
+                        <Upload {...props} style={{display:"flex",flexDirection:"row"}}>
+                            <Button>
+                                <Icon type="upload" /> 资源库筛选
+                            </Button>
+                        </Upload>
                     </div>
-                    <div className="submit">
-                        <Button type="submit" onClick={()=>this.onClick()}>OK</Button>
-                    </div>
-            </div>
-            </div>
-
+                </div>
         )
     }
 }
+

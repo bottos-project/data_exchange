@@ -1,7 +1,7 @@
 import React,{PureComponent} from 'react'
 import { Table } from 'antd'
 import "./dashboardStyle.less"
-
+import BTFetch from '../../../utils/BTFetch'
 const columns = [
     {title: 'TransactionID', dataIndex: 'id',},
     { title: 'Price', dataIndex: 'price', key: 'price',render:()=>
@@ -36,7 +36,17 @@ export default class BTDashboardTable extends PureComponent{
     constructor(props){
         super(props)
     }
+    componentDidMount(){
+        BTFetch('http://10.104.10.152:8080/v2/dashboard/GetRecentTxList','get',{},{
+            full_path:true,
+        }).then(res=>{
+            if(res.code==1){
+                let data=JSON.parse(res.data);
+                console.log(data)
 
+            }
+        })
+    }
     render(){
         return(
             <div style={{width:"100%"}}>

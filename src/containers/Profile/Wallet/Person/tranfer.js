@@ -1,5 +1,6 @@
 import React,{PureComponent} from 'react'
-
+import BTFetch from '../../../../utils/BTFetch'
+import {getBlockInfo, getDataInfo} from "../../../../utils/BTCommonApi";
 export default class Transfer extends PureComponent{
     constructor(props){
         super(props)
@@ -13,6 +14,51 @@ export default class Transfer extends PureComponent{
     }
     handleAddress(e){
         this.setState({userAddress:e.target.value})
+    }
+     async submit(){
+         let block=(await getBlockInfo()).data;
+         console.log(block);
+         let username='12'
+        let param={
+            "code":"currency",
+            "action":"transfer",
+            "args":{
+                "from":username,
+                "to":this.state.userAddress,
+                "quantity":this.state.userCoin
+            }
+        };
+       // let getDataInfo = await getDataInfo(param);
+       let getDataBin=(await getDataInfo(param)).data.bin;
+       console.log(getDataBin);
+       let data={
+           "ref_block_num": block.ref_block_num,
+           "ref_block_prefix": block.ref_block_prefix,
+           "expiration": block.expiration,
+           "scope": [
+               username,
+               this.state.userAddress
+           ],
+           "read_scope": [],
+           "messages": [{
+               "code": "currency",
+               "type": "transfer",
+               "authorization": [],
+               "data": getDataBin
+           }],
+           "signatures": []
+       };
+        BTFetch('http://10.104.21.10:8080/v2/user/transfer','post',data,{
+            full_path:true,
+        }).then(res=>{
+            console.log(res);
+            if(res.code==1){
+                alert('转账成功')
+            }else{
+                alert('转账失败')
+            }
+        })
+
     }
     clear(){
         this.setState({userCoin:'',userAddress:''},()=>{
@@ -29,7 +75,7 @@ export default class Transfer extends PureComponent{
                         <span>From</span>
                         <div className="transfer-right">
                             <select name="" id="">
-                                <option value="">Lidy</option>
+                                <option value="btd121">btd121</option>
                                 <option value="">Haoyu</option>
                                 <option value="">Yugedaren</option>
                             </select>
@@ -58,7 +104,7 @@ export default class Transfer extends PureComponent{
                     </div>
                 </div>
                 <div className="token-submit">
-                    <button className='add'>Submit</button>
+                    <button className='add' onClick={(e)=>this.submit()}>Submit</button>
                     <button className='cancel' onClick={()=>this.clear()}>Cancel</button>
                 </div>
             </div>

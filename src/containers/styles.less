@@ -4,6 +4,9 @@
 @marginTop:20px;
 @marginBottom:20px;
 
+.flex {
+    display: flex;
+}
 
 .container {
     display: flex;
@@ -35,8 +38,19 @@
 }
 
 .header {
+    background-color: #FFFFFF;
+    box-shadow: 1px 2px 2px #CCCCCC;
     flex: 1;
     height: 80px;
+}
+
+.center {
+    align-items: center;
+    justify-content: center;
+}
+
+.redbg{
+    background-color: red
 }
 
 .content {
@@ -44,7 +58,7 @@
 
     .menu {
         min-width: @sideWidth;
-        background-color: #1a1a1a;
+        background-color: #FFFFFF;
     }
 
     .contentbody {

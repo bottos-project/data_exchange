@@ -27,7 +27,7 @@ export default class BTPublishAssetModal extends PureComponent{
 
     render(){
         return(
-            <Modal 
+            <Modal
                 visible={this.state.visible}
                 onCancel={()=>this.onCancel()}
                 onOk = {()=>this.onOk()}

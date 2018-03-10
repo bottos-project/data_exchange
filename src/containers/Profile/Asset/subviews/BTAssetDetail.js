@@ -74,19 +74,10 @@ import React,{PureComponent} from 'react'
 import { Table, Input, Icon, Button, Popconfirm,Menu, Dropdown, Select } from 'antd';
 import "./styles.less"
 import BTFetch from "../../../../utils/BTFetch"
+import {getBlockInfo, getDataInfo} from "../../../../utils/BTCommonApi";
 const { Option, OptGroup } = Select;
-const menu = (
-    <Menu>
-        <Menu.Item key="0">
-            <a href="http://www.alipay.com/">1st menu item</a>
-        </Menu.Item>
-        <Menu.Item key="1">
-            <a href="http://www.taobao.com/">2nd menu item</a>
-        </Menu.Item>
-        <Menu.Divider />
-        <Menu.Item key="3">3rd menu item</Menu.Item>
-    </Menu>
-);
+
+
 
 
 const EditableCell = ({ editable, value, onChange }) => (
@@ -109,7 +100,8 @@ export default class BTAssetDetail extends PureComponent{
                 render: (text, record) => this.renderColumns(text, record, 'assetName'),
         },
             { title: 'Type', dataIndex: 'type', key: 'type',
-                render:() =>(
+                render:() =>{
+                    return(
                     <Select
                         defaultValue="数据清洗"
                         onChange={handleChange}
@@ -117,7 +109,8 @@ export default class BTAssetDetail extends PureComponent{
                             <Option value="jack">数据清洗</Option>
                             <Option value="lucy">数据采集</Option>
                     </Select>
-                )
+                    )
+                }
 
             },
         { title: 'Price', dataIndex: 'price', key: 'price',
@@ -164,22 +157,11 @@ export default class BTAssetDetail extends PureComponent{
             }];
         const data = [];
         this.cacheData = data.map(item => ({ item }));
-        for (let i = 0; i < 7; ++i) {
-            data.push({
-                key: i,
-                assetName: 'pandas',
-                type:'数据清洗',
-                price: '150',
-                fileName:"pandas.zip",
-                fileSize:"123M",
-                date: '2018-01-15 23:12:00',
-                description:'the pictures of pandas',
-            });
-        }
         this.state = {
             data,
         }
     }
+    //删除数据后的操作
     onDelete(key){
         const dataSource = [...this.state.data];
         this.setState({ data: dataSource.filter(item => item.key !== key) });
@@ -212,20 +194,71 @@ export default class BTAssetDetail extends PureComponent{
             target.editable = true;
             this.setState({ data: newData });
         }
-
     }
-    save(key) {
-                const newData = [...this.state.data];
-                const target = newData.filter(item => key === item.key)[0];
-                if (target) {
-                    delete target.editable;
-                    this.setState({ data: newData });
-                    this.cacheData = newData.map(item => ({ item }));
+    //修改数据后点击保存
+    async save(key) {
+        const newData = [...this.state.data];
+        const target = newData.filter(item => key === item.key)[0];
+        if (target) {
+            delete target.editable;
+            this.cacheData = newData.map(item => ({item}));
+        }
+        let blockData = {
+            code: "assetmng",
+            action: "assetreg",
+            args: {
+                asset_id: "filehashtest2",
+                basic_info: {
+                    user_name: "wc2",
+                    session_id: "sessidtestwc2",
+                    asset_name: newData[key].assetName,
+                    feature_tag: 12345,
+                    sample_path: "pathtest",
+                    sample_hash: "samplehasttest",
+                    storage_path: "stpathtest",
+                    storage_hash: "sthashtest",
+                    expire_time: 345,
+                    price: newData[key].price,
+                    description: newData[key].description,
+                    upload_date: 999,
+                    signature: "sigtest"
                 }
-                const postNewData = newData[key];
-                BTFetch("","post",postNewData).then(data=>{
-                    console.log(data)
-                })
+            }
+        }
+        let blockInfo = await getBlockInfo(blockData);
+        blockData = await getDataInfo(blockData);
+        var myHeaders = new Headers();
+        myHeaders.append('Content-Type','text/plain');
+        fetch("http://10.104.21.10:8080/v2/asset/modify",{
+            method:"post",
+            header:myHeaders,
+            body:JSON.stringify({
+                ref_block_num: blockInfo.data.ref_block_num,
+                ref_block_prefix: blockInfo.data.ref_block_prefix,
+                expiration: blockInfo.data.expiration,
+                scope: ["assetmn"],
+                read_scope: [],
+                messages: [{
+                    code: "assetmng",
+                    type: "assetreg",
+                    authorization: [111],
+                    data: blockData.data.bin,
+                }],
+                signatures:[]
+            })
+        }).then(response=>response.json())
+            .then(res=>{
+                if(res.code==1) {
+                    alert("successful")
+                    if(target){
+                        this.setState({data: newData});
+                    }
+                }else{
+                    alert("failed")
+                }
+            }).catch(error=>{
+            console.log(error)
+        })
     }
     cancel(key) {
         const newData = [...this.state.data];
@@ -235,6 +268,35 @@ export default class BTAssetDetail extends PureComponent{
             delete target.editable;
             this.setState({ data: newData });
         }
+    }
+
+    componentDidMount() {
+        var myHeaders = new Headers();
+        myHeaders.append('Content-Type','text/plain');
+        fetch("http://127.0.0.1:3005/asset/modify",{
+            method:"get",
+            header:myHeaders,
+        }).then(response=>response.json()).then(data=>{
+            var newdata = [];
+            console.log(data.assetDetail[0].asset_name)
+            for(let i=0;i<data.assetDetail.length;i++){
+                newdata.push({
+                    key: i,
+                    assetName:data.assetDetail[i].asset_name,
+                    type:data.assetDetail[i].type,
+                    price:data.assetDetail[i].price,
+                    fileName:data.assetDetail[i].file_name,
+                    fileSize:data.assetDetail[i].file_size,
+                    date: "",
+                    description:data.assetDetail[i].description,
+                })
+            }
+            this.setState({
+                data:newdata
+            })
+        }).catch(error=>{
+            console.log(error)
+        })
     }
     render() {
         return (

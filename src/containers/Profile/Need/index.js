@@ -5,7 +5,7 @@ import './styles.less';
 import BTList from '../../../components/BTList'
 import BTAssetDetail from './subviews/BTAssetDetail'
 import BTUploadAsset from './subviews/BTUploadAsset'
-import BTHaveBought from "./subviews/BTHaveBought"
+import BTMyAssetSet from "./subviews/BTMyAssetSet"
 
 const TabPane = Tabs.TabPane;
 
@@ -25,9 +25,10 @@ export default class BTProfileNeed extends PureComponent{
                     <TabPane tab="已发布需求" key="2">
                         <BTAssetDetail/>
                     </TabPane>
-                    {/*<TabPane tab="已购买需求" key="3">*/}
-                        {/*<BTHaveBought/>*/}
-                    {/*</TabPane>*/}
+                    <TabPane tab="我的资源库" key="3">
+                        <BTMyAssetSet/>
+                    </TabPane>
+
                 </Tabs>
             </div>
         )

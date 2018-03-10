@@ -1,8 +1,9 @@
 import React,{PureComponent} from 'react'
 import './styles.less'
-
 import {Button,Icon,Tag} from 'antd'
 import {Link} from 'react-router'
+import {isLogin} from '../../../tools/localStore'
+import BTLogin from '../../../components/Login'
 
 const IconText = ({ type, text }) => (
     <span>
@@ -16,10 +17,22 @@ export default class BTAssetCell extends PureComponent{
         super(props)
     }
 
+    buyButtonClick(){
+        console.log('buyButtonClick')
+        // let loginState = isLogin()
+        // if(!loginState){
+            this.loginModel.setState({
+                visible:true
+            })
+        // }
+    }
+
     render(){
         let linkto = this.props.linkto || '/'
         return(
             <div className="listCellStyle">
+                <BTLogin ref={ref=>this.loginModel = ref}/>
+
                 <div className="ant-list-item-extra" style={{backgroundColor:'red'}}>
                     <img src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" alt="logo" width="272"/>
                 </div>
@@ -51,7 +64,7 @@ export default class BTAssetCell extends PureComponent{
                             <li><IconText type="star-o" text="156" /></li>
                             <li><IconText type="like-o" text="156" /></li>
                             <li><IconText type="message" text="2" /></li>
-                            <li><Button type="primary" size="small">购买</Button></li>
+                            <li><Button type="primary" onClick={()=>{this.buyButtonClick()}}>购买</Button></li>
                             <li><Button type="danger" size="small">加入购物车</Button></li>
                         </ul>
                     </div>

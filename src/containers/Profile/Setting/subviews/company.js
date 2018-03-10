@@ -48,16 +48,16 @@ export default class BTCompany extends PureComponent{
 
     //公司资料提交
     onClickE() {
-       var param = {
+        var param = {
             "username":this.state.username,
             "owner_pub_key": "0xxxx",
             "active_pub_key": "0xxxxx",
             "signature_acct": "0xxxxxx",
             "user_info":{
-                        "encrypted_info":1,
-                         "user_type":0,
-                         "role_type":1
-                         },
+                "encrypted_info":1,
+                "user_type":0,
+                "role_type":1
+            },
             "signature_user": "0xxxxxx"
         }
         // var param={
@@ -85,46 +85,46 @@ export default class BTCompany extends PureComponent{
         // console.log(BTCryptTool.aesDecrypto(this.props.data.encypted_info,'btd121'))
         return(
             <div>
-                        <div className="enterpriseInformation">
-                            <div>
-                                <span>user_type:</span>
-                                <Select defaultValue="company"  onChange={(value)=>this.handleChange(value)} disabled>
-                                    <Option value="disabled" disabled>Disabled</Option>
-                                </Select>
-                            </div>
-                            <div className="UserName">
-                                <span>UserName:</span>
-                                <span>{this.state.username}</span>
-                            </div>
-                            <div className="enterpriseName">
-                                <span>company :</span>
-                                <span>{this.state.company_name} </span>
-                            </div>
-                            <div className="enterpriseAddress">
-                                <span>enterpriseAddress :</span>
-                                <span>{this.state.company_address} </span>
-                            </div>
-                            <div className="accountType">
-                                <span>RoleType:</span>
-                                <select value={this.state.role_type} onChange={(e)=>this.onChangeRoleType(e)}>
-                                    <option value="0">consumer</option>
-                                    <option value="1">provider</option>
-                                    <option value="2">arbiter</option>
-                                </select>
-                            </div>
-                            <div className="mailBox">
-                                <span>Email:</span>
-                                <Input value={this.state.email} onChange={(e)=>this.onChangeEmail (e)}/>
-                            </div>
-                            {/*<div className="address">*/}
-                                {/*<span>enterpriseAddress:</span>*/}
-                                {/*<Input value={this.state.EAddress} onChange={(e)=>this.onChangeEAddress(e)}/>*/}
-                                {/*<Button>modify</Button>*/}
-                            {/*</div>*/}
-                            <div className="submit" >
-                                <Button onClick={()=>this.onClickE()}>submit</Button>
-                            </div>
-                        </div>
+                <div className="enterpriseInformation">
+                    <div>
+                        <span>user_type:</span>
+                        <Select defaultValue="company"  onChange={(value)=>this.handleChange(value)} disabled>
+                            <Option value="disabled" disabled>Disabled</Option>
+                        </Select>
+                    </div>
+                    <div className="UserName">
+                        <span>UserName:</span>
+                        <span>{this.state.username}</span>
+                    </div>
+                    <div className="enterpriseName">
+                        <span>company :</span>
+                        <span>{this.state.company_name} </span>
+                    </div>
+                    <div className="enterpriseAddress">
+                        <span>enterpriseAddress :</span>
+                        <span>{this.state.company_address} </span>
+                    </div>
+                    <div className="accountType">
+                        <span>RoleType:</span>
+                        <select value={this.state.role_type} onChange={(e)=>this.onChangeRoleType(e)}>
+                            <option value="0">consumer</option>
+                            <option value="1">provider</option>
+                            <option value="2">arbiter</option>
+                        </select>
+                    </div>
+                    <div className="mailBox">
+                        <span>Email:</span>
+                        <Input value={this.state.email} onChange={(e)=>this.onChangeEmail (e)}/>
+                    </div>
+                    {/*<div className="address">*/}
+                    {/*<span>enterpriseAddress:</span>*/}
+                    {/*<Input value={this.state.EAddress} onChange={(e)=>this.onChangeEAddress(e)}/>*/}
+                    {/*<Button>modify</Button>*/}
+                    {/*</div>*/}
+                    <div className="submit" >
+                        <Button onClick={()=>this.onClickE()}>submit</Button>
+                    </div>
+                </div>
             </div>
 
         )

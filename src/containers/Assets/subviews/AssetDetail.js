@@ -1,42 +1,99 @@
 import React,{PureComponent} from 'react'
 import { Carousel,Button,Tag } from 'antd';
-
+import BTFetch from '../../../utils/BTFetch'
+import {getBlockInfo,getDataInfo} from '../../../utils/BTCommonApi'
 // 此处样式在Demand/subviews/styles.less中控制
 
 export default class BTAssetDetail extends PureComponent{
     constructor(props){
         super(props)
+        this.state={
+            data:this.props.location.query
+        }
     }
-
+    async buy(){
+        //获取区块信息
+        if(this.state.data.username == 'btd121'){
+            alert('不允许购买自己的资产！！！')
+            return;
+        }
+        // console.log(this.state.data)
+        let block=(await getBlockInfo()).data;
+        // console.log(this.state.data,block);
+        //获取data信息
+        let data={
+            "code":"datadealmng",
+            "action":"datapurchase",
+            "args":{
+                "data_deal_id":"dealidtest",
+                "basic_info":{
+                    "user_name":"12",
+                    "session_id":"sessidtest",
+                    "asset_id":this.state.data.asset_id,
+                    "random_num":Math.ceil(Math.random()*100),
+                    "signature":"0xxxxxxxx"
+                }
+            }
+        };
+        let getDataBin=(await getDataInfo(data)).data.bin;
+        console.log(getDataBin)
+        let param={
+            "ref_block_num": block.ref_block_num,
+            "ref_block_prefix": block.ref_block_prefix,
+            "expiration": block.expiration,
+            "scope": [
+                "assetmng",
+                '12',
+                "datadealmng",
+                this.state.data.username
+            ],
+            "read_scope": [],
+            "messages": [{
+                "code": "datadealmng",
+                "type": "datapurchase",
+                "authorization": [],
+                "data": getDataBin
+            }],
+            "signatures": []
+        };
+        BTFetch('http://10.104.21.10:8080/v2/exchange/consumerBuy','post',param,{
+            full_path:true
+        }).then(res=>{
+            console.log(res);
+            if(res.code == 1){
+                alert('ConsumerBuy Successful!');
+            }else{
+                alert('ConsumerBuy Failed!');
+            }
+        })
+    }
     render(){
+        let data=this.props.location.query;
         return(
             <div>
             <div className="detailContentStyle">
                 <div style={{padding:20}}>
-                    <p><span>资产ID:</span>2378979948237498237423947329</p>
-                    <p><span style={{fontSize:15,fontWeight:'bold'}}>标题:</span>年轻人表情图标</p>
-                    <p><span style={{fontSize:15,fontWeight:'bold'}}>资产类型:</span>Audio</p>
-                    <p><span style={{fontSize:15,fontWeight:'bold'}}>期望价格:</span>50</p>
-                    <p><span style={{fontSize:15,fontWeight:'bold'}}>下架时间:</span>2017-8-18</p>
+                    <p><span>资产ID:</span>{data.asset_id}</p>
+                    <p><span style={{fontSize:15,fontWeight:'bold'}}>标题:</span>{data.asset_name}</p>
+                    <p><span style={{fontSize:15,fontWeight:'bold'}}>资产类型:</span>{data.type}</p>
+                    <p><span style={{fontSize:15,fontWeight:'bold'}}>期望价格:</span>{data.price}</p>
+                    <p><span style={{fontSize:15,fontWeight:'bold'}}>下架时间:</span>{data.expire_time}</p>
                     <div>
-                        <Tag color="cyan">便宜</Tag>
-                        <Tag color="cyan">实用</Tag>
-                        <Tag color="cyan">有价值</Tag>
+                        <Tag color="cyan">{data.feature_tag}</Tag>
+                        {/*<Tag color="cyan">实用</Tag>*/}
+                        {/*<Tag color="cyan">有价值</Tag>*/}
                     </div>
 
                     <div className="detailOptions">
                         <ul>
-                            <li><Button type="primary" className="buyButton">购买</Button></li>
-                            <li><Button type="primary">下载样例</Button></li>
+                            <li><Button onClick={(e)=>this.buy(e)} type="primary" className="buyButton">购买</Button></li>
+                            <li><Button type="primary"><a href={data.sample_path}>下载样例</a></Button></li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div className="detailDescribe">
-                <p>区块链是分布式数据存储、点对点传输、共识机制、加密算法等计算机技术的新型应用模式。所谓共识机制是区块链系统中实现不同节点之间建立信任、获取权益的数学算法[1]  。
-    区块链（Blockchain）是比特币的一个重要概念，货币联合清华大学五道口金融学院互联网金融实验室、新浪科技发布的《2014—2016全球比特币发展研究报告》提到区块链是比特币的底层技术和基础架构[2]  。
-    本质上是一个去中心化的数据库，同时作为比特币的底层技术。区块链是一串使用密码学方法相关联产生的数据块，每一个数据块中包含了一次比特币网络交易的信息，
-    用于验证其信息的有效性（防伪）和生成下一个区块</p>
+                <p>{data.description}</p>
             </div>
             </div>
         )

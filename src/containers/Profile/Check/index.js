@@ -2,96 +2,71 @@ import React,{PureComponent} from 'react'
 import { Table, Icon } from 'antd'
 import "./style.less"
 import BTFetch from "../../../utils/BTFetch";
+import BTUnlogin from '../../../components/BTUnlogin'
+import {isLogin} from '../../../tools/localStore'
+import BTTable from '../../../components/BTTable'
+
 
 const columns = [
-    { title: 'To', dataIndex: 'requireID', key: 'requireID',render:() =>
-            <div>
-                <a href="#" style={{color:"#6d6df5"}}>Jack</a>
-            </div>
-    },
-    { title: 'State', dataIndex: 'state', key:'state' },
-    { title: 'FeatureTag', dataIndex: 'featureTag', key:'featureTag' },
-    { title: 'Price', dataIndex: 'price', key: 'price',render:()=>
-            <div>
-                <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
-                <span>200</span>
-            </div>
-    },
-    { title: 'Sample', dataIndex: 'sample', key: 'sample',render:() =>
-            <a>
-                <Icon type="download" style={{color:"black",fontWeight:900}}/>
-            </a>
-    },
-    { title: 'SampleSize',dataIndex:'sampleSize',key:'sampleSize'},
-    { title: 'From', dataIndex: 'assetID', key: 'assetID',render:() =>
-            <div>
-                <a href="#" style={{color:"#6d6df5"}}>Tom</a>
-            </div>
-    },
-    { title: 'Cancel', dataIndex: '', key: 'x', render: () =>
-            <div>
-                <a href="#" style={{backgroundColor:"black",color:"white",padding:"1px 5px",borderRadius:"3px"}}>Cancel</a>
-            </div>
-},
-    { title: 'Agree', dataIndex: '', key: 'y', render: () =>
-            <div>
-                <a onClick={()=>this.onClick()} href="#" style={{backgroundColor:"black",color:"white",padding:"1px 5px",borderRadius:"3px"}}>Agree</a>
-            </div>
-    },
-    { title: 'Reject', dataIndex: '', key: 'z', render: () =>
-            <div>
-                <a href="#" style={{backgroundColor:"black",color:"white",padding:"1px 5px",borderRadius:"3px"}}>Reject</a>
-            </div>
-    },
-    { title: 'Date', dataIndex: 'date', key: 'date' },
-
+    { title: 'asset_id', dataIndex: 'asset_id', key: 'asset_id'},
+    { title: 'consumer', dataIndex: 'consumer', key:'consumer' },
+    { title: 'data_presale_id', dataIndex: 'data_presale_id', key:'data_presale_id' },
+    { title: 'data_req_id', dataIndex: 'data_req_id', key:'data_req_id' },
+    { title: 'user_name', dataIndex: 'user_name', key:'user_name' },
 ];
 
-const data = [];
-for (let i = 0; i < 5; ++i) {
-    data.push({
-        key: i,
-        requireID:"jack",
-        state:"checking",
-        featureTag:"pictures",
-        price:"200",
-        sample:"samples.zip",
-        sampleSize:"3M",
-        date: '2018-01-15 23:12:00',
-        // description:"pictures of pandas",
-        assetID:"Tom"
-    });
-}
+
 
 export default class BTCheck extends PureComponent{
     constructor(props){
         super(props)
+        const data = [];
         this.state={
-            agree:"",
-            reject:"",
-            cancel:"",
-            data:[],
+            asset_id:"",
+            consumer:"",
+            data_presale_id:"",
+            data_req_id:"",
+            data,
         }
     }
 
     componentDidMount() {
-        BTFetch("","post",JSON.stringify({sessionID:"lalala"})).then(data=>{
-            data = {
-                code:'1',
-                response:{
-                    dlf:'sdf'
-                }
-            };
-            let response = data.response;
+        var myHeaders = new Headers();
+        myHeaders.append('Content-Type','text/plain');
+        fetch("http://10.104.21.10:8080/v2/user/QueryNotice",{
+            method:"post",
+            header:myHeaders,
+            body:JSON.stringify({
+                userName: "nametest",
+                random: "fileName123",
+                signatures: "0xxxx"
+            })
+        }).then(response=>response.json()).then(data=>{
+
+            const theSureData = JSON.parse(data.data);
+            console.log(theSureData);
+            console.log(theSureData[0].asset_id)
+            var newdata = [];
+            for(let i=0;i<theSureData.length;i++){
+                newdata.push({
+                    key: i,
+                    asset_id:theSureData[i].asset_id,
+                    consumer:theSureData[i].consumer,
+                    data_presale_id:theSureData[i].data_presale_id,
+                    data_req_id:theSureData[i].data_presale_id,
+                    user_name:theSureData[i].user_name
+                })
+            }
+
             this.setState({
-                data:response
-            });
-            console.log(data)
+                data:newdata
+            })
         }).catch(error=>{
             console.log(error)
         })
     }
     render(){
+        const data  = this.state.data;
         return(
             <div style={{width:"90%",height:"100%"}}>
                 <Table

@@ -1,6 +1,4 @@
 import React,{PureComponent} from 'react'
-
-
 import {Button,Icon} from 'antd'
 import {Link} from 'react-router'
 
@@ -52,4 +50,6 @@ export default class BTShopListCell extends PureComponent{
             </div>
         )
     }
+
 }
+

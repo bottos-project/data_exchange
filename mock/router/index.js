@@ -1,13 +1,13 @@
 const Router = require('koa-router');
 const route = new Router();
 
-const yuanjunliang = require('./yuanjunliang')
-const liuhaoyu = require('./liuhaoyu')
-const yuanjia = require('./yuanjia')
+const yjl = require('./yjl')
+const lhy = require('./lhy')
+const yj = require('./yj')
 
 module.exports = function (app){
-    app.use(yuanjunliang);
-    app.use(liuhaoyu);
-    app.use(yuanjia);
+    app.use(yjl);
+    app.use(lhy);
+    app.use(yj);
     return ()=>{}
 }

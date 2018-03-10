@@ -7,15 +7,17 @@ export default class BlockList extends PureComponent{
         super(props)
     }
     render(){
+        // console.log(this.props.block);
+        let data=this.props.block;
         return (
             <div className='event'>
                 <div className="formats">
-                    <a>Block 4242314</a>
+                    <a>Block {data.block_id}</a>
                     <em>18 secs ago</em>
                 </div>
                 <div className="detail">
                     <p>
-                        Mined By<a className='address-tag'>0xb75d1e62b10e4ba91315c...</a>
+                        Mined By<a className='address-tag'>{(data.transaction_id).substr(0,30)+'...'}</a>
                     </p>
                     <p>
                         <a >146 Txns</a>

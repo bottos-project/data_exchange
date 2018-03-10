@@ -1,6 +1,6 @@
 import React,{PureComponent} from 'react'
-import {Table, Upload, Icon, message} from 'antd';
-
+import {Popconfirm,Table, Upload, Icon, message} from 'antd';
+import BTFetch from "../../../../utils/BTFetch"
 const Dragger = Upload.Dragger;
 
 const props = {
@@ -21,41 +21,63 @@ const props = {
 };
 
 
-const columns = [
-    { title: 'FileName', dataIndex: 'fileName', key: 'fileName' },
-    { title: 'FileSize', dataIndex: 'fileSize', key: 'fileSize' },
-    { title: 'sampleName', dataIndex: 'sampleName', key: 'sampleName' },
-    { title: 'sampleSize', dataIndex: 'sampleSize', key: 'sampleSize' },
-    { title: 'Action', dataIndex: '', key: 'x', render: () =>
-            <ul>
-                <a href="#">DownLoad </a>
-                <a href="#">Delete</a>
-            </ul>,
-    },
-    { title: 'Date', dataIndex: 'date', key: 'date' },
-];
-
-const data = [];
-for (let i = 0; i < 5; ++i) {
-    data.push({
-        key: i,
-        fileName:"pandas.zip",
-        fileSize:"123M",
-        sampleName:"samples.zip",
-        sampleSize:"3M",
-        date: '2018-01-15 23:12:00',
-    });
-}
 
 export default class BTMyAssetSet extends PureComponent{
     constructor(props){
-        super(props)
+        super(props);
+        this.columns = [
+            { title: 'sampleName', dataIndex: 'sampleName', key: 'sampleName' },
+            { title: 'sampleSize', dataIndex: 'sampleSize', key: 'sampleSize' },
+            { title: 'Date', dataIndex: 'date', key: 'date' },
+            { title: "Download", dataIndex: '', key: 'x', render: () =>
+                    <a>
+                        <Icon type="download" style={{color:"black",fontWeight:900}}/>
+                    </a>
+            },
+            { title: 'Delete', dataIndex: 'delete',
+                render: (text, record) => {
+                    return (
+                        // this.state.dataSource.length > 1 ?
+                        //     (
+                        <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
+                            <a href="#" style={{color:"#6d6df5"}}>Delete</a>
+                        </Popconfirm>
+                        // ) : null
+                    );
+                },
+            },
+        ];
+
+        const data = [];
+        for (let i = 0; i < 7; ++i) {
+            data.push({
+                key: i,
+                sampleName:"samples.zip",
+                sampleSize:"3M",
+                date: '2018-01-15 23:12:00',
+            });
+        }
+
+        this.state = {
+            data,
+        }
     }
 
+    onDelete(key){
+        const data = [...this.state.data];
+        this.setState({ data: data.filter(item => item.key !== key) });
+    }
+    componentDidMount() {
+        BTFetch("","post",{}).then(data=>{
+            console.log(data)
+        })
+    }
 
     render(){
+        const { data } = this.state;
+        const columns = this.columns;
         return(
-            <div>
+            <div className="set">
                 <Dragger {...props}>
                     <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />
@@ -64,8 +86,7 @@ export default class BTMyAssetSet extends PureComponent{
                     <p className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
                 </Dragger>
                     <Table
-                        className="components-table-demo-nested"
-
+                        bordered
                         columns={columns}
                         dataSource={data}
                     />
