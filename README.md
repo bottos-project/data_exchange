@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-前端钱包项目
-=======
+
 # Wallet code for Bottos
 
 ```
@@ -20,4 +18,3 @@
 # License
 
 GPLv3 licensed.
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
