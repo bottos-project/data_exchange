@@ -35,10 +35,6 @@ export default class Wallet extends PureComponent{
         // console.log(e)
     }
     export_file(e){
-        // console.log('importKeyStore')
-        // BTUtil.importFile((keyStore)=>{
-        //     BTIpcRenderer.setKeyStore(keyStore)
-        // })
         let selectedFile = document.getElementById("files").files[0];//获取读取的File对象
         if(!selectedFile) return;
         let name = selectedFile.name;//读取选中文件的文件名

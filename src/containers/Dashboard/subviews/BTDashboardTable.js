@@ -3,54 +3,70 @@ import { Table } from 'antd'
 import "./dashboardStyle.less"
 import BTFetch from '../../../utils/BTFetch'
 const columns = [
-    {title: 'TransactionID', dataIndex: 'id',},
-    { title: 'Price', dataIndex: 'price', key: 'price',render:()=>
-            <div>
-                <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
-                <span>200</span>
-            </div>
-    },
-    {title: 'Type', dataIndex: 'type',},
-    {title: 'From', dataIndex: 'from',},
-    {title: 'To', dataIndex: 'to',},
-    {title: 'Date', dataIndex: 'date',},
-    {title: 'Block', dataIndex: 'block',}
+    {title: 'TransactionID', dataIndex: 'id'},
+    { title: 'Price', dataIndex: 'price', key: 'price'},
+    {title: 'Type', dataIndex: 'type'},
+    {title: 'From', dataIndex: 'from'},
+    {title: 'To', dataIndex: 'to'},
+    {title: 'Date', dataIndex: 'date'},
+    {title: 'Block', dataIndex: 'block'}
     ];
-const data = [];
-for (let i = 0; i < 5; ++i) {
-    data.push({
-        key: i,
-        id: '345231',
-        price:"200",
-        type:"数据清洗",
-        from:"8x3454****1212",
-        to:"0k4343****6473",
-        date:"2018-01-22",
-        block:"8494083904"
-    });
-}
 
 
 
 export default class BTDashboardTable extends PureComponent{
     constructor(props){
         super(props)
+        this.state={
+            data:[],
+        }
+    }
+    columns(data){
+        return [
+            {title: 'TransactionID', dataIndex: 'transaction_id',key:'transaction_id',render:(item)=>{
+                return <span>{item.substring(0,15)+'...'}</span>
+                }},
+            { title: 'Price', dataIndex: 'price', key: 'price',render:()=>
+                    <div>
+                        <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
+                        <span>200</span>
+                    </div>
+            },
+            {title: 'Type', dataIndex: 'type',key:'type'},
+            {title: 'From', dataIndex: 'from',key:'from'},
+            {title: 'To', dataIndex: 'to',key:'to'},
+            {title: 'Date', dataIndex: 'date',key:'date',render:(data)=>{
+                return <span>{data.split(' ')[0]}</span>
+                }},
+            {title: 'Block', dataIndex: 'block_id',key:'block_id'}
+        ];
     }
     componentDidMount(){
-        BTFetch('http://10.104.10.152:8080/v2/dashboard/GetRecentTxList','get',{},{
-            full_path:true,
+        BTFetch('/dashboard/GetRecentTxList','get',{},{
+            service:'service',
         }).then(res=>{
             if(res.code==1){
                 let data=JSON.parse(res.data);
                 console.log(data)
-
+                this.setState({
+                    data
+                })
             }
         })
     }
     render(){
+        const { data } = this.state;
+        const columns = this.columns(data);
         return(
-            <div style={{width:"100%"}}>
-                <Table columns={columns} dataSource={data} size="middle" bordered />
+            <div>
+                <h3 style={{padding:20,color:"#666666"}}>最近交易</h3>
+                <Table
+                    className="shadow radius table"
+                    columns={columns}
+                    dataSource={this.state.data}
+                    size="middle"
+                    bordered
+                />
             </div>
         )
     }

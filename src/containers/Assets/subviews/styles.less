@@ -1,24 +1,89 @@
-.tag{
-  display: flex;
-  span{
-    padding:2px 4px;
-    background:#b4b0fa;
-    color: #fff;
-    font-size: 12px;
-    border-radius:2px;
-    margin-right:4px;
-  }
-
+//选中字体颜色
+::selection {
+  background:#4A90E2;
+  color: #fff;
 }
-.bottom{
+.assetDetailBox{
+  color: #FFFFFF;
+  width: 100%;
+  background-color: #FFFFFF;
   display: flex;
   justify-content: center;
-  // span{
-  //   padding:5px 15px;
-  //   background:#1a1a1a;
-  //   color: #fff;
-  //   border-radius: 5px;
-  //   cursor: pointer;
-  //   margin-right: 15px;
-  // }
+  flex-direction: column;
+  position: relative;
+
+  h2,ul,div,.dataDescription{
+    display: flex;
+    justify-content: center;
+
+  }
+  .mainData{
+    padding: 30px 50px 50px 50px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction:column;
+    background-image: linear-gradient(-45deg, #5937B9 0%, #BC68D4 100%);
+    box-shadow: 0 0 8px 0 #4A90E2;
+    border-radius: 5px;
+    width: 600px;
+  }
+  h1{
+    font-size: 40px;
+    color: #FFFFFF;
+  }
+  button{
+    background-color:#4A90E2;
+    box-shadow: 0 0 8px 0 #4A90E2;
+    color: #FFFFFF;
+    border: none;
+    margin:20px;
+    height: 28px;
+    padding: 0 30px;
+  }
+  button:hover{
+    border: 2px solid #4A60E2;
+    background-color: #4A90E2;
+  }
+  .dataDescription{
+    width: 600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    flex-direction: column;
+    span,textarea{
+      color: #444444;
+    }
+  }
+}
+//assetList
+.assetList{
+  color: #FFFFFF;
+  width: 23%;
+  display: inline-block;
+  background-image: linear-gradient(-45deg, #66A2EA 0%, #CDC8F8 100%);
+  border-radius: 5px;
+  float: left;
+  margin: 1% 2% 1% 0;
+  padding: 10px;
+  height: 20vh;
+  .headAndShop{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 6vh;
+  }
+  h4{
+    margin-bottom: 10px;
+  }
+  h4,a{
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  p,span{
+    font-size: 12px;
+    font-weight: lighter;
+    margin: 0;
+  }
 }

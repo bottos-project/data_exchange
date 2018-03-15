@@ -18,19 +18,16 @@ export default class BTPublishAssetModal extends PureComponent{
         })
     }
 
-    onOk(){
-        /*this.setState({
-            visible:false
-        })*/
-    }
-
     render(){
         return(
             <Modal
                 visible={this.state.visible}
                 onCancel={()=>this.onCancel()}
-                onOk = {()=>this.onOk()}
                 className="modalAsset"
+                okText = "立即发布"
+                cancelText = "取消"
+                footer={null}
+                title="发布资产"
             >
                 <BTUploadAsset/>
             </Modal>

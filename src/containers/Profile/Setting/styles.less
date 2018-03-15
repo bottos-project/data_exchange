@@ -1,20 +1,21 @@
 .personalInformation,.enterpriseInformation{
+  justify-content: center;
   width: 500px;
   padding: 25px;
   margin:5px;
   font-weight: bold;
+  select{
+    display: flex;
+    flex: 1;
+  }
+  .ant-select{
+    padding: 0;
+    height: 25px;
+  }
   input{
     height: 25px;
     display: flex;
     flex: 1;
-  }
-  button{
-    display: flex;
-    width:80px;
-    height: 25px;
-    border: none;
-    color:white;
-    background-color: black;
   }
   div{
       display: flex;
@@ -28,32 +29,24 @@
   div{
     padding: 10px;
   }
-  .submit{
-    display:flex;
-
-    flex-direction: row;
-     button{
-       display: flex;
-       align-items: right;
-       height: 40px;
-       width: 90px;
-       font-size: 18px;
-       background-color: black;
-       color: white;
-       padding-bottom: 2px;
-       flex-direction: row;
-       span{
-         display: flex;
-         justify-content: center;
-       }
-     }
-  }
 .accountType{
   display: flex;
   div{
     padding: 0;
   }
 }
+  .submit{
+    display: flex;
+    justify-content: center;
+    button{
+      display: flex;
+      justify-content: center;
+      span{
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
 }
 .personalInformation div span, .enterpriseInformation div span{
   margin: 0;

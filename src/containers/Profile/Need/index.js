@@ -6,6 +6,7 @@ import BTList from '../../../components/BTList'
 import BTAssetDetail from './subviews/BTAssetDetail'
 import BTUploadAsset from './subviews/BTUploadAsset'
 import BTMyAssetSet from "./subviews/BTMyAssetSet"
+import BTDemandTitle from "./subviews/BTAssetTitle";
 
 const TabPane = Tabs.TabPane;
 
@@ -17,11 +18,12 @@ export default class BTProfileNeed extends PureComponent{
     render(){
 
         return(
-            <div style={{width:"90%"}}>
+            <div style={{width:"100%"}}>
+                <BTDemandTitle/>
                 <Tabs>
-                    <TabPane tab="发布需求" key="1">
-                        <BTUploadAsset/>
-                    </TabPane>
+                    {/*<TabPane tab="发布需求" key="1">*/}
+                        {/*<BTUploadAsset/>*/}
+                    {/*</TabPane>*/}
                     <TabPane tab="已发布需求" key="2">
                         <BTAssetDetail/>
                     </TabPane>

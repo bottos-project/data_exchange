@@ -4,17 +4,14 @@ import "./styles.less"
 import BTFetch from "../../../../utils/BTFetch"
 import BTCryptTool from '../../../../tools/BTCryptTool'
 import {getBlockInfo,getDataInfo} from '../../../../utils/BTCommonApi'
-
 const Dragger = Upload.Dragger;
-// const md5File=require('md5-file');
-// const md5File = require('md5-file/promise')
-// const fs=require('fs');
 const callback_data = ''
-const props = {
+// console.log(getBlockInfo,getDataInfo)
+const  props = {
     customRequest(info){
         //生成文件存储路径url
         const file=info.file;
-        var param={
+        let param={
             "userName": "btd121",
             "fileName": file.name,
             "fileSize": file.size,
@@ -22,42 +19,41 @@ const props = {
             "fileNumber": "1",
             "fileHash":BTCryptTool.sha256(JSON.stringify(info.file)),
             "signatures": "0xxxx"
-        }
-
-        var myHeaders=new Headers();
-        myHeaders.append('Content-Type','text/plain')
-        fetch('http://10.104.21.10:8080/v2/asset/getFileUploadURL',{
-            method:'POST',
-            header:myHeaders,
-            body:JSON.stringify(param)
-        })
-            .then(response=>response.json())
+        };
+        BTFetch('/asset/getFileUploadURL','post',param,{service:'service'})
             .then(res=>{
-                console.log(res)
                 if(res.code==1){
                     let url=res.data;
                     up_ajax(url);
+                }else{
+                    message.error(`${info.file} 获取文件存储url失败`)
                 }
             }).catch(error=>{
-            console.log(error)
-        })
+                message.error(`${info.file} 获取文件存储url失败`)
+        });
+        let myHeaders=new Headers();
+        myHeaders.append('Content-Type','text/plain')
+
         //上传到存储路径中
         const status = info.file.status;
         function up_ajax(url){
-            var myHeaders=new Headers();
-            myHeaders.append('Content-Type','text/plain; charset=utf-8');
-            console.log(url)
+
+           /* BTFetch(url,'put',{},{full_path:true})
+                .then(res=>{
+                    console.log(res);
+                    inquire()
+                }).catch(error=>{
+                    message.error(`${info.file} 上传到存储路径失败 `);
+            });*/
             fetch(url,{
                 method:'PUT',
                 header:myHeaders,
                 body:info.file
             })
-            // .then(response=>response.json())
                 .then(res=>{
                     info.onSuccess();
                     console.log(res)
                     inquire();//查询状态
-                    // inquire_data()//查询注册链上参数
 
                 }).catch(error=>{
                 console.log('错误')
@@ -72,35 +68,28 @@ const props = {
         */
         // 查询状态
         function inquire(){
-            var data={
+            let data={
                 "userName": "btd121",
                 "fileName": file.name
-            }
-            fetch('http://10.104.21.10:8080/v2/asset/getFileUploadStat',{
-                method:'POST',
-                header:myHeaders,
-                body:JSON.stringify(data)
-            })
-                .then(response=>response.json())
-                .then(result=>{
-                    console.log(result)
-                    if(result.msg=='OK'){
-                        inquire_data();
+            };
+           BTFetch('/asset/getFileUploadStat','post',data,{service:'service'})
+                .then(res=>{
+                    if(res.code=='1'){
+                        makeRequest();
+                    }else{
+                        message.error(`${info.file}文件上传失败`);
+                        return ;
                     }
                 }).catch(error=>{
-                console.log(error)
-            })
+                message.error(`${info.file} 文件上传失败 `);
+            });
+
         }
-        //获取注册到链上data 信息
-        function fetch_all(url,method,data){
-            fetch(url,{
-                method:method,
-                header:myHeaders,
-                body:JSON.stringify(data)
-            }).then(response=>response.json())
-        }
-        function inquire_data(){
-            var data={
+        //获取注册到链上data 信息及注册到链上信息
+        const makeRequest = async () => {
+            let _blockInfo = await getBlockInfo();
+            console.log(_blockInfo);
+            let param={
                 "code":"datafilemng",
                 "action":"datafilereg",
                 "args":{
@@ -116,23 +105,14 @@ const props = {
                         "auth_path":"sigtest"
                     }
                 }
-            }
-            fetch('http://10.104.14.169:8888/v1/chain/abi_json_to_bin',{
-                method:'POST',
-                header:myHeaders,
-                body:JSON.stringify(data)
-            })
-                .then(response=>response.json())
-                .then(res=>{
-                    console.log(res);
-                    let binargs=res.binargs;
-                    lian(binargs);
-                })
-        }
-        // 注册到链上
-        async function lian(binargs){
-            let blockInfo = (await getBlockInfo()).data;
-            var data={
+            };
+            let getDataInfos=(await getDataInfo(param));
+            /*if(getDataInfos.code!=0 || !_blockInfo.code!=0){
+                message.error('获取区块信息失败')
+            };*/
+            console.log();
+            let blockInfo=_blockInfo.data;
+            let data={
                 "ref_block_num": blockInfo.ref_block_num,
                 "ref_block_prefix": blockInfo.ref_block_prefix,
                 "expiration": blockInfo.expiration,
@@ -142,48 +122,24 @@ const props = {
                     "code": "datafilemng",
                     "type": "datafilereg",
                     "authorization": [],
-                    "data": binargs
+                    "data": getDataInfos.data.bin
                 }],
                 "signatures": []
-            }
-            console.log(data)
-            fetch('http://10.104.21.10:8080/v2/asset/registerFile',{
-                method:'POST',
-                header:myHeaders,
-                body:JSON.stringify(data)
-            }).then(response=>response.json())
+            };
+            console.log(data);
+            BTFetch('/asset/registerFile','post',data,{service:'service'})
                 .then(res=>{
                     if(res.code==1){
-                        alert(`注册成功！！！`);
-                        var data={
-                            "userName": "btd121",
-                            "random": Math.ceil(Math.random()*100),
-                            "signatures": "0xxxx"
-                        };
-                        fetch('http://10.104.21.10:8080/v2/asset/queryUploadedData',{
-                            method:'POST',
-                            header:myHeaders,
-                            body:JSON.stringify(data)
-                        })
-                            .then(response=>response.json())
-                            .then(res=>{
-                                if(res.code=='1'){
-                                    let _data=JSON.parse(res.data);
-                                    console.log(_data);
-                                    if(_data == null){
-                                        return
-                                    }
-                                    // callback_data = _data;
-                                    // return callback_data
-                                }
-
-                            })
+                        message.success(info.file+`文件上传成功`)
                     }else{
-                        alert('error！！！')
+                        message.error(info.file+`文件上传失败`)
                     }
-                    console.log(res)
-                })
-        }
+                }).catch(error=>{
+                message.error(info.file+`文件上传失败`)
+            });
+
+        };
+
     },
     onChange(info) {
         const status = info.file.status;
@@ -204,11 +160,11 @@ export default class BTMyAssetSet extends PureComponent{
     constructor(props){
         super(props);
         this.state = {
-            data:''||callback_data,
-            none_hash:'',
+            data:[]||callback_data,
             hash:''
         }
     };
+
     columns(data) {
         console.log(data);
             return [
@@ -219,50 +175,41 @@ export default class BTMyAssetSet extends PureComponent{
                 {title: 'Date', dataIndex: 'date', key: 'date'},
                 {
                     title: "Download", dataIndex: 'file_name', key: 'x', render: (item)=>{
-                        console.log({
-                            item
-                        })
                         return(
-                            <a onClick={()=>this.download(item)}>
-                                <Icon type="download" style={{color: "black", fontWeight: 900}}/>
+                            <a href={this.state.href} onClick={()=>this.download(item)}>
+                                <Icon type="download"/>
                             </a>
                         )
                     }
                 },
                 {
-                    title: "Delete", dataIndex: 'delete', key: 'x', render: (text, record)=>{
+                    title: "Delete", dataIndex: 'delete', key: 'y', render: (text, record)=>{
                         return (
                             <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
-                                <a  href="#" style={{color: "#6d6df5"}}>Delete</a>
+                                <a  href="#">Delete</a>
                             </Popconfirm>
                         );
                     }
                 }
-                /*{
-                    title: 'Delete', dataIndex: 'delete',
-                    render: (text, record) => {
-                        return (
-                            <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
-                                <a  href="#" style={{color: "#6d6df5"}}>Delete</a>
-                            </Popconfirm>
-                        );
-                    },
-                },*/
             ];
      }
      download(dataIndex){
-        console.log(dataIndex);
-        BTFetch('http://10.104.20.80:8080/v2/asset/getDownLoadURL','post',{
+        BTFetch('/asset/getDownLoadURL','post',{
             'userName':'btd121',
             'fileName':dataIndex
-        },{
-            full_path:true,
         }).then(res=>{
             console.log(res);
             if(res.code==1){
-                debugger;
                 this.setState({href:res.data});
+                let iframe = document.createElement("iframe");
+                iframe.style.display = "none";
+                iframe.src = this.state.href;
+                document.body.appendChild(iframe);
+            }else{
+                message.error(`${dataIndex} file download failed.`)
             }
+        }).catch(error=>{
+            message.error(`${dataIndex} file download failed.`)
         })
     }
 
@@ -272,37 +219,31 @@ export default class BTMyAssetSet extends PureComponent{
         this.setState({ data: data.filter(item => item.key !== key) });
     }
     componentDidMount() {
-        var getUrl=[];
-        var param={
-            'userName':'btd121',
-            'fileName':'test.zip'
-        };
-        var myHeaders = new Headers();
-        myHeaders.append('Content-Type','text/plain');
-            var data={
+            let getUrl=[];
+            let param={
+                'userName':'btd121',
+                'fileName':'test.zip'
+            };
+            let data={
                 "userName": "btd121",
                 "random": Math.ceil(Math.random()*100),
                 "signatures": "0xxxx"
             };
-            fetch('http://10.104.21.10:8080/v2/asset/queryUploadedData',{
-                method:'POST',
-                header:myHeaders,
-                body:JSON.stringify(data)
-            })
-                .then(response=>response.json())
+            BTFetch('/asset/queryUploadedData','post',data,{service:'service'})
                 .then(res=>{
-                    if(res.code=='1'){
+                    if( res.code == 1 ){
                         let data=JSON.parse(res.data);
                         console.log(data);
-                        if(data == null){
-                            return
+                        if(res.data == 'null' ){
+                            return ;
+                            message.warning('资源库为空')
                         }
                         this.setState({
                             data:data
                         })
                     }
                     console.log(this.state.data)
-                })
+                });
 
 
     }
@@ -315,15 +256,15 @@ export default class BTMyAssetSet extends PureComponent{
                     <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />
                     </p>
-                    <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                    <p className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
+                    <p style={{color:"#666666"}} className="ant-upload-text">Click or drag file to this area to upload</p>
+                    <p style={{color:"#666666"}} className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
                 </Dragger>
                 <Table
+                    className="shadow radius table"
                     bordered
                     columns={columns}
                     dataSource={this.state.data}
                 />
-                <input style={{display:'none'}} id='none_hash' ref='none_hash' value={this.state.none_hash} />
             </div>
         )
     }

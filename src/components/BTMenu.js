@@ -14,7 +14,7 @@ class MenuLink extends PureComponent{
 
     render(){
         return(
-            <Link style={{color:'white'}} {...this.props}/>
+            <Link {...this.props}/>
         )
     }
 }
@@ -41,65 +41,35 @@ export default class BTMenu extends PureComponent{
                     defaultSelectedKeys={['1']}
                     defaultOpenKeys={['sub1']}
                     mode="inline"
-<<<<<<< HEAD
                     theme="light"
-=======
-                    theme="dark"
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
                     inlineCollapsed={this.state.collapsed}
                 >
                     <Menu.Item key="10">
                         {/* <Icon type="pie-chart" /> */}
-<<<<<<< HEAD
-                        <MenuLink style={{color:'#444444'}} to="/"><FormattedMessage {...MenuMessages.Dashboard}/></MenuLink>
+                        <MenuLink to="/"><FormattedMessage {...MenuMessages.Dashboard}/></MenuLink>
                     </Menu.Item>
                     <Menu.Item key="30">
                         {/* <Icon type="pie-chart" /> */}
-                        <MenuLink style={{color:'#444444'}} to="/demand"><FormattedMessage {...MenuMessages.Demand}/></MenuLink>
+                        <MenuLink to="/demand"><FormattedMessage {...MenuMessages.Demand}/></MenuLink>
                     </Menu.Item>
                     <Menu.Item key="40">
-                        <MenuLink style={{color:'#444444'}} to="/assets">
-=======
-                        <MenuLink style={{color:'white'}} to="/"><FormattedMessage {...MenuMessages.Dashboard}/></MenuLink>
-                    </Menu.Item>
-                    <Menu.Item key="30">
-                        {/* <Icon type="pie-chart" /> */}
-                        <MenuLink style={{color:'white'}} to="/demand"><FormattedMessage {...MenuMessages.Demand}/></MenuLink>
-                    </Menu.Item>
-                    <Menu.Item key="40">
-                        <MenuLink style={{color:'white'}} to="/assets">
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
+                        <MenuLink to="/assets">
                             <FormattedMessage {...MenuMessages.Asset}/>
                         </MenuLink>
                     </Menu.Item>
                     <Menu.Item key="70">
-<<<<<<< HEAD
-                        <MenuLink style={{color:'#444444'}} to="/profile/history"><FormattedMessage {...MenuMessages.History}/></MenuLink>
+                        <MenuLink to="/profile/history"><FormattedMessage {...MenuMessages.History}/></MenuLink>
                     </Menu.Item>
                     <Menu.Item key="20">
                         {/* <Icon type="pie-chart" /> */}
-                        <MenuLink style={{color:'#444444'}} to="/other"><FormattedMessage {...MenuMessages.Blocks}/></MenuLink>
+                        <MenuLink to="/other"><FormattedMessage {...MenuMessages.Blocks}/></MenuLink>
                     </Menu.Item>
-                    <SubMenu key="sub1" title={<span><span><FormattedMessage {...MenuMessages.Profile}/></span></span>}>
+                    <SubMenu className="personalCenter" key="sub1" title={<span><Icon type="mail" /><span><FormattedMessage {...MenuMessages.Profile}/></span></span>}>
                         {/* <Menu.Item key="8"><MenuLink to="/profile/asset">资产管理</MenuLink></Menu.Item>
                         <Menu.Item key="9"><MenuLink to="/profile/shopcart">购物车</MenuLink></Menu.Item>
                         <Menu.Item key="5"><MenuLink to="/profile/collect">收藏</MenuLink></Menu.Item> */}
-                        <Menu.Item key="sub1"><MenuLink style={{color:'#444444'}} to="/profile/check"><FormattedMessage {...MenuMessages.Check}/></MenuLink></Menu.Item>
-                        <Menu.Item key="sub2"><MenuLink style={{color:'#444444'}} to="/profile/wallet"><FormattedMessage {...MenuMessages.Wallet}/></MenuLink></Menu.Item>
-=======
-                        <MenuLink style={{color:'white'}} to="/profile/history"><FormattedMessage {...MenuMessages.History}/></MenuLink>
-                    </Menu.Item>
-                    <Menu.Item key="20">
-                        {/* <Icon type="pie-chart" /> */}
-                        <MenuLink style={{color:'white'}} to="/other"><FormattedMessage {...MenuMessages.Blocks}/></MenuLink>
-                    </Menu.Item>
-                    <SubMenu key="sub1" title={<span><Icon type="mail" /><span><FormattedMessage {...MenuMessages.Profile}/></span></span>}>
-                        {/* <Menu.Item key="8"><MenuLink to="/profile/asset">资产管理</MenuLink></Menu.Item>
-                        <Menu.Item key="9"><MenuLink to="/profile/shopcart">购物车</MenuLink></Menu.Item>
-                        <Menu.Item key="5"><MenuLink to="/profile/collect">收藏</MenuLink></Menu.Item> */}
-                        <Menu.Item key="sub1"><MenuLink to="/profile/check"><FormattedMessage {...MenuMessages.Check}/></MenuLink></Menu.Item>
+                        <Menu.Item key="sub1"><MenuLink  to="/profile/check"><FormattedMessage {...MenuMessages.Check}/></MenuLink></Menu.Item>
                         <Menu.Item key="sub2"><MenuLink to="/profile/wallet"><FormattedMessage {...MenuMessages.Wallet}/></MenuLink></Menu.Item>
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
                     </SubMenu>
 
                 </Menu>

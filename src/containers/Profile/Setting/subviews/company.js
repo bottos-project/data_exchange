@@ -94,15 +94,15 @@ export default class BTCompany extends PureComponent{
                     </div>
                     <div className="UserName">
                         <span>UserName:</span>
-                        <span>{this.state.username}</span>
+                        <Input value={this.state.username} disabled />
                     </div>
                     <div className="enterpriseName">
                         <span>company :</span>
-                        <span>{this.state.company_name} </span>
+                        <Input value={this.state.company_name} disabled />
                     </div>
                     <div className="enterpriseAddress">
                         <span>enterpriseAddress :</span>
-                        <span>{this.state.company_address} </span>
+                        <Input value={this.state.company_address} disabled/>
                     </div>
                     <div className="accountType">
                         <span>RoleType:</span>

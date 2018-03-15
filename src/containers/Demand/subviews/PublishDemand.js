@@ -2,6 +2,7 @@ import React,{PureComponent} from 'react'
 import moment from "moment"
 import {Upload,Modal,Form, Icon, Input, Button,DatePicker,TimePicker} from 'antd'
 import {getBlockInfo, getDataInfo} from "../../../utils/BTCommonApi";
+import BTFetch from "../../../utils/BTFetch";
 
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const FormItem = Form.Item;
@@ -129,26 +130,21 @@ export default class BTPublishDemand extends PureComponent{
 
         let blockInfo = await getBlockInfo(blockData);
         blockData = await getDataInfo(blockData);
-        var myHeaders = new Headers();
-        myHeaders.append('Content-Type','text/plain');
-        fetch("http://10.104.10.152:8080/v2/requirement/Publish",{
-            method:"post",
-            header:myHeaders,
-            body:JSON.stringify({
-                ref_block_num: blockInfo.data.ref_block_num,
-                ref_block_prefix: blockInfo.data.ref_block_prefix,
-                expiration: blockInfo.data.expiration,
-                scope: ["datareqmng"],
-                read_scope: [],
-                messages: [{
-                    code: "datareqmng",
-                    type: "datareqreg",
-                    authorization: [],
-                    data: blockData.data.bin
-                }],
-                signatures: []
-            })
-        }).then(response=>response.json())
+        let param={
+            ref_block_num: blockInfo.data.ref_block_num,
+            ref_block_prefix: blockInfo.data.ref_block_prefix,
+            expiration: blockInfo.data.expiration,
+            scope: ["datareqmng"],
+            read_scope: [],
+            messages: [{
+                code: "datareqmng",
+                type: "datareqreg",
+                authorization: [],
+                data: blockData.data.bin
+            }],
+            signatures: []
+        };
+        BTFetch("/requirement/Publish",'post',param)
             .then(res=>{
                 //成功时返回的code,并隐藏弹框
                 if(res.code==0) {

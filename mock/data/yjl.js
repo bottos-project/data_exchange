@@ -8,11 +8,7 @@ exports.user_register = (ctx)=>{
 exports.user_login = (ctx)=>{
     ctx.response.body = {
         code:'0',
-<<<<<<< HEAD
         token:'jkdshafklsahfklsadfhkjsdfhsdklfhsdkjlfhsdklf'
-=======
-        msg:'登录成功'
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
     }
 }
 

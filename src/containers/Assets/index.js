@@ -1,10 +1,13 @@
 import React,{PureComponent} from 'react'
 
 import BTAssetCell from './subviews/AssetCell'
-import {Pagination} from 'antd'
+import {Pagination,message} from 'antd'
 import Assetlist from './subviews/Assetlist'
 import BTMyTag from '../../components/BTMyTag'
 import BTFetch from '../../utils/BTFetch'
+import {List} from 'antd'
+
+import BTAssetTitle from "./subviews/BTAssetTitle";
 const BTHeaderSearch = () => (
     <div className="searchViewStyle">
         <div>
@@ -36,25 +39,37 @@ export default class BTAssets extends PureComponent{
         this.state={
             list:[1,2,3,4],
             current:1,
-            data:[]
+            data:[],
+            dataSource:[]
         };
     }
     componentDidMount(){
-        var param={
+        let param={
             "userName": "btd121",
             "random": Math.ceil(Math.random()*100),
             "signatures": "0xxxx"
-        }
-        BTFetch('http://10.104.21.10:8080/v2/asset/queryAllAsset','POST',JSON.stringify(param),{
-            full_path:true,
+        };
+        BTFetch('/asset/queryAllAsset','POST',JSON.stringify(param),{
+            full_path:false,
+            service:'service'
         }).then(response=>{
             if(response.code==1){
                 let data=JSON.parse(response.data);
-                console.log(data)
+                console.log(data);
+                let dataSource  = response.data && response.data.Row;
+                this.setState({
+                    dataSource:JSON.parse(response.data)
+                })
                 this.setState({
                     data:data,
                 })
+            }else{
+                message.error('市场资源查询失败')
             }
+        }).catch(error=>{
+            console.log(error)
+            message.error('市场资源查询失败')
+
         });
     }
     onChange(pageNumber){
@@ -62,32 +77,16 @@ export default class BTAssets extends PureComponent{
     }
     render(){
         return(
-            <div>
-                <BTHeaderSearch/>
-
-                <div style={{marginTop:20}}>
-                    <ul>
-                        {
-                            this.state.data.map((value,index)=>{
-                                return (
-
-                                    <li key={index}><Assetlist list={value} /></li>
-                                )
-                            })
-                        }
-                        {/*<li><Assetlist linkto="/assets/detail"/></li>    linkto="/assets/detail"*/}
-                        {/*<li><Assetlist linkto="/assets/detail"/></li>*/}
-                        {/*<li><Assetlist linkto="/assets/detail"/></li>*/}
-                        {/*<li><Assetlist linkto="/assets/detail"/></li>*/}
-                        {/*<li><Assetlist linkto="/assets/detail"/></li>*/}
-                        {/*<li><Assetlist linkto="/assets/detail"/></li>*/}
-                        {/*<li><Assetlist linkto="/assets/detail"/></li>*/}
-
-                    </ul>
-                </div>
-
-                <div style={{marginBottom:20}}>
-                    <Pagination showQuickJumper  onChange={(e)=>this.onChange(e)} defaultCurrent={1} pageSize={4} total={this.state.data.length} />
+            <div style={{width:"100%"}}>
+                <BTAssetTitle />
+                {/* <BTHeaderSearch/> */}
+                <div style={{width:"100%"}}>
+                    <List
+                        dataSource={this.state.dataSource||[]}
+                        renderItem={(item)=>(
+                            <Assetlist list={item} />
+                        )}
+                    />
                 </div>
             </div>
         )

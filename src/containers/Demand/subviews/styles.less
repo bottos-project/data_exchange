@@ -56,128 +56,66 @@
         color: rgb(206, 91, 91);
         font-size: 20px;
     }
-    
+
 }
-
-
-// 详情页面
-.detailContentStyle {
-
-    span {
-        font-size: 15px;
-        font-weight: bold;
-        margin-right: @margin;
-    }
-
-    .detailOptions {
-        margin-top: @margin;
-        flex-direction: row;
-
-        ul {
-            display: flex;
-            flex-direction: row;
-
-            li {
-                margin-right: @margin;
-            }
-        }
-    }
-}
-
 //新版样式
 //search
 .search{
     display: flex;
     justify-content: space-between;
 }
-.list{
-    display:flex;
-    flex: 1;
-    background: #fff;
-    flex-direction: row;
-    box-sizing: border-box;
-    border-left:8px solid #6d6df5;
-    border-radius: 4px;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 0 #e6e6e6;
-    .img{
+
+//2.0detail頁面
+.demandDetailBox{
+    color: #FFFFFF;
+    width: 100%;
+    background-color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+
+    h2,ul,div,.dataDescription{
         display: flex;
-        img{
-            width:270px;
-            height:170px;
-        }
-        p{
-            margin: 0;
-            width:6px;
-            height:100%;
-            background:linear-gradient(to right,#fff 0%,#000 100%);
-            opacity: 0.32;
-        }
+        justify-content: center;
+
     }
-    .main{
-        flex:1;
-        padding:0 24px;
+    .mainData{
+        padding: 30px 50px 50px 50px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction:column;
+        background-image: linear-gradient(-45deg, #FF739F 0%, #FF8F90 41%, #FFB77B 100%);
+        box-shadow: 0 0 8px 0 #4A90E2;
+        border-radius: 5px;
+        width: 600px;
+    }
+    h1{
+        font-size: 40px;
+        color: #FFFFFF;
+    }
+    button{
+        background-color:#4A90E2;
+        box-shadow: 0 0 8px 0 #4A90E2;
+        color: #FFFFFF;
+        border: none;
+        margin:20px;
+        height: 28px;
+        padding: 0 30px;
+    }
+    button:hover{
+        border: 2px solid #4A60E2;
+        background-color: #4A90E2;
+    }
+    .dataDescription{
+        width: 600px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
         position: relative;
-        .title{
-            display:flex;
-            height:60px;
-            line-height: 60px;
-            align-item:center;
-            justify-content: space-between;
-            h4{
-                color:#6d6df5;
-                font-size:22px;
-                cursor: pointer;
-            }
-            p{
-                font-size: 14px;
-                span{color:#666;
-                    }
-            }
-        }
-        .font{
-            color:#333;
-        }
-        .infomation{
-            position:absolute;
-            bottom:15px;
-        }
-    }
-    .down{
-        width:205px;
-        position:relative;
-        em{
-            display: block;
-            width:1px;
-            height:260px;
-            background: #f1f1f1;
-            position: absolute;
-            left:0;
-            top:calc(50% - 75px);
-            transform: scale(0.5);
-        }
-        .icon{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height:100px;
-            span{
-                font-size: 30px;
-                color:#5952f0;
-                padding-left: 10px;
-            }
-        }
-        p{
-           width:110px;
-            height:40px;
-            line-height: 40px;
-            text-align: center;
-            font-size:18px;
-            color: #fff;
-            border-radius:5px;
-            margin:0 auto;
-            cursor: pointer;
-            background: #1a1a1a;
+        flex-direction: column;
+        span,textarea{
+            color: #444444;
         }
     }
 }

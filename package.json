@@ -5,25 +5,18 @@
   "main": "main.js",
   "homepage": ".",
   "DEV": true,
-<<<<<<< HEAD
-  "MOCK": true,
+  "MOCK": false,
   "dependencies": {
     "antd": "^3.2.1",
     "appdmg": "^0.5.2",
-=======
-  "dependencies": {
-    "antd": "^3.2.1",
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
     "buffer": "^5.1.0",
     "crypto-js": "^3.1.9-1",
     "eccrypto": "^1.0.3",
     "electron-log": "^2.2.14",
+    "eosjs": "^6.1.9",
     "eosjs-ecc": "^2.0.1",
-<<<<<<< HEAD
     "event-emitter": "^0.3.5",
     "node-uuid": "^1.4.8",
-=======
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
     "react": "^16.2.0",
     "react-amap": "^1.2.0",
     "react-dom": "^16.2.0",
@@ -40,19 +33,14 @@
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject",
     "electron-start": "electron .",
-<<<<<<< HEAD
     "electron-package": "electron-packager . app --platform=darwin --out packageApp --arch=x64 --overwrite --ignore=node_modulesls --electron-version=1.8.2",
     "electron-package-all": "electron-packager . app --all --out packageApp --arch=x64 --overwrite --ignore=node_modulesls --icon=./electron_pack/icon.png --appCopyright=bottos --appVersion=2.0 --buildVersion=2.0  --electron-version=1.8.2",
-    "electron-package-win": "electron-packager . app --win32 --out packageApp --arch=x64 --overwrite --ignore=node_modulesls --icon=./electron_pack/icon.png --appCopyright=bottos --appVersion=2.0 --buildVersion=2.0  --electron-version=1.8.2",
+    "electron-package-win": "electron-packager . app --platform=win32 --out packageApp --arch=x64 --overwrite --ignore=node_modulesls --appCopyright=bottos --appVersion=2.0 --buildVersion=2.0  --electron-version=1.8.2",
     "mock": "node ./mock/server.js"
-=======
-    "electron-package": "electron-packager . app --darwin --out packageApp --arch=x64 --overwrite --ignore=node_modulesls --electron-version=1.8.2"
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
   },
   "devDependencies": {
     "babel-plugin-import": "^1.6.5",
     "electron": "^1.8.2",
-<<<<<<< HEAD
     "electron-installer-dmg": "^0.2.1",
     "electron-packager": "^11.0.1",
     "koa": "^2.5.0",
@@ -61,11 +49,6 @@
     "koa-router": "^7.4.0",
     "react-app-rewire-less": "^2.1.0",
     "react-app-rewired": "^1.5.0",
-=======
-    "electron-packager": "^11.0.1",
-    "react-app-rewire-less": "^2.1.0",
-    "react-app-rewired": "^1.4.1",
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
     "webpack-target-electron-renderer": "^0.4.0"
   }
 }

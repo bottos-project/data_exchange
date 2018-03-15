@@ -24,6 +24,7 @@ import BTWallet from '../containers/Profile/Wallet'
 import BTHistory from '../containers/Profile/History'
 import BTShopCart from '../containers/Profile/ShopCart'
 import BTSetting from '../containers/Profile/Setting'
+import BTAccountList from '../containers/Profile/Wallet/subvies/BTAccountList'
 
 
 
@@ -49,7 +50,6 @@ export default class RouterMap extends PureComponent{
 
                     <Route path="/other" component={BTBlockList}/>
 
-                    {/* <Route path="/profile/account" component={BTAccount}/> */}
                     <Route path="/profile/wallet" component={BTWallet}/>
                     <Route path="/profile/history" component={BTHistory}/>
                     <Route path="/profile/asset" component={BTProfileAsset}/>
@@ -58,6 +58,7 @@ export default class RouterMap extends PureComponent{
                     <Route path="/profile/collect" component={BTCollect}/>
                     <Route path="/profile/shopcart" component={BTShopCart}/>
                     <Route path="/profile/setting" component={BTSetting}/>
+                    <Route path="/profile/wallet/accountlist" component={BTAccountList}/>
                 </Route>
             </Router>
         )

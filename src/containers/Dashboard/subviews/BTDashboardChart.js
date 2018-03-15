@@ -15,18 +15,13 @@ import { LineChart, Line,SimpleLineChart,CartesianGrid,XAxis,YAxis,Tooltip,Legen
 
 
 const data = [
-    {name:'2018-03-05',requireNumPerDay:30,assetNumPerDay:40,txNumPerDay:23},
-    {name:'2018-03-05',requireNumPerDay:13,assetNumPerDay:44,txNumPerDay:23},
-    {name:'2018-03-05',requireNumPerDay:30,assetNumPerDay:24,txNumPerDay:23},
-    {name:'2018-03-05',requireNumPerDay:25,assetNumPerDay:48,txNumPerDay:23},
-    {name:'2018-03-05',requireNumPerDay:11,assetNumPerDay:18,txNumPerDay:23},
-    {name:'2018-03-05',requireNumPerDay:36,assetNumPerDay:35,txNumPerDay:23},
-    {name:'2018-03-05',requireNumPerDay:22,assetNumPerDay:39,txNumPerDay:23},
-    {name:'2018-03-05',requireNumPerDay:31,assetNumPerDay:23,txNumPerDay:23},
-    {name:'2018-03-05',requireNumPerDay:32,assetNumPerDay:19,txNumPerDay:23},
-    {name:'2018-03-05',requireNumPerDay:23,assetNumPerDay:10,txNumPerDay:23},
-    {name:'2018-03-05',requireNumPerDay:3,assetNumPerDay:39,txNumPerDay:23},
-    {name:'2018-03-05',requireNumPerDay:13,assetNumPerDay:40,txNumPerDay:23},
+    {name:'03-03',requireNumPerDay:30,assetNumPerDay:40,},
+    {name:'03-04',requireNumPerDay:13,assetNumPerDay:44,},
+    {name:'03-05',requireNumPerDay:30,assetNumPerDay:24,},
+    {name:'03-06',requireNumPerDay:25,assetNumPerDay:48,},
+    {name:'03-07',requireNumPerDay:11,assetNumPerDay:18,},
+    {name:'03-08',requireNumPerDay:36,assetNumPerDay:35,},
+    {name:'03-09',requireNumPerDay:22,assetNumPerDay:39,},
 ]
 
 
@@ -39,30 +34,34 @@ export default class BTDashboardChart extends PureComponent{
 
     render(){
         return(
-            <div >
-                <div className="container row marginBottom" style={{alignItems:'center'}}>
-                    <LineChart width={820} height={250} data={data}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Line type="monotone" dataKey="requireNumPerDay" stroke="red"/>
-                        <Line type="monotone" dataKey="assetNumPerDay" stroke="red"/>
-                        <Line type="monotone" dataKey="txNumPerDay" stroke="red"/>
-                        {/* <Line type="monotone" dataKey="data" stroke="#8884d8" />
-                        <Line type="monotone" dataKey="requirement" stroke="#0596d8" /> */}
-                    </LineChart>
-                    <div>
-                        <div>注册人数：1000000</div>
+                <div>
+                    <div className="dashboardChartTitle">
+                        <h3 style={{color:"#666666"}}>市场供需</h3>
                         <div>
-                            <span>交易金额：</span>
-                            <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:15,height:15}} alt=""/>
-                            <span>30000</span>
+                            <div>
+                                <span style={{display:"block",width:"15px",height:"15px",background:"#3023AE",borderRadius:"15px",margin:"0 10px"}}> </span>
+                                <span>总需求</span>
+                            </div>
+                            <div>
+                                <span style={{display:"block",width:"15px",height:"15px",background:"#C86DD7",borderRadius:"15px",margin:"0 10px"}}> </span>
+                                <span>总发布</span>
+                            </div>
                         </div>
                     </div>
+                    <div className="dashboardChart shadow radius">
+                        <LineChart width={960} height={250} data={data}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line type="monotone" dataKey="requireNumPerDay" stroke="#C86DD7"/>
+                            <Line type="monotone" dataKey="assetNumPerDay" stroke="#3023AE"/>
+                            {/* <Line type="monotone" dataKey="data" stroke="#8884d8" />
+                            <Line type="monotone" dataKey="requirement" stroke="#0596d8" /> */}
+                        </LineChart>
+                    </div>
                 </div>
-            </div>
         )
     }
 }

@@ -90,7 +90,7 @@ export default class BTPerson extends PureComponent{
                     </div>
                     <div className="UserName">
                         <span>UserName:</span>
-                        <span>{this.state.username}</span>
+                        <Input value={this.state.username} disabled />
                     </div>
                     <div className="accountType">
                         <span>RoleType:</span>
@@ -106,7 +106,7 @@ export default class BTPerson extends PureComponent{
                     </div>
                     <div className="address">
                         <span>address :</span>
-                        <span>address </span>
+                        <Input value={this.state.address}/>
                     </div>
                     <div className="submit" >
                         <Button onClick={()=>this.onClickP()}>submit</Button>

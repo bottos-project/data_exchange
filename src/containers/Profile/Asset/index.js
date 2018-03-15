@@ -9,6 +9,7 @@ import BTUploadAsset from './subviews/BTUploadAsset'
 import BTHaveBought from "./subviews/BTHaveBought"
 import BTMyAssetSet from "./subviews/BTMyAssetSet"
 import BTFetch from "../../../utils/BTFetch";
+import BTAssetTitle from "./subviews/BTAssetTitle";
 
 const TabPane = Tabs.TabPane;
 
@@ -21,21 +22,24 @@ export default class BTProfileAsset extends PureComponent{
     render(){
 
         return(
-            <div className="assetTagPage">
-                <Tabs style={{width:"950px"}}>
-                    <TabPane tab="发布资产" key="1">
-                        <BTUploadAsset/>
-                    </TabPane>
-                    <TabPane tab="已发布资产" key="2">
-                        <BTAssetDetail/>
-                    </TabPane>
-                    <TabPane tab="已购买资产" key="3">
-                        <BTHaveBought/>
-                    </TabPane>
-                    <TabPane tab="我的资产库" key="4">
-                        <BTMyAssetSet/>
-                    </TabPane>
-                </Tabs>
+            <div style={{width:"100%"}}>
+                <BTAssetTitle/>
+                <div>
+                    <Tabs className="tabs">
+                        {/*<TabPane tab="发布资产" key="1">*/}
+                            {/*<BTUploadAsset/>*/}
+                        {/*</TabPane>*/}
+                        <TabPane tab="已发布资产" key="2">
+                            <BTAssetDetail/>
+                        </TabPane>
+                        <TabPane tab="已购买资产" key="3" >
+                            <BTHaveBought/>
+                        </TabPane>
+                        <TabPane tab="我的资产库" key="4">
+                            <BTMyAssetSet/>
+                        </TabPane>
+                    </Tabs>
+                </div>
             </div>
         )
     }

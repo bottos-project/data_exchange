@@ -3,23 +3,13 @@
 @userIconW:50px;
 @userIconH:50px;
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
 .header {
     justify-content: space-between;
-    //margin-bottom: 10px;
-    //height:75px;
-<<<<<<< HEAD
     .logoMenuStyle {
       background-color:#FFFFFF ;
-=======
-    background :url("../static/img/banner.jpg");
-    .logoMenuStyle {
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
         display: flex;
         flex-direction: row;
+        box-shadow: 0 0 5px #CCCCCC;
     }
     
     .logoStyle {
@@ -31,13 +21,6 @@
         //background-color: black;
         font-size: 30px;
         height:75px;
-<<<<<<< HEAD
-
-=======
-        background:url(../static/img/banner.jpg) no-repeat center;
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
-        //font-weight: 50px;
-        //background: url("../static/img/logo.png") no-repeat center;
         z-index:9999;
         img{
             width:100%;
@@ -50,6 +33,13 @@
         justify-content: center;
         align-items: center;
         margin-right: 200px;
+        button{
+          margin: 0 5px;
+        }
+        button:hover,button:focus,button:active{
+          border:1px solid #4A90E2;
+          color:#4A90E2;
+        }
 
         .publishBtnStyle {
             margin-right: @margin;
@@ -68,35 +58,42 @@
         font-size: 16px;
         padding-right: 10px;
         cursor:pointer;
-<<<<<<< HEAD
         color:#444444;
-=======
-        color:#fff;
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
     }
     span:last-child{
         padding-right: 0;
     }
 }
+.register .ant-row{
+  display: flex;
+  justify-content: center;
+}
+.register .ant-row div{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.register .ant-row .ant-form-item-children{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+.register .ant-row input{
+  display: flex;
+  flex: 1;
+  width: 100%;
+}
 .ant-menu.ant-menu-dark .ant-menu-item-selected, .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected{
     background-color: #5951f2;
-  margin-top:1px solid #2e318e ;
+    border-top:1px solid #2e318e ;
     //border-top:1px solid #2e318e ;
 }
 .ant-menu-dark, .ant-menu-dark .ant-menu-sub{
-<<<<<<< HEAD
-=======
-    background-color: #1a1a1a;
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
 }
 .content {
     flex-direction: row;
     .menu {
         min-width: @sideWidth;
-<<<<<<< HEAD
-=======
-        background-color: #1a1a1a;
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
     }
 }
 
@@ -144,7 +141,6 @@
 
 }
 
-<<<<<<< HEAD
 .file {
     position: relative;
     display: inline-block;
@@ -165,23 +161,65 @@
 .content .menu{
   background-color: #FFFFFF;
 }
-=======
->>>>>>> 987e290a1a15fccda791f29484116e8f83355471
-// .categoryStyle {
-//     display: flex;
-//     flex: 1;
-//     height: 850px;
-//     flex-direction: row;
-// }
+//menu每行的背景色
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected{
+  background-color: #F5F5F5;
+}
+.ant-menu-item-selected > a, .ant-menu-item-selected > a:active{
+  color: #4F32B6;
+}
+.ant-menu-item-selected > a, .ant-menu-item-selected > a:hover{
+  color: #4F32B6;
+}
+.ant-menu-item > a:hover{
+  color: #4F32B6;
+}
+//menu的右边一条的颜色
+.ant-menu-vertical .ant-menu-item:after, .ant-menu-vertical-left .ant-menu-item:after, .ant-menu-vertical-right .ant-menu-item:after, .ant-menu-inline .ant-menu-item:after{
+          border-right:3px solid #4F32B6
+}
+//个人中心
+.personalCenter:hover .ant-menu-submenu-title span{
+  color:#4F32B6
+}
+//modal框的按钮颜色
+.ant-btn-primary{
+  color:#FFFFFF ;
+  background-color: #4A90E2;
+  box-shadow: 0 0 10px 0 #4A90E2;
+  border-radius: 5px;
+  border: none;
+}
+.ant-btn-primary:focus,.ant-btn-primary:active,.ant-btn-primary:hover{
+  color:#FFFFFF ;
+  background-color: #4A90E2;
+  box-shadow: 0 0 10px 0 #4A90E2;
+  border-radius: 5px;
+  border: 1px solid #4A60E2;
+}
 
-// .categorySelectStyle {
-//     width: @sideWidth;
-//     background-color: aqua
-// }
+//keystore
+#menu .file:hover{
+  background-color: #4A90E2;
+  color:#FFFFFF;
+}
+#menu .file{
+  background-color: #ffffff;
+}
 
-// .cardListStyle {
-//     display: flex;
-//     flex-direction: row;
-//     flex-wrap: wrap
-// }
-
+//icon下拉按钮
+.ant-dropdown-menu-item-active a{
+  border:1px solid #4A90E2;
+  color:#4A90E2 ;
+  background-color: #FFFFFF;
+  border-radius: 5px;
+}
+//登入注册按钮
+.isLogin{
+  span:hover{
+    color: #4A90E2;
+  }
+}
+.iconfont:hover{
+  color:#4A90E2;
+}

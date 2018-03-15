@@ -23,28 +23,6 @@ export default class BTList extends PureComponent{
                     <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
                     <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
                     <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
-                    <li><BTListCell linkto={this.props.linkto} title='资产需求'/></li>
                 </ul>
             </div>
         )

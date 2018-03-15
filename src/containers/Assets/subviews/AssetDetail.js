@@ -1,25 +1,30 @@
 import React,{PureComponent} from 'react'
-import { Carousel,Button,Tag } from 'antd';
+import { Carousel,Button,Tag, } from 'antd';
 import BTFetch from '../../../utils/BTFetch'
 import {getBlockInfo,getDataInfo} from '../../../utils/BTCommonApi'
+import {Input} from "antd/lib/index";
+import {message} from "antd/lib/index";
 // 此处样式在Demand/subviews/styles.less中控制
-
+const { TextArea } = Input;
 export default class BTAssetDetail extends PureComponent{
     constructor(props){
         super(props)
         this.state={
-            data:this.props.location.query
+            data:this.props.location.query||[]
         }
     }
     async buy(){
-        //获取区块信息
         if(this.state.data.username == 'btd121'){
-            alert('不允许购买自己的资产！！！')
+            message.warn('不允许购买自己的资产！！！')
             return;
         }
-        // console.log(this.state.data)
-        let block=(await getBlockInfo()).data;
-        // console.log(this.state.data,block);
+        //获取区块信息
+        let _block=(await getBlockInfo());
+        if(_block.code != 0){
+            message.error('获取区块信息失败');
+            return;
+        }
+        let block=_block.data;
         //获取data信息
         let data={
             "code":"datadealmng",
@@ -27,7 +32,7 @@ export default class BTAssetDetail extends PureComponent{
             "args":{
                 "data_deal_id":"dealidtest",
                 "basic_info":{
-                    "user_name":"12",
+                    "user_name":"btd121",
                     "session_id":"sessidtest",
                     "asset_id":this.state.data.asset_id,
                     "random_num":Math.ceil(Math.random()*100),
@@ -35,66 +40,76 @@ export default class BTAssetDetail extends PureComponent{
                 }
             }
         };
-        let getDataBin=(await getDataInfo(data)).data.bin;
-        console.log(getDataBin)
+        /*let getDataBin=(await getDataInfo(data)).data.bin;
+        console.log(getDataBin)*/
+        let _getDataBin=(await getDataInfo(data));
+        if(_getDataBin.code!=0){
+            message.error('获取区块数据失败');
+            return;
+        }
+        //数组排序
+        let array=[
+            "assetmng",
+            "btd121",
+            this.state.data.username,
+            "datadealmng",
+            "datafilemng"
+        ].sort();
         let param={
             "ref_block_num": block.ref_block_num,
             "ref_block_prefix": block.ref_block_prefix,
             "expiration": block.expiration,
-            "scope": [
-                "assetmng",
-                '12',
-                "datadealmng",
-                this.state.data.username
-            ],
+            "scope": array,
             "read_scope": [],
             "messages": [{
                 "code": "datadealmng",
                 "type": "datapurchase",
                 "authorization": [],
-                "data": getDataBin
+                "data": _getDataBin.data.bin
             }],
             "signatures": []
         };
-        BTFetch('http://10.104.21.10:8080/v2/exchange/consumerBuy','post',param,{
-            full_path:true
+        BTFetch('/exchange/consumerBuy','post',param,{
+            service:'service'
         }).then(res=>{
             console.log(res);
             if(res.code == 1){
-                alert('ConsumerBuy Successful!');
+                message.success('购买成功')
+                // alert('ConsumerBuy Successful!');
             }else{
-                alert('ConsumerBuy Failed!');
+                message.error('购买失败')
+                // alert('ConsumerBuy Failed!');
             }
         })
     }
+    download(index){
+        let iframe = document.createElement("iframe");
+        iframe.style.display = "none";
+        iframe.src = index;
+        document.body.appendChild(iframe);
+    }
     render(){
         let data=this.props.location.query;
+        console.log(data);
         return(
-            <div>
-            <div className="detailContentStyle">
-                <div style={{padding:20}}>
+            <div className="assetDetailBox">
+                <h2>数据详情</h2>
+                <div className="mainData">
+                    <h1>{data.asset_name}</h1>
                     <p><span>资产ID:</span>{data.asset_id}</p>
-                    <p><span style={{fontSize:15,fontWeight:'bold'}}>标题:</span>{data.asset_name}</p>
-                    <p><span style={{fontSize:15,fontWeight:'bold'}}>资产类型:</span>{data.type}</p>
-                    <p><span style={{fontSize:15,fontWeight:'bold'}}>期望价格:</span>{data.price}</p>
-                    <p><span style={{fontSize:15,fontWeight:'bold'}}>下架时间:</span>{data.expire_time}</p>
-                    <div>
-                        <Tag color="cyan">{data.feature_tag}</Tag>
-                        {/*<Tag color="cyan">实用</Tag>*/}
-                        {/*<Tag color="cyan">有价值</Tag>*/}
-                    </div>
-
-                    <div className="detailOptions">
-                        <ul>
-                            <li><Button onClick={(e)=>this.buy(e)} type="primary" className="buyButton">购买</Button></li>
-                            <li><Button type="primary"><a href={data.sample_path}>下载样例</a></Button></li>
-                        </ul>
-                    </div>
+                    <p><span>资产类型:</span>{data.type}</p>
+                    <p><span>期望价格:</span>{data.price}</p>
+                    <p><span>下架时间:</span>{data.expire_time}</p>
+                    <Tag>{data.feature_tag}</Tag>
                 </div>
-            </div>
-            <div className="detailDescribe">
-                <p>{data.description}</p>
-            </div>
+                <ul>
+                    <li><Button onClick={(e)=>this.buy(e)} type="primary" className="buyButton">购买</Button></li>
+                    <li><Button onClick={(e)=>this.download(data.sample_path)} type="primary">下载样例</Button></li>
+                </ul>
+                <div className="dataDescription">
+                    <span>数据描述:</span>
+                    <TextArea disabled rows={4}>{data.description}</TextArea>
+                </div>
             </div>
         )
     }

@@ -18,6 +18,10 @@
 # vscode
 /.vscode
 
+/src/utils/
+/src/tools/
+/src/sys_moudles/
+
 # misc
 .DS_Store
 .env.local

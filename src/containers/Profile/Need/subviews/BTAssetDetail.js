@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import {Popconfirm,Table} from 'antd';
+import {Popconfirm,Table,message} from 'antd';
 import BTFetch from "../../../../utils/BTFetch";
 
 
@@ -8,7 +8,7 @@ export default class BTAssetDetail extends PureComponent{
         super(props)
         const data = [];
         this.state = {
-            data,
+            data:[],
         };
     }
 
@@ -21,16 +21,20 @@ export default class BTAssetDetail extends PureComponent{
             { title: 'Title', dataIndex: 'requirement_name', key: 'title' },
             { title: 'Type', dataIndex: 'feature_tag', key: 'type' },
             { title: 'Price', dataIndex: 'price', key: 'price' },
-            { title: 'expire_time', dataIndex: 'expire_time', key: 'expire_time' },
+            { title: 'expire_time', dataIndex: 'expire_time', key: 'expire_time' ,render:(time)=>{
+                return <span>{(new Date(time*1000)).toLocaleDateString()}</span>
+                }},
             { title: 'Description', dataIndex: 'description', key: 'description' },
-            { title: 'PublishDate', dataIndex:'publish_date', key: 'publishDate'},
+            { title: 'PublishDate', dataIndex:'publish_date', key: 'publishDate',render:(time)=>{
+                return <span>{(new Date(time*1000)).toLocaleDateString()}</span>
+                }},
             { title: 'Sample', dataIndex: 'sample_path', key: 'sample' ,render:(sample_path)=>{
                     return(
                         <a href={sample_path}>Download</a>
                     )
 
                 }},
-            { title: 'Delete', dataIndex: 'delete',
+            { title: 'Delete', dataIndex: 'delete',key:'y',
                 render: (text, record) => {
                     return (
                         // this.state.dataSource.length > 1 ?
@@ -55,51 +59,22 @@ export default class BTAssetDetail extends PureComponent{
         })
     }
     componentDidMount() {
-        var myHeaders = new Headers();
-        myHeaders.append('Content-Type','text/plain');
-        fetch("http://10.104.10.152:8080/v2/requirement/Query",{
-            method:"post",
-            header:myHeaders,
-            body:JSON.stringify({
-                feature_tag:111
-            })
-        }).then(response=>response.json()).then(data=>{
-            console.log(data)
-            // let resultData = data.data
-            // console.log({
-            //     resultData
-            // })
-            // if(resultData == 'null') return;
-
-            let newdata = [{
-                requirement_name:'dsf',
-                feature_tag:'dsf',
-                price:'dsf',
-                expire_time:'dsf',
-                description:'dsf',
-                publish_date:'dsf',
-                sample_path:'http://www.baidu.com',
-                    }]
-
-            // const theSureData = JSON.parse(data.data);
-            // console.log(data);
-            // var newdata = [];
-            // for(let i=0;i<theSureData.length;i++){
-            //     newdata.push({
-            //         key: i,
-            //         title:theSureData[i].requirement_name,
-            //         type:theSureData[i].feature_tag,
-            //         price:theSureData[i].price,
-            //         deadline:theSureData[i].expire_time,
-            //         description:theSureData[i].description,
-            //         publishDate:theSureData[i].publish_date,
-            //         Sample:theSureData[i].sample_path,
-            //     })
-            // }
-
-            this.setState({
-                data:newdata
-            })
+        let param={
+            "pageSize":20,
+            "pageNum":1,
+            "username":"btd121"
+            // "featureTag":12345
+        };
+        BTFetch("/requirement/query",'post',param)
+            .then(res=>{
+                console.log(res.data.Row)
+                if(res.code==0&&res.data.Row!='null'){
+                    this.setState({
+                        data:res.data.Row,
+                    });
+                }else{
+                    message.warn('暂无发布资产')
+                }
         }).catch(error=>{
             console.log(error)
         })
@@ -112,7 +87,7 @@ export default class BTAssetDetail extends PureComponent{
         return(
 
             <div>
-                <Table bordered dataSource={data} columns={columns} />
+                <Table className="shadow radius table" bordered dataSource={this.state.data} columns={columns} />
             </div>
         )
     }

@@ -68,9 +68,9 @@ export default class BTMyAssetSet extends PureComponent{
         this.setState({ data: data.filter(item => item.key !== key) });
     }
     componentDidMount() {
-        BTFetch("","post",{}).then(data=>{
+       /* BTFetch("","post",{}).then(data=>{
             console.log(data)
-        })
+        })*/
     }
 
     render(){
@@ -82,13 +82,14 @@ export default class BTMyAssetSet extends PureComponent{
                     <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />
                     </p>
-                    <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                    <p className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
+                    <p style={{color:"#666666"}} className="ant-upload-text">Click or drag file to this area to upload</p>
+                    <p style={{color:"#666666"}} className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
                 </Dragger>
                     <Table
                         bordered
                         columns={columns}
                         dataSource={data}
+                        className="shadow radius table"
                     />
             </div>
         )

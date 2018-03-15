@@ -7,7 +7,8 @@ import BTMyTag from '../../components/BTMyTag'
 import BTRequireCell from './subviews/BTRequireCell'
 import {getAccount} from '../../tools/localStore'
 import BTFetch from '../../utils/BTFetch';
-import {List} from 'antd'
+import {List,message} from 'antd'
+import BTDemandTitle from "./subviews/BTDemandTitle";
 
 const BTHeaderSearch = () => (
     <div className="searchViewStyle">
@@ -45,15 +46,22 @@ export default class BTDemand extends PureComponent{
             dataSource:[]
         }
     }
-    
+
     componentDidMount(){
         let reqUrl = '/requirement/query'
-
-        BTFetch(reqUrl,'POST').then(response=>{
+        let param={
+            "pageSize":20,
+            "pageNum":1,
+        }
+        BTFetch(reqUrl,'POST',param).then(response=>{
             console.log({
                 response
             })
             if(response && response.code=='0'){
+                if(response.data=='null'){
+                    message.warning('暂无市场需求');
+                    return;
+                }
                 let dataSource  = response.data && response.data.Row;
                 this.setState({
                     dataSource:dataSource
@@ -65,12 +73,12 @@ export default class BTDemand extends PureComponent{
     render(){
         return(
             <div className='container column'>
-                <div><BTHeaderSearch/></div>
-                {/*功能筛选*/}
-               <div className='container' style={{marginTop:20}}>
+                <BTDemandTitle/>
+                {/* <div><BTHeaderSearch/></div> */}
+               <div className='container' >
                     <List
                         style={{flex:1}}
-                        dataSource={this.state.dataSource}
+                        dataSource={this.state.dataSource||[]}
                         renderItem={(item)=>(
                             <BTRequireCell linkto='/demand/detail' {...item}/>
                         )}

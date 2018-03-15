@@ -15,10 +15,10 @@ export default class Walletall extends PureComponent{
     }
     componentDidMount(){
         let param={
-            username:'12'
+            username:'btd121'
         }
-        BTFetch('http://10.104.21.10:8080/v2/user/getAccount','POST',(param),{
-            full_path:true,
+        BTFetch('/user/getAccount','POST',(param),{
+            service:'service',
         }).then(res=>{
             console.log(res.data);
             if(res.code == 1){

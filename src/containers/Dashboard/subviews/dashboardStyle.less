@@ -1,34 +1,124 @@
 body{
   background-color: #f1f1f1;
 }
-//.ant-table{
-//  width: 900px;
-//}
-.ant-table-thead tr th{
-  background-color: #6d6df5;
-  color:white;
-  text-align: center;
-}
-.ant-table-row{
-  td{
-    color:#333333;
-    text-align: center;
-  }
-}
-.ant-table-thead > tr > th, .ant-table-tbody > tr > td{
-  padding: 3px;
-}
-.ant-table-expanded-row td{
-  background-color:#c1c0fb;
-  border:none;
-  color:white;
-}
-//.ant-pagination{
-//  display: none;
-//}
 .content {
   .menu {
     background-color: #FFFFFF;
     height: 100vh;
+    box-shadow: 0 2px 2px #CCCCCC;
+  }
+}
+.everyTitle{
+  background-color:#ffffff ;
+  padding: 10px 20px 2px 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px  #CCCCCC;
+  margin-bottom: 20px;
+  h3{
+    color:#4f43B6;
+    font-size: 20px;
+  }
+  p{
+    color:#999999;
+  }
+}
+.DashboardBlockDetails{
+  background: linear-gradient(to right, rgba(255,105,164,0.61) , rgba(255,146,48,0.61));
+  display: flex;
+  flex-direction: row;
+  column-count:5;
+  margin-bottom: 20px;
+  div{
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-weight: lighter;
+    h4{
+      color:#FFFFFF;
+      font-size:18px;
+    }
+    p{
+      color:#FFFFFF;
+      font-size: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}
+//引入图标中的下标
+.recharts-default-legend{
+  display: none;
+}
+.dashboardChart{
+  padding: 20px;
+  background-color: #FFFFFF;
+  margin-bottom: 20px;
+}
+.shadow{
+  box-shadow: 0 0 5px #CCCCCC;
+}
+.radius{
+  border-radius: 5px;
+}
+.table{
+  background-color: #FFFFFF;
+  .ant-table-thead > tr > th{
+    span{
+      color: #9B9B9B;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    background-color: #FFFFFF;
+  }
+}
+//tr
+.ant-table-middle > .ant-table-content > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr{
+  position: relative;
+  text-align:center
+}
+//td
+.ant-table-middle > .ant-table-content > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-thead > tr > th, .ant-table-middle > .ant-table-content > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-body > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-scroll > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-scroll > .ant-table-body > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-fixed-left > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-fixed-right > .ant-table-header > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-fixed-left > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td, .ant-table-middle > .ant-table-content > .ant-table-fixed-right > .ant-table-body-outer > .ant-table-body-inner > table > .ant-table-tbody > tr > td{
+  margin: 0 auto;
+  padding: 10px;
+  color: #616161;
+}
+//hover
+.ant-table-thead > tr.ant-table-row-hover > td, .ant-table-tbody > tr.ant-table-row-hover > td, .ant-table-thead > tr:hover > td, .ant-table-tbody > tr:hover > td{
+  background-color:rgba(79,50,182,0.05);//#4F32B6
+}
+//表格上的纵线
+.ant-table-bordered .ant-table-thead > tr > th, .ant-table-bordered .ant-table-tbody > tr > td{
+  border-right: none;
+}
+//控制其余表格的行距
+.ant-table-thead > tr > th, .ant-table-tbody > tr > td{
+  padding: 10px;
+}
+//表格中链接变为蓝色
+.ant-table-thead > tr > th, .ant-table-tbody > tr > td a{
+  //color:#4A90E2;
+}
+.dashboardChartTitle{
+  display:flex;
+  flex-direction:row;
+  padding:20px;
+  justify-content:space-between;
+    div{
+    display:flex;
+    flex-direction:row;
+      div{
+        display:flex;
+        flex-direction:row;
+      }
+  }
+  h4{
+    font-size: 16px;
+  }
+  span{
+    font-size: 16px;
   }
 }

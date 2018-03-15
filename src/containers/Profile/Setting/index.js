@@ -5,6 +5,7 @@ import BTPerson from "./subviews/person"
 import BTCompany from "./subviews/company"
 import BTFetch from '../../../utils/BTFetch'
 import BTCryptTool from '../../../tools/BTCryptTool'
+import BTSettingTitle from "./subviews/BTSettingTitle";
 const TabPane = Tabs.TabPane;
 
 export default class BTAccount extends PureComponent {
@@ -59,24 +60,29 @@ export default class BTAccount extends PureComponent {
     }
     render(){
         return (
-            <div>
-                <Tabs defaultActiveKey="1">
-                    {
-                        this.state.user_type == 0 ?
-                            (<TabPane  tab="个人资料" key="1">
-                                <BTPerson name={this.state.name} data={this.state.data} />
-                            </TabPane>)  :
-                            (<TabPane tab="公司资料" key="1">
-                                <BTCompany name={this.state.name}  data={this.state.data} />
-                            </TabPane>)
-                    }
-                    {/* <TabPane tab="个人资料" key="1">
-                            <BTPerson/>
-                        </TabPane>
-                        <TabPane tab="公司资料" key="2">
-                            <BTCompany/>
-                        </TabPane> */}
-                </Tabs>
+            <div style={{width:"100%"}}>
+                <div>
+                    <BTSettingTitle/>
+                </div>
+                <div>
+                    <Tabs defaultActiveKey="1">
+                        {
+                            this.state.user_type == 0 ?
+                                (<TabPane  tab="个人资料" key="1">
+                                    <BTPerson name={this.state.name} data={this.state.data} />
+                                </TabPane>)  :
+                                (<TabPane tab="公司资料" key="1">
+                                    <BTCompany name={this.state.name}  data={this.state.data} />
+                                </TabPane>)
+                        }
+                        {/* <TabPane tab="个人资料" key="1">
+                                <BTPerson/>
+                            </TabPane>
+                            <TabPane tab="公司资料" key="2">
+                                <BTCompany/>
+                            </TabPane> */}
+                    </Tabs>
+                </div>
             </div>
 
         )

@@ -1,52 +1,74 @@
 import React,{PureComponent} from 'react'
-import { Table, Icon} from 'antd';
+import { Table, Icon,message} from 'antd';
 import "./styles.less"
-
-const data = [];
-for (let i = 0; i < 7; ++i) {
-    data.push({
-        key: i,
-        title:"pandas",
-        fileName:"pandas.zip",
-        fileSize:"123M",
-        date: '2018-01-15 23:12:00',
-        from:"Jack",
-    });
-}
-const columns = [
-    { title: 'title', dataIndex: 'title', key: 'title' },
-    { title: 'price', dataIndex: 'price', key: 'price',render:()=>
-            <div>
-                <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
-                <span>200</span>
-            </div>
-    },
-    { title: 'fileName', dataIndex: 'fileName', key: 'fileName' },
-    { title: 'fileSize', dataIndex: 'fileSize', key: 'fileSize' },
-    { title: 'date', dataIndex: 'date', key: 'date' },
-    { title: 'Action', dataIndex: '', key: 'x', render: () =>
-            <a>
-                <Icon type="download" style={{color:"black",fontWeight:900}}/>
-            </a>
-    },    { title: 'From', dataIndex: '', key: 'y', render:() =>
-            <div>
-                <a href="#" style={{color:"#6d6df5"}}>Jack</a>
-            </div>
-    },
-
-];
+import BTFetch from '../../../../utils/BTFetch'
 
 export default class BTHaveBought extends PureComponent{
     constructor(props){
-        super(props)
+        super(props);
+        this.state={
+            data:[],
+        }
     }
-
+    columns(data){
+        console.log(data);
+        return [
+            { title: 'title', dataIndex: 'asset_name', key: 'title' },
+            { title: 'price', dataIndex: 'price', key: 'price',render:()=>
+                    <div>
+                        <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
+                        <span>200</span>
+                    </div>
+            },
+            { title: 'fileName', dataIndex: 'fileName', key: 'fileName' },
+            { title: 'fileSize', dataIndex: 'fileSize', key: 'fileSize' },
+            { title: 'date', dataIndex: 'date', key: 'date' },
+            { title: 'Action', dataIndex: 'storage_path', key: 'x', render: (item) =>
+                    <a href={item}>
+                        <Icon type="download" style={{color:"black",fontWeight:900}}/>
+                    </a>
+            },    { title: 'From', dataIndex: '', key: 'y', render:() =>
+                    <div>
+                        <a href="#" style={{color:"#6d6df5"}}>Jack</a>
+                    </div>
+            }
+        ];
+    }
+    componentDidMount(){
+        let param={
+            userName:'btd121',
+            random:Math.ceil(Math.random()*100),
+            signatures:'0XXXX'
+        }
+        BTFetch('/asset/GetUserPurchaseAssetList','post',param,{
+            service:'service'
+        }).then(res=>{
+            if(res.code==1){
+                console.log(res.data);
+                if(res.data=='null'){
+                   return;
+                }
+                this.setState({
+                    data:JSON.parse(res.data),
+                })
+            }else{
+                message.error('查询已购买资产失败');
+            }
+        }).catch(error=>{
+            message.error('查询已购买资产失败');
+        });
+        console.log(this.state.data)
+    }
     render(){
+        const { data } = this.state;
+        const columns = this.columns(data);
         return(
             <Table
+                className="shadow radius table"
                 columns={columns}
-                dataSource={data}
                 bordered
+                style={{width:"100%"}}
+                dataSource={this.state.data}
             />
         )
     }

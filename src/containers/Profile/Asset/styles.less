@@ -1,172 +1,108 @@
+
 *{
   margin: 0;
   padding: 0;
 }
-.asset{
-  width: 700px;
-  display: flex;
+.ant-tabs{
+  width: 100%;
 }
-  .upLoadForm {
-    width: 700px;
-    span {
-      display: inline-flex;
-      min-width: 100px;
-      flex-direction: row-reverse;
-      height: 25px;
-      margin: 5px 0;
-    }
-    input, select {
+.uploadAsset{
+    display: flex;
+    flex-direction: column;
+    span{
       display: flex;
-      height: 25px;
-      margin: 5px 0 5px 10px;
+      align-items: center;
     }
-    .Title {
-      span {
-        display: flex;
-        flex-direction: row-reverse;
-      }
+    div{
       display: flex;
       flex-direction: row;
       align-items: center;
-    }
-    .featureTag {
-      display: flex;
-      margin: 5px 0;
-      align-content: center;
-      height: 25px;
-      span {
-        margin: 0;
-        height: 25px;
-        display: flex;
-        flex-direction: row-reverse;
-      }
-      div {
-        height: 25px;
-        min-height: 25px;
-      }
-      .ant-select-selection, .ant-select-selection--single {
-        background-color: #fff;
-        border: 1px solid #d9d9d9;
-        margin-left: 10px;
-        width: 210px;
-        li {
-          height: 20px;
-        }
-      }
-    }
-    .priceAndData {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      .price {
-        display: flex;
-        flex: 1;
-        align-content: center;
-        justify-content: center;
-        span {
-          display: inline-flex;
-          flex-direction: row-reverse;
-        }
-      }
-      .dataAssetType {
-        height: 35px;
-        display: flex;
-        flex: 1;
-        .ant-cascader-picker {
-          display: inline-flex;
-          flex: 1;
-        }
-      }
-    }
-
-    .dateSelect {
-      margin-left: 8px;
-      margin-top: 5px;
-
-      span {
-        margin: 3px;
-        span {
-          margin: 0;
-        }
-      }
-    }
-
-    .dataAssetType {
-      display: flex;
-      flex-direction: row;
-      height: 25px;
-      margin: 0;
-
-      .ant-cascader-picker {
-        .ant-cascader-input.ant-input {
-          background-color: #fff;
-          border: 1px solid #d9d9d9;
-        }
-        .ant-cascader-input.ant-input {
-
-          margin: 0;
-        }
-      }
-      span {
-        width: 120px;
-        align-items: center;
-        display: flex;
-        flex-direction: row;
-      }
-    }
-
-    .description {
-      display: flex;
-      flex: 1;
-      flex-direction: row;
-
-      .textarea {
-        margin: 10px 0 10px 10px;
-        display: flex;
-        flex: 1;
-        textarea {
-          height: 150px;
-          display: flex;
-          flex: 1;
-        }
-      }
-    }
-    .upLoadAndSubmit{
+      margin: 8px;
       span{
-        margin-right: 5px;
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        margin: 0 5px;
+        color: #444444;
+      }
+      input{
+        display: flex;
+        align-items: center;
+        height: 28px;
+        width: 140px;
+        border-radius: 5px;
+      }
+      textarea{
+        border-radius: 6px;
+        display: flex;
+        flex: 1;
       }
       button{
-        background-color: #808080;
-        margin: 0 5px;
-        color:white;
-        width: 130px;
-        padding: 0;
         span{
-          justify-content: center;
+          display: inline-block;
+          font-size: 18px;
+          color: #444444;
         }
       }
-      .submit{
+      .ant-cascader-picker,.ant-cascader-picker-label{
+        margin: 0;
         display: flex;
-        flex-direction: row-reverse;
-        button{
-          display: flex;
-          flex-direction: row-reverse;
-          background-color: black;
-          color: #fff;
-          width: 100px;
-          span{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
+        flex: 1;
+        align-items: center;
+      }
+      .ant-cascader-picker-label{
+        margin-top: -10px;
+      }
+    }
+    .ant-calendar-picker-icon{
+      margin-top: -7px;
+    }
+    .ant-calendar-picker{
+      margin: 0;
+      div{
+        margin: 0;
+      }
+    }
+    .upLoad{
+      button{
+        background: -webkit-linear-gradient(#9A7DE0, #6147BD);
+        box-shadow: 0 0 4px 0 #9B85DB;
+        border: none;
+        padding: 0 20px;
+        max-height: 28px;
+        font-weight: lighter;
+        i{
+          display: none;
+        }
+        span{
+          color:#FFFFFF;
+          font-size: 16px;
         }
       }
-
+      button:hover{
+        border:1px solid #6127BD;
+      }
+      div{
+        margin: 0;
+        span{
+          margin: 0;
+        }
+      }
     }
-
   }
+.uploadAsset .featureTag div{
+  margin: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.uploadAsset .featureTag input{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 120px;
+}
 .set{
   .ant-upload.ant-upload-drag p.ant-upload-text{
     color:white;
@@ -175,40 +111,37 @@
     color: white;
   }
 }
-
-
-.ant-table-thead > tr > th, .ant-table-tbody > tr > td{
-  padding: 3px;
+//居中
+//tr
+.ant-table-bordered .ant-table-thead > tr > th, .ant-table-bordered .ant-table-tbody > tr {
+  position: relative;
+  text-align:center
 }
-.ant-upload.ant-upload-drag{
+//td
+.ant-table-bordered .ant-table-thead > tr > th, .ant-table-bordered .ant-table-tbody > tr > td{
+  margin: 0 auto;
+}
+//原本样式
+.ant-tabs-nav,.ant-tabs-nav-animated{
+  color:#6147BD;
+  margin: 20px;
   padding: 0;
-  background-color: grey;
-  color:white;
 }
-.ant-upload-btn{
-  background-color: grey;
-  padding: 20px;
-  color:white;
+//鼠标滑过样式
+.ant-tabs-nav-wrap .ant-tabs-nav .ant-tabs-tab:hover {
+  color:#9A7DE0;
 }
-.ant-upload.ant-upload-drag p.ant-upload-drag-icon .anticon{
-  color:white;
+//点击后样式
+.ant-tabs-nav-wrap .ant-tabs-nav-scroll .ant-tabs-nav .ant-tabs-tab-active{
+  color:#9A7DE0;
 }
-.modalAsset .asset{
-  width: 460px;
+//边线
+.ant-tabs-nav .ant-tabs-ink-bar{
+  background-color: transparent;
+  border-top:1px solid #9A7DE0
 }
-.modalAsset .asset .upLoadForm{
-  width: 460px;
-}
-.modalAsset .upLoadForm .upLoadAndSubmit .submit button{
-  display: none;
+.ant-table-bordered .ant-table-thead > tr > th, .ant-table-bordered .ant-table-tbody > tr a{
+  color: #4A90E2;
 }
 
-//.upLoadForm .dataAssetType .ant-cascader-picker span{
-//  width:auto;
-//}
-.ant-cascader-picker-label{
-  top:-5px;
-}
-//.priceAndData .dataAssetType .ant-cascader-picker{
-//  width:340px;
-//}
+

@@ -105,12 +105,8 @@ export default class History extends PureComponent{
                             return (
                                 <li key={index} onClick={()=>this.handleOver(index)}>
                                     <span className='icon'>
-                                        {/*<Icon type="arrow-up" style={{ fontSize: 16, color: '#00b1a9' }} />*/}
-                                        {/*<img src="../../../../static/img/show.png" alt=""/>*/}
-                                       {/* <i className='show_hide'></i>
-                                        <i className='up_down'></i>*/}
-                                        <img src="../../../../static/img/show.png" alt=""/>
-                                        <img src="../../../../static/img/info.png" alt=""/>
+                                        <img src="./img/show.png" alt=""/>
+                                        <img src="./img/info.png" alt=""/>
 
                                     </span>
                                     <span className="exhash">{data.tx_id}</span>

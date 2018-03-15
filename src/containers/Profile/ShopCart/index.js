@@ -1,9 +1,10 @@
 import React, {PureComponent} from 'react'
 import BTList from '../../../components/BTList'
 import BTShopListCell from './subviews/BTShopListCell'
-import BTFetch from"../../../utils/BTFetch"
-import {Popconfirm,Checkbox,Row,Col,Button,Table } from 'antd';
+import {Popconfirm,Checkbox,Row,Col,Button,Table,message } from 'antd';
+import BTFetch from '../../../utils/BTFetch'
 import {getBlockInfo, getDataInfo} from "../../../utils/BTCommonApi";
+// import {Popconfirm,Checkbox,Row,Col,Button,Table } from 'antd';
 const CheckboxGroup = Checkbox.Group;
 const data=[
     {
@@ -47,6 +48,7 @@ export default class BTShopCart extends PureComponent{
     constructor(props){
         super(props)
         this.state={
+            data:[],
             data:"",
             title:"",
             price:"",
@@ -57,19 +59,16 @@ export default class BTShopCart extends PureComponent{
 
         }
     };
-    columns(){
+    columns(data){
+        // console.log(data)
         return [
-            { title: 'goods_id', dataIndex: 'goods_id', key: 'goods_id' },
-            { title: 'goods_type', dataIndex: 'goods_type', key: 'goods_type' },
-            { title: 'username', dataIndex: 'username', key: 'username' },
-            { title: 'op_type', dataIndex: 'op_type', key: 'op_type' },
+            { title: 'title', dataIndex: 'goods_id', key: 'title' },
             { title: 'price', dataIndex: 'price', key: 'price' },
             { title: 'fileName', dataIndex: 'fileName', key: 'fileName' },
             { title: 'fileSize', dataIndex: 'fileSize', key: 'fileSize' },
             { title: 'date', dataIndex: 'date', key: 'date' },
-            { title: 'From', dataIndex: 'from', key: 'from'},
-            { title: 'Delete', dataIndex: 'delete',
-                render: (text, record) => {
+            { title: 'From', dataIndex: 'username', key: 'from'},
+            { title: 'Delete', dataIndex: 'goods_id', key:'x', render: (item,record) => {
                     return (
                         // this.state.dataSource.length > 1 ?
                         //     (
@@ -91,28 +90,71 @@ export default class BTShopCart extends PureComponent{
     onChange(checkedValues) {
         console.log('checked = ', checkedValues);
     }
-    async onDelete(key){
+   /* onDelete(key){
         const data = [...this.state.data];
-        let blockData = {
+        this.setState({ data: data.filter(item => item.key !== key) });
+    }*/
+    async onDelete(data){
+        // const data = [...this.state.data];
+        console.log(data)
+        let _block=await getBlockInfo();
+        if(_block.code!=0){
+            message.error('获取区块信息失败');
+            return;
+        }
+        let block=_block.data;
+        //获取生成data的参数
+        let param={
+            "code":"favoritemng",
+            "action":"favoritepro",
+            "args":{
+                "user_name":"btd121",
+                "session_id":"idtest",
+                "op_type":"delete",
+                "goods_type":"typetest",
+                "goods_id":data,
+                "signature":"signatest"
+            }
+        };
+
+        let _getDataBin=(await getDataInfo(data));
+        if(_getDataBin.code!=0){
+            message.error('获取区块数据失败');
+            return;
+        }
+        let favorite={
+            "ref_block_num": block.ref_block_num,
+            "ref_block_prefix": block.ref_block_prefix,
+            "expiration": block.expiration,
+            "scope": ["buyertest"],
+            "read_scope": [],
+            "messages": [{
+                "code": "favoritemng",
+                "type": "favoritepro",
+                "authorization": [],
+                "data": _getDataBin.data.bin
+            }],
+            "signatures": []
+        };
+        BTFetch('/user/FavoriteMng','post',favorite,{full_path:false,service:'service'})
+            .then(res=>{
+                console.log(res)
+            });
+       /* let blockData = {
             code: "favoritemng",
             action: "favoritepro",
             args: {
                 user_name: "buyertest",
                 session_id: "idtest",
-                op_type: "add",
+                op_type: "delete",
                 goods_type: "typetest",
                 goods_id: "idtest3",
                 signature: "signatest"
             }
         }
-            let blockInfo = await getBlockInfo(blockData);
+        let blockInfo = await getBlockInfo(blockData);
         blockData = await getDataInfo(blockData);
-        var myHeaders = new Headers();
-        myHeaders.append('Content-Type','text/plain');
-        fetch("http://10.104.21.10:8080/v2/user/FavoriteMng",{
-            method:"post",
-            header:myHeaders,
-            body:JSON.stringify({
+        BTFetch("/user/FavoriteMng",{
                 ref_block_num: blockInfo.data.ref_block_num,
                 ref_block_prefix: blockInfo.data.ref_block_prefix,
                 expiration: blockInfo.data.expiration,
@@ -125,8 +167,10 @@ export default class BTShopCart extends PureComponent{
                     data: blockData.data.bin,
                 }],
                 signatures:[]
-            })
-        }).then(response=>response.json())
+
+        },{
+            service:'service'
+            }).then(response=>response.json())
             .then(res=>{
                 if(res.code==1) {
                     alert("successful");
@@ -136,43 +180,34 @@ export default class BTShopCart extends PureComponent{
                 }
             }).catch(error=>{
             console.log(error)
-        })
+        })*/
     }
-
     componentDidMount() {
-        BTFetch("http://10.104.21.10:8080/v2/user/QueryFavorite", "post",
-            {
-                userName: "buyertest",
-                random: "fileName123",
-                signatures: "0xxxx"
-            },{
-                full_path:true,
-        }).then(data=>{
-            const theSureData = JSON.parse(data.data);
-            var newdata = [];
-            for(let i=0;i<theSureData.length;i++){
-                newdata.push({
-                    goods_id:theSureData[i].goods_id,
-                    goods_type:theSureData[i].goods_type,
-                    price:theSureData[i].price,
-                    op_type:theSureData[i].op_type,
-                    username:theSureData[i].username,
-                    fileName:theSureData[i].fileName,
-                    fileSize:theSureData[i].fileSize,
-                    date:theSureData[i].date,
-                    from:theSureData[i].from,
-                })
-            }
+        let param={
+            userName: "buyertest",
+            random: "fileName123",
+            signatures: "0xxxx"
+        }
+        BTFetch("/user/QueryFavorite", "post",param,{service:'service',})
+            .then(data=>{
+                if(data.code==1){
+                    this.setState({
+                        data:JSON.parse(data.data)
+                    });
+                }else{
+                    message.error('获取数据失败')
+                }
 
-            this.setState({
-                data:newdata
-            })
         }).catch(error=>{
             console.log(error)
         })
     }
+    clearShopping(){
+        //结算数据
+
+    }
     render(){
-        const data = this.state.data;
+        const { data } = this.state;
         const columns = this.columns(data);
         const { selectedRowKeys } = this.state;
         const rowSelection = {
@@ -180,6 +215,7 @@ export default class BTShopCart extends PureComponent{
         onChange: (e)=>this.onSelectChange(e),
         hideDefaultSelections: true,
         type:"radio",  //单选
+
         onSelection: this.onSelection,
         };
         return (
@@ -189,7 +225,7 @@ export default class BTShopCart extends PureComponent{
                     />
                 </div>
                 <div>
-                    <Button type="primary">结算</Button>
+                    <Button onClick={()=>this.clearShopping()} type="primary">结算</Button>
                 </div>
             </div>
         );

@@ -1,7 +1,9 @@
 import React,{PureComponent} from 'react'
 import moment from "moment"
-import {Upload,Modal,Form, Icon, Input, Button,DatePicker,TimePicker} from 'antd'
+import {Upload,Modal,Form, Icon, Input, Button,DatePicker,TimePicker,message} from 'antd'
 import {getBlockInfo, getDataInfo} from "../../../../utils/BTCommonApi";
+import "../styles.less"
+import BTFetch from "../../../../utils/BTFetch";
 
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const FormItem = Form.Item;
@@ -70,14 +72,14 @@ export default class BTPublishDemand extends PureComponent{
             this.setState({ number });
         }
         this.triggerChange({ number });
-    }
+    };
     triggerChange = (changedValue) => {
         // Should provide an event to pass value to Form.
         const onChange = this.props.onChange;
         if (onChange) {
             onChange(Object.assign({}, this.state, changedValue));
         }
-    }
+    };
     //datePicker
     onChangeDate(date,dateString) {
         this.setState({
@@ -97,7 +99,7 @@ export default class BTPublishDemand extends PureComponent{
     }
 
     //点击后数据收集、fetch
-    async handleOk(){
+    async updata(){
         console.log({
             title:this.state.title,
             number: this.state.number,
@@ -112,7 +114,7 @@ export default class BTPublishDemand extends PureComponent{
             args: {
                 data_req_id: "idtest12",
                 basic_info: {
-                    user_name: "nametest22",
+                    user_name: "btd121",
                     session_id: "sessidtest232",
                     requirement_name: this.state.title,
                     feature_tag: 111,
@@ -127,81 +129,85 @@ export default class BTPublishDemand extends PureComponent{
             }
         }
 
-        let blockInfo = await getBlockInfo(blockData);
-        blockData = await getDataInfo(blockData);
-        var myHeaders = new Headers();
-        myHeaders.append('Content-Type','text/plain');
-        fetch("http://10.104.10.152:8080/v2/requirement/Publish",{
-            method:"post",
-            header:myHeaders,
-            body:JSON.stringify({
-                ref_block_num: blockInfo.data.ref_block_num,
-                ref_block_prefix: blockInfo.data.ref_block_prefix,
-                expiration: blockInfo.data.expiration,
-                scope: ["datareqmng"],
-                read_scope: [],
-                messages: [{
-                    code: "datareqmng",
-                    type: "datareqreg",
-                    authorization: [],
-                    data: blockData.data.bin
-                }],
-                signatures: []
-            })
-        }).then(response=>response.json())
+        let blockInfo = await getBlockInfo();
+        let blockDataBin = await getDataInfo(blockData);
+        if(blockInfo.code!=0 || blockDataBin.code!=0){
+            message.error('获取区块信息错误');
+            return ;
+        }
+       let param={
+           ref_block_num: blockInfo.data.ref_block_num,
+           ref_block_prefix: blockInfo.data.ref_block_prefix,
+           expiration: blockInfo.data.expiration,
+           scope: ["datareqmng"],
+           read_scope: [],
+           messages: [{
+               code: "datareqmng",
+               type: "datareqreg",
+               authorization: [],
+               data: blockDataBin.data.bin
+           }],
+           signatures: []
+       };
+        BTFetch("/requirement/Publish",'post',param)
             .then(res=>{
                 //成功时返回的code,并隐藏弹框
                 if(res.code==0) {
-                    alert("successful")
+                    // alert("successful")
+                    message.success('需求发布成功')
                     this.setState({
                         visible: false,
                     });
                 }else{
-                    alert("failed")
+                    message.error('需求发布失败')
                 }
             }).catch(error=>{
-            console.log(error)
-        })
+                message.error('需求发布失败')
+            })
     }
     render(){
         return(
+            <div className="upLoadNeed">
                 <div>
+                    <span>需求名称:</span>
+                    <Input style={{width:170}} value={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
+                </div>
+                <div>
+                    <span>招募价格:</span>
+                    <Input
+                        type="text"
+                        value={this.state.number}
+                        onChange={this.handleNumberChange}
+                    />
+                </div>
+                <div>
+                    <span>需求描述:</span>
+                    <TextArea rows={4} value={this.state.textArea} onChange={(e)=>this.onChangeTextArea(e)} />
+                </div>
+                <div className="upLoad">
+                    <span>上传样例:</span>
+                    <br/>
                     <div>
-                        <span>Title:</span>
-                        <Input value={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
-                    </div>
-                    <div>
-                        <span>Expect Price:</span>
-                        <Input
-                            type="text"
-                            value={this.state.number}
-                            onChange={this.handleNumberChange}
-                        /> </div>
-                    <div>
-                        <span>Deadline:</span>
-                        <br/>
-                        <DatePicker
-                            onChange={(date,dateString)=>this.onChangeDate(date,dateString)}
-                            style={{width:"100%"}}
-                            disabledDate = {(current)=>this.disabledDate(current)}
-                        />
-                    </div>
-                    <div>
-                        <span>Description: </span>
-                    </div>
-                    <div>
-                        <TextArea rows={4} value={this.state.textArea} onChange={(e)=>this.onChangeTextArea(e)} />
-                    </div>
-                    <div>
-                        <span>Upload some samples:</span>
-                        <br/>
-                        <Upload {...props} style={{display:"flex",flexDirection:"row"}}>
+                        <Upload {...props}>
                             <Button>
                                 <Icon type="upload" /> 资源库筛选
                             </Button>
                         </Upload>
+                        <Button onClick={()=>this.handleOk()}>发布</Button>
                     </div>
                 </div>
+                <div>
+                    <span>截止时间:</span>
+                    <br/>
+                    <DatePicker
+                        onChange={(date,dateString)=>this.onChangeDate(date,dateString)}
+                        disabledDate = {(current)=>this.disabledDate(current)}
+                    />
+                </div>
+                <div className="uploadNeedSubmit">
+                    <Button type="submit" onClick={(e)=>this.updata(e)}>立即发布</Button>
+                </div>
+            </div>
         )
     }
 }
