@@ -1,5 +1,4 @@
 import React,{PureComponent} from 'react'
-import '../styles.less'
 
 
 export default class BlockList extends PureComponent{
