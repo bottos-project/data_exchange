@@ -145,12 +145,12 @@ export default class BTUploadAsset extends PureComponent{
     }
     tag2(e){
         this.setState({
-            tag1:e.target.value,
+            tag2:e.target.value,
         })
     }
     tag3(e){
         this.setState({
-            tag1:e.target.value,
+            tag3:e.target.value,
         })
     }
     getFileName(fileInfo){
@@ -167,6 +167,7 @@ export default class BTUploadAsset extends PureComponent{
         }
     }
     async updata(){
+
         let myHeaders = new Headers();
         myHeaders.append('Content-Type','text/plain');
         let filename={
@@ -195,8 +196,8 @@ export default class BTUploadAsset extends PureComponent{
                 }
                 console.log(response)
             }).catch(error=>{
-                console.log(error)
-            });
+            console.log(error)
+        });
         BTFetch('/asset/getDownLoadURL','post',params1,{service:'service'})
             .then(response=>{
                 if(response.code==1){
@@ -209,6 +210,14 @@ export default class BTUploadAsset extends PureComponent{
             }).catch(error=>{
             console.log(error)
         });
+        let notValue=this.state;
+        console.log(notValue);
+        for(const key in notValue){
+            if(notValue[key]==''){
+                message.warning('请完善注册资产信息');
+                return;
+            }
+        }
         let _blockInfo = (await getBlockInfo());
         if(_blockInfo.code!=0){
             message.error('获取区块信息失败')
@@ -219,7 +228,7 @@ export default class BTUploadAsset extends PureComponent{
             "code": "assetmng",
             "action": "assetreg",
             "args": {
-                "asset_id": "filehashtest2",
+                "asset_id": window.uuid,
                 "basic_info": {
                     "user_name": "btd121",
                     "session_id": "sessidtestwc2",
@@ -271,7 +280,6 @@ export default class BTUploadAsset extends PureComponent{
 
             }else{
                 message.error('注册资产失败')
-
             }
             console.log(repsonse);
             this.setState({
@@ -295,7 +303,7 @@ export default class BTUploadAsset extends PureComponent{
                         <Button type="upload" examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</Button>
                         <span>{this.state.getFileNameTemp}</span>
                         {/*<Button>*/}
-                            {/*<span type="upload"  onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</span>*/}
+                        {/*<span type="upload"  onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</span>*/}
                         {/*</Button>*/}
                     </div>
                     <div className="upLoad">
@@ -303,7 +311,7 @@ export default class BTUploadAsset extends PureComponent{
                         <Button exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>资源库筛选</Button>
                         <span>{this.state.getFileName}</span>
                         {/*<Button>*/}
-                            {/*<span onClick={()=>this.commitAsset('asset')}>资源库筛选</span>*/}
+                        {/*<span onClick={()=>this.commitAsset('asset')}>资源库筛选</span>*/}
                         {/*</Button>*/}
                     </div>
                     <div>

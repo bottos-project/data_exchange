@@ -29,7 +29,7 @@ const  props = {
                     message.error(`${info.file} 获取文件存储url失败`)
                 }
             }).catch(error=>{
-                message.error(`${info.file} 获取文件存储url失败`)
+            message.error(`${info.file} 获取文件存储url失败`)
         });
         let myHeaders=new Headers();
         myHeaders.append('Content-Type','text/plain')
@@ -38,13 +38,13 @@ const  props = {
         const status = info.file.status;
         function up_ajax(url){
 
-           /* BTFetch(url,'put',{},{full_path:true})
-                .then(res=>{
-                    console.log(res);
-                    inquire()
-                }).catch(error=>{
-                    message.error(`${info.file} 上传到存储路径失败 `);
-            });*/
+            /* BTFetch(url,'put',{},{full_path:true})
+                 .then(res=>{
+                     console.log(res);
+                     inquire()
+                 }).catch(error=>{
+                     message.error(`${info.file} 上传到存储路径失败 `);
+             });*/
             fetch(url,{
                 method:'PUT',
                 header:myHeaders,
@@ -72,7 +72,7 @@ const  props = {
                 "userName": "btd121",
                 "fileName": file.name
             };
-           BTFetch('/asset/getFileUploadStat','post',data,{service:'service'})
+            BTFetch('/asset/getFileUploadStat','post',data,{service:'service'})
                 .then(res=>{
                     if(res.code=='1'){
                         makeRequest();
@@ -167,33 +167,33 @@ export default class BTMyAssetSet extends PureComponent{
 
     columns(data) {
         console.log(data);
-            return [
-                {title: 'FileName', dataIndex: 'file_name', key: 'fileName'},
-                {title: 'FileSize', dataIndex: 'file_size', key: 'fileSize'},
-                {title: 'sampleName', dataIndex: 'sampleName', key: 'sampleName'},
-                {title: 'sampleSize', dataIndex: 'sampleSize', key: 'sampleSize'},
-                {title: 'Date', dataIndex: 'date', key: 'date'},
-                {
-                    title: "Download", dataIndex: 'file_name', key: 'x', render: (item)=>{
-                        return(
-                            <a href={this.state.href} onClick={()=>this.download(item)}>
-                                <Icon type="download"/>
-                            </a>
-                        )
-                    }
-                },
-                {
-                    title: "Delete", dataIndex: 'delete', key: 'y', render: (text, record)=>{
-                        return (
-                            <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
-                                <a  href="#">Delete</a>
-                            </Popconfirm>
-                        );
-                    }
+        return [
+            {title: 'FileName', dataIndex: 'file_name', key: 'fileName'},
+            {title: 'FileSize', dataIndex: 'file_size', key: 'fileSize'},
+            {title: 'sampleName', dataIndex: 'sampleName', key: 'sampleName'},
+            {title: 'sampleSize', dataIndex: 'sampleSize', key: 'sampleSize'},
+            {title: 'Date', dataIndex: 'date', key: 'date'},
+            {
+                title: "Download", dataIndex: 'file_name', key: 'x', render: (item)=>{
+                    return(
+                        <a href={this.state.href} onClick={()=>this.download(item)}>
+                            <Icon type="download"/>
+                        </a>
+                    )
                 }
-            ];
-     }
-     download(dataIndex){
+            },
+            {
+                title: "Delete", dataIndex: 'delete', key: 'y', render: (text, record)=>{
+                    return (
+                        <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
+                            <a  href="#">Delete</a>
+                        </Popconfirm>
+                    );
+                }
+            }
+        ];
+    }
+    download(dataIndex){
         BTFetch('/asset/getDownLoadURL','post',{
             'userName':'btd121',
             'fileName':dataIndex
@@ -219,31 +219,31 @@ export default class BTMyAssetSet extends PureComponent{
         this.setState({ data: data.filter(item => item.key !== key) });
     }
     componentDidMount() {
-            let getUrl=[];
-            let param={
-                'userName':'btd121',
-                'fileName':'test.zip'
-            };
-            let data={
-                "userName": "btd121",
-                "random": Math.ceil(Math.random()*100),
-                "signatures": "0xxxx"
-            };
-            BTFetch('/asset/queryUploadedData','post',data,{service:'service'})
-                .then(res=>{
-                    if( res.code == 1 ){
-                        let data=JSON.parse(res.data);
-                        console.log(data);
-                        if(res.data == 'null' ){
-                            return ;
-                            message.warning('资源库为空')
-                        }
-                        this.setState({
-                            data:data
-                        })
+        let getUrl=[];
+        let param={
+            'userName':'btd121',
+            'fileName':'test.zip'
+        };
+        let data={
+            "userName": "btd121",
+            "random": Math.ceil(Math.random()*100),
+            "signatures": "0xxxx"
+        };
+        BTFetch('/asset/queryUploadedData','post',data,{service:'service'})
+            .then(res=>{
+                if( res.code == 1 ){
+                    let data=JSON.parse(res.data);
+                    console.log(data);
+                    if(res.data == 'null' ){
+                        return ;
+                        message.warning('资源库为空')
                     }
-                    console.log(this.state.data)
-                });
+                    this.setState({
+                        data:data
+                    })
+                }
+                console.log(this.state.data)
+            });
 
 
     }
