@@ -196,8 +196,8 @@ export default class BTUploadAsset extends PureComponent{
                 }
                 console.log(response)
             }).catch(error=>{
-            console.log(error)
-        });
+                console.log(error)
+            });
         BTFetch('/asset/getDownLoadURL','post',params1,{service:'service'})
             .then(response=>{
                 if(response.code==1){
@@ -303,7 +303,7 @@ export default class BTUploadAsset extends PureComponent{
                         <Button type="upload" examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</Button>
                         <span>{this.state.getFileNameTemp}</span>
                         {/*<Button>*/}
-                        {/*<span type="upload"  onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</span>*/}
+                            {/*<span type="upload"  onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</span>*/}
                         {/*</Button>*/}
                     </div>
                     <div className="upLoad">
@@ -311,7 +311,7 @@ export default class BTUploadAsset extends PureComponent{
                         <Button exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>资源库筛选</Button>
                         <span>{this.state.getFileName}</span>
                         {/*<Button>*/}
-                        {/*<span onClick={()=>this.commitAsset('asset')}>资源库筛选</span>*/}
+                            {/*<span onClick={()=>this.commitAsset('asset')}>资源库筛选</span>*/}
                         {/*</Button>*/}
                     </div>
                     <div>

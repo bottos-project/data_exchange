@@ -66,7 +66,7 @@ export default class BTRequireCell extends PureComponent{
             "args":{
                 "data_presale_id":"idtest",
                 "basic_info":{
-                    "user_name":"btd123",
+                    "user_name":"btd121",
                     "session_id":"sessionidtest",
                     "asset_id":fileInfo.value,
                     "data_req_id":this.props.requirement_id,

@@ -8,8 +8,7 @@ import {exportFile} from '../../../utils/BTUtil'
 import BTIpcRenderer from '../../../tools/BTIpcRenderer'
 import BTCryptTool from '../../../tools/BTCryptTool'
 import BTUnlogin from '../../../components/BTUnlogin'
-const ipc = window.electron.ipcRenderer
-const {dialog} = window.electron.remote
+import * as localStore from '../../../tools/localStore'
 
 const TabPane = Tabs.TabPane;
 
@@ -29,23 +28,28 @@ export default class BTWallet extends PureComponent{
     }
 
     render(){
+        let loginState = localStore.isLogin();
         return (
-            <div className="flex container column" style={{height:200}}>
-               <BTAccountListHeader/>
             <div className="container">
-             <List
-                 style={{flex:1}}
-                 dataSource={this.state.accountList}
-                     renderItem = {(item,index)=>{
-                        let newItem = {
-                            accountName:item.slice(0,-9)
-                        }
-                         return(
-                             <BTAccountItem {...newItem}/>
-                         )
-                     }}
-                 />
-            </div>
+                {
+                    loginState ? (<div className="flex container column" style={{height:200}}>
+                        <BTAccountListHeader/>
+                        <div>
+                        <List
+                            style={{flex:1}}
+                            dataSource={this.state.accountList}
+                                renderItem = {(item,index)=>{
+                                    let newItem = {
+                                        accountName:item.slice(0,-9)
+                                    }
+                                    return(
+                                        <BTAccountItem {...newItem}/>
+                                    )
+                                }}
+                            />
+                        </div>
+                    </div>) : <div className="container center"><BTUnlogin/></div>
+                }
             </div>
         )
     }
@@ -68,21 +72,11 @@ class BTAccountItem extends PureComponent{
     }
 
     exportAccount(accountName){
-        ipc.send('save-dialog')
-
-        // dialog.showSaveDialog(this,{
-
-        // },(filePath)=>{
-        //     console.log({
-        //         filePath
-        //     })
-        // })
-
-        // let exportFileName = accountName
-        // let keyStore = BTIpcRenderer.getKeyStore(accountName)
-        // if(!keyStore.error){
-        //     BTIpcRenderer.exportKeyStore(accountName,JSON.parse(keyStore.result))
-        // }
+        let exportFileName = accountName
+        let keyStore = BTIpcRenderer.getKeyStore(accountName)
+        if(!keyStore.error){
+            BTIpcRenderer.exportKeyStore(accountName,JSON.parse(keyStore.result))
+        }
     }
 
     onHandleOk(){
@@ -126,7 +120,6 @@ class BTAccountItem extends PureComponent{
     }
 
     render(){
-        // let loginState = localStorage.isLogin()
         return(
             <div className="container accountItem">
 

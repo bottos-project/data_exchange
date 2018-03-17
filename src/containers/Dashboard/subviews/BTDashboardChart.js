@@ -20,9 +20,9 @@ export default class BTDashboardChart extends PureComponent{
             /*data:this.props.num||[],
             key:this.props.dkey||'',
             type:this.props.type||'注册人数'*/
-            /* data:[],
-             key:'',
-             type:''*/
+           /* data:[],
+            key:'',
+            type:''*/
         }
     }
     render(){
@@ -32,10 +32,10 @@ export default class BTDashboardChart extends PureComponent{
             type:this.props.type,
         });*/
         return(
-            <div>
-                <div className="dashboardChartTitle">
-                    <h3 style={{color:"#666666"}}>{this.props.type}</h3>
-                    {/*<div>
+                <div>
+                    <div className="dashboardChartTitle">
+                        <h3 style={{color:"#666666"}}>{this.props.type}</h3>
+                        {/*<div>
                             <div>
                                 <span style={{display:"block",width:"15px",height:"15px",background:"#3023AE",borderRadius:"15px",margin:"0 10px"}}> </span>
                                 <span>总需求</span>
@@ -45,21 +45,21 @@ export default class BTDashboardChart extends PureComponent{
                                 <span>总发布</span>
                             </div>
                         </div>*/}
-                </div>
-                <div className="dashboardChart shadow radius">
-                    <LineChart width={1000} height={250} data={this.props.num}>
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis dataKey="day" />
-                        <YAxis />
-                        <Tooltip />
-                        <Legend />
-                        <Line type="monotone" dataKey={this.props.dkey} stroke="#C86DD7"/>
-                        {/*<Line type="monotone" dataKey="assetNumPerDay" stroke="#3023AE"/>*/}
-                        {/* <Line type="monotone" dataKey="data" stroke="#8884d8" />
+                    </div>
+                    <div className="dashboardChart shadow radius">
+                        <LineChart width={1000} height={250} data={this.props.num}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="day" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line type="monotone" dataKey={this.props.dkey} stroke="#C86DD7"/>
+                            {/*<Line type="monotone" dataKey="assetNumPerDay" stroke="#3023AE"/>*/}
+                            {/* <Line type="monotone" dataKey="data" stroke="#8884d8" />
                             <Line type="monotone" dataKey="requirement" stroke="#0596d8" /> */}
-                    </LineChart>
+                        </LineChart>
+                    </div>
                 </div>
-            </div>
         )
     }
 }

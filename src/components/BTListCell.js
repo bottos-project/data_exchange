@@ -16,7 +16,6 @@ export default class BTListCell extends PureComponent{
     constructor(props){
         super(props)
     }
-
     render(){
         let linkto = this.props.linkto || '/'
         return(

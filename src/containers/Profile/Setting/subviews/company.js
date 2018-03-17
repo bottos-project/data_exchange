@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import { Tabs, Input, Ico,Button,Select } from 'antd';
+import { Tabs, Input, Ico,Button,Select,message } from 'antd';
 import BTFetch from "../../../../utils/BTFetch"
 import BTCryptTool from '../../../../tools/BTCryptTool'
 // import {nativeImage} from 'electron'
@@ -74,7 +74,12 @@ export default class BTCompany extends PureComponent{
         // console.log(param,BTCryptTool.aesDecrypto(param.user_info.encypted_info,this.state.username))
         // debugger;
         BTFetch("/user/UpdateUserInfo","post",param).then((responseData) => {
-            console.log(responseData)
+            // console.log(responseData)
+            if(responseData.code==0){
+                message.success('修改信息成功')
+            }else{
+                message.error('修改信息失败')
+            }
         })
 
 

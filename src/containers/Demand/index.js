@@ -63,6 +63,7 @@ export default class BTDemand extends PureComponent{
                     return;
                 }
                 let dataSource  = response.data && response.data.Row;
+
                 this.setState({
                     dataSource:dataSource
                 })

@@ -13,9 +13,7 @@ export default class BTOtherAllBlock extends PureComponent{
     }
     componentDidMount(){
         //获取Total_BTO总量
-        BTFetch('http://10.104.10.152:8080/v2/dashboard/GetSumTxAmount','GET',{},{
-            full_path:true,
-        }).then(res=>{
+        BTFetch('/dashboard/GetSumTxAmount','GET').then(res=>{
             if(res.code == 1){
                 this.setState({
                     Total_BTO:res.data.num
@@ -23,22 +21,19 @@ export default class BTOtherAllBlock extends PureComponent{
             }
         });
         //获取Total_Trans总量
-        BTFetch('http://10.104.10.152:8080/v2/dashboard/GetAllTxNum','GET',{},{
-            full_path:true,
-        }).then(res=>{
+        BTFetch('/dashboard/GetAllTxNum','GET').then(res=>{
             if(res.code == 1){
                 this.setState({
                     Total_Trans:res.data.num
                 })
             }
         })
-        BTFetch('http://10.104.10.152:8080/v2/dashboard/GetNodeInfos','GET',{},{
-            full_path:true,
-        }).then(res=>{
+        BTFetch('/dashboard/GetNodeInfos','GET').then(res=>{
             if(res.code == 1){
-                console.log(JSON.parse(res.data));
+                console.log(typeof JSON.parse(res.data),JSON.parse(res.data).length);
+                let Total_Nodes=JSON.parse(res.data).length;
                 this.setState({
-                    // Total_Nodes:res.data.num
+                    Total_Nodes,
                 })
             }
         })

@@ -68,7 +68,7 @@ export default class BTMenu extends PureComponent{
                         {/* <Menu.Item key="8"><MenuLink to="/profile/asset">资产管理</MenuLink></Menu.Item>
                         <Menu.Item key="9"><MenuLink to="/profile/shopcart">购物车</MenuLink></Menu.Item>
                         <Menu.Item key="5"><MenuLink to="/profile/collect">收藏</MenuLink></Menu.Item> */}
-                        <Menu.Item key="sub1"><MenuLink  to="/profile/check"><FormattedMessage {...MenuMessages.Check}/></MenuLink></Menu.Item>
+                        {/* <Menu.Item key="sub1"><MenuLink  to="/profile/check"><FormattedMessage {...MenuMessages.Check}/></MenuLink></Menu.Item> */}
                         <Menu.Item key="sub2"><MenuLink to="/profile/wallet"><FormattedMessage {...MenuMessages.Wallet}/></MenuLink></Menu.Item>
                     </SubMenu>
 

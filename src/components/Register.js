@@ -26,7 +26,7 @@ export default class IsRegister extends PureComponent{
                 email:'',
                 password:'',
                 user_type:0,
-                role_type:0
+                // role_type:0
             })
        }
 
@@ -85,7 +85,7 @@ class Regist extends PureComponent{
             email:'',
             password:'',
             user_type:0,
-            role_type:0
+            // role_type:0
         })
     }
 
@@ -97,7 +97,7 @@ class Regist extends PureComponent{
         // 获取表单参数
         let username = fieldValues.username;
         let user_type = fieldValues.user_type;
-        let role_type = fieldValues.role_type;
+        // let role_type = fieldValues.role_type;
         let email = fieldValues.email;
         let password = fieldValues.password;
 
@@ -141,7 +141,7 @@ class Regist extends PureComponent{
             user_info:{
                 encypted_info:encypted_info.toString(),
                 user_type,// 0:个人  1:公司
-                role_type, // 0:数据提供  1:数据招募 2:数据审核
+                // role_type, // 0:数据提供  1:数据招募 2:数据审核
             },
             owner_pub_key:owner_pub_key.toString(),
             active_pub_key:active_pub_key.toString(),
@@ -167,9 +167,11 @@ class Regist extends PureComponent{
                 message.success('注册成功')
                 let privateKeyStr = JSON.stringify(privateKeys)
                 let cryptStr = BTCryptTool.aesEncrypto(privateKeyStr,password)
-                console.log({cryptStr})
+                // 创建本地用户目录
+                BTIpcRenderer.mkdir(username)
                 // 存储keystore文件到本地
-                BTIpcRenderer.saveKeyStore('keystore',cryptStr)
+                BTIpcRenderer.saveKeyStore({username:username,account_name:username},cryptStr)
+
                 this.props.registSuccess({
                     cryptStr,
                     isRegist:true,
@@ -222,22 +224,6 @@ class Regist extends PureComponent{
                             <RadioGroup >
                                 <Radio  value={0}>个人</Radio>
                                 <Radio value={1}>公司</Radio>
-                            </RadioGroup>
-                        )
-                    }
-                </FormItem>
-                <FormItem
-                    {...formItemLayout}
-                >
-                    {
-                        getFieldDecorator('role_type',{
-                            getValueFromEvent:(e)=>{return e.target.value},
-                            initialValue:0
-                        })(
-                            <RadioGroup>
-                                <Radio value={0}>数据提供</Radio>
-                                <Radio value={1}>数据招募</Radio>
-                                <Radio value={2}>数据审核</Radio>
                             </RadioGroup>
                         )
                     }

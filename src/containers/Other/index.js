@@ -3,6 +3,7 @@ import BTOtherTitle from "./subviews/BTOtherTitle"
 import BTOtherAllBlock from "./subviews/BTOtherAllBlock";
 import BTMap from "./subviews/BTMap"
 import BTOtherBlocks from "./subviews/BTOtherBlocks";
+import BTOtherExchange from "./subviews/BTOtherExchange";
 export default class BTOther extends PureComponent{
     constructor(props){
         super(props);
@@ -14,7 +15,6 @@ export default class BTOther extends PureComponent{
             Total_Nodes:''
         }
     }
-
     render(){
         return(
             <div className="container column">
@@ -25,8 +25,11 @@ export default class BTOther extends PureComponent{
                     <BTOtherAllBlock/>
                 </div>
                 <div>
-                    <BTOtherBlocks/>
                     <BTMap/>
+                </div>
+                <div>
+                    <BTOtherBlocks/>
+                    <BTOtherExchange/>
                 </div>
             </div>
         )

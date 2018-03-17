@@ -27,9 +27,9 @@ export default class BTProfileNeed extends PureComponent{
                     <TabPane tab="已发布需求" key="2">
                         <BTAssetDetail/>
                     </TabPane>
-                    <TabPane tab="我的资源库" key="3">
+                    {/*<TabPane tab="我的资源库" key="3">
                         <BTMyAssetSet/>
-                    </TabPane>
+                    </TabPane>*/}
 
                 </Tabs>
             </div>

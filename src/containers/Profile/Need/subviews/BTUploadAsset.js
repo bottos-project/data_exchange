@@ -106,13 +106,17 @@ export default class BTPublishDemand extends PureComponent{
             date:this.state.date,
             dateString:(new Date(this.state.dateString).getTime())/1000, //时间戳
             textArea:this.state.textArea,
-        })
+        });
+        if(!this.state.title || !this.state.date || !this.state.textArea){
+            message.warning('请完善发布需求');
+            return;
+        }
         //链的data
         let blockData = {
             code: "datareqmng",
             action: "datareqreg",
             args: {
-                data_req_id: "idtest12",
+                data_req_id: window.uuid,
                 basic_info: {
                     user_name: "btd121",
                     session_id: "sessidtest232",
@@ -154,9 +158,14 @@ export default class BTPublishDemand extends PureComponent{
                 //成功时返回的code,并隐藏弹框
                 if(res.code==0) {
                     // alert("successful")
-                    message.success('需求发布成功')
+                    message.success('需求发布成功');
+
                     this.setState({
                         visible: false,
+                        title:"",
+                        textArea:"",
+                        number:0,
+                        date:"",
                     });
                 }else{
                     message.error('需求发布失败')
@@ -170,7 +179,7 @@ export default class BTPublishDemand extends PureComponent{
             <div className="upLoadNeed">
                 <div>
                     <span>需求名称:</span>
-                    <Input style={{width:170}} value={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
+                    <Input style={{width:170}} defaultValue={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
                 </div>
                 <div>
                     <span>招募价格:</span>
@@ -182,9 +191,9 @@ export default class BTPublishDemand extends PureComponent{
                 </div>
                 <div>
                     <span>需求描述:</span>
-                    <TextArea rows={4} value={this.state.textArea} onChange={(e)=>this.onChangeTextArea(e)} />
+                    <TextArea rows={4} defaultValue={this.state.textArea} onChange={(e)=>this.onChangeTextArea(e)} />
                 </div>
-                <div className="upLoad">
+                {/*<div className="upLoad">
                     <span>上传样例:</span>
                     <br/>
                     <div>
@@ -195,7 +204,7 @@ export default class BTPublishDemand extends PureComponent{
                         </Upload>
                         <Button onClick={()=>this.handleOk()}>发布</Button>
                     </div>
-                </div>
+                </div>*/}
                 <div>
                     <span>截止时间:</span>
                     <br/>

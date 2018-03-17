@@ -21,12 +21,13 @@ export default class BTAssetDetail extends PureComponent{
             { title: 'Title', dataIndex: 'requirement_name', key: 'title' },
             { title: 'Type', dataIndex: 'feature_tag', key: 'type' },
             { title: 'Price', dataIndex: 'price', key: 'price' },
-            { title: 'expire_time', dataIndex: 'expire_time', key: 'expire_time' ,render:(time)=>{
-                return <span>{(new Date(time*1000)).toLocaleDateString()}</span>
-                }},
+
             { title: 'Description', dataIndex: 'description', key: 'description' },
             { title: 'PublishDate', dataIndex:'publish_date', key: 'publishDate',render:(time)=>{
                 return <span>{(new Date(time*1000)).toLocaleDateString()}</span>
+                }},
+            { title: 'expire_time', dataIndex: 'expire_time', key: 'expire_time' ,render:(time)=>{
+                    return <span>{(new Date(time*1000)).toLocaleDateString()}</span>
                 }},
             { title: 'Sample', dataIndex: 'sample_path', key: 'sample' ,render:(sample_path)=>{
                     return(
@@ -34,7 +35,7 @@ export default class BTAssetDetail extends PureComponent{
                     )
 
                 }},
-            { title: 'Delete', dataIndex: 'delete',key:'y',
+           /* { title: 'Delete', dataIndex: 'delete',key:'y',
                 render: (text, record) => {
                     return (
                         // this.state.dataSource.length > 1 ?
@@ -45,8 +46,8 @@ export default class BTAssetDetail extends PureComponent{
                         // ) : null
                     );
                 },
-            },
-            { title: 'Deadline', dataIndex: 'deadline', key: 'deadline' },
+            },*/
+            // { title: 'Deadline', dataIndex: 'deadline', key: 'deadline' },
         ];
     }
 
@@ -67,7 +68,7 @@ export default class BTAssetDetail extends PureComponent{
         };
         BTFetch("/requirement/query",'post',param)
             .then(res=>{
-                console.log(res.data.Row)
+                console.log(res.data);
                 if(res.code==0&&res.data.Row!='null'){
                     this.setState({
                         data:res.data.Row,
@@ -76,7 +77,7 @@ export default class BTAssetDetail extends PureComponent{
                     message.warn('暂无发布资产')
                 }
         }).catch(error=>{
-            console.log(error)
+            message.error('暂无发布资产')
         })
     }
 

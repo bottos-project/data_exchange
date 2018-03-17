@@ -1,5 +1,6 @@
 import React,{PureComponent} from 'react'
 import BTList from '../../../components/BTList'
+import CollectHeader from "./collectHeader";
 
 
 export default class BTCollect extends PureComponent{
@@ -9,9 +10,10 @@ export default class BTCollect extends PureComponent{
 
     render(){
         return(
-            <div>
-                <BTList/>
-            </div>
+                <div style={{width:'100%'}}>
+                    <CollectHeader/>
+                    <BTList/>
+                </div>
         )
     }
 }

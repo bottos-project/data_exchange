@@ -13,25 +13,29 @@ export default class BTHaveBought extends PureComponent{
     columns(data){
         console.log(data);
         return [
-            { title: 'title', dataIndex: 'asset_name', key: 'title' },
-            { title: 'price', dataIndex: 'price', key: 'price',render:()=>
+            { title: 'asset_name', dataIndex: 'asset_name', key: 'title' },
+            { title: 'price', dataIndex: 'price', key: 'price',render:(price)=>
                     <div>
                         <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
-                        <span>200</span>
+                        <span>{price}</span>
                     </div>
             },
-            { title: 'fileName', dataIndex: 'fileName', key: 'fileName' },
-            { title: 'fileSize', dataIndex: 'fileSize', key: 'fileSize' },
+           /* { title: 'fileName', dataIndex: 'fileName', key: 'fileName' },
+            { title: 'fileSize', dataIndex: 'fileSize', key: 'fileSize' },*/
+            { title: 'description', dataIndex: 'description', key: 'description', render:(item)=>{
+                return <span>{item.length <= 10 ? item : item.substring(0,10)+'...'}</span>
+                }},
             { title: 'date', dataIndex: 'date', key: 'date' },
             { title: 'Action', dataIndex: 'storage_path', key: 'x', render: (item) =>
                     <a href={item}>
                         <Icon type="download" style={{color:"black",fontWeight:900}}/>
                     </a>
-            },    { title: 'From', dataIndex: '', key: 'y', render:() =>
+            },
+            /*{ title: 'From', dataIndex: '', key: 'y', render:() =>
                     <div>
                         <a href="#" style={{color:"#6d6df5"}}>Jack</a>
                     </div>
-            }
+            }*/
         ];
     }
     componentDidMount(){

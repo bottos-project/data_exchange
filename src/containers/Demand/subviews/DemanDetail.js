@@ -1,11 +1,13 @@
-import React,{PureComponent} from 'react'
-import { Carousel,Button,Tag,Input } from 'antd';
-import BTAssetList from './BTAssetList'
-import './styles.less'
 import BTFetch from "../../../utils/BTFetch";
 import {getBlockInfo, getDataInfo} from "../../../utils/BTCommonApi";
 import {message} from "antd/lib/index";
+import React,{PureComponent} from 'react'
+import { Carousel,Button,Tag,Input } from 'antd';
+import BTAssetList from './BTAssetList'
+import {browerHistory} from 'react-router'
+import './styles.less'
 const { TextArea } = Input;
+
 
 export default class BTDemanDetail extends PureComponent{
     constructor(props){
@@ -34,7 +36,7 @@ export default class BTDemanDetail extends PureComponent{
             "args":{
                 "data_presale_id":"idtest",
                 "basic_info":{
-                    "user_name":"btd123",
+                    "user_name":"btd121",
                     "session_id":"sessionidtest",
                     "asset_id":fileInfo.value,
                     "data_req_id":this.props.location.state.requirement_id,
@@ -80,23 +82,23 @@ export default class BTDemanDetail extends PureComponent{
             signature:'0xxxx'
         };
         BTFetch('/asset/query','post',param)
-            .then(res=>{
-                if(res.code==1){
-                    if(res.data=='null'){
-                        message.warning('暂无数据');
-                        return;
-                    };
-                    console.log(JSON.parse(res.data))
-                    this.setState({
-                        exampledata:JSON.parse(res.data),
+                    .then(res=>{
+                        if(res.code==1){
+                            if(res.data=='null'){
+                                message.warning('暂无数据');
+                                return;
+                            };
+                            console.log(JSON.parse(res.data))
+                            this.setState({
+                                exampledata:JSON.parse(res.data),
+                            })
+                        }else{
+                            message.warning('获取文件资源库失败')
+                            return;
+                        }
                     })
-                }else{
-                    message.warning('获取文件资源库失败')
-                    return;
-                }
-            })
-            .catch(error=>{
-                message.warning('获取文件资源库失败')
+                    .catch(error=>{
+                        message.warning('获取文件资源库失败')
             })
     }
     download(href){
@@ -107,7 +109,7 @@ export default class BTDemanDetail extends PureComponent{
         document.body.appendChild(iframe);
     }
     render(){
-        let data = this.props.location.state;
+        let data = this.props.location.state||[];
         let date=(new Date((data.expire_time)*1000)).toLocaleString()
         return(
             <div className="demandDetailBox">
@@ -118,7 +120,7 @@ export default class BTDemanDetail extends PureComponent{
                     <h1>{data.requirement_name}</h1>
                     <p><span>资产类型:</span>{data.feature_tag}</p>
                     <p><span>期望价格:</span>{data.price}</p>
-                    <p><span>下架时间:</span>{data.expire_time}</p>
+                    <p><span>下架时间:</span>{date}</p>
                 </div>
                     <ul>
                         <li><Button onClick={()=>this.download(data.sample_path)} type="danger">下载样例</Button></li>

@@ -170,6 +170,10 @@ class BTHeader extends PureComponent{
         )
     }
 
+    checkMessages(){
+        console.log("checkMessages")
+    }
+
 
     render(){
         return(
@@ -202,11 +206,16 @@ class BTHeader extends PureComponent{
                     <div>
                         {
                             this.state.isLogin ? 
-                            <Dropdown overlay={this.menu()}>
-                                <img className="userIcon"
-                                    src="./img/usericon.jpeg"
-                                />
-                            </Dropdown> :
+                            <div className="center">
+                                <Dropdown overlay={this.menu()}>
+                                        <img className="userIcon"
+                                            src="./img/usericon.jpeg"
+                                        />
+                                </Dropdown>
+                                <Link to="/profile/check" style={{color:'rgba(0, 0, 0, 0.65)'}}><i className="iconfont icon-email" style={{fontSize:20,marginLeft:10}} onClick={()=>{this.checkMessages()}}/></Link>
+                            </div>
+                            
+                            :
                             <div className='isLogin'><span onClick={()=>this.isShowLogin()}>登录</span>&nbsp;<span onClick={()=>this.isRegister()}>注册</span></div>
                         }
                     </div>
@@ -217,6 +226,9 @@ class BTHeader extends PureComponent{
                         </Dropdown>
                     </div> */}
 
+                    {/* <div className="marginLeft marginRight">
+                        <BTIcon type="icon-email" style={{fontSize:20}}/>
+                    </div> */}
                     <div style={{marginLeft:10}}>
                         <Button onClick={()=>this.setLocale()}>
                             {(this.props.locale == 'en-US') ? '中文' : 'English'}

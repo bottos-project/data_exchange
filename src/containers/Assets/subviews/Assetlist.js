@@ -39,7 +39,7 @@ export default class Assetlist extends PureComponent{
              "code":"datadealmng",
              "action":"datapurchase",
              "args":{
-                 "data_deal_id":"dealidtest",
+                 "data_deal_id":window.uuid,
                  "basic_info":{
                      "user_name":"btd121",
                      "session_id":"sessidtest",

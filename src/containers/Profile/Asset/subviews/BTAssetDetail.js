@@ -7,7 +7,7 @@ const { Option, OptGroup } = Select;
 const EditableCell = ({ editable, value, onChange }) => (
     <div>
         {editable
-            ? <Input style={{ margin: '-5px 0' }} value={value} onChange={e => onChange(e.target.value)} />
+            ? <Input style={{ margin: '-5px 0' }} defaultValue={value} onChange={e => onChange(e.target.value)} />
             : value
         }
     </div>
@@ -20,7 +20,7 @@ export default class BTAssetDetail extends PureComponent{
     constructor(props) {
         super(props);
         const data = [];
-        this.cacheData = data.map(item => ({ item }));
+        this.cacheData = data.map(item => ({ ...item }));
         this.state = {
             data:[],
         }
@@ -28,7 +28,7 @@ export default class BTAssetDetail extends PureComponent{
     columns(data){
         return [
             {title: 'assetName', dataIndex: 'asset_name',
-                render: (text, record) => this.renderColumns(text, record, 'assetName'),
+                render: (item, record) => this.renderColumns(item, record, 'asset_name'),
             },
             { title: 'Type', dataIndex: 'type', key: 'type',
                 render:() =>{
@@ -44,41 +44,25 @@ export default class BTAssetDetail extends PureComponent{
                 }
 
             },
-            { title: 'Price', dataIndex: 'price', key: 'price',
-                render: /*(text, record) => this.renderColumns(text, record, 'price')*/
-                    (item)=>{
+            { title: 'Price', dataIndex: 'price', key: 'price',render:(item,record)=>{
                        return <div>
-                            <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
-                            <span>{item}</span>
+                            <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
+                            <span>{this.renderColumns(item,record,'price')}</span>
                         </div>
                     }
             },
-            /*{ title: 'FileName', dataIndex: 'fileName', key: 'fileName' },
-            { title: 'FileSize', dataIndex: 'fileSize', key: 'fileSize' },*/
             { title: 'Date', dataIndex: 'upload_date', key: 'date',
                 render: (text, record) => this.renderColumns(text, record, 'date'),
             },
             { title: 'Description', dataIndex: 'description', key: 'description',
-                // render: (text, record) => this.renderColumns(text, record, 'description'),
                 render:(item)=>{
                     return <span>
                            {item.length < 30? item:item.substring(0,30)+'...'}
                         </span>
                 }
             },
-            { title: 'Delete', dataIndex: 'delete',key:'x',
-                render: (text, record) => {
-                    return (
-                        // this.state.dataSource.length > 1 ?
-                        //     (
-                        <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
-                            <a href="#" style={{color:"#6d6df5"}}>Delete</a>
-                        </Popconfirm>
-                        // ) : null
-                    );
-                },
-            },
-            { title: 'operation', dataIndex: 'operation', key:'y',
+
+            { title: 'operation' ,key:'y',
                 render: (text, record) => {
                     const { editable } = record;
                     return (
@@ -86,26 +70,17 @@ export default class BTAssetDetail extends PureComponent{
                             {
                                 editable ?
                                     <span>
-                  <a onClick={() => this.save(record.key)}>Save</a>
-                  <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
-                    <a>Cancel</a>
-                  </Popconfirm>
-                </span>
-                                    : <a onClick={() => this.edit(record.key)}>Edit</a>
+                                          <a onClick={() => this.save(text)}>Save</a>
+                                          <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
+                                             <a>Cancel</a>
+                                          </Popconfirm>
+                                    </span>
+                                    : <a onClick={() => this.edit(record.key)}>Edit </a>
                             }
                         </div>
                     );
                 },
             }];
-    }
-    //删除数据后的操作
-    onDelete(key){
-        const dataSource = [...this.state.data];
-        this.setState({ data: dataSource.filter(item => item.key !== key) });
-        const deleteDataSource = this.state.data[key];//被删除的一行的数据
-        BTFetch("","post",deleteDataSource).then((data)=>{
-            console.log(data)
-        })
     }
     renderColumns(text, record, column) {
         return (
@@ -130,40 +105,44 @@ export default class BTAssetDetail extends PureComponent{
         if (target) {
             target.editable = true;
             this.setState({ data: newData });
+            console.log(20)
         }
     }
     //修改数据后点击保存
     async save(key) {
         const newData = [...this.state.data];
+        console.log(newData,key)
         const target = newData.filter(item => key === item.key)[0];
         if (target) {
             delete target.editable;
             this.cacheData = newData.map(item => ({item}));
         }
-        let blockData = {
+        let gblockData = {
             code: "assetmng",
             action: "assetreg",
             args: {
-                asset_id: "filehashtest2",
+                asset_id: key.asset_id,
                 basic_info: {
                     user_name: "btd121",
-                    session_id: "sessidtestwc2",
-                    asset_name: newData[key].asset_name,
-                    feature_tag: 12345,
-                    sample_path: "pathtest",
-                    sample_hash: "samplehasttest",
-                    storage_path: "stpathtest",
-                    storage_hash: "sthashtest",
+                    asset_type: 'type',
+                    asset_name: key.asset_name,
+                    feature_tag1: 12345,
+                    feature_tag2: 12345,
+                    feature_tag3: 12345,
+                    sample_path: key.sample_hash,
+                    sample_hash: key.sample_hash,
+                    storage_path: key.sample_hash,
+                    storage_hash: key.storage_path,
                     expire_time: 345,
-                    price: newData[key].price,
-                    description: newData[key].description,
-                    upload_date: newData[key].upload_date,
-                    signature: "sigtest"
+                    price: key.price,
+                    description: key.description,
+                    upload_date: key.upload_date,
+                    signature: "sigtest",
                 }
             }
-        }
-        let blockInfo = await getBlockInfo(blockData);
-        blockData = await getDataInfo(blockData);
+        };
+        let blockInfo = await getBlockInfo();
+        let blockData = await getDataInfo(gblockData);
         if(blockData.code!=0 || blockInfo.code!=0){
             message.error('获取区块信息失败');
             return ;
@@ -172,17 +151,17 @@ export default class BTAssetDetail extends PureComponent{
             ref_block_num: blockInfo.data.ref_block_num,
             ref_block_prefix: blockInfo.data.ref_block_prefix,
             expiration: blockInfo.data.expiration,
-            scope: ["assetmn"],
+            scope: ["assetmng"],
             read_scope: [],
             messages: [{
                 code: "assetmng",
                 type: "assetreg",
-                authorization: [111],
+                authorization: [],
                 data: blockData.data.bin,
             }],
             signatures:[]
         };
-        BTFetch("/asset/modify",param,'post',{service:'service'})
+        BTFetch("/asset/modify",'post',param)
             .then(res=>{
                 if(res.code==1) {
                     if(res.data == 'null'){
@@ -190,13 +169,16 @@ export default class BTAssetDetail extends PureComponent{
                     };
                     // console.log(d)
                     if(target){
-                        this.setState({data: newData});
+                        delete target.editable;
+                        this.setState({ data: newData });
+                        this.cacheData = newData.map(item => ({ ...item }));
                     }
+                    message.success('修改发布资产成功')
                 }else{
-                    message.error('获取发布资产失败')
+                    message.error('修改发布资产失败')
                 }
             }).catch(error=>{
-                message.error('获取发布资产失败')
+                message.error('修改发布资产失败')
               })
     }
     cancel(key) {

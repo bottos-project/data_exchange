@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import { Tabs, Input, Ico,Button,Select } from 'antd';
+import { Tabs, Input, Ico,Button,Select,message } from 'antd';
 import BTFetch from "../../../../utils/BTFetch"
 import BTCryptTool from '../../../../tools/BTCryptTool'
 // import saveAs from '../../../../tools/FileSaver'
@@ -15,7 +15,8 @@ export default class BTPerson extends PureComponent{
             email:"",
             role_type:this.props.data.role_type,
             user_type:0,
-            download:''
+            download:'',
+            address:'',
         }
     }
     //个人资料修改
@@ -41,12 +42,17 @@ export default class BTPerson extends PureComponent{
             }
         )
     }
+    onChangeAddress(e){
+        this.setState({
+            address:e.target.value,
+        })
+    }
     //个人资料提交
     onClickP() {
-        var email=BTCryptTool.aesEncrypto(this.state.email,this.state.username);
+        let email=BTCryptTool.aesEncrypto(this.state.email,this.state.username);
         // var ceshi=BTCryptTool.aesDecrypto(this.state.email,this.state.username);
         // console.log(ceshi)
-        var param1 = {
+        let param1 = {
             username:this.state.username,
             owner_pub_key: "0xxxx",
             active_pub_key: "0xxxxx",
@@ -57,7 +63,7 @@ export default class BTPerson extends PureComponent{
                 role_type:1
             },
             signature_user: "0xxxxxx"
-        }
+        };
         // var param={
         //     username:this.state.username,
         //     user_info:{
@@ -68,12 +74,16 @@ export default class BTPerson extends PureComponent{
         //     },
         //     signature_user:''
         // };
-        var a=BTCryptTool.aesEncrypto('234134321',this.state.username)
-        var b=BTCryptTool.aesDecrypto(a,this.state.username)
+        let a=BTCryptTool.aesEncrypto('234134321',this.state.username)
+        let b=BTCryptTool.aesDecrypto(a,this.state.username)
         console.log(param1,a,b,param1)
-        debugger
         BTFetch("/user/UpdateUserInfo","post",param1).then((responseData)=>{
-            console.log(responseData)
+            console.log(responseData);
+            if(responseData.code==0){
+                message.success('信息修改成功')
+            }else{
+                message.error('信息修改失败')
+            }
         })
     }
 
@@ -106,7 +116,7 @@ export default class BTPerson extends PureComponent{
                     </div>
                     <div className="address">
                         <span>address :</span>
-                        <Input value={this.state.address}/>
+                        <Input value={this.state.address} onChange={(e)=>this.onChangeAddress(e)}/>
                     </div>
                     <div className="submit" >
                         <Button onClick={()=>this.onClickP()}>submit</Button>

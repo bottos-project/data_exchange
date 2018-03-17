@@ -37,9 +37,10 @@ export default class BTAccount extends PureComponent {
                 console.log({response})
                 if(response && response.code=='0'){
                     var data=JSON.parse(JSON.parse(response.data).rows[0].basic_info.info);
-                    var name=JSON.parse(response.data).rows[0].user_name
+                    var name=JSON.parse(response.data).rows[0].user_name;
+                    console.log(data);
                     this.setState({
-                        user_type:data.user_type,
+                        user_type:data.role_type,
                         name:name,
                         data:data
                     })
@@ -67,11 +68,11 @@ export default class BTAccount extends PureComponent {
                 <div>
                     <Tabs defaultActiveKey="1">
                         {
-                            this.state.user_type == 0 ?
+                            this.state.user_type == 1 ?
                                 (<TabPane  tab="个人资料" key="1">
                                     <BTPerson name={this.state.name} data={this.state.data} />
                                 </TabPane>)  :
-                                (<TabPane tab="公司资料" key="1">
+                                (<TabPane tab="公司资料" key="2">
                                     <BTCompany name={this.state.name}  data={this.state.data} />
                                 </TabPane>)
                         }

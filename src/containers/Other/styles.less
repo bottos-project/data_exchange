@@ -6,8 +6,8 @@
   column-count:4;
   margin-bottom: 20px;
   color: #FFFFFF;
-  div{
-    width: 20%;
+  >div{
+    width: 25%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,18 +15,27 @@
     font-weight: lighter;
   }
 }
-.OtherBlocksMessage{
-  width: 50%;
+.OtherBlocksMessage,.BTOtherExchange{
+  margin-top: 20px;
+  width: 49%;
   float:left;
-  div{
+  .blockView{
     display: flex;
     flex-direction: row;
     justify-content:space-between;
     align-items: center;
+    h3{
+      font-size: 16px;
+      margin: 10px;
+      font-weight: normal;
+    }
+    a{
+      color:#4A90E2;
+    }
   }
-  h3{
-    font-size: 16px;
-    margin: 20px;
-    font-weight: normal;
-  }
+
+}
+.BTOtherExchange{
+  width:49%;
+  float:right;
 }

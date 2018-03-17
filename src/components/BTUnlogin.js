@@ -16,18 +16,15 @@ export default class BTUnlogin extends PureComponent{
     render(){
         return(
             <div className='container center column'>
-                <BTLogin ref={(ref)=>this.isLoginShow = ref}/>
-                <div className='container center column'>
                     <div>
-                        <img style={{width:200,height:200}}  src="/img/unloginLogo.png" alt=""/>
+                        <img style={{width:200,height:200}}  src="./img/unloginLogo.png" alt=""/>
                     </div>
                     <div style={{marginTop:10,marginBottom:20}}>
                         您还没登录呢，请先登录
                     </div>
-                    <div className="flex">
+                    {/* <div className="flex">
                         <Button type="denger" onClick={()=>{this.onHandleLogin()}}>立即登录</Button>
-                    </div>
-                </div>
+                    </div> */}
             </div>
         )
     }

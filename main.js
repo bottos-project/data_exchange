@@ -1,7 +1,7 @@
 // const {app, BrowserWindow} = require('electron')
 // const {app,BrowserWindow,webContents} = require('electron')
 const electron = require('electron');
-const {app, BrowserWindow, Menu, ipcMain, ipcRenderer,webContents} = electron;
+const {app, BrowserWindow, Menu, ipcMain, ipcRenderer,webContents,dialog} = electron;
 const path = require('path')
 const url = require('url')
 const pkg = require('./package.json')
@@ -82,6 +82,3 @@ app.on('activate', () => {
 
 // 文件模块
 const BTIpcMain = require('./src/sys_modules/BTIpcMain')
-
-
-

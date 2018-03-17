@@ -16,6 +16,7 @@ export default class Login extends PureComponent{
         this.state = {
             visible:false,
             password:'',
+            username:'',
             keyStore:'',
             hasKeystore:false
         }
@@ -31,26 +32,18 @@ export default class Login extends PureComponent{
 
         let blockInfo = await this.getBlockInfo();
         let data = await this.getDataInfo()
-        let keyStoreResult = BTIPcRenderer.getKeyStore('keystore');
+        let keyStoreResult = BTIPcRenderer.getKeyStore({});
         if(keyStoreResult.error){
             message.error('请先导入keyStore文件')
             return;
         }
         let keyStore = keyStoreResult.result;
         let keyStoreObj = JSON.parse(keyStore)
-        console.log({
-            keyStoreResult,
-            keyStore,
-            keyStoreObj
-        })
         // 用密码解密keyStore
         try{
             let decryptoStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
 
             let decryptoData = JSON.parse(decryptoStr);
-            console.log({
-                decryptoData
-            })
             if(decryptoData.code!='0'){
                 message.error('密码错误，请重新输入密码')
                 return;
@@ -64,9 +57,6 @@ export default class Login extends PureComponent{
             }
             BTFetch(url,'POST',params)
             .then(response=>{
-                console.log({
-                    response
-                })
                 if(response && response.code=='0'){
                     message.success('登录成功')
                     let accountInfo = {
@@ -78,8 +68,8 @@ export default class Login extends PureComponent{
                         visible:false,
                         password:''
                     })
-
                     this.props.onHandleLogin(true)
+                    // window.location.reload()
                 }else{
                     message.error('登录失败')
                 }
@@ -109,6 +99,7 @@ export default class Login extends PureComponent{
     closeModal(){
         this.setState({
             visible:false,
+            username:'',
             password:''
         })
     }
@@ -126,13 +117,15 @@ export default class Login extends PureComponent{
                 onCancel={()=>this.closeModal()}
             >
                 <div className="marginRight">
+                    <div style={{marginBottom:20}}><Button onClick={()=>this.importKeyStore()}>导入keystore文件</Button></div>
                     <div className="container row">
+                       <Input placeholder="请输入用户名" className="marginRight" value={this.state.username} onChange={(e)=>{this.setState({username:e.target.value})}}/> 
                        <Input type="password" placeholder="请输入密码" className="marginRight" value={this.state.password} onChange={(e)=>{this.setState({password:e.target.value})}}/> 
                         <Button type="danger" onClick={()=>this.onHandleUnlock()}>解锁</Button>
                     </div>
-                    {
+                    {/* {
                         this.state.hasKeystore ? <div></div> : (<div style={{marginTop:20}}><Button onClick={()=>this.importKeyStore()}>导入keystore文件</Button></div>)
-                    }
+                    } */}
                 </div>
             </Modal>
         )

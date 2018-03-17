@@ -65,6 +65,7 @@ export default class BTDashboardTable extends PureComponent{
                     columns={columns}
                     dataSource={this.state.data}
                     size="middle"
+                    pagination
                     bordered
                 />
             </div>
