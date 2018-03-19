@@ -2,7 +2,9 @@ import React,{PureComponent} from 'react'
 
 import {List,Button} from 'antd'
 import BTFetch from '../../../../utils/BTFetch';
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const WalletMessages = messages.Wallet;
 const dataSource = [
     {
         accountName:'BTO'
@@ -19,7 +21,7 @@ export default class BTAccountList extends PureComponent{
     componentDidMount(){
         let reqUrl = '/user/getAccount'
         let params = {
-            username:'buyertest'
+            username:JSON.parse(window.localStorage.account_info).username||''
         }
 
         BTFetch(reqUrl,'POST',params).then(response=>{
@@ -68,13 +70,19 @@ class BTAccountListCell extends PureComponent{
                     <div className="flex accountLeft">
                         <div>
                             <span className="font25 colorTitle">{props.accountName}</span>
-                            <span>可用现金</span>
+                            <span>
+                                <FormattedMessage {...WalletMessages.AvailableCash}/>
+                            </span>
                         </div>
                         <div className="font25 colorRed">{props.token}</div>
                     </div>
                     <div>
-                        <Button className="marginRight" type="primary" onClick={()=>this.changePwd(this.props.accountName)}>修改密码</Button>
-                        <Button type="primary" onClick={()=>this.exportAccount(this.props.accountName)}>导出账号</Button>
+                        <Button className="marginRight" type="primary" onClick={()=>this.changePwd(this.props.accountName)}>
+                            <FormattedMessage {...WalletMessages.ModifyThePassword}/>
+                        </Button>
+                        <Button type="primary" onClick={()=>this.exportAccount(this.props.accountName)}>
+                            <FormattedMessage {...WalletMessages.ExportTheAccount}/>
+                        </Button>
                     </div>
                 </div>
             </div>

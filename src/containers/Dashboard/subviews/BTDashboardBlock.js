@@ -1,7 +1,9 @@
 import React,{PureComponent} from 'react'
 import "./dashboardStyle.less"
 import BTFetch from "../../../utils/BTFetch";
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../locales/messages'
+const DashboardMessages = messages.Dashboard;
 
 
 
@@ -61,44 +63,42 @@ export default class BTDashboardTitle extends PureComponent{
         return(
             <div className="DashboardBlockDetails radius shadow">
                <div>
-                   <a onClick={()=>this.getAccount()}>注册人数</a>
-                   <p>今日：</p>
-                   <p>昨日：</p>
-                   <p>查看详情</p>
-                   <p>更新时间</p>
-                   <p>18.03.09 18a:43:59</p>
+                   <a style={{color:"#4F43B6"}} onClick={()=>this.getAccount()}>
+                       <FormattedMessage {...DashboardMessages.Registration}/>
+                   </a>
+                   <p>
+                       <FormattedMessage {...DashboardMessages.Yesterday}/>
+                   </p>
                </div>
                 <div>
-                    <a onClick={()=>this.exchangeNum()}>交易量</a>
-                    <p>今日：</p>
-                    <p>昨日：</p>
-                    <p>查看详情</p>
-                    <p>更新时间</p>
-                    <p>18.03.09 18:43:59</p>
+                    <a style={{color:"#4F43B6"}} onClick={()=>this.exchangeNum()}>
+                        <FormattedMessage {...DashboardMessages.VolumeOfTransaction}/>
+                    </a>
+                    <p>
+                        <FormattedMessage {...DashboardMessages.Yesterday}/>
+                    </p>
                 </div>
                 <div>
-                    <a onClick={()=>this.exchangeCoin()}>交易金额</a>
-                    <p>今日：</p>
-                    <p>昨日：</p>
-                    <p>查看详情</p>
-                    <p>更新时间</p>
-                    <p>18.03.09 18:43:59</p>
+                    <a style={{color:"#4F43B6"}} onClick={()=>this.exchangeCoin()}>
+                        <FormattedMessage {...DashboardMessages.TransactionAmount}/>
+                    </a>
+                    <p>
+                        <FormattedMessage {...DashboardMessages.Yesterday}/>
+                    </p>
                 </div>
                 <div onClick={()=>this.assetNum()}>
-                    <a>新增资产</a>
-                    <p>今日：</p>
-                    <p>昨日：</p>
-                    <p>查看详情</p>
-                    <p>更新时间</p>
-                    <p>18.03.09 18:43:59</p>
+                    <a style={{color:"#4F43B6"}}>
+                        <FormattedMessage {...DashboardMessages.IncrementalAsset}/>
+                    </a>
+                    <p>
+                        <FormattedMessage {...DashboardMessages.Yesterday}/>
+                    </p>
                 </div>
                 <div onClick={()=>this.requireNum()}>
-                    <a>新增需求</a>
-                    <p>今日：</p>
-                    <p>昨日：</p>
-                    <p>查看详情</p>
-                    <p>更新时间</p>
-                    <p>18.03.09 18:43:59</p>
+                    <FormattedMessage {...DashboardMessages.IncrementalDemand}/>
+                    <p>
+                        <FormattedMessage {...DashboardMessages.Yesterday}/>
+                    </p>
                 </div>
             </div>
         )

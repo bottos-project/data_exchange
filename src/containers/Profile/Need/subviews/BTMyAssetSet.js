@@ -1,6 +1,9 @@
 import React,{PureComponent} from 'react'
 import {Popconfirm,Table, Upload, Icon, message} from 'antd';
 import BTFetch from "../../../../utils/BTFetch"
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const PersonalDemandMessages = messages.PersonalDemand;
 const Dragger = Upload.Dragger;
 
 const props = {
@@ -82,8 +85,9 @@ export default class BTMyAssetSet extends PureComponent{
                     <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />
                     </p>
-                    <p style={{color:"#666666"}} className="ant-upload-text">Click or drag file to this area to upload</p>
-                    <p style={{color:"#666666"}} className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
+                    <p style={{color:"#666666"}} className="ant-upload-text">
+                        <FormattedMessage {...PersonalDemandMessages.ClickOrDragFileToThisAreaToUpload}/>
+                    </p>
                 </Dragger>
                     <Table
                         bordered

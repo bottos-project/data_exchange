@@ -17,10 +17,12 @@ export default class BTAssetList extends PureComponent{
         this.setState({
             visible:false
         });
+        let getvalue=this.state.value.split(',')
         let callBackData = {};
             callBackData = {
                 type:'asset_id',
-                value:this.state.value
+                value:getvalue[0],
+                name:getvalue[1]
             }
 
         this.props.handleFile(callBackData);
@@ -37,7 +39,8 @@ export default class BTAssetList extends PureComponent{
     }
     render(){
         // console.log(this.props);
-        let exampledata=this.props.exampledata||[]
+        let exampledata=this.props.exampledata||[];
+        console.log(exampledata);
         return(
             <Modal visible={this.state.visible}
                    onOk={()=>this.handleOk()}
@@ -49,7 +52,7 @@ export default class BTAssetList extends PureComponent{
                             {
                                 exampledata.map((value,index)=>{
                                     return (
-                                        <Row key={index} span={8}><Radio value={value.asset_id}>{value.asset_name}</Radio></Row>
+                                        <Row key={index} span={8}><Radio value={value.asset_id+','+value.asset_name}>{value.asset_name}</Radio></Row>
                                     )
                                 })
                             }

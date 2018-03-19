@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import { Radio,Select, message, Button,Input, DatePicker,Cascader  } from 'antd';
+import {Icon, Radio,Select, message, Button,Input, DatePicker,Cascader  } from 'antd';
 // import BTIcon from "app/components/BTIcon"
 import BTIcon from '../../../../components/BTIcon'
 import BTAssetList from '../../../../components/BTAssetList'
@@ -8,6 +8,9 @@ import BTCryptTool from '../../../../tools/BTCryptTool'
 import {getBlockInfo,getDataInfo} from '../../../../utils/BTCommonApi'
 import BTFetch from "../../../../utils/BTFetch";
 import {options} from '../../../../utils/option'
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const PersonalAssetMessages = messages.PersonalAsset;
 const RangePicker = DatePicker.RangePicker;
 const { TextArea } = Input;
 const RadioGroup = Radio.Group;
@@ -49,7 +52,6 @@ for (let i = 10; i < 36; i++) {
 function handleChange(value) {
     console.log(`selected ${value}`);
 }
-
 export default class BTUploadAsset extends PureComponent{
     constructor(props){
         super(props)
@@ -58,7 +60,6 @@ export default class BTUploadAsset extends PureComponent{
             value:1,
             title:'',
             price:'',
-            file:'',
             description:'',
             tag1:'',
             tag2:'',
@@ -68,55 +69,37 @@ export default class BTUploadAsset extends PureComponent{
             getFileName:'',
             getExampleUrl:'',
             getRealUrl:'',
-            exampledata:[],
+            expire_time:'',
+            sample_hash:'',
+            storage_hash:'',
 
         }
     }
-    componentDidMount(){
+  /*  componentDidMount(){
         let param={
-            "userName": "btd121",
+            "userName": username,
             "random": Math.ceil(Math.random()*100),
             "signatures": "0xxxx"
         };
-        BTFetch('/asset/queryUploadedData','post',param,{service:'service'})
+        BTFetch('/asset/queryUploadedData','post',param)
             .then(res=>{
                 if(res.code=='1'){
-                    this.setState({file:res.data})
+                    this.setState({fileArr:res.data});
+                    console.log(JSON.parse(res.data));
                 };
             })
-    }
+    }*/
     onChangeDataAssetType(dates){
-        const datas = dates[0] + " " + dates[1] + " "+ dates[2] + " " + dates[3];
+        const datas=dates[0]+dates[1]+dates[2]+dates[3];
         this.setState({
             dataAssetType:datas
         });
-        console.log(dates)
     }
     commitAsset(type){
         this.assetListModal.setState({
             visible:true,
             type:type
         });
-        let param={
-            userName:'btd121',
-            random:Math.ceil(Math.random()*100),
-            signature:'0xxxx'
-        }
-        BTFetch('/asset/queryUploadedData','post',param,{service:'service'})
-            .then(res=>{
-                if(res.code==1){
-                    this.setState({
-                        exampledata:JSON.parse(res.data),
-                    })
-                }else{
-                    message.warning('获取文件资源库失败')
-                    return;
-                }
-            })
-            .catch(error=>{
-                message.warning('获取文件资源库失败')
-            })
-
     }
     onChange(e){
         this.setState({
@@ -155,65 +138,25 @@ export default class BTUploadAsset extends PureComponent{
     }
     getFileName(fileInfo){
         if(fileInfo.type=='asset'){
-            console.log('上传资产',fileInfo.value)
+            console.log('上传资产',fileInfo)
             this.setState({
                 getFileName:fileInfo.value,
+                storage_hash:fileInfo.hash,
+                getRealUrl:fileInfo.getRealUrl,
             })
         }else if(fileInfo.type=='assetTemp'){
-            console.log('上传样例',fileInfo.value)
+            console.log('上传样例',fileInfo)
             this.setState({
                 getFileNameTemp:fileInfo.value,
+                sample_hash:fileInfo.hash,
+                getExampleUrl:fileInfo.getExampleUrl,
             })
         }
     }
     async updata(){
-
-        let myHeaders = new Headers();
-        myHeaders.append('Content-Type','text/plain');
-        let filename={
-            userName:'btd121',
-            fileName:this.state.getFileName
-        };
-        let filename1={
-            userName:'btd121',
-            fileName:this.state.getFileNameTemp
-        };
-        if(!filename.fileName&&!filename1.fileName){
-            message.warning('上传文件不能为空');
-            return;
-        }
-        // let getExampleUrl='';
-        //获取样例文件和真实文件storage_path
-        let reqUrl = '/asset/getDownLoadURL';
-        let params = filename; // rel 文件
-        let params1 = filename1; //example文件
-        BTFetch('/asset/getDownLoadURL','post',params,{service:'service'})
-            .then(response=>{
-                if(response.code==1){
-                    this.setState({
-                        getRealUrl:response.data,
-                    })
-                }
-                console.log(response)
-            }).catch(error=>{
-                console.log(error)
-            });
-        BTFetch('/asset/getDownLoadURL','post',params1,{service:'service'})
-            .then(response=>{
-                if(response.code==1){
-                    this.setState({
-                        getExampleUrl:response.data,
-                    })
-                }
-                console.log(response)
-
-            }).catch(error=>{
-            console.log(error)
-        });
-        let notValue=this.state;
-        console.log(notValue);
-        for(const key in notValue){
-            if(notValue[key]==''){
+        console.log(this.state);
+        for(const key in this.state){
+            if(this.state[key]==''){
                 message.warning('请完善注册资产信息');
                 return;
             }
@@ -230,25 +173,26 @@ export default class BTUploadAsset extends PureComponent{
             "args": {
                 "asset_id": window.uuid,
                 "basic_info": {
-                    "user_name": "btd121",
-                    "session_id": "sessidtestwc2",
+                    "user_name": JSON.parse(window.localStorage.account_info).username,
+                    "session_id": JSON.parse(window.localStorage.account_info).token,
                     "asset_name": this.state.title,
                     "asset_type": this.state.dataAssetType,
                     "feature_tag1": this.state.tag1,
                     "feature_tag2": this.state.tag2,
                     "feature_tag3": this.state.tag3,
-                    "sample_path": this.state.getExampleUrl,
-                    "sample_hash": "samplehasttest",
-                    "storage_path": this.state.getRealUrl,
-                    "storage_hash": "5f7e3771976bc953a37f24b16e0bca3b57a6a1a10216802aa273dcc935878bc5",
-                    "expire_time": 345,
+                    "sample_path": this.state.sample_hash,
+                    "sample_hash": this.state.getExampleUrl,
+                    "storage_path": this.state.storage_hash,
+                    "storage_hash": this.state.getRealUrl,
+                    "expire_time": this.state.expire_time,
                     "price": this.state.price,
                     "description": this.state.description,
-                    "upload_date": 999,
+                    "upload_date": 1,
                     "signature": "0xxxx"
                 }
             }
         };
+        console.log(data);
         let getDataBin = (await getDataInfo(data));
         if(getDataBin.code!=0){
             message.error('获取getDataBin失败')
@@ -290,45 +234,66 @@ export default class BTUploadAsset extends PureComponent{
             console.log(error);
         })
 
-
+    }
+    dataPicker(date,dateString){
+        console.log(date,dateString);
+        this.setState({
+            expire_time:Number(new Date(dateString))
+        })
     }
     render(){
         return(
 
             <div>
-                <BTAssetList  fileall={this.state.file} ref={(ref)=>this.assetListModal = ref} handleFile={(fileName)=>this.getFileName(fileName)}/>
+                <BTAssetList  ref={(ref)=>this.assetListModal = ref} handleFile={(fileName)=>this.getFileName(fileName)}/>
                 <div className="uploadAsset">
                     <div className="upLoad">
-                        <span>上传样例:</span>
-                        <Button type="upload" examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</Button>
+                        <span className="align">
+                            <FormattedMessage {...PersonalAssetMessages.UploadTheSample}/>
+                        </span>
+                        <Button type="upload" examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>
+                            <FormattedMessage{...PersonalAssetMessages.SetScreening}/>
+                        </Button>
                         <span>{this.state.getFileNameTemp}</span>
                         {/*<Button>*/}
                             {/*<span type="upload"  onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</span>*/}
                         {/*</Button>*/}
                     </div>
                     <div className="upLoad">
-                        <span>上传资产:</span>
-                        <Button exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>资源库筛选</Button>
+                        <span className="align">
+                             <FormattedMessage {...PersonalAssetMessages.UploadTheAsset}/>
+                        </span>
+                        <Button exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>
+                            <FormattedMessage {...PersonalAssetMessages.SetScreening}/>
+                        </Button>
                         <span>{this.state.getFileName}</span>
                         {/*<Button>*/}
                             {/*<span onClick={()=>this.commitAsset('asset')}>资源库筛选</span>*/}
                         {/*</Button>*/}
                     </div>
                     <div>
-                        <span>资产名称:</span>
-                        <Input placeholder="名称" defaultValue={this.state.title} onChange={(e)=>this.title(e)} />
+                        <span className="align">
+                            <FormattedMessage {...PersonalAssetMessages.AssetName}/>
+                        </span>
+                        <Input placeholder="Name" defaultValue={this.state.title} onChange={(e)=>this.title(e)} />
                     </div>
                     <div>
-                        <span>资产定价:</span>
-                        <Input placeholder='价格' defaultValue={this.state.price} onChange={(e)=>this.price(e)} />
-                        <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
+                        <span className="align">
+                            <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>
+                        </span>
+                        <Input placeholder='Price' defaultValue={this.state.price} onChange={(e)=>this.price(e)} />
+                        <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
                     </div>
                     <div>
-                        <span>资产类型: </span>
+                        <span className="align90">
+                            <FormattedMessage {...PersonalAssetMessages.AssetType}/>
+                        </span>
                         <Cascader options={options} onChange={(datas)=>this.onChangeDataAssetType(datas)} placeholder="Please select" />
                     </div>
                     <div className="featureTag">
-                        <span>资产标签:</span>
+                        <span className="align90">
+                            <FormattedMessage {...PersonalAssetMessages.AssetFeatureTag}/>
+                        </span>
                         <div>
                             <Input type="text" onChange={(e)=>this.tag1(e)}/>
                             <Input type="text" onChange={(e)=>this.tag2(e)}/>
@@ -336,11 +301,15 @@ export default class BTUploadAsset extends PureComponent{
                         </div>
                     </div>
                     <div>
-                        <span>资产描述: </span>
+                        <span className="align90">
+                            <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>
+                        </span>
                         <TextArea defaultValue={this.state.description} onChange={(e)=>this.description(e)} rows={4} />
                     </div>
                     <div className="uploadNeedSubmit">
-                        <Button type="submit" onClick={(e)=>this.updata(e)}>立即发布</Button>
+                        <Button type="submit" onClick={(e)=>this.updata(e)}>
+                            <FormattedMessage {...PersonalAssetMessages.Publish}/>
+                        </Button>
                     </div>
                 </div>
             </div>

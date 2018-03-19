@@ -1,5 +1,7 @@
 import React,{PureComponent} from 'react'
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const MessageMessages = messages.Message;
 
 
 
@@ -11,8 +13,12 @@ export default class BTMessageTitle extends PureComponent{
     render(){
         return(
             <div className="everyTitle">
-                <h3>个人中心</h3>
-                <p>Welcome to Personal Center</p>
+                <h3>
+                    <FormattedMessage {...MessageMessages.PersonalCenter}/>
+                </h3>
+                <p>
+                    <FormattedMessage {...MessageMessages.WelcomeToPersonalCenter}/>
+                </p>
             </div>
         )
     }

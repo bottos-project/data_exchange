@@ -3,6 +3,9 @@ import { Pagination } from 'antd';
 import {Table} from 'antd'
 import {Icon} from 'antd'
 import BTFetch from '../../../../utils/BTFetch'
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const WalletMessages = messages.Wallet;
 class Detail extends PureComponent{
     constructor(props){
         super(props);
@@ -31,15 +34,58 @@ class Detail extends PureComponent{
                 )
             }*/}
             <div className='left'>
-                <p><span>交易号&nbsp;:&nbsp;</span><span>{data.tx_id}</span></p>
-                <p><span>Form&nbsp;:&nbsp;</span><span>{data.from}</span></p>
-                <p><span>时间&nbsp;:&nbsp;</span><span>{data.tx_time}</span></p>
+                <p>
+                    <span>
+                        <FormattedMessage {...WalletMessages.TransactionID}/>
+                    </span>
+                    <span>
+                        {data.tx_id}
+                    </span>
+                </p>
+                <p>
+                    <span>
+                        <FormattedMessage {...WalletMessages.From}/>
+                    </span>
+                    <span>
+                        {data.from}
+                    </span>
+                </p>
+                <p>
+                    <span>
+                        <FormattedMessage {...WalletMessages.Date}/>
+                    </span>
+                    <span>
+                        {data.tx_time}
+                    </span>
+                </p>
 
             </div>
             <div className="right">
-                <p><span>块号&nbsp;:&nbsp;</span><span>{data.block_num}</span></p>
-                <p><span>To&nbsp;:&nbsp;</span><span>{data.to}</span></p>
-                <p><span>金额&nbsp;:&nbsp;</span><span>转出&nbsp;{data.price}BTO</span></p>
+                <p>
+                    <span>
+                        <FormattedMessage {...WalletMessages.BlockNumber}/>
+                    </span>
+                    <span>
+                        {data.block_num}
+                    </span>
+                </p>
+                <p>
+                    <span>
+                        <FormattedMessage {...WalletMessages.To}/>
+                    </span>
+                    <span>
+                        {data.to}
+                    </span>
+                </p>
+                <p>
+                    <span>
+                        <FormattedMessage {...WalletMessages.Price}/>
+                    </span>
+                <span>
+                    <FormattedMessage {...WalletMessages.TurnOut}/>
+                    {data.price}BTO
+                </span>
+                </p>
             </div>
         </div>
     }

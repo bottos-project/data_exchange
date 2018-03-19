@@ -1,9 +1,13 @@
 import React,{PureComponent} from 'react'
+import "./index.less"
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
-const BlockBrowsingMessages = messages.BlockBrowsing;
+const CollectMessages = messages.Collect;
 
-export default class BTOtherTitle extends PureComponent{
+
+
+
+export default class CollectHeader extends PureComponent{
     constructor(props){
         super(props)
     }
@@ -12,10 +16,10 @@ export default class BTOtherTitle extends PureComponent{
         return(
             <div className="everyTitle">
                 <h3>
-                    <FormattedMessage {...BlockBrowsingMessages.BlockBrowsing}/>
+                    <FormattedMessage {...CollectMessages.MyCollection}/>
                 </h3>
                 <p>
-                    <FormattedMessage {...BlockBrowsingMessages.WelcomeToBlockBrowsing}/>
+                    <FormattedMessage {...CollectMessages.WelcomeToCollectMessages}/>
                 </p>
             </div>
         )

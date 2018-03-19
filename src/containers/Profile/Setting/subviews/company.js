@@ -3,6 +3,9 @@ import { Tabs, Input, Ico,Button,Select,message } from 'antd';
 import BTFetch from "../../../../utils/BTFetch"
 import BTCryptTool from '../../../../tools/BTCryptTool'
 // import {nativeImage} from 'electron'
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const SettingMessages = messages.Setting;
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
 
@@ -92,33 +95,43 @@ export default class BTCompany extends PureComponent{
             <div>
                 <div className="enterpriseInformation">
                     <div>
-                        <span>user_type:</span>
+                        <span>
+                            <FormattedMessage {...SettingMessages.userType}/>
+                        </span>
                         <Select defaultValue="company"  onChange={(value)=>this.handleChange(value)} disabled>
                             <Option value="disabled" disabled>Disabled</Option>
                         </Select>
                     </div>
                     <div className="UserName">
-                        <span>UserName:</span>
+                        <span>
+                            <FormattedMessage {...SettingMessages.userName}/>
+                        </span>
                         <Input value={this.state.username} disabled />
                     </div>
                     <div className="enterpriseName">
-                        <span>company :</span>
+                        <span>
+                            <FormattedMessage {...SettingMessages.EnterpriseName}/>
+                        </span>
                         <Input value={this.state.company_name} disabled />
                     </div>
                     <div className="enterpriseAddress">
-                        <span>enterpriseAddress :</span>
+                        <span>
+                            <FormattedMessage {...SettingMessages.EnterpriseAddress}/>
+                         </span>
                         <Input value={this.state.company_address} disabled/>
                     </div>
-                    <div className="accountType">
-                        <span>RoleType:</span>
-                        <select value={this.state.role_type} onChange={(e)=>this.onChangeRoleType(e)}>
-                            <option value="0">consumer</option>
-                            <option value="1">provider</option>
-                            <option value="2">arbiter</option>
-                        </select>
-                    </div>
+                    {/*<div className="accountType">*/}
+                        {/*<span>RoleType:</span>*/}
+                        {/*<select value={this.state.role_type} onChange={(e)=>this.onChangeRoleType(e)}>*/}
+                            {/*<option value="0">consumer</option>*/}
+                            {/*<option value="1">provider</option>*/}
+                            {/*<option value="2">arbiter</option>*/}
+                        {/*</select>*/}
+                    {/*</div>*/}
                     <div className="mailBox">
-                        <span>Email:</span>
+                        <span>
+                           <FormattedMessage {...SettingMessages.EnterpriseEmail}/>
+                        </span>
                         <Input value={this.state.email} onChange={(e)=>this.onChangeEmail (e)}/>
                     </div>
                     {/*<div className="address">*/}
@@ -127,7 +140,9 @@ export default class BTCompany extends PureComponent{
                     {/*<Button>modify</Button>*/}
                     {/*</div>*/}
                     <div className="submit" >
-                        <Button onClick={()=>this.onClickE()}>submit</Button>
+                        <Button onClick={()=>this.onClickE()}>
+                            <FormattedMessage {...SettingMessages.Submit}/>
+                        </Button>
                     </div>
                 </div>
             </div>

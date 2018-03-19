@@ -3,6 +3,9 @@ import { Tabs, Input, Ico,Button,Select,message } from 'antd';
 import BTFetch from "../../../../utils/BTFetch"
 import BTCryptTool from '../../../../tools/BTCryptTool'
 // import saveAs from '../../../../tools/FileSaver'
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const SettingMessages = messages.Setting;
 const Option = Select.Option;
 
 
@@ -93,33 +96,41 @@ export default class BTPerson extends PureComponent{
             <div>
                 <div className="personalInformation">
                     <div>
-                        <span>user_type:</span>
+                        <span>
+                            <FormattedMessage {...SettingMessages.userType}/>
+                        </span>
                         <Select defaultValue="person"  onChange={(value)=>this.handleChange(value)} disabled>
                             <Option value="disabled" disabled>Disabled</Option>
                         </Select>
                     </div>
                     <div className="UserName">
-                        <span>UserName:</span>
+                        <span>
+                            <FormattedMessage {...SettingMessages.userName}/>
+                        </span>
                         <Input value={this.state.username} disabled />
                     </div>
-                    <div className="accountType">
-                        <span>RoleType:</span>
-                        <select value={this.state.role_type} onChange={(e)=>this.onChangeRoleType(e)}>
-                            <option value="0">consumer</option>
-                            <option value="1">provider</option>
-                            <option value="2">arbiter</option>
-                        </select>
-                    </div>
-                    <div className="mailBox">
-                        <span>Email:</span>
-                        <Input value={this.state.email} onChange={(e)=>this.onChangeEmail (e)}/>
-                    </div>
+                    {/*<div className="accountType">*/}
+                        {/*<span>RoleType:</span>*/}
+                        {/*<select value={this.state.role_type} onChange={(e)=>this.onChangeRoleType(e)}>*/}
+                            {/*<option value="0">consumer</option>*/}
+                            {/*<option value="1">provider</option>*/}
+                            {/*<option value="2">arbiter</option>*/}
+                        {/*</select>*/}
+                    {/*</div>*/}
+                    {/*<div className="mailBox">*/}
+                        {/*<span>Email:</span>*/}
+                        {/*<Input value={this.state.email} onChange={(e)=>this.onChangeEmail (e)}/>*/}
+                    {/*</div>*/}
                     <div className="address">
-                        <span>address :</span>
+                        <span>
+                            <FormattedMessage {...SettingMessages.address}/>
+                        </span>
                         <Input value={this.state.address} onChange={(e)=>this.onChangeAddress(e)}/>
                     </div>
                     <div className="submit" >
-                        <Button onClick={()=>this.onClickP()}>submit</Button>
+                        <Button onClick={()=>this.onClickP()}>
+                            <FormattedMessage {...SettingMessages.Submit}/>
+                        </Button>
                     </div>
                 </div>
                 {/* <input type='file' id='files' style={{display:'none'}} onChange={(e)=>this.import()} /> */}

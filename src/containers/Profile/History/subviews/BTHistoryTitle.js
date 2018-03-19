@@ -1,5 +1,7 @@
 import React,{PureComponent} from 'react'
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const HistoryMessages = messages.History;
 export default class BTHistoryTitle extends PureComponent{
     constructor(props){
         super(props)
@@ -7,8 +9,12 @@ export default class BTHistoryTitle extends PureComponent{
     render(){
         return(
             <div className="everyTitle">
-                <h3>历史交易</h3>
-                <p>Welcome to Historical Transaction</p>
+                <h3>
+                    <FormattedMessage {...HistoryMessages.HistoryTransaction}/>
+                </h3>
+                <p>
+                    <FormattedMessage {...HistoryMessages.WelcomeToHistoryTransaction}/>
+                </p>
             </div>
         )
     }

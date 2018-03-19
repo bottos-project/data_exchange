@@ -1,5 +1,7 @@
 import React,{PureComponent} from 'react'
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const SettingMessages = messages.Setting;
 
 export default class BTSettingTitle extends PureComponent{
     constructor(props){
@@ -9,8 +11,12 @@ export default class BTSettingTitle extends PureComponent{
     render(){
         return(
             <div className="everyTitle">
-                <h3>个人中心</h3>
-                <p>Welcome to Personal Center</p>
+                <h3>
+                    <FormattedMessage {...SettingMessages.PersonalCenter}/>
+                </h3>
+                <p>
+                    <FormattedMessage {...SettingMessages.WelcomeToPersonalCenter}/>
+                </p>
             </div>
         )
     }

@@ -5,7 +5,8 @@ import BTCryptTool from '../tools/BTCryptTool'
 import './styles.less'
 import BTIpcRenderer from '../tools/BTIpcRenderer'
 import {exportFile} from '../utils/BTUtil'
-
+import PersonUser from "./Person";
+import CompanyUser from "./Company";
 const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
 
@@ -71,10 +72,87 @@ const formItemLayout = {
         sm: { span: 18 },
     },
 };
+/*class FormItem extends PureComponent{
+    return (
+        <div>
+            <FormItem {...formItemLayout} >
+                {
+                    getFieldDecorator('username',{
 
+                    })(
+                        <Input placeholder="请输入用户名" id="error1" />
+                    )
+                }
+            </FormItem>
+            <FormItem {...formItemLayout}>
+                {
+                    getFieldDecorator('password',{
+
+                    })(
+                        <Input placeholder="请输入密码" type="password" id="error1"/>
+                    )
+                }
+            </FormItem>
+            <FormItem
+                {...formItemLayout}
+            >
+                {
+                    getFieldDecorator('email',{})(
+                        <Input placeholder="请输入email" id="error2" />
+                    )
+                }
+
+            </FormItem>
+        </div>
+    )
+}*/
+/*class Person extends PureComponent{
+    constructor(props){
+        super(props);
+    }
+    render(){
+        const {getFieldDecorator} = this.props.form;
+        return (
+            <div>
+                <FormItem {...formItemLayout} >
+                    {
+                        getFieldDecorator('username',{
+
+                        })(
+                            <Input placeholder="请输入用户名" id="error1" />
+                        )
+                    }
+                </FormItem>
+                <FormItem {...formItemLayout}>
+                    {
+                        getFieldDecorator('password',{
+
+                        })(
+                            <Input placeholder="请输入密码" type="password" id="error1"/>
+                        )
+                    }
+                </FormItem>
+                <FormItem
+                    {...formItemLayout}
+                >
+                    {
+                        getFieldDecorator('email',{})(
+                            <Input placeholder="请输入email" id="error2" />
+                        )
+                    }
+
+                </FormItem>
+            </div>
+        )
+    }
+}*/
 class Regist extends PureComponent{
     constructor(props){
-        super(props)
+        super(props);
+        this.state={
+            value:0,
+            form:''
+        }
     }
 
     clearFields(){
@@ -90,10 +168,11 @@ class Regist extends PureComponent{
     }
 
     async onHandleSubmit(){
-        message.destroy()
+        // alert(1)
+        message.destroy();
         const { getFieldDecorator,getFieldsValue,getFieldValue,setFields } = this.props.form;
         let fieldValues = getFieldsValue()
-        
+        console.log(fieldValues)
         // 获取表单参数
         let username = fieldValues.username;
         let user_type = fieldValues.user_type;
@@ -101,9 +180,32 @@ class Regist extends PureComponent{
         let email = fieldValues.email;
         let password = fieldValues.password;
 
-        if(email==undefined){message.error('请输入邮箱'); return}
+        //新增参数
+        let msg = fieldValues.msg;
+        let phone = fieldValues.phone;
+        let contacts = fieldValues.contacts;
+        let contactsPhone = fieldValues.contactsPhone;
+        let companyName = fieldValues.companyName;
+
+        // !(new RegExp(/^{8,}$/, "g").test(password))
         if(username==undefined){message.error('请输入用户名'); return}
         if(password==undefined){message.error('请输入密码'); return}
+        else if(password.length < 8){
+            message.error('密码至少包含8位字符');
+            return;
+        }
+        //密码不得少入8位字符
+
+        // if(phone==undefined){message.error('请输入手机号'); return}
+        // if(msg==undefined){message.error('请输入验证码'); return}
+        //判断是公司账户
+        // if(user_type == 1){
+            // if(email==undefined){message.error('请输入邮箱'); return}
+            // if(companyName==undefined){message.error('请输入公司名'); return}
+            // if(contacts==undefined){message.error('请输入公司联系人'); return}
+            // if(contactsPhone==undefined){message.error('请输入联系人手机号'); return}
+        // }
+
 
         // 生成两对公私钥
         let owner_keys = await BTCryptTool.createPubPrivateKeys();
@@ -141,6 +243,7 @@ class Regist extends PureComponent{
             user_info:{
                 encypted_info:encypted_info.toString(),
                 user_type,// 0:个人  1:公司
+                company_name:companyName
                 // role_type, // 0:数据提供  1:数据招募 2:数据审核
             },
             owner_pub_key:owner_pub_key.toString(),
@@ -200,7 +303,13 @@ class Regist extends PureComponent{
             isRegist:true
         })
     }
+    radio(e){
+        console.log(e.target.value);
+        this.setState({
+            value:e.target.value,
+        })
 
+    }
     render(){
         const {getFieldDecorator} = this.props.form;
         return(
@@ -221,10 +330,48 @@ class Regist extends PureComponent{
                             },
                             initialValue:0
                         })(
-                            <RadioGroup >
-                                <Radio  value={0}>个人</Radio>
-                                <Radio value={1}>公司</Radio>
+                            <RadioGroup onChange={(e)=>this.radio(e)} setFieldsValue={this.state.value}>
+                                <Radio  value={0}>个人用户</Radio>
+                                <Radio value={1}>企业用户</Radio>
                             </RadioGroup>
+                        )
+                    }
+                </FormItem>
+                    {
+                        this.state.value==0 ?
+                            <PersonUser form={this.props.form}/>:<CompanyUser form={this.props.form}/>
+                    }
+                {/* <FormItem
+                    {...formItemLayout}
+                >
+                    {
+                        getFieldDecorator('role_type',{
+                            getValueFromEvent:(e)=>{return e.target.value},
+                            initialValue:0
+                        })(
+                            <RadioGroup>
+                                <Radio value={0}>数据提供</Radio>
+                                <Radio value={1}>数据招募</Radio>
+                                <Radio value={2}>数据审核</Radio>
+                            </RadioGroup>
+                        )
+                    }
+                </FormItem> */}
+                {/*<FormItem {...formItemLayout} >
+                    {
+                        getFieldDecorator('username',{
+
+                        })(
+                            <Input placeholder="请输入用户名" id="error1" />
+                        )
+                    }
+                </FormItem>
+                <FormItem {...formItemLayout}>
+                    {
+                        getFieldDecorator('password',{
+
+                        })(
+                            <Input placeholder="请输入密码" type="password" id="error1"/>
                         )
                     }
                 </FormItem>
@@ -236,28 +383,20 @@ class Regist extends PureComponent{
                             <Input placeholder="请输入email" id="error2" />
                         )
                     }
-                    
-                </FormItem>
 
-                <FormItem {...formItemLayout} >
+                </FormItem>*/}
+
+               {/* <FormItem {...formItemLayout} >
                 {
                     getFieldDecorator('username',{
-                        
+
                     })(
                         <Input placeholder="请输入用户名" id="error1" />
                     )
-                }   
-                </FormItem>
+                }
+                </FormItem>*/}
 
-                <FormItem {...formItemLayout}>
-                    {
-                        getFieldDecorator('password',{
 
-                        })(
-                            <Input placeholder="请输入密码" type="password" id="error1"/>
-                        )
-                    }
-                </FormItem>
 
                 <div style={{display:'flex',justifyContent:'flex-end'}}>
                     <Button type="primary" onClick={()=>this.onHandleSubmit()}>注册</Button>
@@ -269,7 +408,7 @@ class Regist extends PureComponent{
     }
 }
 
-const RegistForm = Form.create()(Regist); 
+const RegistForm = Form.create()(Regist);
 
 
 class BTRegistSuccess extends PureComponent{

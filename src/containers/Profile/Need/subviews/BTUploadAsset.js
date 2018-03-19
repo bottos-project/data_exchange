@@ -4,7 +4,9 @@ import {Upload,Modal,Form, Icon, Input, Button,DatePicker,TimePicker,message} fr
 import {getBlockInfo, getDataInfo} from "../../../../utils/BTCommonApi";
 import "../styles.less"
 import BTFetch from "../../../../utils/BTFetch";
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const PersonalDemandMessages = messages.PersonalDemand;
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -178,11 +180,15 @@ export default class BTPublishDemand extends PureComponent{
         return(
             <div className="upLoadNeed">
                 <div>
-                    <span>需求名称:</span>
+                    <span>
+                         <FormattedMessage {...PersonalDemandMessages.DemandName}/>
+                    </span>
                     <Input style={{width:170}} defaultValue={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
                 </div>
                 <div>
-                    <span>招募价格:</span>
+                    <span>
+                        <FormattedMessage {...PersonalDemandMessages.RecruitmentPrice}/>
+                    </span>
                     <Input
                         type="text"
                         value={this.state.number}
@@ -190,7 +196,9 @@ export default class BTPublishDemand extends PureComponent{
                     />
                 </div>
                 <div>
-                    <span>需求描述:</span>
+                    <span>
+                         <FormattedMessage {...PersonalDemandMessages.DemandDescription}/>
+                    </span>
                     <TextArea rows={4} defaultValue={this.state.textArea} onChange={(e)=>this.onChangeTextArea(e)} />
                 </div>
                 {/*<div className="upLoad">
@@ -199,14 +207,17 @@ export default class BTPublishDemand extends PureComponent{
                     <div>
                         <Upload {...props}>
                             <Button>
-                                <Icon type="upload" /> 资源库筛选
+                                <Icon type="upload" />
+                                <FormattedMessage {...PersonalDemandMessages.SetScreening}/>
                             </Button>
                         </Upload>
                         <Button onClick={()=>this.handleOk()}>发布</Button>
                     </div>
                 </div>*/}
                 <div>
-                    <span>截止时间:</span>
+                    <span>
+                        <FormattedMessage {...PersonalDemandMessages.Deadline}/>
+                    </span>
                     <br/>
                     <DatePicker
                         onChange={(date,dateString)=>this.onChangeDate(date,dateString)}
@@ -214,7 +225,9 @@ export default class BTPublishDemand extends PureComponent{
                     />
                 </div>
                 <div className="uploadNeedSubmit">
-                    <Button type="submit" onClick={(e)=>this.updata(e)}>立即发布</Button>
+                    <Button type="submit" onClick={(e)=>this.updata(e)}>
+                        <FormattedMessage {...PersonalDemandMessages.Publish}/>
+                    </Button>
                 </div>
             </div>
         )

@@ -2,6 +2,9 @@ import React,{PureComponent} from 'react'
 import BlockList from './blockList'
 import BTFetch from "../../../utils/BTFetch";
 import {Table} from 'antd'
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../locales/messages'
+const BlockBrowsingMessages = messages.BlockBrowsing;
 export default class BTOtherBlocks extends PureComponent{
     constructor(props){
         super(props)
@@ -12,16 +15,16 @@ export default class BTOtherBlocks extends PureComponent{
     }
     columns (data){
         return [
-            { title: '区块号', dataIndex: 'block_id', key: 'title',render:(data)=>{
-                return <span>{data.substring(0,20)+'...'}</span>
+            { title: <FormattedMessage {...BlockBrowsingMessages.BlockNumber}/>, dataIndex: 'block_id', key: 'title',render:(data)=>{
+                return <span>{data.substring(0,16)+'...'}</span>
                 } },
-            { title: '时间', dataIndex: 'timestamp', key: 'date',render:(date)=>{
+            { title: <FormattedMessage {...BlockBrowsingMessages.Date}/>, dataIndex: 'timestamp', key: 'date',render:(date)=>{
                 return <span>{date.split(' ')[0]}</span>
                 }},
-            { title: '交易', dataIndex: 'transaction_merkle_root', key: 'looker',render:(data)=>{
-                    return <span>{data.substring(0,20)+'...'}</span>
+            { title: <FormattedMessage {...BlockBrowsingMessages.Transaction}/>, dataIndex: 'transaction_merkle_root', key: 'looker',render:(data)=>{
+                    return <span>{data.substring(0,16)+'...'}</span>
                 }},
-            { title: '生产者',dataIndex: 'producer',key: 'x'},
+            { title: <FormattedMessage {...BlockBrowsingMessages.Producer}/>,dataIndex: 'producer',key: 'x'},
         ];
     }
     componentDidMount() {
@@ -35,7 +38,6 @@ export default class BTOtherBlocks extends PureComponent{
                 this.setState({
                     data,
                 });
-                console.log(res);
             }
         });
     }
@@ -47,7 +49,9 @@ export default class BTOtherBlocks extends PureComponent{
             <div className="OtherBlocksMessage">
                 {/*<div style={{width:"100%"}}>*/}
                     <div className="blockView">
-                        <h3>区块</h3>
+                        <h3>
+                            <FormattedMessage {...BlockBrowsingMessages.Block}/>
+                        </h3>
                         {/*<a >查看所有&lt;</a>*/}
                     </div>
                     <Table bordered pagination columns={columns} dataSource={this.state.data}

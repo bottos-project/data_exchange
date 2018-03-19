@@ -59,7 +59,7 @@ export default class BTDemandCell extends PureComponent{
                             <li><IconText type="star-o" text="156" /></li>
                             <li><IconText type="like-o" text="156" /></li>
                             <li><IconText type="message" text="2" /></li>
-                            <li><Button type="primary" size="small" onClick={()=>{this.commitAsset()}}>提交资产</Button></li>
+                            <li><Button type="primary" size="small" onClick={()=>{this.commitAsset()}}>推销资产</Button></li>
                             {/* <li><Button type="danger" size="small">加入购物车</Button></li> */}
                         </ul>
                     </div>

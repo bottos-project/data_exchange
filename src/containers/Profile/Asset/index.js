@@ -10,7 +10,9 @@ import BTHaveBought from "./subviews/BTHaveBought"
 import BTMyAssetSet from "./subviews/BTMyAssetSet"
 import BTFetch from "../../../utils/BTFetch";
 import BTAssetTitle from "./subviews/BTAssetTitle";
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../locales/messages'
+const PersonalAssetMessages = messages.PersonalAsset;
 const TabPane = Tabs.TabPane;
 
 export default class BTProfileAsset extends PureComponent{
@@ -26,16 +28,14 @@ export default class BTProfileAsset extends PureComponent{
                 <BTAssetTitle/>
                 <div>
                     <Tabs className="tabs">
-                        {/*<TabPane tab="发布资产" key="1">*/}
-                            {/*<BTUploadAsset/>*/}
-                        {/*</TabPane>*/}
-                        <TabPane tab="已发布资产" key="2">
+
+                        <TabPane tab={<FormattedMessage {...PersonalAssetMessages.PublishedAsset}/>} key="2">
                             <BTAssetDetail/>
                         </TabPane>
-                        <TabPane tab="已购买资产" key="3" >
+                        <TabPane tab={<FormattedMessage {...PersonalAssetMessages.HaveBoughtAsset}/>} key="3" >
                             <BTHaveBought/>
                         </TabPane>
-                        <TabPane tab="我的资产库" key="4">
+                        <TabPane tab={<FormattedMessage {...PersonalAssetMessages.MyAssetSet}/>} key="4">
                             <BTMyAssetSet/>
                         </TabPane>
                     </Tabs>

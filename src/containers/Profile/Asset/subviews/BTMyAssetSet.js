@@ -4,15 +4,20 @@ import "./styles.less"
 import BTFetch from "../../../../utils/BTFetch"
 import BTCryptTool from '../../../../tools/BTCryptTool'
 import {getBlockInfo,getDataInfo} from '../../../../utils/BTCommonApi'
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const PersonalAssetMessages = messages.PersonalAsset;
 const Dragger = Upload.Dragger;
 const callback_data = ''
+// const username = JSON.parse(window.localStorage.account_info).username;
+// const token = JSON.parse(window.localStorage.account_info).token;
 // console.log(getBlockInfo,getDataInfo)
 const  props = {
     customRequest(info){
         //生成文件存储路径url
         const file=info.file;
         let param={
-            "userName": "btd121",
+            "userName": JSON.parse(window.localStorage.account_info).username||'' ,
             "fileName": file.name,
             "fileSize": file.size,
             "filePolicy": "public",
@@ -35,16 +40,7 @@ const  props = {
         myHeaders.append('Content-Type','text/plain')
 
         //上传到存储路径中
-        const status = info.file.status;
         function up_ajax(url){
-
-           /* BTFetch(url,'put',{},{full_path:true})
-                .then(res=>{
-                    console.log(res);
-                    inquire()
-                }).catch(error=>{
-                    message.error(`${info.file} 上传到存储路径失败 `);
-            });*/
             fetch(url,{
                 method:'PUT',
                 header:myHeaders,
@@ -69,7 +65,7 @@ const  props = {
         // 查询状态
         function inquire(){
             let data={
-                "userName": "btd121",
+                "userName": JSON.parse(window.localStorage.account_info).username||'',
                 "fileName": file.name
             };
            BTFetch('/asset/getFileUploadStat','post',data,{service:'service'})
@@ -93,10 +89,10 @@ const  props = {
                 "code":"datafilemng",
                 "action":"datafilereg",
                 "args":{
-                    "file_hash":"filehashtest",
+                    "file_hash":window.uuid,
                     "basic_info":{
-                        "user_name":"btd121",
-                        "session_id":"sessidtest",
+                        "user_name":JSON.parse(window.localStorage.account_info).username||'',
+                        "session_id":JSON.parse(window.localStorage.account_info).token||'',
                         "file_size":file.size,
                         "file_name":file.name,
                         "file_policy":"policytest",
@@ -107,10 +103,6 @@ const  props = {
                 }
             };
             let getDataInfos=(await getDataInfo(param));
-            /*if(getDataInfos.code!=0 || !_blockInfo.code!=0){
-                message.error('获取区块信息失败')
-            };*/
-            console.log();
             let blockInfo=_blockInfo.data;
             let data={
                 "ref_block_num": blockInfo.ref_block_num,
@@ -168,13 +160,13 @@ export default class BTMyAssetSet extends PureComponent{
     columns(data) {
         console.log(data);
             return [
-                {title: 'FileName', dataIndex: 'file_name', key: 'fileName'},
-                {title: 'FileSize', dataIndex: 'file_size', key: 'fileSize'},
-                {title: 'sampleName', dataIndex: 'sampleName', key: 'sampleName'},
-                {title: 'sampleSize', dataIndex: 'sampleSize', key: 'sampleSize'},
-                {title: 'Date', dataIndex: 'date', key: 'date'},
+                {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name', key: 'fileName'},
+                {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size', key: 'fileSize'},
+                {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleName}/>, dataIndex: 'sampleName', key: 'sampleName'},
+                {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleSize}/>, dataIndex: 'sampleSize', key: 'sampleSize'},
+                {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'date', key: 'date'},
                 {
-                    title: "Download", dataIndex: 'file_name', key: 'x', render: (item)=>{
+                    title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_name', key: 'x', render: (item)=>{
                         return(
                             <a href={this.state.href} onClick={()=>this.download(item)}>
                                 <Icon type="download"/>
@@ -182,20 +174,11 @@ export default class BTMyAssetSet extends PureComponent{
                         )
                     }
                 },
-                {
-                    title: "Delete", dataIndex: 'delete', key: 'y', render: (text, record)=>{
-                        return (
-                            <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
-                                <a  href="#">Delete</a>
-                            </Popconfirm>
-                        );
-                    }
-                }
             ];
      }
      download(dataIndex){
         BTFetch('/asset/getDownLoadURL','post',{
-            'userName':'btd121',
+            'userName':JSON.parse(window.localStorage.account_info).username||'',
             'fileName':dataIndex
         }).then(res=>{
             console.log(res);
@@ -219,30 +202,22 @@ export default class BTMyAssetSet extends PureComponent{
         this.setState({ data: data.filter(item => item.key !== key) });
     }
     componentDidMount() {
-            let getUrl=[];
-            let param={
-                'userName':'btd121',
-                'fileName':'test.zip'
-            };
             let data={
-                "userName": "btd121",
+                "userName": JSON.parse(window.localStorage.account_info).username||'',
                 "random": Math.ceil(Math.random()*100),
                 "signatures": "0xxxx"
             };
-            BTFetch('/asset/queryUploadedData','post',data,{service:'service'})
+            BTFetch('/asset/queryUploadedData','post',data)
                 .then(res=>{
-                    if( res.code == 1 ){
-                        let data=JSON.parse(res.data);
-                        console.log(data);
-                        if(res.data == 'null' ){
-                            return ;
+                    if( res.code == 0 ){
+                        if(res.data.rowCount == 0 ){
                             message.warning('资源库为空')
+                            return ;
                         }
                         this.setState({
-                            data:data
+                            data:res.data.row
                         })
                     }
-                    console.log(this.state.data)
                 });
 
 
@@ -256,8 +231,9 @@ export default class BTMyAssetSet extends PureComponent{
                     <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />
                     </p>
-                    <p style={{color:"#666666"}} className="ant-upload-text">Click or drag file to this area to upload</p>
-                    <p style={{color:"#666666"}} className="ant-upload-hint">Support for a single or bulk upload. Strictly prohibit from uploading company data or other band files</p>
+                    <p style={{color:"#666666"}} className="ant-upload-text">
+                        <FormattedMessage {...PersonalAssetMessages.ClickOrDragFileToThisAreaToUpload}/>
+                    </p>
                 </Dragger>
                 <Table
                     className="shadow radius table"

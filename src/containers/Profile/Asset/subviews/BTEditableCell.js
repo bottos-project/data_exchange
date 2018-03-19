@@ -58,7 +58,9 @@
 //     }
 // }
 import { Table, Input, Popconfirm } from 'antd';
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const PersonalAssetMessages = messages.PersonalAsset;
 const data = [];
 for (let i = 0; i < 100; i++) {
     data.push({
@@ -106,12 +108,18 @@ class EditableTable extends React.Component {
                         {
                             editable ?
                                 <span>
-                  <a onClick={() => this.save(record.key)}>Save</a>
+                  <a onClick={() => this.save(record.key)}>
+                        <FormattedMessage {...PersonalAssetMessages.Save}/>
+                  </a>
                   <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
-                    <a>Cancel</a>
+                    <a>
+                        <FormattedMessage {...PersonalAssetMessages.Cancel}/>
+                    </a>
                   </Popconfirm>
                 </span>
-                                : <a onClick={() => this.edit(record.key)}>Edit</a>
+                                : <a onClick={() => this.edit(record.key)}>
+                                     <FormattedMessage {...PersonalAssetMessages.Edit}/>
+                                </a>
                         }
                     </div>
                 );

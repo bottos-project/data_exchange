@@ -1,6 +1,9 @@
 import React,{PureComponent} from 'react'
 import BTFetch from '../../../utils/BTFetch'
 import "../styles.less"
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../locales/messages'
+const BlockBrowsingMessages = messages.BlockBrowsing;
 export default class BTOtherAllBlock extends PureComponent{
     constructor(props){
         super(props);
@@ -27,13 +30,13 @@ export default class BTOtherAllBlock extends PureComponent{
                     Total_Trans:res.data.num
                 })
             }
-        })
+        });
         BTFetch('/dashboard/GetNodeInfos','GET').then(res=>{
-            if(res.code == 1){
-                console.log(typeof JSON.parse(res.data),JSON.parse(res.data).length);
-                let Total_Nodes=JSON.parse(res.data).length;
+            if(res.code == 0){
+                // let Total_Nodes=JSON.parse(res.data).length;
+                console.log(res.data);
                 this.setState({
-                    Total_Nodes,
+                    Total_Nodes:res.data.length
                 })
             }
         })
@@ -46,25 +49,33 @@ export default class BTOtherAllBlock extends PureComponent{
                 <div className="OtherBlockDetails radius shadow">
                     <div>
                         <div>
-                            <span>Total BTO</span>
+                            <span>
+                                <FormattedMessage {...BlockBrowsingMessages.TotalBTO}/>
+                            </span>
                         </div>
                         <p>{this.state.Total_BTO}</p>
                     </div>
                     <div>
                         <div>
-                            <span>Last Block</span>
+                            <span>
+                                <FormattedMessage {...BlockBrowsingMessages.LastBlock}/>
+                            </span>
                         </div>
                         <p> </p>
                     </div>
                     <div>
                         <div>
-                            <span>Total Trans</span>
+                            <span>
+                                <FormattedMessage {...BlockBrowsingMessages.TotalTrans}/>
+                            </span>
                         </div>
                         <p>{this.state.Total_Trans}</p>
                     </div>
                     <div>
                         <div>
-                             <span>Total Nodes</span>
+                             <span>
+                                 <FormattedMessage {...BlockBrowsingMessages.TotalNodes}/>
+                             </span>
                         </div>
                         <p>{this.state.Total_Nodes}</p>
                     </div>

@@ -2,7 +2,9 @@ import React,{PureComponent} from 'react'
 import moment from "moment"
 import {Upload,Modal,Form, Icon, Input, Button,DatePicker,TimePicker} from 'antd'
 import BTUploadNeed from "./BTUploadAsset"
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const PersonalDemandMessages = messages.PersonalDemand;
 
 export default class BTPublishDemand extends PureComponent{
     constructor(props) {
@@ -32,7 +34,7 @@ export default class BTPublishDemand extends PureComponent{
                    okText = "立即发布"
                    cancelText = "取消"
                    footer={null}
-                   title="发布需求"
+                   title={<FormattedMessage {...PersonalDemandMessages.PublishTheDemand}/>}
             >
                 <BTUploadNeed/>
             </Modal>

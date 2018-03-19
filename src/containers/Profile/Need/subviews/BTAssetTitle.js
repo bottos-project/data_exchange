@@ -1,5 +1,7 @@
 import React,{PureComponent} from 'react'
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const PersonalDemandMessages = messages.PersonalDemand;
 
 export default class BTDemandTitle extends PureComponent{
     constructor(props){
@@ -9,8 +11,12 @@ export default class BTDemandTitle extends PureComponent{
     render(){
         return(
             <div className="everyTitle">
-                <h3>市场需求</h3>
-                <p>Welcome to Market Demand</p>
+                <h3>
+                    <FormattedMessage {...PersonalDemandMessages.PersonalDemand}/>
+                </h3>
+                <p>
+                    <FormattedMessage {...PersonalDemandMessages.WelcomeToPersonalDemand}/>
+                </p>
             </div>
         )
     }

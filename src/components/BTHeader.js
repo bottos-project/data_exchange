@@ -14,7 +14,9 @@ import BTPublishDemand from '../containers/Profile/Need/subviews/publishDemandBo
 import BTFetch from '../utils/BTFetch'
 import {importFile,exportFile} from '../utils/BTUtil'
 import BTIpcRenderer from '../tools/BTIpcRenderer'
-import {deleteAccount,isLogin} from '../tools/localStore'
+import {deleteAccount,isLogin,getAccount} from '../tools/localStore'
+import messages from "../locales/messages";
+const HeaderMessages = messages.Header;
 
 const {dialog} = window.electron.remote
 
@@ -84,12 +86,22 @@ class BTHeader extends PureComponent{
     }
 
     handlePublishDemand(){
+        message.destroy()
+        if(!this.state.isLogin){
+            message.info("请先登录")
+            return
+        }
         this.publishModal.setState({
             visible:true
         })
     }
 
     handlePublishAsset(){
+        message.destroy()
+        if(!this.state.isLogin){
+            message.info("请首先登录")
+            return
+        }
         this.publishAssetModal.setState({
             visible:true
         })
@@ -113,7 +125,11 @@ class BTHeader extends PureComponent{
 
     logout(){
         let url = '/user/logout'
-        BTFetch(url,'POST').then(response=>{
+        let account = getAccount()
+        let params = {
+            token:account.token
+        }
+        BTFetch(url,'POST',params).then(response=>{
             if(response && response.code=='0'){
                 deleteAccount()
                 this.setState({isLogin:false})
@@ -129,21 +145,29 @@ class BTHeader extends PureComponent{
             <Menu>
                 <Menu.Item key="0">
                     <Link to="/profile/asset">
-                        <FormattedMessage id='Menu.Asset' defaultMessage="资产"/>
+                        <FormattedMessage {...HeaderMessages.Asset}/>
                     </Link>
                 </Menu.Item>
                 <Menu.Item key="1">
-                    <Link to="/profile/need">需求</Link>
+                    <Link to="/profile/need">
+                        <FormattedMessage {...HeaderMessages.Demand}/>
+                    </Link>
                 </Menu.Item>
                 <Menu.Item key="2">
-                    <Link to="/profile/collect">收藏</Link>
+                    <Link to="/profile/collect">
+                        <FormattedMessage {...HeaderMessages.Collect}/>
+                    </Link>
                 </Menu.Item>
-                <Menu.Item key="3">
-                    <Link to="/profile/setting">设置</Link>
-                </Menu.Item>
+                {/* <Menu.Item key="3">
+                    <Link to="/profile/setting">
+                        <FormattedMessage {...HeaderMessages.Setting}/>
+                    </Link>
+                </Menu.Item> */}
                 <Menu.Divider/>
                 <Menu.Item key="4">
-                    <a href="#" onClick={()=>{this.logout()}}>登出</a>
+                    <a href="#" onClick={()=>{this.logout()}}>
+                        <FormattedMessage {...HeaderMessages.Logout}/>
+                    </a>
                 </Menu.Item>
             </Menu>
         )
@@ -164,8 +188,12 @@ class BTHeader extends PureComponent{
     keyStoreMenu(){
         return(
             <Menu>
-                <Menu.Item key="1"><a href="#" onClick={()=>this.importKeyStore()}>导入KeyStore</a></Menu.Item>
-                <Menu.Item key="2"><a href="#" onClick={()=>this.exportKeyStore()}>导出KeyStore</a></Menu.Item>
+                <Menu.Item key="1"><a href="#"  className="file" onClick={()=>this.importKeyStore()}>
+                    <FormattedMessage {...HeaderMessages.ImportKeystore}/>
+                </a></Menu.Item>
+                <Menu.Item key="2"><a href="#" className="file" onClick={()=>this.exportKeyStore()}>
+                    <FormattedMessage {...HeaderMessages.ExportKeystore}/>
+                </a></Menu.Item>
             </Menu>
         )
     }
@@ -201,8 +229,12 @@ class BTHeader extends PureComponent{
                 </div>
 
                 <div className="loginBtnStyle">
-                    <Button onClick={()=>this.handlePublishDemand()} ><FormattedMessage id='Header.PublishDemand' defaultMessage="发布需求"/></Button>
-                    <Button onClick={()=>this.handlePublishAsset()} >发布资产</Button>
+                    <Button onClick={()=>this.handlePublishDemand()} >
+                        <FormattedMessage {...HeaderMessages.PublishDemand}/>
+                    </Button>
+                    <Button onClick={()=>this.handlePublishAsset()} >
+                        <FormattedMessage {...HeaderMessages.PublishAsset}/>
+                    </Button>
                     <div>
                         {
                             this.state.isLogin ? 
@@ -214,9 +246,13 @@ class BTHeader extends PureComponent{
                                 </Dropdown>
                                 <Link to="/profile/check" style={{color:'rgba(0, 0, 0, 0.65)'}}><i className="iconfont icon-email" style={{fontSize:20,marginLeft:10}} onClick={()=>{this.checkMessages()}}/></Link>
                             </div>
-                            
+
                             :
-                            <div className='isLogin'><span onClick={()=>this.isShowLogin()}>登录</span>&nbsp;<span onClick={()=>this.isRegister()}>注册</span></div>
+                            <div className='isLogin'><span onClick={()=>this.isShowLogin()}>
+                                <FormattedMessage {...HeaderMessages.Login}/>
+                            </span>&nbsp;<span onClick={()=>this.isRegister()}>
+                                 <FormattedMessage {...HeaderMessages.Register}/>
+                            </span></div>
                         }
                     </div>
 

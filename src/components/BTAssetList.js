@@ -3,7 +3,9 @@ import { Radio, Row, Col,Modal } from 'antd';
 import BTFetch from "../utils/BTFetch";
 import {message} from "antd/lib/index";
 const RadioGroup = Radio.Group;
-
+const getUrl = async(reqUrl,params)=>{
+    return await BTFetch(reqUrl,'POST',params)
+};
 export default class BTAssetList extends PureComponent{
     constructor(props){
         super(props)
@@ -11,34 +13,62 @@ export default class BTAssetList extends PureComponent{
             visible:false,
             value:'',
             type:'',
-            // data:this.props.examplefile||[]
+            file_hash:'',
             exampledata:[],
+            getRealUrl:'',
+            getExampleUrl:'',
         }
     }
-
-    handleOk(){
+   async handleOk(){
         this.setState({
-            visible:false
-        })
+            visible:false,
+            username:''
+        });
 
-        let callBackData = {}
+        //判断是asset还是assetTemp
+        let callBackData = {};
         if(this.state.type=='asset'){
+            let filename={
+                userName:this.state.username,
+                fileName:this.state.value
+            };
+            let url= await getUrl('/asset/getDownLoadURL',filename);
+            if(url.code==1){
+                this.setState({
+                    getRealUrl:url.data,
+                })
+            }
             callBackData = {
                 type:'asset',
-                value:this.state.value
-            }
+                value:this.state.value,
+                hash:this.state.file_hash,
+                getRealUrl:this.state.getRealUrl,
+            };
         }else if(this.state.type == 'assetTemp'){
+            let filename1={
+                userName:this.state.username,
+                fileName:this.state.value
+            };
+            let url= await getUrl('/asset/getDownLoadURL',filename1);
+            if(url.code==1){
+                this.setState({
+                    getExampleUrl:url.data,
+                })
+            }
             callBackData = {
                 type:'assetTemp',
-                value:this.state.value
-            }
+                value:this.state.value,
+                hash:this.state.file_hash,
+                getExampleUrl:this.state.getExampleUrl,
+            };
         }else{
             callBackData = {
                 type:'other',
-                value:this.state.value
+                value:this.state.value,
+                hash:this.state.file_hash
             }
         }
-
+        //获取url路径
         this.props.handleFile(callBackData);
     }
 
@@ -49,26 +79,37 @@ export default class BTAssetList extends PureComponent{
     }
 
     onChange(e){
-        this.setState({value:e.target.value});
-        // console.log(this.state.value);
-
+        this.setState({
+            value:e.target.value.split(',')[0],
+            file_hash:e.target.value.split(',')[1],
+        });
     }
 
     componentDidMount(){
-        // console.log(this.state.data)
+        let username = ''
+        if(window.localStorage.account_info!=undefined){
+            username = JSON.parse(window.localStorage.account_info).username;
+            this.setState({
+                username:username
+            })
+        }
+
+
         let param={
-            userName:'btd121',
+            userName:this.state.username ||'',
             random:Math.ceil(Math.random()*100),
             signature:'0xxxx'
         };
-        BTFetch('/asset/queryUploadedData','post',param,{service:'service'})
+        BTFetch('/asset/queryUploadedData','post',param)
             .then(res=>{
-                if(res.code==1){
+                if(res.code==0){
+                    if(res.data.rowCount==0){
+                        message.warning('暂无文件资产库')
+                    }
                     this.setState({
-                        exampledata:JSON.parse(res.data),
+                        exampledata:res.data.row,
                     })
-                    // console.log(this.state.exampledata)
-
+                    console.log(this.state.exampledata)
                 }else{
                     message.warning('获取文件资源库失败')
                     return;
@@ -93,7 +134,7 @@ export default class BTAssetList extends PureComponent{
                             {
                                 this.state.exampledata.map((value,index)=>{
                                         return (
-                                            <Row key={index} span={8}><Radio value={value.file_name}>{value.file_name}</Radio></Row>
+                                            <Row key={index} span={8}><Radio value={value.file_name+','+value.auth_path}>{value.file_name}</Radio></Row>
                                         )
                                     })
                             }

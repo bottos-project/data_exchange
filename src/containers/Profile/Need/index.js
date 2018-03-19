@@ -7,7 +7,9 @@ import BTAssetDetail from './subviews/BTAssetDetail'
 import BTUploadAsset from './subviews/BTUploadAsset'
 import BTMyAssetSet from "./subviews/BTMyAssetSet"
 import BTDemandTitle from "./subviews/BTAssetTitle";
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../locales/messages'
+const PersonalDemandMessages = messages.PersonalDemand;
 const TabPane = Tabs.TabPane;
 
 export default class BTProfileNeed extends PureComponent{
@@ -24,13 +26,12 @@ export default class BTProfileNeed extends PureComponent{
                     {/*<TabPane tab="发布需求" key="1">*/}
                         {/*<BTUploadAsset/>*/}
                     {/*</TabPane>*/}
-                    <TabPane tab="已发布需求" key="2">
+                    <TabPane tab={<FormattedMessage {...PersonalDemandMessages.PublishedDemand}/>} key="2">
                         <BTAssetDetail/>
                     </TabPane>
                     {/*<TabPane tab="我的资源库" key="3">
                         <BTMyAssetSet/>
                     </TabPane>*/}
-
                 </Tabs>
             </div>
         )

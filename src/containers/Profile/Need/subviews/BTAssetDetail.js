@@ -1,7 +1,9 @@
 import React,{PureComponent} from 'react'
 import {Popconfirm,Table,message} from 'antd';
 import BTFetch from "../../../../utils/BTFetch";
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const PersonalDemandMessages = messages.PersonalDemand;
 
 export default class BTAssetDetail extends PureComponent{
     constructor(props){
@@ -18,18 +20,18 @@ export default class BTAssetDetail extends PureComponent{
         })
 
         return [
-            { title: 'Title', dataIndex: 'requirement_name', key: 'title' },
-            { title: 'Type', dataIndex: 'feature_tag', key: 'type' },
-            { title: 'Price', dataIndex: 'price', key: 'price' },
+            { title: <FormattedMessage {...PersonalDemandMessages.RequirementName}/>, dataIndex: 'requirement_name', key: 'title' },
+            { title: <FormattedMessage {...PersonalDemandMessages.FeatureTag}/>, dataIndex: 'feature_tag', key: 'type' },
+            { title: <FormattedMessage {...PersonalDemandMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price' },
 
-            { title: 'Description', dataIndex: 'description', key: 'description' },
-            { title: 'PublishDate', dataIndex:'publish_date', key: 'publishDate',render:(time)=>{
+            { title: <FormattedMessage {...PersonalDemandMessages.DemandDescription}/>, dataIndex: 'description', key: 'description' },
+            { title: <FormattedMessage {...PersonalDemandMessages.PublishDate}/>, dataIndex:'publish_date', key: 'publishDate',render:(time)=>{
                 return <span>{(new Date(time*1000)).toLocaleDateString()}</span>
                 }},
-            { title: 'expire_time', dataIndex: 'expire_time', key: 'expire_time' ,render:(time)=>{
+            { title: <FormattedMessage {...PersonalDemandMessages.Deadline}/>, dataIndex: 'expire_time', key: 'expire_time' ,render:(time)=>{
                     return <span>{(new Date(time*1000)).toLocaleDateString()}</span>
                 }},
-            { title: 'Sample', dataIndex: 'sample_path', key: 'sample' ,render:(sample_path)=>{
+            { title: <FormattedMessage {...PersonalDemandMessages.SampleDownload}/>, dataIndex: 'sample_path', key: 'sample' ,render:(sample_path)=>{
                     return(
                         <a href={sample_path}>Download</a>
                     )
@@ -41,7 +43,9 @@ export default class BTAssetDetail extends PureComponent{
                         // this.state.dataSource.length > 1 ?
                         //     (
                         <Popconfirm title="Sure to delete?" onConfirm={() => this.onDelete(record.key)}>
-                            <a href="#">Delete</a>
+                            <a href="#">
+                                <FormattedMessage {...PersonalDemandMessages.Download}/>
+                            </a>
                         </Popconfirm>
                         // ) : null
                     );
@@ -63,15 +67,19 @@ export default class BTAssetDetail extends PureComponent{
         let param={
             "pageSize":20,
             "pageNum":1,
-            "username":"btd121"
+            "username":JSON.parse(window.localStorage.account_info).username||''
             // "featureTag":12345
         };
         BTFetch("/requirement/query",'post',param)
             .then(res=>{
                 console.log(res.data);
-                if(res.code==0&&res.data.Row!='null'){
+                if(res&&res.code==0){
+                    if(res.data.rowCount==0){
+                        message.warning('No Data');
+                        return;
+                    }
                     this.setState({
-                        data:res.data.Row,
+                        data:res.data.row,
                     });
                 }else{
                     message.warn('暂无发布资产')

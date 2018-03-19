@@ -2,6 +2,9 @@ import React,{PureComponent} from 'react'
 import { Table, Icon,message} from 'antd';
 import "./styles.less"
 import BTFetch from '../../../../utils/BTFetch'
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const PersonalAssetMessages = messages.PersonalAsset;
 
 export default class BTHaveBought extends PureComponent{
     constructor(props){
@@ -13,20 +16,20 @@ export default class BTHaveBought extends PureComponent{
     columns(data){
         console.log(data);
         return [
-            { title: 'asset_name', dataIndex: 'asset_name', key: 'title' },
-            { title: 'price', dataIndex: 'price', key: 'price',render:(price)=>
+            { title: <FormattedMessage {...PersonalAssetMessages.AssetName}/>, dataIndex: 'asset_name', key: 'title' },
+            { title: <FormattedMessage {...PersonalAssetMessages.AssetType}/>, dataIndex: 'price', key: 'price',render:(price)=>
                     <div>
-                        <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
+                        <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
                         <span>{price}</span>
                     </div>
             },
            /* { title: 'fileName', dataIndex: 'fileName', key: 'fileName' },
             { title: 'fileSize', dataIndex: 'fileSize', key: 'fileSize' },*/
-            { title: 'description', dataIndex: 'description', key: 'description', render:(item)=>{
+            { title: <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>, dataIndex: 'description', key: 'description', render:(item)=>{
                 return <span>{item.length <= 10 ? item : item.substring(0,10)+'...'}</span>
                 }},
-            { title: 'date', dataIndex: 'date', key: 'date' },
-            { title: 'Action', dataIndex: 'storage_path', key: 'x', render: (item) =>
+            { title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'date', key: 'date' },
+            { title: <FormattedMessage {...PersonalAssetMessages.AssetOperation}/>, dataIndex: 'storage_path', key: 'x', render: (item) =>
                     <a href={item}>
                         <Icon type="download" style={{color:"black",fontWeight:900}}/>
                     </a>
@@ -40,20 +43,18 @@ export default class BTHaveBought extends PureComponent{
     }
     componentDidMount(){
         let param={
-            userName:'btd121',
+            userName:JSON.parse(window.localStorage.account_info).username||'',
             random:Math.ceil(Math.random()*100),
             signatures:'0XXXX'
         }
-        BTFetch('/asset/GetUserPurchaseAssetList','post',param,{
-            service:'service'
-        }).then(res=>{
-            if(res.code==1){
-                console.log(res.data);
-                if(res.data=='null'){
-                   return;
+        BTFetch('/asset/GetUserPurchaseAssetList','post',param).then(res=>{
+            if(res.code==0){
+                if(res.data.rowCount==0){
+                    message.warning('暂无购买资产');
+                    return;
                 }
                 this.setState({
-                    data:JSON.parse(res.data),
+                    data:res.data.row,
                 })
             }else{
                 message.error('查询已购买资产失败');
@@ -61,7 +62,6 @@ export default class BTHaveBought extends PureComponent{
         }).catch(error=>{
             message.error('查询已购买资产失败');
         });
-        console.log(this.state.data)
     }
     render(){
         const { data } = this.state;

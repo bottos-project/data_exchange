@@ -5,8 +5,12 @@ import {message} from 'antd'
 import BTFetch from '../../../utils/BTFetch'
 import {getBlockInfo,getDataInfo} from '../../../utils/BTCommonApi'
 import './styles.less'
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../locales/messages'
 import {Icon} from 'antd'
+const DemandMessages = messages.Demand;
+
+
 const IconText = ({ type, text }) => (
     <span>
       <Icon type={type} style={{ marginRight: 8 }} />
@@ -22,21 +26,21 @@ export default class BTRequireCell extends PureComponent{
     }
     commitAsset(){
         let param={
-            userName:'btd121',
+            userName:JSON.parse(window.localStorage.account_info).username||'',
             random:Math.ceil(Math.random()*100),
             signature:'0xxxx'
         };
         BTFetch('/asset/query','post',param)
             .then(res=>{
-                if(res.code==1){
-                    if(res.data=='null'){
+                if(res.code==0){
+                    if(res.data.rowCount==0){
                         message.warning('暂无数据');
                         return;
                     };
-                    console.log(JSON.parse(res.data))
+                    console.log(res.data.row,res.data)
                     this.setState({
-                        exampledata:JSON.parse(res.data),
-                    })
+                        exampledata:res.data.row,
+                    });
                 }else{
                     message.warning('获取文件资源库失败')
                     return;
@@ -52,9 +56,7 @@ export default class BTRequireCell extends PureComponent{
     }
 
    async handleFile(fileInfo){
-        console.log({
-            fileInfo
-        });
+        console.log(fileInfo);
         let asset=fileInfo.value;
         if(!fileInfo.value){
             message.error('暂无提交资产');
@@ -64,12 +66,14 @@ export default class BTRequireCell extends PureComponent{
             "code":"datadealmng",
             "action":"datapresale",
             "args":{
-                "data_presale_id":"idtest",
+                "data_presale_id":window.uuid,
                 "basic_info":{
-                    "user_name":"btd121",
-                    "session_id":"sessionidtest",
+                    "user_name":JSON.parse(window.localStorage.account_info).username||'',
+                    "session_id":JSON.parse(window.localStorage.account_info).token||'',
                     "asset_id":fileInfo.value,
+                    "asset_name":"assetidtest123",
                     "data_req_id":this.props.requirement_id,
+                    "data_req_name":"reqtest123",
                     "consumer":"buyer",
                     "random_num":Math.ceil(Math.random()*100),
                     "signature":"sigtest"
@@ -112,15 +116,22 @@ export default class BTRequireCell extends PureComponent{
             pathname:linkto,
             state:data
         }
+
         return (
                 <div className="assetList">
                     <BTAssetList exampledata={this.state.exampledata} ref={(ref)=>this.assetListModal = ref} handleFile={(fileInfo)=>this.handleFile(fileInfo)}/>
                     <div>
                         <h4 className="headAndShop"><Link to={path}>{data.requirement_name}</Link></h4>
-                        <p>发布人：{data.username}</p>
-                        <span>有效时间：{data.expire_time}</span>
+                        <p>
+                            <FormattedMessage {...DemandMessages.Publisher}/>
+                            {data.username}
+                        </p>
+                        <span>
+                            <FormattedMessage {...DemandMessages.ExpireTime}/>
+                            {data.expire_time}
+                        </span>
                         <div>
-                            <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" width='12' alt=""/>
+                            <img src="./img/token.png" width='12' alt=""/>
                             <span>{data.price}</span>
                         </div>
                     </div>

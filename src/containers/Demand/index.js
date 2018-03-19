@@ -62,7 +62,7 @@ export default class BTDemand extends PureComponent{
                     message.warning('暂无市场需求');
                     return;
                 }
-                let dataSource  = response.data && response.data.Row;
+                let dataSource  = response.data && response.data.row;
 
                 this.setState({
                     dataSource:dataSource

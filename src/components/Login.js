@@ -15,30 +15,49 @@ export default class Login extends PureComponent{
 
         this.state = {
             visible:false,
-            password:'',
             username:'',
-            keyStore:'',
+            password:'',
+            keyStore:{},
             hasKeystore:false
         }
     }
 
     async onHandleUnlock(){
-        console.log('onHandleUnlock')
         message.destroy()
+        if(this.state.username==''){
+            message.error('请输入用户名')
+            return
+        }
+
         if(this.state.password == ''){
             message.error('请输入密码')
             return
         }
 
+        let username = this.state.username;
         let blockInfo = await this.getBlockInfo();
-        let data = await this.getDataInfo()
-        let keyStoreResult = BTIPcRenderer.getKeyStore({});
+        let data = await this.getDataInfo(username)
+
+        if(!(blockInfo&&blockInfo.code=="0")) {
+            message.error('登录失败')
+            return
+        }
+
+        if(!(data && data.code=="0")){
+            message.error('登录失败')
+            return
+        }
+
+        let keyStoreResult = BTIPcRenderer.getKeyStore({
+            username:username,
+            account_name:username
+        });
         if(keyStoreResult.error){
             message.error('请先导入keyStore文件')
             return;
         }
-        let keyStore = keyStoreResult.result;
-        let keyStoreObj = JSON.parse(keyStore)
+        let keyStoreStr = keyStoreResult.result;
+        let keyStoreObj = JSON.parse(keyStoreStr)
         // 用密码解密keyStore
         try{
             let decryptoStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
@@ -52,11 +71,36 @@ export default class Login extends PureComponent{
             let url = '/user/login'
     
             let params = {
-                // blockInfo,
-                // data
+                ref_block_num: blockInfo.data.ref_block_num,
+                "ref_block_prefix": blockInfo.data.ref_block_prefix,
+                "expiration": blockInfo.data.expiration,
+                "scope": ["usermng"],
+                "read_scope": [],
+                "messages": [
+                    {
+                        "code": "usermng",
+                        "type": "userlogin",
+                        // "authorization": [{
+                        //     "account": username,
+                        //     "permission": "active"
+                        // }],
+                        authorization:[],
+                        "data": data.data.bin
+                    }
+                ],
+                "signatures": []
+
             }
+
+            console.log({
+                params:JSON.stringify(params)
+            })
+
             BTFetch(url,'POST',params)
             .then(response=>{
+                console.log({
+                    response
+                })
                 if(response && response.code=='0'){
                     message.success('登录成功')
                     let accountInfo = {
@@ -66,14 +110,17 @@ export default class Login extends PureComponent{
                     setAccount(accountInfo)
                     this.setState({
                         visible:false,
-                        password:''
+                        password:'',
+                        username:''
                     })
                     this.props.onHandleLogin(true)
                     // window.location.reload()
                 }else{
+                    console.log("lkdsjflksdjflsdjfl")
                     message.error('登录失败')
                 }
             }).catch(error=>{
+                console.log("lkdsjflksdjflsdjfl")
                 message.error('登录失败')
             })
         }catch(error){
@@ -88,44 +135,60 @@ export default class Login extends PureComponent{
     }
 
     // 获取data信息
-    async getDataInfo(){
-        let reqUrl = '/user/GetBin'
+    async getDataInfo(username){
+        let reqUrl = '/user/GetDataBin'
         let params = {
-            // username:'btd352'
+            "code":"usermng", 
+            "action":"userlogin", 
+            "args":{
+                "user_name":username,
+                "random_num":Math.round(Math.random()*1000)
+            }
         }
-        return await BTFetch(reqUrl,'POST')
+        return await BTFetch(reqUrl,'POST',params)
     }
 
     closeModal(){
         this.setState({
             visible:false,
-            username:'',
-            password:''
+            password:'',
+            username:''
         })
     }
 
     importKeyStore(){
-        let keyStore = BTIPcRenderer.importFile()
-        BTIPcRenderer.saveKeyStore('keystore',keyStore)
+        let keyStoreObj = BTIPcRenderer.importFile()
+        if(this.state.password==''){
+            message.error('请输入密码')
+            return;
+        }
+    
+        try{
+            let keyStoreStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
+            let keyStore = JSON.parse(keyStoreStr)
+            let account_name = keyStore.account_name;
+            // return;
+            BTIPcRenderer.saveKeyStore({username:account_name,account_name:account_name},keyStoreObj)
+        }catch(error){
+            message.error('密码与该keystore文件不匹配')
+        }
     }
 
     render(){
         return(
             <Modal
                 visible={this.state.visible}
-                footer={null}
                 onCancel={()=>this.closeModal()}
+                onOk={()=>{this.onHandleUnlock()}}
             >
                 <div className="marginRight">
-                    <div style={{marginBottom:20}}><Button onClick={()=>this.importKeyStore()}>导入keystore文件</Button></div>
-                    <div className="container row">
-                       <Input placeholder="请输入用户名" className="marginRight" value={this.state.username} onChange={(e)=>{this.setState({username:e.target.value})}}/> 
-                       <Input type="password" placeholder="请输入密码" className="marginRight" value={this.state.password} onChange={(e)=>{this.setState({password:e.target.value})}}/> 
-                        <Button type="danger" onClick={()=>this.onHandleUnlock()}>解锁</Button>
+                    <div className="marginBottom marginRight" ><Input placeholder="请输入用户名" value={this.state.username} onChange={(e)=>{this.setState({username:e.target.value})}}/></div>
+                    <div className="container row marginTop">
+                      <Input type="password" placeholder="请输入密码" className="marginRight" value={this.state.password} onChange={(e)=>{this.setState({password:e.target.value})}}/>
                     </div>
-                    {/* {
+                    {
                         this.state.hasKeystore ? <div></div> : (<div style={{marginTop:20}}><Button onClick={()=>this.importKeyStore()}>导入keystore文件</Button></div>)
-                    } */}
+                    }
                 </div>
             </Modal>
         )

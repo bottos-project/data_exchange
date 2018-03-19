@@ -3,9 +3,12 @@ import {getBlockInfo, getDataInfo} from "../../../utils/BTCommonApi";
 import {message} from "antd/lib/index";
 import React,{PureComponent} from 'react'
 import { Carousel,Button,Tag,Input } from 'antd';
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../locales/messages'
 import BTAssetList from './BTAssetList'
 import {browerHistory} from 'react-router'
 import './styles.less'
+const DemandMessages = messages.Demand;
 const { TextArea } = Input;
 
 
@@ -34,18 +37,21 @@ export default class BTDemanDetail extends PureComponent{
             "code":"datadealmng",
             "action":"datapresale",
             "args":{
-                "data_presale_id":"idtest",
+                "data_presale_id":window.uuid,
                 "basic_info":{
-                    "user_name":"btd121",
-                    "session_id":"sessionidtest",
+                    "user_name":this.props.location.state.username,
+                    "session_id":'',
                     "asset_id":fileInfo.value,
+                    "asset_name":fileInfo.name,
                     "data_req_id":this.props.location.state.requirement_id,
+                    "data_req_name":this.props.location.state.requirement_name,
                     "consumer":"buyer",
                     "random_num":Math.ceil(Math.random()*100),
                     "signature":"sigtest"
                 }
             }
         };
+        console.log(this.props)
         let block=await getBlockInfo();
         let getDate=await getDataInfo(param);
         if(block.code!=0||getDate.code!=0){
@@ -77,20 +83,19 @@ export default class BTDemanDetail extends PureComponent{
     }
     componentDidMount(){
         let param={
-            userName:'btd121',
+            userName:JSON.parse(window.localStorage.account_info).username||'',
             random:Math.ceil(Math.random()*100),
             signature:'0xxxx'
         };
         BTFetch('/asset/query','post',param)
                     .then(res=>{
-                        if(res.code==1){
-                            if(res.data=='null'){
+                        if(res.code==0){
+                            if(res.data.rowCount==0){
                                 message.warning('暂无数据');
                                 return;
                             };
-                            console.log(JSON.parse(res.data))
                             this.setState({
-                                exampledata:JSON.parse(res.data),
+                                exampledata:res.data.row,
                             })
                         }else{
                             message.warning('获取文件资源库失败')
@@ -114,20 +119,46 @@ export default class BTDemanDetail extends PureComponent{
         return(
             <div className="demandDetailBox">
                 <BTAssetList exampledata={this.state.exampledata} ref={(ref)=>this.assetListModal = ref} handleFile={(fileInfo)=>this.handleFile(fileInfo)}/>
-
-                <h2>数据详情</h2>
+                <h2>
+                    <FormattedMessage {...DemandMessages.DataDetails}/>
+                </h2>
                 <div className="mainData">
                     <h1>{data.requirement_name}</h1>
-                    <p><span>资产类型:</span>{data.feature_tag}</p>
-                    <p><span>期望价格:</span>{data.price}</p>
-                    <p><span>下架时间:</span>{date}</p>
+                    <p>
+                        <span>
+                         <FormattedMessage {...DemandMessages.AssetType}/>
+                        </span>
+                        {data.feature_tag}
+                    </p>
+                    <p>
+                        <span>
+                            <FormattedMessage {...DemandMessages.ExpectedPrice}/>
+                        </span>
+                        {data.price}
+                    </p>
+                    <p>
+                        <span>
+                            <FormattedMessage {...DemandMessages.FailureTime}/>
+                        </span>
+                        {date}
+                    </p>
                 </div>
                     <ul>
-                        <li><Button onClick={()=>this.download(data.sample_path)} type="danger">下载样例</Button></li>
-                        <li><Button type="primary" onClick={()=>this.commitAsset()}>提供资产</Button></li>
+                        <li>
+                            <Button onClick={()=>this.download(data.sample_path)} type="danger">
+                                <FormattedMessage {...DemandMessages.DownLoadTheSample}/>
+                            </Button>
+                        </li>
+                        <li>
+                            <Button type="primary" onClick={()=>this.commitAsset()}>
+                                <FormattedMessage {...DemandMessages.ProvideTheAsset}/>
+                            </Button>
+                        </li>
                     </ul>
                 <div className="dataDescription">
-                    <span>数据描述</span>
+                    <span>
+                        <FormattedMessage {...DemandMessages.DataDescription}/>
+                    </span>
                     <TextArea disabled rows={4}>{data.description}</TextArea>
                 </div>
             </div>

@@ -9,6 +9,9 @@ import BTIpcRenderer from '../../../tools/BTIpcRenderer'
 import BTCryptTool from '../../../tools/BTCryptTool'
 import BTUnlogin from '../../../components/BTUnlogin'
 import * as localStore from '../../../tools/localStore'
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../locales/messages'
+const WalletMessages = messages.Wallet;
 
 const TabPane = Tabs.TabPane;
 
@@ -143,8 +146,12 @@ class BTAccountItem extends PureComponent{
                     {/* <div className="font25 colorRed">{this.props.accounts}</div> */}
                 </div>
                 <div>
-                    <Button className="marginRight" type="primary" onClick={()=>this.changePwd(this.props.accountName)}>修改密码</Button>
-                    <Button type="primary" onClick={()=>this.exportAccount(this.props.accountName)}>导出账号</Button>
+                    <Button className="marginRight" type="primary" onClick={()=>this.changePwd(this.props.accountName)}>
+                        <FormattedMessage {...WalletMessages.ModifyThePassword}/>
+                    </Button>
+                    <Button type="primary" onClick={()=>this.exportAccount(this.props.accountName)}>
+                        <FormattedMessage {...WalletMessages.ExportTheAccount }/>
+                    </Button>
                 </div>
             </div>
         )
@@ -203,10 +210,14 @@ class BTAccountListHeader extends PureComponent{
                     onOk={()=>this.onHandleOk()}
                     onCancel={()=>this.onHandleCancel()}
                 >
-                    <Button onClick={()=>this.importKeyStore()}>导入KeyStore文件</Button>
+                    <Button onClick={()=>this.importKeyStore()}>
+                        <FormattedMessage {...WalletMessages.ImportTheKeyStore}/>
+                    </Button>
                     <Input style={{marginBottom:10}} type="password" name="password" placeholder="请输入导入keystore的密码" value={this.state.password} onChange={(e)=>this.setState({password:e.target.value})}></Input>
                 </Modal>
-                <Button onClick={()=>this.importAccount()}>导入账号</Button>
+                <Button onClick={()=>this.importAccount()}>
+                    <FormattedMessage {...WalletMessages.ImportTheAccount}/>
+                </Button>
             </div>
         )
     }

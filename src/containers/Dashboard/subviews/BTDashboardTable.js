@@ -2,6 +2,9 @@ import React,{PureComponent} from 'react'
 import { Table } from 'antd'
 import "./dashboardStyle.less"
 import BTFetch from '../../../utils/BTFetch'
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../locales/messages'
+const DashboardMessages = messages.Dashboard;
 const columns = [
     {title: 'TransactionID', dataIndex: 'id'},
     { title: 'Price', dataIndex: 'price', key: 'price'},
@@ -28,7 +31,7 @@ export default class BTDashboardTable extends PureComponent{
                 }},
             { title: 'Price', dataIndex: 'price', key: 'price',render:()=>
                     <div>
-                        <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>
+                        <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
                         <span>200</span>
                     </div>
             },
@@ -59,7 +62,9 @@ export default class BTDashboardTable extends PureComponent{
         const columns = this.columns(data);
         return(
             <div>
-                <h3 style={{padding:20,color:"#666666"}}>最近交易</h3>
+                <h3 style={{padding:20,color:"#666666"}}>
+                    <FormattedMessage {...DashboardMessages.RecentTransactions}/>
+                </h3>
                 <Table
                     className="shadow radius table"
                     columns={columns}

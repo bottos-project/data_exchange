@@ -4,7 +4,9 @@ import Walletall from './walletall'
 import '../styles.less'
 import * as BTUtil from '../../../../utils/BTUtil'
 import BTIpcRenderer from "../../../../tools/BTIpcRenderer";
-
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const WalletMessages = messages.Wallet;
 const lists=[{
     'id':'1',
     'account':'Lidy',
@@ -59,7 +61,11 @@ export default class Wallet extends PureComponent{
             money:this.props.acount});*/
         return(
                <div className='wallet'>
-                   <header>总额 {this.props.acount}<span className='file'>导入钱包<input onChange={(e)=>this.export_file(e)} type="file" name="" id="files" value=""/></span></header>
+                   <header>
+                       <FormattedMessage {...WalletMessages.Total}/>
+                       {this.props.acount}<span className='file'>
+                       <FormattedMessage {...WalletMessages.ImportTheWallet}/>
+                       <input onChange={(e)=>this.export_file(e)} type="file" name="" id="files" value=""/></span></header>
                    <ul className='wallet_data'>
                        {
 
@@ -68,22 +74,13 @@ export default class Wallet extends PureComponent{
                                    <li key={index}>
                                        <span className='account'>{data.account_name}</span>
                                        <span className='address'>{data.money}</span>
-                                       <span className='total'>导出</span>
+                                       <span className='total'>
+                                           <FormattedMessage {...WalletMessages.ExportTheWallet}/>
+                                       </span>
                                    </li>
                                )
                            })
                        }
-                       {/*{
-                           this.state.lists.map(function(res){
-                               return (
-                                   <li key={res.id}>
-                                       <span className='account'>{res.account}</span>
-                                       <span className='address'>{res.address}</span>
-                                       <span className='total'>{res.total}</span>
-                                   </li>
-                               )
-                           })
-                       }*/}
                    </ul>
                </div>
         )

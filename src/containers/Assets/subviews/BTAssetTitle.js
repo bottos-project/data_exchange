@@ -1,4 +1,8 @@
 import React,{PureComponent} from 'react'
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../locales/messages'
+const AssetMessages = messages.Asset;
+
 export default class BTAssetTitle extends PureComponent{
     constructor(props){
         super(props)
@@ -7,8 +11,12 @@ export default class BTAssetTitle extends PureComponent{
     render(){
         return(
             <div className="everyTitle">
-                <h3>市场资产</h3>
-                <p>Welcome to Market Asset</p>
+                <h3>
+                    <FormattedMessage {...AssetMessages.Asset}/>
+                </h3>
+                <p>
+                    <FormattedMessage {...AssetMessages.WelcomeToMarketAsset}/>
+                </p>
             </div>
         )
     }

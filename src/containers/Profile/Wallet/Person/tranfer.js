@@ -1,6 +1,9 @@
 import React,{PureComponent} from 'react'
 import BTFetch from '../../../../utils/BTFetch'
 import {getBlockInfo, getDataInfo} from "../../../../utils/BTCommonApi";
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../../locales/messages'
+const WalletMessages = messages.Wallet;
 export default class Transfer extends PureComponent{
     constructor(props){
         super(props)
@@ -69,10 +72,14 @@ export default class Transfer extends PureComponent{
         var paddingLeft='10px';
         return (
             <div className='transfer'>
-                <header>Transfer</header>
+                <header>
+                    <FormattedMessage {...WalletMessages.Transfer}/>
+                </header>
                 <div className='transfer-content'>
                     <div className="transfer-from">
-                        <span>From</span>
+                        <span>
+                            <FormattedMessage {...WalletMessages.From}/>
+                        </span>
                         <div className="transfer-right">
                             <select name="" id="">
                                 <option value="btd121">btd121</option>
@@ -83,7 +90,9 @@ export default class Transfer extends PureComponent{
                         </div>
                     </div>
                     <div className="transfer-from">
-                        <span>Token</span>
+                        <span>
+                            <FormattedMessage {...WalletMessages.Token}/>
+                        </span>
                         <div className="transfer-right">
                             <input
                                 ref='theCoin'
@@ -93,7 +102,9 @@ export default class Transfer extends PureComponent{
                         </div>
                     </div>
                     <div className="transfer-from">
-                        <span>To</span>
+                        <span>
+                            <FormattedMessage {...WalletMessages.To}/>
+                        </span>
                         <div className="transfer-right">
                             <input
                                 value={this.state.userAddress}
@@ -104,8 +115,12 @@ export default class Transfer extends PureComponent{
                     </div>
                 </div>
                 <div className="token-submit">
-                    <button className='add' onClick={(e)=>this.submit()}>Submit</button>
-                    <button className='cancel' onClick={()=>this.clear()}>Cancel</button>
+                    <button className='add' onClick={(e)=>this.submit()}>
+                        <FormattedMessage {...WalletMessages.Submit}/>
+                    </button>
+                    <button className='cancel' onClick={()=>this.clear()}>
+                        <FormattedMessage {...WalletMessages.Cancel}/>
+                    </button>
                 </div>
             </div>
         )

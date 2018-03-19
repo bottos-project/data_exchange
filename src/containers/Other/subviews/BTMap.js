@@ -1,8 +1,8 @@
 import React,{PureComponent} from 'react'
 import { Map,Markers} from 'react-amap';
 const randomPosition = () => ({
-    longitude: 100 + Math.random() * 20,
-    latitude: 30 + Math.random() * 20
+    longitude: 100,
+    latitude:30,
 })
 const randomMarker = (len) => (
     Array(len).fill(true).map((e, idx) => ({
@@ -14,20 +14,22 @@ export default class BTMap extends PureComponent{
         super(props);
         this.mapCenter={longitude:120,latitude:30};
         this.state = {
+            setLang:"en",
             markers: randomMarker(1),
             center: {longitude:120,latitude:30}
         }
     }
+
     render(){
         {/*center={this.state.center}*/}
         return (
-            <div style={{display:"flex",height:"40vh",width:"100%",float:"right"}}>
-                <Map plugins={['ToolBar']} center={this.state.center} zoom={6}>
+            <div style={{display:"flex",height:"40vh",width:"100%",float:"right"}} >
+                <Map setLang="en" plugins={['ToolBar']} center={this.state.center} zoom={1}>
                     <Markers
                         markers={this.state.markers}
+                        setLang="en"
                     />
                 </Map>
-                {/*<Map amapkey="0230816951e0c0fabe27d840aa2d745" center={this.mapCenter}  zoom={1} />*/}
             </div>
         )
     }

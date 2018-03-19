@@ -2,6 +2,9 @@ import React,{PureComponent} from 'react'
 import moment from "moment"
 import {Upload,Modal,Form, Icon, Input, Button,DatePicker,TimePicker} from 'antd'
 import {getBlockInfo, getDataInfo} from "../../../utils/BTCommonApi";
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../locales/messages'
+const DemandMessages = messages.Demand;
 
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const FormItem = Form.Item;
@@ -201,7 +204,8 @@ export default class BTPublishDemand extends PureComponent{
                         <br/>
                         <Upload {...props} style={{display:"flex",flexDirection:"row"}}>
                             <Button>
-                                <Icon type="upload" /> 资源库筛选
+                                <Icon type="upload" />
+                                <FormattedMessage {...DemandMessages.SetScreening}/>
                             </Button>
                         </Upload>
                     </div>
