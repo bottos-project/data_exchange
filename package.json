@@ -4,7 +4,7 @@
   "private": true,
   "main": "main.js",
   "homepage": ".",
-  "DEV": false,
+  "DEV": true,
   "MOCK": false,
   "dependencies": {
     "antd": "^3.2.1",
