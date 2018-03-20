@@ -45,21 +45,19 @@ export default class BTAssets extends PureComponent{
     }
     componentDidMount(){
         let param={
-            "userName": "btd121",
-            "random": Math.ceil(Math.random()*100),
-            "signatures": "0xxxx"
+
         };
-        BTFetch('/asset/queryAllAsset','POST',JSON.stringify(param),{
-            full_path:false,
-            service:'service'
-        }).then(response=>{
-            if(response.code==1){
-                let data=JSON.parse(response.data);
-                console.log(data);
+        BTFetch('/asset/query','POST',param).then(response=>{
+            if(response&&response.code==0){
+                if(response.data.rowCount==0){
+                    message.warning('暂无市场资产')
+                    return;
+                }
+                let data=response.data.row;
                 let dataSource  = response.data && response.data.Row;
                 this.setState({
-                    dataSource:JSON.parse(response.data)
-                })
+                    dataSource:response.data.row
+                });
                 this.setState({
                     data:data,
                 })

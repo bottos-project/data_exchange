@@ -35,12 +35,12 @@ export default class BTAssetDetail extends PureComponent{
             },
             { title:  <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price',render:(item,record)=>{
                        return <div>
-                            <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
+                            {/*<img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>*/}
                             <span>{this.renderColumns(item,record,'price')}</span>
                         </div>
                     }
             },
-            { title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'upload_date', key: 'date',
+            { title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date',
                 render: (text, record) => this.renderColumns(text, record, 'date'),
             },
             { title: <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>, dataIndex: 'description', key: 'description',

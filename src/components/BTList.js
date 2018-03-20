@@ -59,10 +59,12 @@ export default class BTList extends PureComponent{
         };
         BTFetch('/asset/QueryByID','post',param)
             .then(res=>{
-                if(res.code==1){
+                if(res.code==0){
+                    console.log(res.data.row)
+
                     hashHistory.push({
                         pathname:'/assets/detail',
-                        query:res.data
+                        query:res.data.row
                     })
                 }else{
                     message.error('查询失败')
@@ -108,7 +110,9 @@ export default class BTList extends PureComponent{
             "ref_block_num": block.ref_block_num,
             "ref_block_prefix": block.ref_block_prefix,
             "expiration": block.expiration,
-            "scope": ["buyertest"],
+            "scope": [
+                JSON.parse(window.localStorage.account_info).username||''
+            ],
             "read_scope": [],
             "messages": [{
                 "code": "favoritemng",
@@ -121,7 +125,7 @@ export default class BTList extends PureComponent{
         BTFetch('/user/FavoriteMng','post',favorite)
             .then(res=>{
                 if(res.code==1){
-                    message.error('移除收藏成功')
+                    message.success('移除收藏成功')
 
                 }else{
                     message.error('删除收藏失败')

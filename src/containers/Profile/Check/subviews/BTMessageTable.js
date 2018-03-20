@@ -26,7 +26,7 @@ export default class BTMessageTable extends PureComponent{
         return  [
             { title: <FormattedMessage {...CheckMessages.AssetID}/>, dataIndex: 'asset_id', key: 'asset_id'},
             { title: <FormattedMessage {...CheckMessages.Consumer}/>, dataIndex: 'consumer', key:'consumer' },
-            { title: <FormattedMessage {...CheckMessages.DataPresaleId}/>, dataIndex: 'data_presale_id', key:'data_presale_id' },
+            { title: <FormattedMessage {...CheckMessages.DataPresaleId}/>, dataIndex: 'data_req_name', key:'data_req_name' },
             { title: <FormattedMessage {...CheckMessages.DataReqId}/>, dataIndex: 'data_req_id', key:'data_req_id' },
             { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username', key:'user_name' },
             { title: <FormattedMessage {...CheckMessages.View}/>,dataIndex:'asset_id',key:'x',render:(item)=>

@@ -285,6 +285,10 @@ export default class BTUploadAsset extends PureComponent{
                         <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
                     </div>
                     <div>
+                        <span className="align">截至时间 </span>
+                        <DatePicker onChange={(date,dateString)=>this.dataPicker(date,dateString)} />
+                    </div>
+                    <div>
                         <span className="align90">
                             <FormattedMessage {...PersonalAssetMessages.AssetType}/>
                         </span>

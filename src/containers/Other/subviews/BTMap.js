@@ -1,22 +1,26 @@
 import React,{PureComponent} from 'react'
 import { Map,Markers} from 'react-amap';
-const randomPosition = () => ({
+/*const randomPosition = () => ({
     longitude: 100,
     latitude:30,
-})
+})*/
 const randomMarker = (len) => (
     Array(len).fill(true).map((e, idx) => ({
         position: randomPosition()
     }))
 );
+const randomPosition = () => ({
+    longitude: [100,100],
+    latitude: [30,50]
+});
 export default class BTMap extends PureComponent{
     constructor(props){
         super(props);
         this.mapCenter={longitude:120,latitude:30};
         this.state = {
             setLang:"en",
-            markers: randomMarker(1),
-            center: {longitude:120,latitude:30}
+            markers: randomMarker(2),
+            center: randomPosition()
         }
     }
 

@@ -17,6 +17,7 @@ export default class BTAssetList extends PureComponent{
             exampledata:[],
             getRealUrl:'',
             getExampleUrl:'',
+            username:'',
         }
     }
    async handleOk(){
@@ -29,7 +30,7 @@ export default class BTAssetList extends PureComponent{
         let callBackData = {};
         if(this.state.type=='asset'){
             let filename={
-                userName:this.state.username,
+                userName:JSON.parse(window.localStorage.account_info).username,
                 fileName:this.state.value
             };
             let url= await getUrl('/asset/getDownLoadURL',filename);
@@ -46,7 +47,7 @@ export default class BTAssetList extends PureComponent{
             };
         }else if(this.state.type == 'assetTemp'){
             let filename1={
-                userName:this.state.username,
+                userName:JSON.parse(window.localStorage.account_info).username,
                 fileName:this.state.value
             };
             let url= await getUrl('/asset/getDownLoadURL',filename1);
@@ -86,17 +87,18 @@ export default class BTAssetList extends PureComponent{
     }
 
     componentDidMount(){
-        let username = ''
+        let username1 = ''
         if(window.localStorage.account_info!=undefined){
-            username = JSON.parse(window.localStorage.account_info).username;
+            username1 = JSON.parse(window.localStorage.account_info).username;
             this.setState({
-                username:username
+                username:username1
             })
+            console.log(this.state.username)
+
         }
 
-
         let param={
-            userName:this.state.username ||'',
+            userName:JSON.parse(window.localStorage.account_info).username ||'',
             random:Math.ceil(Math.random()*100),
             signature:'0xxxx'
         };

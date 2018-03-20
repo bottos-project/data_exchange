@@ -6,6 +6,7 @@ import "../styles.less"
 import BTFetch from "../../../../utils/BTFetch";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
+import {getAccount} from '../../../../tools/localStore'
 const PersonalDemandMessages = messages.PersonalDemand;
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const FormItem = Form.Item;
@@ -40,7 +41,9 @@ export default class BTPublishDemand extends PureComponent{
             textArea:"",
             number: value.number || 0,
             date:"",
-            dateString:""
+            dateString:"",
+            username:'',
+            token:''
         }
     }
     componentWillReceiveProps(nextProps) {
@@ -49,6 +52,18 @@ export default class BTPublishDemand extends PureComponent{
             const value = nextProps.value;
             this.setState(value);
         }
+    }
+    componentDidMount(){
+        let getName = getAccount();
+        if(getName){
+            this.setState({
+                username:getName.username,
+                token:getName.token,
+            },function(){
+                console.log(getName,this.state.username,this.state.token)
+            })
+        }
+
     }
     onChange(e){
         this.setState({
@@ -108,6 +123,7 @@ export default class BTPublishDemand extends PureComponent{
             date:this.state.date,
             dateString:(new Date(this.state.dateString).getTime())/1000, //时间戳
             textArea:this.state.textArea,
+            username:this.state.username,
         });
         if(!this.state.title || !this.state.date || !this.state.textArea){
             message.warning('请完善发布需求');
@@ -120,8 +136,8 @@ export default class BTPublishDemand extends PureComponent{
             args: {
                 data_req_id: window.uuid,
                 basic_info: {
-                    user_name: "btd121",
-                    session_id: "sessidtest232",
+                    user_name: this.state.username,
+                    session_id: this.state.token,
                     requirement_name: this.state.title,
                     feature_tag: 111,
                     sample_path: "pathtest",
@@ -161,14 +177,15 @@ export default class BTPublishDemand extends PureComponent{
                 if(res.code==0) {
                     // alert("successful")
                     message.success('需求发布成功');
-
                     this.setState({
                         visible: false,
                         title:"",
                         textArea:"",
                         number:0,
                         date:"",
+                        dateString:'',
                     });
+
                 }else{
                     message.error('需求发布失败')
                 }
@@ -183,7 +200,7 @@ export default class BTPublishDemand extends PureComponent{
                     <span>
                          <FormattedMessage {...PersonalDemandMessages.DemandName}/>
                     </span>
-                    <Input style={{width:170}} defaultValue={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
+                    <Input style={{width:170}} value={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
                 </div>
                 <div>
                     <span>
@@ -199,7 +216,7 @@ export default class BTPublishDemand extends PureComponent{
                     <span>
                          <FormattedMessage {...PersonalDemandMessages.DemandDescription}/>
                     </span>
-                    <TextArea rows={4} defaultValue={this.state.textArea} onChange={(e)=>this.onChangeTextArea(e)} />
+                    <TextArea rows={4} value={this.state.textArea} onChange={(e)=>this.onChangeTextArea(e)} />
                 </div>
                 {/*<div className="upLoad">
                     <span>上传样例:</span>

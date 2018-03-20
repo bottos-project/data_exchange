@@ -27,7 +27,7 @@ export default class BTOtherExchange extends PureComponent{
         ];
     }
     componentDidMount() {
-        BTFetch('http://10.104.10.152:8080/v2/dashboard/GetRecentTxList','POST',{limit:10},{full_path:true})
+        BTFetch('/dashboard/GetRecentTxList','POST',{limit:10})
             .then(res=>{
                 if ( res.code == 1) {
                     let data=res.data;

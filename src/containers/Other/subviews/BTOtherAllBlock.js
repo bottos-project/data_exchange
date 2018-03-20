@@ -61,7 +61,7 @@ export default class BTOtherAllBlock extends PureComponent{
                                 <FormattedMessage {...BlockBrowsingMessages.LastBlock}/>
                             </span>
                         </div>
-                        <p> </p>
+                        <p>87246 </p>
                     </div>
                     <div>
                         <div>

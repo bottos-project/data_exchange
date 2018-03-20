@@ -28,7 +28,7 @@ export default class BTHaveBought extends PureComponent{
             { title: <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>, dataIndex: 'description', key: 'description', render:(item)=>{
                 return <span>{item.length <= 10 ? item : item.substring(0,10)+'...'}</span>
                 }},
-            { title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'date', key: 'date' },
+            { title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date' },
             { title: <FormattedMessage {...PersonalAssetMessages.AssetOperation}/>, dataIndex: 'storage_path', key: 'x', render: (item) =>
                     <a href={item}>
                         <Icon type="download" style={{color:"black",fontWeight:900}}/>

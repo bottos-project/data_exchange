@@ -32,12 +32,13 @@ export default class BTOtherBlocks extends PureComponent{
             // pageSize:1,
             pageNum:15
         };
-        BTFetch('http://10.104.10.152:8080/v2/dashboard/GetBlockList', 'POST',param,{full_path:true}).then(res => {
+        BTFetch('/dashboard/GetBlockList', 'POST',param).then(res => {
             if (res.code == 1) {
                 let data=res.data.row;
                 this.setState({
                     data,
                 });
+                console.log(res);
             }
         });
     }

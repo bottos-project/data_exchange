@@ -104,11 +104,12 @@ const  props = {
             };
             let getDataInfos=(await getDataInfo(param));
             let blockInfo=_blockInfo.data;
+            let getscope=[JSON.parse(window.localStorage.account_info).username,"datafilemng"].sort();
             let data={
                 "ref_block_num": blockInfo.ref_block_num,
                 "ref_block_prefix": blockInfo.ref_block_prefix,
                 "expiration": blockInfo.expiration,
-                "scope": ["datafilemng"],
+                "scope": getscope,
                 "read_scope": [],
                 "messages": [{
                     "code": "datafilemng",
@@ -168,7 +169,7 @@ export default class BTMyAssetSet extends PureComponent{
                 {
                     title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_name', key: 'x', render: (item)=>{
                         return(
-                            <a href={this.state.href} onClick={()=>this.download(item)}>
+                            <a  onClick={()=>this.download(item)}>
                                 <Icon type="download"/>
                             </a>
                         )

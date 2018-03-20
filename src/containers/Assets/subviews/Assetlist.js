@@ -155,9 +155,9 @@ export default class Assetlist extends PureComponent{
         BTFetch('/user/FavoriteMng','post',favorite)
             .then(res=>{
                 if(res.code==1){
-                    message.success('加入购物车成功')
+                    message.success('加入收藏成功')
                 }else{
-                    message.error('加入购物车失败')
+                    message.error('加入收藏失败')
                 }
             })
 
