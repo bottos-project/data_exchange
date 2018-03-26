@@ -14,6 +14,5 @@ const storage = window.localStorage;
 let locale = storage.getItem('locale')
 
 const appLocale = (locale == 'en-US') ? enLocale : zhLocale;
-
 // module.exports = appLocale;
 export default appLocale;

@@ -169,7 +169,7 @@ module.exports = {
         },
         ProvideTheAsset:{
             id:'Demand.ProvideTheAsset',
-            defaultMessage:'提供资产'
+            defaultMessage:'推销资产'
         },
         DataDescription:{
             id:'Demand.DataDescription',
@@ -279,7 +279,7 @@ module.exports = {
         },
         LastBlock:{
             id:'BlockBrowsing.LastBlock',
-            defaultMessage:'最近区块'
+            defaultMessage:'最新区块'
         },
         TotalTrans:{
             id:'BlockBrowsing.TotalTrans',
@@ -411,6 +411,10 @@ module.exports = {
         UploadTime:{
             id:"PersonalAsset.UploadTime",
             defaultMessage:"上传时间"
+        },
+        ExpireTime:{
+            id:'PersonalAsset.ExpireTime',
+            defaultMessage:'过期时间'
         },
         ClickOrDragFileToThisAreaToUpload:{
             id:"PersonalAsset.ClickOrDragFileToThisAreaToUpload",
@@ -729,19 +733,19 @@ module.exports = {
     Check:{
         AssetID:{
             id:"Check.AssetID",
-            defaultMessage:"资产ID"
+            defaultMessage:"资产名称"
         },
         Consumer:{
             id:"Check.Consumer",
-            defaultMessage:"消费者"
+            defaultMessage:"推销者"
         },
         DataPresaleId:{
             id:"Check.DataPresaleId",
-            defaultMessage:"数据推销ID"
+            defaultMessage:"需求名称"
         },
-        DataReqId:{
+        DataTime:{
             id:"Check.DataReqId",
-            defaultMessage:"数据接受ID"
+            defaultMessage:"推销时间"
         },
         UserName:{
             id:"Check.UserName",
