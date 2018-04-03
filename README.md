@@ -6,10 +6,12 @@ Bottos web wallet is an application to transfer Bottos tokens. It provides a AI 
 ![browsing](https://github.com/Bottos-project/wallet/blob/master/pic/browsing.png)
 
 ## Providers sell data assets
+### 
 
 ![asset](https://github.com/Bottos-project/wallet/blob/master/pic/asset.png)
 
 ## Exchange history between providers and consumers
+###
 
 ![history](https://github.com/Bottos-project/wallet/blob/master/pic/history.png)
 
