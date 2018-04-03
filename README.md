@@ -1,7 +1,8 @@
-# [![Bottos Logo](https://github.com/Bottos-project/wallet/blob/master/pic/logo.png]v2.0 
+# [![Bottos Logo](https://github.com/Bottos-project/wallet/blob/master/pic/logo.png)]v2.0 
+
 Bottos web wallet is an application that provides BTO transfer. It provides a AI data market, which allows user exchange and store AI data assets. 
 
-V2.0 Release note：
+# V2.0 Release note：
 
    Improve the transaction speed with new consensus algorithm
    
