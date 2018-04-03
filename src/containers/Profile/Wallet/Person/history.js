@@ -102,7 +102,7 @@ export default class History extends PureComponent{
 
     componentDidMount(){
         //转账历史记录
-        let url='http://10.104.21.10:8080/v2/user/QueryTransfer';
+        let url='/user/QueryTransfer';
         let data={
             "userName": "btd121",
             "random": "fileName123",

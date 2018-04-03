@@ -39,7 +39,7 @@ function createWindow () {
   }
 
   // 打开开发者工具。
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 
   win.once('ready-to-show', () => {
     win.show()

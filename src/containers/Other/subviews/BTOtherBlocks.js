@@ -11,13 +11,16 @@ export default class BTOtherBlocks extends PureComponent{
         this.state={
             block_view:[],
             data:[],
+            rowCount:'',
+            newblock:'',
         }
+        this.onChange=this.onChange.bind(this)
     }
     columns (data){
         return [
-            { title: <FormattedMessage {...BlockBrowsingMessages.BlockNumber}/>, dataIndex: 'block_id', key: 'title',render:(data)=>{
+            { title: <FormattedMessage {...BlockBrowsingMessages.BlockNumber}/>, dataIndex: 'block_num', key: 'title'/*,render:(data)=>{
                 return <span>{data.substring(0,16)+'...'}</span>
-                } },
+                }*/ },
             { title: <FormattedMessage {...BlockBrowsingMessages.Date}/>, dataIndex: 'timestamp', key: 'date',render:(date)=>{
                 return <span>{date.split(' ')[0]}</span>
                 }},
@@ -28,24 +31,48 @@ export default class BTOtherBlocks extends PureComponent{
         ];
     }
     componentDidMount() {
+        this.getPagination(1,10)
+    }
+     getPagination(page,pageSize){
         let param={
-            // pageSize:1,
-            pageNum:15
+            pageSize:pageSize,
+            pageNum:page
         };
-        BTFetch('/dashboard/GetBlockList', 'POST',param).then(res => {
-            if (res.code == 1) {
-                let data=res.data.row;
-                this.setState({
-                    data,
-                });
-                console.log(res);
+        BTFetch('/dashboard/GetBlockList','POST',param).then(res => {
+            if (res&&res.code == 1) {
+                if(res.data.rowCount>0){
+                    let data=res.data.row;
+
+                    this.setState({
+                        data,
+                        rowCount:res.data.rowCount
+                    });
+                    // if(data==null)
+                    //     return;
+                     // newBlockOne=res.data.row[0].block_num||'';
+                    this.props.newblock();
+                }
             }
         });
     }
+    pagination(){
+        let pagination={
+            total:this.state.rowCount,
+            defaultCurrent:1,
+            pageSize:10,
+            showQuickJumper:true,
+            onChange:this.onChange
+        }
+        return pagination
+    }
+    onChange(page, pageSize) {
+        this.getPagination(page, pageSize);
 
+    }
     render(){
         const { data } = this.state;
         const columns = this.columns(data);
+
         return(
             <div className="OtherBlocksMessage">
                 {/*<div style={{width:"100%"}}>*/}
@@ -55,7 +82,7 @@ export default class BTOtherBlocks extends PureComponent{
                         </h3>
                         {/*<a >查看所有&lt;</a>*/}
                     </div>
-                    <Table bordered pagination columns={columns} dataSource={this.state.data}
+                    <Table bordered pagination={this.pagination()} columns={columns} dataSource={this.state.data}
                     />
                 {/*</div>*/}
             </div>

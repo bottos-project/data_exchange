@@ -6,18 +6,23 @@ import BTCryptTool from '../../../../tools/BTCryptTool'
 import {getBlockInfo,getDataInfo} from '../../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
+import {getAccount} from "../../../../tools/localStore";
+
 const PersonalAssetMessages = messages.PersonalAsset;
 const Dragger = Upload.Dragger;
 const callback_data = ''
-// const username = JSON.parse(window.localStorage.account_info).username;
-// const token = JSON.parse(window.localStorage.account_info).token;
-// console.log(getBlockInfo,getDataInfo)
+var fileHashArr=[];
 const  props = {
+
     customRequest(info){
         //生成文件存储路径url
         const file=info.file;
+        if(file.size > 204800){
+            message.error(window.localeInfo["PersonalAsset.UploadFileSize"])
+            return;
+        }
         let param={
-            "userName": JSON.parse(window.localStorage.account_info).username||'' ,
+            "userName": getAccount().username,
             "fileName": file.name,
             "fileSize": file.size,
             "filePolicy": "public",
@@ -31,10 +36,11 @@ const  props = {
                     let url=res.data;
                     up_ajax(url);
                 }else{
-                    message.error(`${info.file} 获取文件存储url失败`)
+                    message.error(`${info.file} window.localeInfo["PersonalAsset.FailedToGetUrlOfDocumentStorage"]`)
                 }
             }).catch(error=>{
-                message.error(`${info.file} 获取文件存储url失败`)
+            message.error(`${info.file} window.localeInfo["PersonalAsset.FailedToGetUrlOfDocumentStorage"]`)
+
         });
         let myHeaders=new Headers();
         myHeaders.append('Content-Type','text/plain')
@@ -65,7 +71,7 @@ const  props = {
         // 查询状态
         function inquire(){
             let data={
-                "userName": JSON.parse(window.localStorage.account_info).username||'',
+                "userName": getAccount().username,
                 "fileName": file.name
             };
            BTFetch('/asset/getFileUploadStat','post',data,{service:'service'})
@@ -73,11 +79,11 @@ const  props = {
                     if(res.code=='1'){
                         makeRequest();
                     }else{
-                        message.error(`${info.file}文件上传失败`);
+                        message.error(window.localeInfo["PersonalAsset.FailedToUploadTheFile"])
                         return ;
                     }
                 }).catch(error=>{
-                message.error(`${info.file} 文件上传失败 `);
+               message.error(window.localeInfo["PersonalAsset.FailedToUploadTheFile"])
             });
 
         }
@@ -91,8 +97,8 @@ const  props = {
                 "args":{
                     "file_hash":window.uuid,
                     "basic_info":{
-                        "user_name":JSON.parse(window.localStorage.account_info).username||'',
-                        "session_id":JSON.parse(window.localStorage.account_info).token||'',
+                        "user_name":getAccount().username,
+                        "session_id":getAccount().token,
                         "file_size":file.size,
                         "file_name":file.name,
                         "file_policy":"policytest",
@@ -104,7 +110,7 @@ const  props = {
             };
             let getDataInfos=(await getDataInfo(param));
             let blockInfo=_blockInfo.data;
-            let getscope=[JSON.parse(window.localStorage.account_info).username,"datafilemng"].sort();
+            let getscope=[getAccount().username,"datafilemng"].sort();
             let data={
                 "ref_block_num": blockInfo.ref_block_num,
                 "ref_block_prefix": blockInfo.ref_block_prefix,
@@ -123,14 +129,13 @@ const  props = {
             BTFetch('/asset/registerFile','post',data,{service:'service'})
                 .then(res=>{
                     if(res.code==1){
-                        message.success(info.file+`文件上传成功`)
+                        message.success(window.localeInfo["PersonalAsset.SuccessfulToUploadTheFile"])
                     }else{
-                        message.error(info.file+`文件上传失败`)
+                        message.error(window.localeInfo["PersonalAsset.FailedToUploadTheFile"])
                     }
                 }).catch(error=>{
-                message.error(info.file+`文件上传失败`)
+                message.error(window.localeInfo["PersonalAsset.FailedToUploadTheFile"])
             });
-
         };
 
     },
@@ -140,36 +145,41 @@ const  props = {
             console.log(info.file, info.fileList);
         }
         if (status === 'done') {
-            message.success(`${info.file.name} file uploaded successfully.`);
+            // message.success(`${info.file.name} file uploaded successfully.`);
+            //message.success(window.localeInfo["PersonalAsset.SuccessfulToUploadTheFile"])
         } else if (status === 'error') {
-            message.error(`${info.file.name} file upload failed.`);
+            message.error(window.localeInfo["PersonalAsset.FailedToUploadTheFile"])
         }
     },
 };
-
-
-
 export default class BTMyAssetSet extends PureComponent{
     constructor(props){
         super(props);
         this.state = {
             data:[]||callback_data,
-            hash:''
+            hash:'',
+            username:'',
+            token:''
         }
     };
 
     columns(data) {
-        console.log(data);
+        // console.log(data);
             return [
-                {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name', key: 'fileName'},
+                {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name', key: 'fileName',
+                    render:(item)=>{
+                        return <span>
+                           {item.length < 30? item:item.substring(0,30)+'...'}
+                        </span>
+                    }},
                 {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size', key: 'fileSize'},
-                {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleName}/>, dataIndex: 'sampleName', key: 'sampleName'},
-                {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleSize}/>, dataIndex: 'sampleSize', key: 'sampleSize'},
-                {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'date', key: 'date'},
+                /*{title: <FormattedMessage {...PersonalAssetMessages.AssetSampleName}/>, dataIndex: 'sampleName', key: 'sampleName'},
+                {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleSize}/>, dataIndex: 'sampleSize', key: 'sampleSize'},*/
+                {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date'},
                 {
                     title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_name', key: 'x', render: (item)=>{
                         return(
-                            <a  onClick={()=>this.download(item)}>
+                            <a onClick={()=>this.download1(item)}>
                                 <Icon type="download"/>
                             </a>
                         )
@@ -177,23 +187,26 @@ export default class BTMyAssetSet extends PureComponent{
                 },
             ];
      }
-     download(dataIndex){
+     download1(dataIndex){
         BTFetch('/asset/getDownLoadURL','post',{
-            'userName':JSON.parse(window.localStorage.account_info).username||'',
+            'userName':getAccount().username,
             'fileName':dataIndex
         }).then(res=>{
-            console.log(res);
+            console.log(this)
             if(res.code==1){
                 this.setState({href:res.data});
-                let iframe = document.createElement("iframe");
-                iframe.style.display = "none";
-                iframe.src = this.state.href;
-                document.body.appendChild(iframe);
+                console.log(res.data);
+                let a = document.createElement('a');
+                let url = res.data;
+                let filename = dataIndex;
+                a.href = url;
+                a.download=filename;
+                a.click();
             }else{
-                message.error(`${dataIndex} file download failed.`)
+                message.error(window.localeInfo["PersonalAsset.FailedToDownloadTheFile"])
             }
         }).catch(error=>{
-            message.error(`${dataIndex} file download failed.`)
+            message.error(window.localeInfo["PersonalAsset.FailedToDownloadTheFile"])
         })
     }
 
@@ -204,22 +217,30 @@ export default class BTMyAssetSet extends PureComponent{
     }
     componentDidMount() {
             let data={
-                "userName": JSON.parse(window.localStorage.account_info).username||'',
+                "userName": getAccount().username||'',
                 "random": Math.ceil(Math.random()*100),
                 "signatures": "0xxxx"
             };
             BTFetch('/asset/queryUploadedData','post',data)
                 .then(res=>{
-                    if( res.code == 0 ){
+                    if(res && res.code == 0 ){
                         if(res.data.rowCount == 0 ){
-                            message.warning('资源库为空')
+                           // message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
                             return ;
                         }
                         this.setState({
                             data:res.data.row
-                        })
+                        });
+                        for(let i of res.data.row){
+                            fileHashArr.push(i.file_hash)
+                        }
+
+                    }else{
+
                     }
-                });
+                }).catch(error=>{
+                    console.log(error)
+            });
 
 
     }
@@ -242,6 +263,7 @@ export default class BTMyAssetSet extends PureComponent{
                     columns={columns}
                     dataSource={this.state.data}
                 />
+                {/*<iframe ref="ifile" style={{display:'none'}} />*/}
             </div>
         )
     }

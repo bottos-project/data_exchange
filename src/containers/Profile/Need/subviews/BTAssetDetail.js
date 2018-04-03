@@ -2,6 +2,7 @@ import React,{PureComponent} from 'react'
 import {Popconfirm,Table,message} from 'antd';
 import BTFetch from "../../../../utils/BTFetch";
 import {FormattedMessage} from 'react-intl'
+import {getAccount} from "../../../../tools/localStore";
 import messages from '../../../../locales/messages'
 const PersonalDemandMessages = messages.PersonalDemand;
 
@@ -11,6 +12,8 @@ export default class BTAssetDetail extends PureComponent{
         const data = [];
         this.state = {
             data:[],
+            username:getAccount().username||'',
+            token:getAccount().token||'',
         };
     }
 
@@ -20,23 +23,27 @@ export default class BTAssetDetail extends PureComponent{
         })
 
         return [
-            { title: <FormattedMessage {...PersonalDemandMessages.RequirementName}/>, dataIndex: 'requirement_name', key: 'title' },
-            { title: <FormattedMessage {...PersonalDemandMessages.FeatureTag}/>, dataIndex: 'feature_tag', key: 'type' },
+            { title: <FormattedMessage {...PersonalDemandMessages.RequirementName}/>, dataIndex: 'requirement_name', key: 'title',render:(title)=>{
+                return <span>{title.length<25?title:title.substring(0,25)+'...'}</span>
+                } },
+            // { title: <FormattedMessage {...PersonalDemandMessages.FeatureTag}/>, dataIndex: 'feature_tag', key: 'type' },
             { title: <FormattedMessage {...PersonalDemandMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price' },
 
-            { title: <FormattedMessage {...PersonalDemandMessages.DemandDescription}/>, dataIndex: 'description', key: 'description' },
+            { title: <FormattedMessage {...PersonalDemandMessages.DemandDescription}/>, dataIndex: 'description', key: 'description' ,render:(title)=>{
+                return <span>{title.length<25?title:title.substring(0,25)+'...'}</span>
+                }},
             { title: <FormattedMessage {...PersonalDemandMessages.PublishDate}/>, dataIndex:'publish_date', key: 'publishDate',render:(time)=>{
                 return <span>{(new Date(time*1000)).toLocaleDateString()}</span>
                 }},
             { title: <FormattedMessage {...PersonalDemandMessages.Deadline}/>, dataIndex: 'expire_time', key: 'expire_time' ,render:(time)=>{
                     return <span>{(new Date(time*1000)).toLocaleDateString()}</span>
                 }},
-            { title: <FormattedMessage {...PersonalDemandMessages.SampleDownload}/>, dataIndex: 'sample_path', key: 'sample' ,render:(sample_path)=>{
+            /*{ title: <FormattedMessage {...PersonalDemandMessages.SampleDownload}/>, dataIndex: 'sample_path', key: 'sample' ,render:(sample_path)=>{
                     return(
                         <a href={sample_path}>Download</a>
                     )
 
-                }},
+                }},*/
            /* { title: 'Delete', dataIndex: 'delete',key:'y',
                 render: (text, record) => {
                     return (
@@ -64,10 +71,16 @@ export default class BTAssetDetail extends PureComponent{
         })
     }
     componentDidMount() {
+        /*if(getAccount()){
+            this.setState({
+                username:getAccount().username,
+                token:getAccount().token,
+            })
+        }*/
         let param={
             "pageSize":20,
             "pageNum":1,
-            "username":JSON.parse(window.localStorage.account_info).username||''
+            "username":getAccount().username
             // "featureTag":12345
         };
         BTFetch("/requirement/query",'post',param)
@@ -75,17 +88,17 @@ export default class BTAssetDetail extends PureComponent{
                 console.log(res.data);
                 if(res&&res.code==0){
                     if(res.data.rowCount==0){
-                        message.warning('No Data');
+                        // message.warning(window.localeInfo["PersonalDemand.ThereIsNoDataForTheTimeBeing"])
                         return;
                     }
                     this.setState({
                         data:res.data.row,
                     });
                 }else{
-                    message.warn('暂无发布资产')
+                    message.warning(window.localeInfo["PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing"])
                 }
         }).catch(error=>{
-            message.error('暂无发布资产')
+                    message.error(window.localeInfo["PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing"])
         })
     }
 

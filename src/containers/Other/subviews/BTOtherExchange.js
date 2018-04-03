@@ -10,7 +10,9 @@ export default class BTOtherExchange extends PureComponent{
         super(props)
         this.state={
             data:[],
+            rowCount:''
         }
+        this.onChange=this.onChange.bind(this)
     }
     columns (data){
         return [
@@ -27,19 +29,40 @@ export default class BTOtherExchange extends PureComponent{
         ];
     }
     componentDidMount() {
-        BTFetch('/dashboard/GetRecentTxList','POST',{limit:10})
+        this.getPagination(1,10)
+    }
+    pagination(){
+        let pagination={
+            total:this.state.rowCount,
+            defaultCurrent:1,
+            pageSize:10,
+            showQuickJumper:true,
+            onChange:this.onChange
+        }
+        return pagination
+    }
+    getPagination(page,pageSize) {
+        let param = {
+            pageSize: pageSize,
+            pageNum: page
+        };
+        BTFetch('/dashboard/GetRecentTxList','POST',param)
             .then(res=>{
                 if ( res.code == 1) {
-                    let data=res.data;
+                    let data=res.data.row;
                     this.setState({
                         data,
+                        rowCount:res.data.rowCount,
                     })
                 }
             }).catch(error=>{
-                message.warning('暂无数据')
+            message.success(window.localeInfo["BlockBrowsing.SuccessfulPromote"])
         })
     }
-
+    onChange(page, pageSize) {
+        console.log(page,pageSize)
+        this.getPagination(page, pageSize)
+    }
     render(){
         const { data } = this.state;
         const columns = this.columns(data);
@@ -52,7 +75,7 @@ export default class BTOtherExchange extends PureComponent{
                     </h3>
                     {/*<a >查看所有&lt;</a>*/}
                 </div>
-                    <Table bordered pagination columns={columns} dataSource={this.state.data}
+                    <Table bordered pagination={this.pagination()} columns={columns} dataSource={this.state.data}
                     />
                 {/*</div>*/}
             </div>

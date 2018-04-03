@@ -4,6 +4,8 @@ import BTFetch from "../../../../utils/BTFetch";
 import {hashHistory} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
+import {getAccount} from "../../../../tools/localStore";
+
 const CheckMessages = messages.Check;
 
 
@@ -20,17 +22,26 @@ export default class BTMessageTable extends PureComponent{
             data_req_id:"",
             data:[],
             linkto:'',
+            username:getAccount().username||'',
+            token:getAccount().token||''
         }
     }
     columns (data){
         return  [
-            { title: <FormattedMessage {...CheckMessages.AssetID}/>, dataIndex: 'asset_id', key: 'asset_id'},
+            { title: <FormattedMessage {...CheckMessages.AssetID}/>, dataIndex: 'asset_name', key: 'asset_id',render:(item)=>{
+                    return <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
+                }},
             { title: <FormattedMessage {...CheckMessages.Consumer}/>, dataIndex: 'consumer', key:'consumer' },
-            { title: <FormattedMessage {...CheckMessages.DataPresaleId}/>, dataIndex: 'data_req_name', key:'data_req_name' },
-            { title: <FormattedMessage {...CheckMessages.DataReqId}/>, dataIndex: 'data_req_id', key:'data_req_id' },
-            { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username', key:'user_name' },
+            { title: <FormattedMessage {...CheckMessages.DataPresaleId}/>, dataIndex: 'data_req_name', key:'data_req_name',
+                render:(item)=>{
+                    return <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
+                }},
+            { title: <FormattedMessage {...CheckMessages.DataTime}/>, dataIndex: 'createTime', key:'data_req_id' },
+            // { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username', key:'user_name' },
             { title: <FormattedMessage {...CheckMessages.View}/>,dataIndex:'asset_id',key:'x',render:(item)=>
-                    <Button onClick={()=>this.lookfor(item)}>查看</Button>
+                    <Button onClick={()=>this.lookfor(item)}>
+                        <FormattedMessage {...CheckMessages.View}/>
+                    </Button>
             }
         ];
     }
@@ -45,26 +56,35 @@ export default class BTMessageTable extends PureComponent{
             .then(res=>{
                 if(res.code==0){
                     if(res.data.rowCount==0){
-                        message.warning('暂无数据');
+                        message.warning(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])
                         return;
                     }
                     let data=res.data.row;
-                    hashHistory.push({
-                        pathname:'/assets/detail',
-                        query:data
-                    })
+                    if(data.length==1){
+                        hashHistory.push({
+                            pathname:'/assets/detail',
+                            query:data[0]
+                        })
+                    }
+
                 }else{
-                    message.error('查询失败')
+                    message.error(window.localeInfo["Check.QueryFailure"])
                 }
             })
             .catch(error=>{
-                message.error('查询失败')
+                message.error(window.localeInfo["Check.QueryFailure"])
 
             })
     }
     componentDidMount() {
+        /*if(getAccount()){
+            this.setState({
+                username:getAccount().username,
+                token:getAccount().token,
+            })
+        }*/
         let param={
-            userName: JSON.parse(window.localStorage.account_info).username||'',
+            userName: this.state.username,
             random: Math.ceil(Math.random()*100),
             signatures: "0xxxx"
         };
@@ -73,14 +93,14 @@ export default class BTMessageTable extends PureComponent{
             .then(res=>{
                 if(res.code==0){
                     if(res.data.rowCount==0){
-                        message.warning('暂无个人消息');
+                        // message.warning(window.localeInfo["Check.ThereIsNoPersonalMessageForTheTimeBeing"])
                         return;
                     }
                     this.setState({
                         data:res.data.row,
                     })
                 }else{
-                    message.warning('暂无消息')
+                    message.warning(window.localeInfo["Check.ThereIsNoPersonalMessageForTheTimeBeing"])
                 }
             }).catch(error=>{
             console.log(error)

@@ -6,6 +6,8 @@ import {Icon,Button,message} from 'antd'
 import {getBlockInfo, getDataInfo} from "../../../utils/BTCommonApi";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
+import {getAccount} from "../../../tools/localStore";
+
 const AssetMessages = messages.Asset;
 const IconText = ({ type, text }) => (
     <span>
@@ -25,20 +27,12 @@ export default class Assetlist extends PureComponent{
     }
 
     componentDidMount(){
-        let username = ''
-        let token = ''
-        if(window.localStorage.account_info){
-            username=JSON.parse(window.localStorage.account_info).username||'';
-            token=JSON.parse(window.localStorage.account_info).token||'';
-            console.log({
-                username,
-                token
-            })
-            this.setState({
-                username:username,
-                token:token
-            })
-        }
+      /* if(getAccount()){
+           this.setState({
+               username:getAccount().username,
+               token:getAccount().token,
+           })
+       }*/
     }
 
     commitAsset(){
@@ -48,13 +42,13 @@ export default class Assetlist extends PureComponent{
     };
     async buy(){
         if(this.state.data.username == this.state.username){
-            message.warning('不允许购买自己的资产！！！');
+            message.warning(window.localeInfo["Asset.YouAreNotAllowedToBuyYourOwnAssets"])
             return;
         }
         //获取区块信息
         let _block=(await getBlockInfo());
         if(_block.code != 0){
-            message.error('获取区块信息失败');
+            message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
             return;
         }
         let block=_block.data;
@@ -75,7 +69,7 @@ export default class Assetlist extends PureComponent{
          };
         let _getDataBin=(await getDataInfo(data));
         if(_getDataBin.code != 0){
-            message.error('获取区块数据失败');
+            message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
             return;
         }
         //数组排序
@@ -104,16 +98,27 @@ export default class Assetlist extends PureComponent{
             .then(res=>{
             console.log(res);
             if(res.code == 1){
-                message.success('购买成功')
+                message.success(window.localeInfo["Asset.SuccessfulPurchase"])
+            }else if(res.code == 4001){
+                message.warning(window.localeInfo["Asset.InsufficientBalance"])
+            }else if(res.code == 4002){
+                message.warning(window.localeInfo["Asset.UnexpectedError"])
             }else{
-                message.error('购买失败')
+                message.error(window.localeInfo["Asset.FailedPurchase"])
             }
+        }).catch(error=>{
+
         })
     }
     async addShopCart(data){
+        message.destroy();
+        if(!getAccount()){
+            message.warning(window.localeInfo["Asset.PleaseLogInFirst"])
+            return;
+        }
         let _block=(await getBlockInfo());
         if(_block.code!=0){
-            message.error('获取区块信息失败');
+            message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
             return;
         }
         let block=_block.data;
@@ -122,10 +127,10 @@ export default class Assetlist extends PureComponent{
             "code":"favoritemng",
             "action":"favoritepro",
             "args":{
-                "user_name":this.state.username,
-                "session_id":this.state.token,
+                "user_name":getAccount().username,
+                "session_id":getAccount().token,
                 "op_type":"add",
-                "goods_type":"typetest",
+                "goods_type":data.asset_type,
                 "goods_id":data.asset_id,
                 "signature":"signatest"
             }
@@ -133,7 +138,7 @@ export default class Assetlist extends PureComponent{
 
         let _getDataBin=(await getDataInfo(param));
         if(_getDataBin.code!=0){
-            message.error('获取区块数据失败');
+            message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
             return;
         }
         let favorite={
@@ -141,7 +146,7 @@ export default class Assetlist extends PureComponent{
             "ref_block_prefix": block.ref_block_prefix,
             "expiration": block.expiration,
             "scope": [
-                this.state.username
+                getAccount().username
             ],
             "read_scope": [],
             "messages": [{
@@ -155,16 +160,15 @@ export default class Assetlist extends PureComponent{
         BTFetch('/user/FavoriteMng','post',favorite)
             .then(res=>{
                 if(res.code==1){
-                    message.success('加入收藏成功')
+                    message.success(window.localeInfo["Asset.DeleteCollect"])
                 }else{
-                    message.error('加入收藏失败')
+                    message.error(window.localeInfo["Asset.FailedCollect"])
                 }
             })
 
     }
     render(){
         let data = this.state.data;
-        console.log(data);
         let linkto = {
             pathname:'/assets/detail',
             query:data,
@@ -174,8 +178,8 @@ export default class Assetlist extends PureComponent{
                 <div>
                     <div>
                         <div className="headAndShop">
-                            <h4><Link to={linkto}>{data.asset_name}</Link></h4>
-                            <Link onClick={()=>this.addShopCart(data)}><Icon type="shopping-cart"/></Link>
+                            <h4><Link to={linkto}>{data.asset_name.length<25?data.asset_name:data.asset_name.substring(0,25)+'...'}</Link></h4>
+                            <Link onClick={()=>this.addShopCart(data)}><Icon type="star-o"/></Link>
                         </div>
                         <p>
                             <FormattedMessage {...AssetMessages.Publisher}/>
@@ -183,8 +187,9 @@ export default class Assetlist extends PureComponent{
                         </p>
                         <p>{data.feature_tag}</p>
                         <div>
-                            <img src="./img/token.png" width='12' alt=""/>
+                            <FormattedMessage {...AssetMessages.ExpectedPrice}/>
                             <span>{data.price}</span>
+                            <img src="./img/token.png" width='18' alt="" style={{paddingLeft:'4px'}}/>
                         </div>
                     </div>
                 </div>

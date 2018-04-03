@@ -1,7 +1,9 @@
 import React,{PureComponent} from 'react'
-import { Radio, Row, Col,Modal } from 'antd';
+import { Radio, Row, Col,Modal,Button } from 'antd';
 import BTFetch from "../utils/BTFetch";
 import {message} from "antd/lib/index";
+import {getAccount} from "../tools/localStore";
+import {Link} from 'react-router'
 const RadioGroup = Radio.Group;
 const getUrl = async(reqUrl,params)=>{
     return await BTFetch(reqUrl,'POST',params)
@@ -30,7 +32,7 @@ export default class BTAssetList extends PureComponent{
         let callBackData = {};
         if(this.state.type=='asset'){
             let filename={
-                userName:JSON.parse(window.localStorage.account_info).username,
+                userName:getAccount().username,
                 fileName:this.state.value
             };
             let url= await getUrl('/asset/getDownLoadURL',filename);
@@ -47,7 +49,7 @@ export default class BTAssetList extends PureComponent{
             };
         }else if(this.state.type == 'assetTemp'){
             let filename1={
-                userName:JSON.parse(window.localStorage.account_info).username,
+                userName:getAccount().username,
                 fileName:this.state.value
             };
             let url= await getUrl('/asset/getDownLoadURL',filename1);
@@ -87,7 +89,12 @@ export default class BTAssetList extends PureComponent{
     }
 
     componentDidMount(){
-        let username1 = ''
+        if(getAccount()){
+            this.setState({
+                username:getAccount().username
+            })
+        }
+       /* let username1 = ''
         if(window.localStorage.account_info!=undefined){
             username1 = JSON.parse(window.localStorage.account_info).username;
             this.setState({
@@ -95,10 +102,10 @@ export default class BTAssetList extends PureComponent{
             })
             console.log(this.state.username)
 
-        }
+        }*/
 
-        let param={
-            userName:JSON.parse(window.localStorage.account_info).username ||'',
+        /*let param={
+            userName:getAccount().username,
             random:Math.ceil(Math.random()*100),
             signature:'0xxxx'
         };
@@ -106,25 +113,31 @@ export default class BTAssetList extends PureComponent{
             .then(res=>{
                 if(res.code==0){
                     if(res.data.rowCount==0){
-                        message.warning('暂无文件资产库')
+                        message.warning(window.localeInfo["Header.ThereIsNoFileResourceSetForTheTimeBeing"]);
+                        return;
                     }
                     this.setState({
                         exampledata:res.data.row,
                     })
                     console.log(this.state.exampledata)
                 }else{
-                    message.warning('获取文件资源库失败')
+                    message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
                     return;
                 }
             })
             .catch(error=>{
-                message.warning('获取文件资源库失败')
-            })
+                message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
+            })*/
+    }
+    file(){
+        this.setState({
+            visible:false,
+        });
     }
     render(){
-        this.setState({data:this.props.examplefile});
-        const data=this.props.examplefile||[];
-        // console.log(data);
+        // this.setState({data:this.props.examplefile});
+        const data=this.props.newdata||[];
+        // console.log(this.props.newdata);
         return(
             <Modal visible={this.state.visible}
                 onOk={()=>this.handleOk()}
@@ -134,15 +147,16 @@ export default class BTAssetList extends PureComponent{
                     <RadioGroup style={{ width: '100%' }}  onChange={(e)=>this.onChange(e)} defaultValue=''>
                         <Col>
                             {
-                                this.state.exampledata.map((value,index)=>{
+                                data.map((value,index)=>{
                                         return (
-                                            <Row key={index} span={8}><Radio value={value.file_name+','+value.auth_path}>{value.file_name}</Radio></Row>
+                                            <Row key={index} span={8}><Radio value={value.file_name+','+value.file_hash}>{value.file_name}</Radio></Row>
                                         )
                                     })
                             }
                             {/*<Row span={8}><Radio value="B">人物表情图片.zip</Radio></Row>*/}
                         </Col>
                     </RadioGroup>
+                    {/*<Button  onClick={()=>this.file()}><Link to='/profile/asset'>上传资源文件</Link></Button>*/}
                 </div>
             </Modal>
         )

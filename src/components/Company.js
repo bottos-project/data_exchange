@@ -43,7 +43,7 @@ class company extends PureComponent {
                         getFieldDecorator('username',{
 
                         })(
-                            <Input placeholder="请输入用户名" id="error1" />
+                            <Input placeholder={window.localeInfo["Header.PleaseEnterTheUserName"]} id="error1" />
                         )
                     }
                 </FormItem>
@@ -51,8 +51,16 @@ class company extends PureComponent {
                 >
                     {
                         getFieldDecorator('password',{})(
-                            <Input placeholder="密码" id="error2" />
+                            <Input placeholder={window.localeInfo["Header.PleaseEnterThePassword"]} type="password" id="error2" />
 
+                        )
+                    }
+                </FormItem>
+                <FormItem {...formItemLayout}>
+                    {
+                        getFieldDecorator('newpassword',{
+                        })(
+                            <Input placeholder={window.localeInfo["Header.PleaseEnterTheSurePassword"]} type="password" id="error1"/>
                         )
                     }
                 </FormItem>
@@ -85,12 +93,11 @@ class company extends PureComponent {
                     }
                     <Button>发送验证码</Button>
                 </FormItem>*/}
-
                 <FormItem
                 >
                     {
                         getFieldDecorator('companyName',{})(
-                            <Input placeholder="公司名" id="error2" />
+                            <Input placeholder={window.localeInfo["Header.PleaseEnterTheCompanyName"]} id="error2" />
 
                         )
                     }
@@ -100,7 +107,6 @@ class company extends PureComponent {
                     {
                         getFieldDecorator('contacts',{})(
                             <Input placeholder="公司联系人" id="error2" />
-
                         )
                     }
                 </FormItem> */}
@@ -109,11 +115,9 @@ class company extends PureComponent {
                     {
                         getFieldDecorator('contactsPhone',{})(
                             <Input placeholder="联系人手机号" id="error2" />
-
                         )
                     }
                 </FormItem> */}
-
             </div>
         );
     }

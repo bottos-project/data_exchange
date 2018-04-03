@@ -90,7 +90,7 @@ export default class BTPublishDemand extends PureComponent{
     }
     disabledDate(current) {
         // Can not select days before today and today
-        return current && current < moment().endOf('day');
+        return current < moment().endOf('day');
     }
 
     onChangeTextArea(e){
@@ -134,7 +134,7 @@ export default class BTPublishDemand extends PureComponent{
         blockData = await getDataInfo(blockData);
         var myHeaders = new Headers();
         myHeaders.append('Content-Type','text/plain');
-        fetch("http://10.104.10.152:8080/v2/requirement/Publish",{
+        fetch("/requirement/Publish",{
             method:"post",
             header:myHeaders,
             body:JSON.stringify({
@@ -188,6 +188,7 @@ export default class BTPublishDemand extends PureComponent{
                         <span>Deadline:</span>
                         <br/>
                         <DatePicker
+                            placeholder={window.localeInfo["PersonalAsset.SelectDate"]}
                             onChange={(date,dateString)=>this.onChangeDate(date,dateString)}
                             style={{width:"100%"}}
                             disabledDate = {(current)=>this.disabledDate(current)}

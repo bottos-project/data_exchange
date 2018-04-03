@@ -34,6 +34,10 @@ module.exports = {
         }
     },
     Header:{
+        PleaseLogInFirst:{
+            id:'Header.PleaseLogInFirst',
+            defaultMessage:'请先登录'
+        },
         Asset:{
             id:'Header.Asset',
             defaultMessage:'资产'
@@ -41,6 +45,10 @@ module.exports = {
         Demand:{
             id:'Header.Demand',
             defaultMessage:'需求'
+        },
+        Wallet:{
+            id:'Header.Wallet',
+            defaultMessage:'钱包'
         },
         Collect:{
             id:'Header.Collect',
@@ -52,7 +60,7 @@ module.exports = {
         },
         Logout:{
             id:'Header.Logout',
-            defaultMessage:'登出'
+            defaultMessage:'退出'
         },
         ImportKeystore:{
             id:'Header.ImportKeystore',
@@ -72,11 +80,27 @@ module.exports = {
         },
         Login:{
             id:'Header.Login',
-            defaultMessage:'登入'
+            defaultMessage:'登录'
         },
         Register:{
             id:'Header.Register',
             defaultMessage:'注册'
+        },
+        YourAccountHasBeenRegisteredSuccessfully:{
+            id:'Header.YourAccountHasBeenRegisteredSuccessfully',
+            defaultMessage:'您的账号已经注册成功，请备份keystore文件'
+        },
+        BackupYourKeystore:{
+            id:'Header.BackupYourKeystore',
+            defaultMessage:'备份keystore文件'
+        },
+        PersonalUser:{
+            id:'Header.PersonalUser',
+            defaultMessage:'个人用户'
+        },
+        EnterpriseUser:{
+            id:'Header.EnterpriseUser',
+            defaultMessage:'企业用户'
         },
     },
     Dashboard:{
@@ -118,17 +142,23 @@ module.exports = {
         },
         IncrementalAsset:{
             id:'Dashboard.IncrementalAsset',
-            defaultMessage:'新增资产'
+            defaultMessage:'资产总量'
         },
         IncrementalDemand:{
             id:'Dashboard.IncrementalDemand',
-            defaultMessage:'新增需求'
+            defaultMessage:'需求总量'
         },
         Yesterday:{
             id:'Dashboard.Yesterday',
             defaultMessage:'昨日：'
         }
 
+    },
+    Login:{
+        ImportTheKeyStore:{
+            id:'Login.ImportTheKeyStore',
+            defaultMessage:'导入Keystore文件'
+        }
     },
     Demand:{
         Demand:{
@@ -141,7 +171,7 @@ module.exports = {
         },
         DataDetails:{
             id:'Demand.DataDetails',
-            defaultMessage:'数据详情'
+            defaultMessage:'需求详情'
         },
         Publisher:{
             id:'Demand.Publisher',
@@ -191,7 +221,7 @@ module.exports = {
         },
         DataDetails:{
             id:'Asset.DataDetails',
-            defaultMessage:'数据详情'
+            defaultMessage:'资产详情'
         },
         AssetID:{
             id:'Asset.AssetID',
@@ -229,6 +259,14 @@ module.exports = {
             id:'Asset.Publisher',
             defaultMessage:'发布人：'
         },
+        AreYouSureToBuyThisAsset:{
+            id:'Asset.AreYouSureToBuyThisAsset',
+            defaultMessage:'确认购买该资产？'
+        },
+        FeatureTag:{
+            id:'Asset.FeatureTag',
+            defaultMessage:'标签:'
+        }
     },
     History:{
         HistoryTransaction:{
@@ -372,9 +410,13 @@ module.exports = {
             id:"PersonalAsset.UploadTheSample",
             defaultMessage:"上传样例"
         },
-        SetScreening:{
-            id:'PersonalAsset.SetScreening',
-            defaultMessage:'资源库筛选'
+        SetScreeningSample:{
+            id:'PersonalAsset.SetScreeningSample',
+            defaultMessage:'选择样例'
+        },
+        SetScreeningFile:{
+            id:'PersonalAsset.SetScreeningFile',
+            defaultMessage:'选择文件'
         },
         AssetName:{
             id:"PersonalAsset.AssetName",
@@ -388,9 +430,17 @@ module.exports = {
             id:"PersonalAsset.ExpectedPrice",
             defaultMessage:"期望价格"
         },
+        Deadline:{
+            id:"PersonalAsset.Deadline",
+            defaultMessage:"截止时间"
+        },
         AssetType:{
             id:"PersonalAsset.AssetType",
             defaultMessage:"资产类型"
+        },
+        AssetTypePrice:{
+            id:"PersonalAsset.AssetTypePrice",
+            defaultMessage:"价格"
         },
         AssetFeatureTag:{
             id:"PersonalAsset.AssetFeatureTag",
@@ -524,7 +574,7 @@ module.exports = {
         },
         Deadline:{
             id:'PersonalDemand.Deadline',
-            defaultMessage:'截止时间:'
+            defaultMessage:'截止时间'
         },
         Publish:{
             id:"PersonalDemand.Publish",
@@ -649,18 +699,22 @@ module.exports = {
             id:"Wallet.ExportTheAccount",
             defaultMessage:"导出账号"
         },
-        // PleaseEnterTheOriginalPassword:{
-        //     id:"Wallet.PleaseEnterTheOriginalPassword",
-        //     defaultMessage:"请输入原密码"
-        // },
-        // PleaseEnterTheNewPassword:{
-        //     id:"Wallet.PleaseEnterTheNewPassword",
-        //     defaultMessage:"请输入新密码"
-        // },
-        // PleaseEnterTheNewPasswordAgain:{
-        //     id:"Wallet.PleaseEnterTheNewPasswordAgain",
-        //     defaultMessage:"请再次输入新密码"
-        // },
+        PleaseEnterTheOriginalPassword:{
+            id:"Wallet.PleaseEnterTheOriginalPassword",
+            defaultMessage:"请输入原密码"
+        },
+        PleaseEnterTheNewPassword:{
+            id:"Wallet.PleaseEnterTheNewPassword",
+            defaultMessage:"请输入新密码"
+        },
+        PleaseEnterTheNewPasswordAgain:{
+            id:"Wallet.PleaseEnterTheNewPasswordAgain",
+            defaultMessage:"请再次输入新密码"
+        },
+        PleaseEnterTheKeystorePassword:{
+            id:"Wallet.PleaseEnterTheKeystorePassword",
+            defaultMessage:"请输入keystore密码"
+        },
         TransactionID:{
             id:"Wallet.TransactionID",
             defaultMessage:"交易ID"
@@ -728,7 +782,19 @@ module.exports = {
         ImportTheKeyStore:{
             id:"Wallet.ImportTheKeyStore",
             defaultMessage:"导入keystore文件"
-        }
+        },
+        TargetAccount:{
+            id:"Wallet.TargetAccount",
+            defaultMessage:"对方账户"
+        },
+        TransferAmount:{
+            id:"Wallet.TheMoneyToBeTransferred",
+            defaultMessage:"转账金额"
+        },
+        Password:{
+            id:"Wallet.Password",
+            defaultMessage:"账户密码"
+        },
     },
     Check:{
         AssetID:{

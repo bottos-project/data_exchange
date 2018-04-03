@@ -11,30 +11,35 @@ export default class BTOtherAllBlock extends PureComponent{
             block_view:[],
             Total_BTO:'',
             Total_Trans:'',
-            Total_Nodes:''
+            Total_Nodes:'',
+            Total_Block:''
         }
     }
     componentDidMount(){
         //获取Total_BTO总量
-        BTFetch('/dashboard/GetSumTxAmount','GET').then(res=>{
-            if(res.code == 1){
+        /*BTFetch('/dashboard/GetSumTxAmount','GET').then(res=>{
+            if(res&&res.code == 1){
                 this.setState({
                     Total_BTO:res.data.num
                 })
             }
-        });
+        });*/
         //获取Total_Trans总量
         BTFetch('/dashboard/GetAllTxNum','GET').then(res=>{
-            if(res.code == 1){
+            if(res&&res.code == 1){
                 this.setState({
                     Total_Trans:res.data.num
                 })
             }
         });
+
         BTFetch('/dashboard/GetNodeInfos','GET').then(res=>{
-            if(res.code == 0){
+            if(res&&res.code == 0){
                 // let Total_Nodes=JSON.parse(res.data).length;
-                console.log(res.data);
+                if(res.data==null){
+                    return ;
+                }
+                console.log(res.data)
                 this.setState({
                     Total_Nodes:res.data.length
                 })
@@ -53,7 +58,7 @@ export default class BTOtherAllBlock extends PureComponent{
                                 <FormattedMessage {...BlockBrowsingMessages.TotalBTO}/>
                             </span>
                         </div>
-                        <p>{this.state.Total_BTO}</p>
+                        <p>1,000,000,000</p>
                     </div>
                     <div>
                         <div>
@@ -61,7 +66,7 @@ export default class BTOtherAllBlock extends PureComponent{
                                 <FormattedMessage {...BlockBrowsingMessages.LastBlock}/>
                             </span>
                         </div>
-                        <p>87246 </p>
+                        <p>{this.props.lastBlock} </p>
                     </div>
                     <div>
                         <div>

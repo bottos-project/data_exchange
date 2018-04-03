@@ -11,6 +11,8 @@ import appLocale from './locales'
 import './static/css/common.less'
 import RouterMap from './router/routerMap'
 import path from 'path'
+
+window.localeInfo = appLocale.messages;
 // 将config文件设置为全局window对象
 window.config = require('./utils/config')
 const store = configureStore();

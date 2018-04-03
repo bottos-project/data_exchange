@@ -88,7 +88,7 @@ class BTHeader extends PureComponent{
     handlePublishDemand(){
         message.destroy()
         if(!this.state.isLogin){
-            message.info("请先登录")
+            message.info(window.localeInfo["Header.PleaseLogInFirst"]);
             return
         }
         this.publishModal.setState({
@@ -99,7 +99,7 @@ class BTHeader extends PureComponent{
     handlePublishAsset(){
         message.destroy()
         if(!this.state.isLogin){
-            message.info("请首先登录")
+            message.info(window.localeInfo["Header.PleaseLogInFirst"]);
             return
         }
         this.publishAssetModal.setState({
@@ -126,17 +126,23 @@ class BTHeader extends PureComponent{
     logout(){
         let url = '/user/logout'
         let account = getAccount()
-        let params = {
-            token:account.token
+        if(!account){
+            message.success(window.localeInfo["Header.SuccessToLogOut"]);
+            this.setState({
+                isLogin:false
+            })
+            return;
         }
-        BTFetch(url,'POST',params).then(response=>{
+        BTFetch(url,'POST').then(response=>{
             if(response && response.code=='0'){
                 deleteAccount()
                 this.setState({isLogin:false})
-                message.success('退出登录成功')
+                message.success(window.localeInfo["Header.SuccessToLogOut"]);
             }else{
-                message.error('退出登录失败')
+                message.error(window.localeInfo["Header.FailedLogOut"]);
             }
+        }).catch(error=>{
+            message.error(window.localeInfo["Header.FailedLogOut"]);
         })
     }
 
@@ -158,11 +164,12 @@ class BTHeader extends PureComponent{
                         <FormattedMessage {...HeaderMessages.Collect}/>
                     </Link>
                 </Menu.Item>
-                {/* <Menu.Item key="3">
-                    <Link to="/profile/setting">
-                        <FormattedMessage {...HeaderMessages.Setting}/>
+                 <Menu.Item key="3">
+                    <Link to="/profile/wallet">
+                        {/*<FormattedMessage {...HeaderMessages.Setting}/>*/}
+                        <FormattedMessage {...HeaderMessages.Wallet}/>
                     </Link>
-                </Menu.Item> */}
+                </Menu.Item>
                 <Menu.Divider/>
                 <Menu.Item key="4">
                     <a href="#" onClick={()=>{this.logout()}}>
@@ -241,18 +248,21 @@ class BTHeader extends PureComponent{
                             <div className="center">
                                 <Dropdown overlay={this.menu()}>
                                         <img className="userIcon"
-                                            src="./img/usericon.jpeg"
+                                            src="https://www.botfans.org/uc_server/images/noavatar_middle.gif"
                                         />
                                 </Dropdown>
                                 <Link to="/profile/check" style={{color:'rgba(0, 0, 0, 0.65)'}}><i className="iconfont icon-email" style={{fontSize:20,marginLeft:10}} onClick={()=>{this.checkMessages()}}/></Link>
                             </div>
 
                             :
-                            <div className='isLogin'><span onClick={()=>this.isShowLogin()}>
-                                <FormattedMessage {...HeaderMessages.Login}/>
-                            </span>&nbsp;<span onClick={()=>this.isRegister()}>
-                                 <FormattedMessage {...HeaderMessages.Register}/>
-                            </span></div>
+                            <div className='isLogin'>
+                                <span onClick={()=>this.isShowLogin()}>
+                                    <FormattedMessage {...HeaderMessages.Login}/>
+                                </span>
+                                <span onClick={()=>this.isRegister()}>
+                                    <FormattedMessage {...HeaderMessages.Register}/>
+                                </span>
+                            </div>
                         }
                     </div>
 
@@ -265,7 +275,7 @@ class BTHeader extends PureComponent{
                     {/* <div className="marginLeft marginRight">
                         <BTIcon type="icon-email" style={{fontSize:20}}/>
                     </div> */}
-                    <div style={{marginLeft:10}}>
+                    <div>
                         <Button onClick={()=>this.setLocale()}>
                             {(this.props.locale == 'en-US') ? '中文' : 'English'}
                         </Button>

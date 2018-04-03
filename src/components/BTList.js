@@ -6,6 +6,8 @@ import {getBlockInfo,getDataInfo} from '../utils/BTCommonApi'
 import {hashHistory} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
+import {getAccount} from "../tools/localStore";
+
 const CollectMessages = messages.Collect;
 
 const CheckboxGroup = Checkbox.Group;
@@ -20,10 +22,13 @@ export default class BTList extends PureComponent{
     constructor(props){
         super(props);
         this.state={
-            data:[]
+            data:[],
+            username:'',
+            token:''
         }
     }
     columns (data){
+        console.log(data)
           return [
             { title: <FormattedMessage {...CollectMessages.GoodId}/>, dataIndex: 'goodsId', key: 'title' },
             { title: <FormattedMessage {...CollectMessages.From}/>, dataIndex: 'username', key: 'from'},
@@ -61,17 +66,19 @@ export default class BTList extends PureComponent{
             .then(res=>{
                 if(res.code==0){
                     console.log(res.data.row)
+                    if(res.data.row.length==1){
+                        hashHistory.push({
+                            pathname:'/assets/detail',
+                            query:res.data.row[0]
+                        })
+                    }
 
-                    hashHistory.push({
-                        pathname:'/assets/detail',
-                        query:res.data.row
-                    })
                 }else{
-                    message.error('查询失败')
+                    message.error(window.localeInfo["Header.FailedQuery"]);
                 }
             })
             .catch(error=>{
-                message.error('查询失败')
+                message.error(window.localeInfo["Header.FailedQuery"]);
 
             })
     }
@@ -92,8 +99,8 @@ export default class BTList extends PureComponent{
             "code":"favoritemng",
             "action":"favoritepro",
             "args":{
-                "user_name":JSON.parse(window.localStorage.account_info).username||'',
-                "session_id":JSON.parse(window.localStorage.account_info).token||'',
+                "user_name":getAccount().username,
+                "session_id":getAccount().token,
                 "op_type":"delete",
                 "goods_type":data.goodsType,
                 "goods_id":data.goodsId,
@@ -103,7 +110,8 @@ export default class BTList extends PureComponent{
 
         let _getDataBin=(await getDataInfo(param));
         if(_getDataBin.code!=0){
-            message.error('获取区块数据失败');
+            // message.error('获取区块数据失败');
+            message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
             return;
         }
         let favorite={
@@ -111,7 +119,7 @@ export default class BTList extends PureComponent{
             "ref_block_prefix": block.ref_block_prefix,
             "expiration": block.expiration,
             "scope": [
-                JSON.parse(window.localStorage.account_info).username||''
+                getAccount().username
             ],
             "read_scope": [],
             "messages": [{
@@ -125,18 +133,26 @@ export default class BTList extends PureComponent{
         BTFetch('/user/FavoriteMng','post',favorite)
             .then(res=>{
                 if(res.code==1){
-                    message.success('移除收藏成功')
+                    // message.success('移除收藏成功')
+                    message.success(window.localeInfo["Asset.DeleteCollect"])
 
                 }else{
-                    message.error('删除收藏失败')
+                    // message.error('删除收藏失败')
+                    message.error(window.localeInfo["Asset.FailedCollect"])
                 }
                 console.log(res)
-            });
+            }).catch(error=>{
+                console.log(error)
+        });
 
     }
     componentDidMount(){
+        if(!getAccount()){
+           message.warning('查询失败');
+           return;
+        }
         let param={
-            "userName": JSON.parse(window.localStorage.account_info).username||'',
+            "userName": getAccount().username,
             "random": Math.ceil(Math.random()*100),
             "signatures": "0xxxx"
         }
@@ -148,8 +164,10 @@ export default class BTList extends PureComponent{
                 })
                 // console.log(data);
             }else{
-                message.warning('暂无资产加入购物车')
+                message.warning('暂无资产加入收藏')
             }
+        }).catch(error=>{
+            console.log(error)
         })
     }
     render(){

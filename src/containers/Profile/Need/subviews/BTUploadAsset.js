@@ -21,29 +21,30 @@ const formItemLayout = {
         sm: { span: 12 },
     },
 };
-const props = {
-    action: '//jsonplaceholder.typicode.com/posts/',
-    onChange({ file, fileList }) {
-        if (file.status !== 'uploading') {
-            console.log(file, fileList);
-        }
-    },
-
-};
+// const props = {
+//     action: '//jsonplaceholder.typicode.com/posts/',
+//     onChange({ file, fileList }) {
+//         if (file.status !== 'uploading') {
+//             console.log(file, fileList);
+//         }
+//     },
+//
+// };
 
 export default class BTPublishDemand extends PureComponent{
     constructor(props){
         super(props)
-        const value = this.props.value || {};
+        // const value = this.props.value || {};
 
         this.state = {
             title:"",
             textArea:"",
-            number: value.number || 0,
+            number: this.props.value || 0,
             date:"",
             dateString:"",
             username:'',
-            token:''
+            token:'',
+            ddatePicker:''
         }
     }
     componentWillReceiveProps(nextProps) {
@@ -59,8 +60,6 @@ export default class BTPublishDemand extends PureComponent{
             this.setState({
                 username:getName.username,
                 token:getName.token,
-            },function(){
-                console.log(getName,this.state.username,this.state.token)
             })
         }
 
@@ -102,11 +101,12 @@ export default class BTPublishDemand extends PureComponent{
         this.setState({
             date:date,
             dateString:dateString,
-        })
+        });
+
     }
     disabledDate(current) {
         // Can not select days before today and today
-        return current && current < moment().endOf('day');
+        return current < moment().endOf('day');
     }
 
     onChangeTextArea(e){
@@ -171,29 +171,42 @@ export default class BTPublishDemand extends PureComponent{
            }],
            signatures: []
        };
+
+
         BTFetch("/requirement/Publish",'post',param)
             .then(res=>{
                 //成功时返回的code,并隐藏弹框
-                if(res.code==0) {
-                    // alert("successful")
+                // if(res.code==0) {
+                //     // alert("successful")
+                //     // this.setState({
+                //     //     visible: false,
+                //     //     title:"",
+                //     //     textArea:"",
+                //     //     number:0,
+                //     //     date:"",
+                //     //     dateString:'',
+                //     //     DatePicker:'',
+                //     // });
+                //     console.log(1)
+                //
+                //     _this.props.cancelok();
                     message.success('需求发布成功');
-                    this.setState({
-                        visible: false,
-                        title:"",
-                        textArea:"",
-                        number:0,
-                        date:"",
-                        dateString:'',
-                    });
-
-                }else{
-                    message.error('需求发布失败')
-                }
+                //
+                //     // this.publishModal.setStatse({
+                //     //     visible:true
+                //     // })
+                // }else{
+                //     message.error('需求发布失败')
+                // }
             }).catch(error=>{
+                console.log(2)
                 message.error('需求发布失败')
             })
     }
     render(){
+        console.log({
+            props:this
+        })
         return(
             <div className="upLoadNeed">
                 <div>

@@ -7,7 +7,7 @@ import BTMyTag from '../../components/BTMyTag'
 import BTRequireCell from './subviews/BTRequireCell'
 import {getAccount} from '../../tools/localStore'
 import BTFetch from '../../utils/BTFetch';
-import {List,message} from 'antd'
+import {List,message,Pagination} from 'antd'
 import BTDemandTitle from "./subviews/BTDemandTitle";
 
 const BTHeaderSearch = () => (
@@ -37,46 +37,58 @@ const BTHeaderSearch = () => (
 const BTOption=()=>{
 
 };
-
+function onChange(pageNumber){
+    console.log(pageNumber)
+}
 export default class BTDemand extends PureComponent{
     constructor(props){
-        super(props)
+        super(props);
 
         this.state = {
-            dataSource:[]
+            dataSource:[],
+            pageNum:'',
+            rowCount:''
         }
+        this.onChange = this.onChange.bind(this)
     }
 
     componentDidMount(){
+        this.getPagination(1,12)
+    }
+    onChange(page,pageSize){
+        this.getPagination(page,pageSize)
+    }
+    getPagination(page,pageSize){
         let reqUrl = '/requirement/query'
         let param={
-            "pageSize":20,
-            "pageNum":1,
+            "pageSize":pageSize,
+            "pageNum":page,
         }
         BTFetch(reqUrl,'POST',param).then(response=>{
             console.log({
                 response
             })
-            if(response && response.code=='0'){
-                if(response.data=='null'){
-                    message.warning('暂无市场需求');
+            if(response && response.code == 0){
+                if(response.data.rowCount == 0){
+                    // message.warning(window.localeInfo["Demand.ThereIsNoMarketDemandForTheTimeBeing"]);
                     return;
                 }
                 let dataSource  = response.data && response.data.row;
-
+                let rowCount= response.data.rowCount;
+                // console.log(this)
                 this.setState({
-                    dataSource:dataSource
+                    dataSource:dataSource,
+                    rowCount,
                 })
             }
         })
     }
-
     render(){
         return(
-            <div className='container column'>
+            <div  style={{width:"100%"}}>
                 <BTDemandTitle/>
                 {/* <div><BTHeaderSearch/></div> */}
-               <div className='container' >
+               <div style={{width:"100%"}} >
                     <List
                         style={{flex:1}}
                         dataSource={this.state.dataSource||[]}
@@ -84,7 +96,8 @@ export default class BTDemand extends PureComponent{
                             <BTRequireCell linkto='/demand/detail' {...item}/>
                         )}
                     />
-               </div> 
+               </div>
+                <Pagination hideOnSinglePage showQuickJumper defaultCurrent={1} pageSize={12} total={this.state.rowCount} onChange={this.onChange} />
             </div>
         )
     }

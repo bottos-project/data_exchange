@@ -37,12 +37,14 @@ export default class BTHistoryTable extends PureComponent{
     }
     componentDidMount(){
         BTFetch('/dashboard/GetRecentTxList','get').then(res=>{
-            if(res.code==1){
-                this.setState({
-                    data:res.data
-                })
+            if(res&&res.code==1){
+                if(res.data&&res.data.rowCount>0){
+                    this.setState({
+                        data:res.data.row,
+                    })
+                }
             }else{
-                message.warning('暂无历史交易记录')
+                message.warning(window.localeInfo["Check.ThereIsNoHistoricalTransactionForTheTimeBeing"])
             }
         })
     }

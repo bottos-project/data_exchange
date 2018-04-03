@@ -5,12 +5,14 @@ import BTFetch from "../../../../utils/BTFetch"
 import {getBlockInfo, getDataInfo} from "../../../../utils/BTCommonApi";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
+import {getAccount} from "../../../../tools/localStore";
+
 const PersonalAssetMessages = messages.PersonalAsset;
 const { Option, OptGroup } = Select;
 const EditableCell = ({ editable, value, onChange }) => (
     <div>
         {editable
-            ? <Input style={{ margin: '-5px 0' }} defaultValue={value} onChange={e => onChange(e.target.value)} />
+            ? <Input style={{ margin: '-5px 0' }} value={value} onChange={e => onChange(e.target.value)} />
             : value
         }
     </div>
@@ -26,12 +28,19 @@ export default class BTAssetDetail extends PureComponent{
         this.cacheData = data.map(item => ({ ...item }));
         this.state = {
             data:[],
+            username:'',
+            token:''
         }
     }
     columns(data){
+        // console.log(data)
         return [
             {title: <FormattedMessage {...PersonalAssetMessages.AssetName}/>, dataIndex: 'asset_name',
-                render: (item, record) => this.renderColumns(item, record, 'asset_name'),
+                render:(item)=>{
+                    return <span>
+                           {item.length < 25? item:item.substring(0,25)+'...'}
+                        </span>
+                }
             },
             { title:  <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price',render:(item,record)=>{
                        return <div>
@@ -40,8 +49,8 @@ export default class BTAssetDetail extends PureComponent{
                         </div>
                     }
             },
-            { title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date',
-                render: (text, record) => this.renderColumns(text, record, 'date'),
+            { title: <FormattedMessage {...PersonalAssetMessages.ExpireTime}/>, dataIndex: 'expire_time', key: 'date',
+                render: (text, record) => this.renderColumns(new Date(text*1000).toLocaleDateString(), record, 'date'),
             },
             { title: <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>, dataIndex: 'description', key: 'description',
                 render:(item)=>{
@@ -50,32 +59,34 @@ export default class BTAssetDetail extends PureComponent{
                         </span>
                 }
             },
-
-            { title: <FormattedMessage {...PersonalAssetMessages.AssetOperation}/> ,key:'y',
-                render: (text, record) => {
+            //修改操作
+            /*{ title: <FormattedMessage {...PersonalAssetMessages.AssetOperation}/>,
+                key:'y',
+                render: ( record) => {
                     const { editable } = record;
                     return (
                         <div className="editable-row-operations">
                             {
                                 editable ?
                                     <span>
-                                          <a onClick={() => this.save(text)}>
+                                          <a onClick={() => this.save(record)}>
                                                <FormattedMessage {...PersonalAssetMessages.Save}/>
                                           </a>
-                                          <Popconfirm title= {<FormattedMessage {...PersonalAssetMessages.SureToCancel}/>} onConfirm={() => this.cancel(record.key)}>
+                                          <Popconfirm title= {<FormattedMessage {...PersonalAssetMessages.SureToCancel}/>} onConfirm={() => this.cancel(record.asset_id)}>
                                              <a>
                                                  <FormattedMessage {...PersonalAssetMessages.Cancel}/>
                                              </a>
                                           </Popconfirm>
                                     </span>
-                                    : <a onClick={() => this.edit(record.key)}>
+                                    : <a onClick={() => this.edit(record.asset_id)}>
                                         <FormattedMessage {...PersonalAssetMessages.Edit}/>
                                     </a>
                             }
                         </div>
                     );
                 },
-            }];
+            }*/
+            ];
     }
     renderColumns(text, record, column) {
         return (
@@ -96,7 +107,13 @@ export default class BTAssetDetail extends PureComponent{
     }
     edit(key) {
         const newData = [...this.state.data];
-        const target = newData.filter(item => key === item.key)[0];
+        console.log(key)
+        const target = newData.filter(item => key === item.asset_id)[0];
+        console.log({
+            newData
+            ,target
+            ,key
+        })
         if (target) {
             target.editable = true;
             this.setState({ data: newData });
@@ -107,7 +124,7 @@ export default class BTAssetDetail extends PureComponent{
     async save(key) {
         const newData = [...this.state.data];
         console.log(newData,key)
-        const target = newData.filter(item => key === item.key)[0];
+        const target = newData.filter(item => key === item.asset_id)[0];
         if (target) {
             delete target.editable;
             this.cacheData = newData.map(item => ({item}));
@@ -118,12 +135,12 @@ export default class BTAssetDetail extends PureComponent{
             args: {
                 asset_id: key.asset_id,
                 basic_info: {
-                    user_name: JSON.parse(window.localStorage.account_info).username|| '',
+                    user_name: getAccount().username,
                     asset_type: 'type',
                     asset_name: key.asset_name,
-                    feature_tag1: 12345,
-                    feature_tag2: 12345,
-                    feature_tag3: 12345,
+                    feature_tag1: key.feature_tag1,
+                    feature_tag2: key.feature_tag2,
+                    feature_tag3: key.feature_tag3,
                     sample_path: key.sample_path,
                     sample_hash: key.sample_hash,
                     storage_path: key.sample_hash,
@@ -139,9 +156,11 @@ export default class BTAssetDetail extends PureComponent{
         let blockInfo = await getBlockInfo();
         let blockData = await getDataInfo(gblockData);
         if(blockData.code!=0 || blockInfo.code!=0){
-            message.error('获取区块信息失败');
+            message.error(window.localeInfo["PersonalAsset.FailedPromote"])
             return ;
         }
+        console.log(key.asset_id);
+
         let param={
             ref_block_num: blockInfo.data.ref_block_num,
             ref_block_prefix: blockInfo.data.ref_block_prefix,
@@ -162,33 +181,31 @@ export default class BTAssetDetail extends PureComponent{
                     if(res.data == 'null'){
                         return;
                     };
-                    // console.log(d)
-                    if(target){
                         delete target.editable;
                         this.setState({ data: newData });
                         this.cacheData = newData.map(item => ({ ...item }));
-                    }
-                    message.success('修改发布资产成功')
+                    message.success(window.localeInfo["PersonalAsset.SuccessfulModify"])
                 }else{
-                    message.error('修改发布资产失败')
+                    message.error(window.localeInfo["PersonalAsset.FailedModify"])
                 }
             }).catch(error=>{
-                message.error('修改发布资产失败')
+                    message.error(window.localeInfo["PersonalAsset.FailedModify"])
               })
     }
     cancel(key) {
         const newData = [...this.state.data];
-        const target = newData.filter(item => key === item.key)[0];
+        const target = newData.filter(item => key === item.asset_id)[0];
         if (target) {
-            Object.assign(target, this.cacheData.filter(item => key === item.key)[0]);
+            Object.assign(target, this.cacheData.filter(item => key === item.asset_id)[0]);
             delete target.editable;
             this.setState({ data: newData });
         }
     }
 
+
     componentDidMount() {
         let param={
-            "userName": JSON.parse(window.localStorage.account_info).username||'',
+            "userName":getAccount().username,
             "random": Math.ceil(Math.random()*100),
             "signatures": "0xxxx"
         }
@@ -196,18 +213,19 @@ export default class BTAssetDetail extends PureComponent{
             .then(res=>{
                    if(res.code==0){
                        if(res.data.rowCount==0){
-                           message.warning('暂无数据');
+                           // message.warning('暂无数据');
+                           //message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
                            return;
                        }
                        console.log(res.data)
                        this.setState({
                           data:res.data.row
                        })
-
                    }
             }).catch(error=>{
-                message.warning('暂无数据');
-            })
+                message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+
+        })
     }
     render() {
         const { data } = this.state;

@@ -15,37 +15,10 @@ export default class BTDashboardTitle extends PureComponent{
         }
     }
     componentDidMount(){
-        BTFetch('http://10.104.10.152:8080/v2/dashboard/GetAccountNumByDay','post',{},{full_path:true,})
-            .then(res=>{
-                if(res.code==1){
-                    let getAccountNum=[];
-                    for(let i of res.data){
-                        console.log(i.time)
-                        let time=(new Date(i.time *1000)).toLocaleDateString();
-                        getAccountNum.push({day:time,requireNumPerDay:i.count})
-                    };
-                    this.setState({
-                        data:getAccountNum,
-                    })
-                    // this.props.num=this.state.data;
-                }
-            });
+
     }
     getAccount(){
-        BTFetch('http://10.104.10.152:8080/v2/dashboard/GetAccountNumByDay','post',{},{full_path:true,})
-            .then(res=>{
-                if(res.code==1){
-                    let getAccountNum=[];
-                    for(let i of res.data){
-                        console.log(i.time)
-                        let time=(new Date(i.time *1000)).toLocaleDateString();
-                        getAccountNum.push({day:time,requireNumPerDay:i.count})
-                    };
-                    this.setState({
-                        data:getAccountNum,
-                    })
-                }
-            });
+
     }
     exchangeNum(){
 

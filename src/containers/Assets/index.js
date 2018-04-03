@@ -36,42 +36,50 @@ const BTHeaderSearch = () => (
 export default class BTAssets extends PureComponent{
     constructor(props){
         super(props);
+        this.onChange=this.onChange.bind(this)
         this.state={
             list:[1,2,3,4],
             current:1,
             data:[],
-            dataSource:[]
+            dataSource:[],
+            rowCount:'',
+            pageNum:''
         };
     }
     componentDidMount(){
+        this.getPagination(1,12)
+    }
+    onChange(page,pageSize){
+        this.getPagination(page,pageSize)
+    }
+    getPagination(page,pageSize){
+        let reqUrl = '/asset/query';
         let param={
-
+            "pageSize":pageSize,
+            "pageNum":page,
         };
-        BTFetch('/asset/query','POST',param).then(response=>{
+        BTFetch(reqUrl,'POST',param).then(response=>{
             if(response&&response.code==0){
                 if(response.data.rowCount==0){
-                    message.warning('暂无市场资产')
                     return;
                 }
                 let data=response.data.row;
                 let dataSource  = response.data && response.data.Row;
                 this.setState({
-                    dataSource:response.data.row
+                    dataSource:response.data.row,
+                    rowCount:response.data.rowCount,
                 });
                 this.setState({
                     data:data,
                 })
             }else{
-                message.error('市场资源查询失败')
+                message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
             }
         }).catch(error=>{
             console.log(error)
-            message.error('市场资源查询失败')
+            message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
 
         });
-    }
-    onChange(pageNumber){
-        console.log('Page:',pageNumber)
     }
     render(){
         return(
@@ -86,6 +94,8 @@ export default class BTAssets extends PureComponent{
                         )}
                     />
                 </div>
+                <Pagination hideOnSinglePage showQuickJumper total={this.state.rowCount} defaultCurrent={1} pageSize={12} onChange={this.onChange}/>
+
             </div>
         )
     }

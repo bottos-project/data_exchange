@@ -1,6 +1,6 @@
 import React,{PureComponent} from 'react'
 // import {Wallet,Transfer,History} from './Person'
-import { Tabs,List,Button, Row,Col,Modal,Input,message } from 'antd';
+import { Tabs,List,Button, Row,Col,Modal,Input,message,Tag } from 'antd';
 import {Link} from 'react-router'
 import Walletall from './Person/walletall'
 import './styles.less'
@@ -11,214 +11,95 @@ import BTUnlogin from '../../../components/BTUnlogin'
 import * as localStore from '../../../tools/localStore'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
+import BTAccountListCell from './subvies/BTAccountListCell'
+import BTAccountListHeader from './subvies/BTAccountListHeader'
+import BTWalletList from './subvies/BTWalletList'
+import BTAccountList from './subvies/BTAccountList'
+import {getAccount} from '../../../tools/localStore'
 const WalletMessages = messages.Wallet;
-
 const TabPane = Tabs.TabPane;
+const CheckableTag = Tag.CheckableTag
 
 export default class BTWallet extends PureComponent{
     constructor(props){
         super(props)
         this.state = {
-            accountList:[]
+            isLogin:false,
+            walletList:[],
+            selectWallet:''
         }
     }
 
     componentDidMount(){
-        let accountList = BTIpcRenderer.getKeyStoreList()
+        let props = this.props;
+        if(props.location) {
+            this.setLoginState(props.location.query.selectWallet)
+        }else{
+            this.setLoginState()
+        }
+    }
+
+    setLoginState(username){
+        let isLogin = localStore.isLogin();
+        this.setState({isLogin})
+        if(isLogin){
+            let walletList = BTIpcRenderer.getKeyStoreList()
+            let userInfo = getAccount()
+            let selectWallet = username ? username : userInfo.username
+            this.setState({
+                selectWallet,
+                walletList
+            })
+        }
+    }
+
+    checkWallet(item){
         this.setState({
-            accountList
+            selectWallet:item.slice(0,-9)
         })
     }
 
+    initComponent(){
+        let checkedStyle = {backgroundColor:'rgb(154,125,224)'}
+        let unCheckedStyle = {borderColor:'rgb(154,125,224)'}
+        let walletListPath = {
+            pathname:'/profile/wallet/walletlist',
+            query:this.state.walletList
+        }
+        console.log(this.state.walletList.toString().slice(0,-9))
+        return(
+            <div className="container column">
+                <div className="flex marginBottom walletWrap">
+                    <div>
+                        {
+                            this.state.walletList.map((item,index)=>{
+                                let isChecked = item.slice(0,-9)==this.state.selectWallet;
+                                let tagStyle = isChecked ? checkedStyle : unCheckedStyle
+                                if(index>2) return;
+                                return (<CheckableTag checked={isChecked} onChange={()=>{this.checkWallet(item)}} style={tagStyle}>{item.slice(0,-9)}</CheckableTag>)
+                            })
+                        }
+                        <Link to={walletListPath}>更多>>></Link>
+                    </div>
+                    <BTAccountListHeader style={{float:'right'}}/>
+
+                </div>
+                <div className="container marginTop">
+                    <BTAccountList className="flex" selectWallet = {this.state.selectWallet}/>
+                </div>
+            </div>
+        )
+    }
+
     render(){
-        let loginState = localStore.isLogin();
+        
         return (
             <div className="container">
                 {
-                    loginState ? (<div className="flex container column" style={{height:200}}>
-                        <BTAccountListHeader/>
-                        <div>
-                        <List
-                            style={{flex:1}}
-                            dataSource={this.state.accountList}
-                                renderItem = {(item,index)=>{
-                                    let newItem = {
-                                        accountName:item.slice(0,-9)
-                                    }
-                                    return(
-                                        <BTAccountItem {...newItem}/>
-                                    )
-                                }}
-                            />
-                        </div>
-                    </div>) : <div className="container center"><BTUnlogin/></div>
+                    this.state.isLogin ? this.initComponent() : <div className="container center"><BTUnlogin/></div>
                 }
             </div>
         )
     }
 }
 
-class BTAccountItem extends PureComponent{
-    constructor(props){
-        super(props)
-        this.state = {
-            visible:false,
-            password:'',
-            newPassword:'',
-            reNewPassword:''
-        }
-    }
-
-    changePwd(accountName){
-        // let keyStore = BTIpcRenderer.getKeyStore(accountName)
-        this.setState({visible:true})
-    }
-
-    exportAccount(accountName){
-        let exportFileName = accountName
-        let keyStore = BTIpcRenderer.getKeyStore(accountName)
-        if(!keyStore.error){
-            BTIpcRenderer.exportKeyStore(accountName,JSON.parse(keyStore.result))
-        }
-    }
-
-    onHandleOk(){
-        if(this.state.password == '') {message.error('请输入原密码');return}
-        if(this.state.newPassword == '') {message.error('请输入新密码');return}
-        if(this.state.reNewPassword == '') {message.error('请输入确认密码');return}
-        // 使用原密码解密账户
-       try{
-        let keyStoreFile = BTIpcRenderer.getKeyStore(this.props.accountName)
-        let keyStoreStr = JSON.parse(keyStoreFile.result)
-        let keyStoreString = BTCryptTool.aesDecrypto(keyStoreStr,this.state.password)
-        let keyStore = JSON.parse(keyStoreString)
-
-        if(this.state.newPassword!=this.state.reNewPassword){
-            message.error('两次新密码输入不一致')
-            return;
-        }
-        let privateKeyStr = JSON.stringify(keyStore)
-        let cryptStr = BTCryptTool.aesEncrypto(privateKeyStr,this.state.newPassword)
-        // 存储keystore文件到本地
-        BTIpcRenderer.saveKeyStore(keyStore.account_name,cryptStr)
-        message.success('密码修改成功')
-        this.setState({
-            visible:false,
-            password:'',
-            newPassword:'',
-            reNewPassword:''
-        })
-       }catch(error){
-           message.error('密码修改失败')
-       }
-    }
-
-    onHandleCancel(){
-        this.setState({
-            visible:false,
-            password:'',
-            newPassword:'',
-            reNewPassword:''
-        })
-    }
-
-    render(){
-        return(
-            <div className="container accountItem">
-
-            <Modal 
-                visible={this.state.visible}
-                onOk={()=>this.onHandleOk()}
-                onCancel={()=>this.onHandleCancel()}
-            >
-                <Input style={{marginTop:20,marginBottom:20}} type="password" placeholder="请输入原密码" value={this.state.password} onChange={(e)=>this.setState({password:e.target.value})}/>
-                <Input style={{marginBottom:20}} type="password" placeholder="请输入新密码" value={this.state.newPassword} onChange={(e)=>this.setState({newPassword:e.target.value})}/>
-                <Input type="password" placeholder="请再次确认新密码" value={this.state.reNewPassword} onChange={(e)=>this.setState({reNewPassword:e.target.value})}/>
-            </Modal>
-
-
-                <div className="flex accountLeft">
-                    <div>
-                        <Link to="/profile/wallet/accountlist"><span className="font25 colorTitle">{this.props.accountName}</span></Link>
-                        
-                        {/* <span>可用现金</span> */}
-                    </div>
-                    {/* <div className="font25 colorRed">{this.props.accounts}</div> */}
-                </div>
-                <div>
-                    <Button className="marginRight" type="primary" onClick={()=>this.changePwd(this.props.accountName)}>
-                        <FormattedMessage {...WalletMessages.ModifyThePassword}/>
-                    </Button>
-                    <Button type="primary" onClick={()=>this.exportAccount(this.props.accountName)}>
-                        <FormattedMessage {...WalletMessages.ExportTheAccount }/>
-                    </Button>
-                </div>
-            </div>
-        )
-    }
-}
-
-class BTAccountListHeader extends PureComponent{
-    constructor(props){
-        super(props)
-        this.state = {
-            visible:false,
-            password:''
-        }
-    }
-
-    importAccount(){
-        this.setState({
-            visible:true,
-            keyStoreStr:''
-        })
-    }
-
-    importKeyStore(){
-        let keyStoreStr = BTIpcRenderer.importFile()
-        this.setState({
-            keyStoreStr
-        })
-    }
-
-    onHandleOk(){
-        if(this.state.password=='') {
-            message.error('请输入KeyStore文件的密码')
-            return
-        }
-       try{
-            let keyStoreCryptStr = BTCryptTool.aesDecrypto(this.state.keyStoreStr,this.state.password)
-            let keyStore = JSON.parse(keyStoreCryptStr);
-            BTIpcRenderer.saveKeyStore(keyStore.account_name,this.state.keyStoreStr);
-            this.setState({password:'',visible:false})
-       }catch(error){
-           message.error('密码错误')
-       }
-    }
-
-    onHandleCancel(){
-        this.setState({
-            visible:false
-        })
-    }
-
-    render(){
-        return(
-            <div className="container accountListHeader">
-                <Modal 
-                    visible={this.state.visible}
-                    onOk={()=>this.onHandleOk()}
-                    onCancel={()=>this.onHandleCancel()}
-                >
-                    <Button onClick={()=>this.importKeyStore()}>
-                        <FormattedMessage {...WalletMessages.ImportTheKeyStore}/>
-                    </Button>
-                    <Input style={{marginBottom:10}} type="password" name="password" placeholder="请输入导入keystore的密码" value={this.state.password} onChange={(e)=>this.setState({password:e.target.value})}></Input>
-                </Modal>
-                <Button onClick={()=>this.importAccount()}>
-                    <FormattedMessage {...WalletMessages.ImportTheAccount}/>
-                </Button>
-            </div>
-        )
-    }
-}

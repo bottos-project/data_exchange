@@ -1,6 +1,5 @@
 import React,{PureComponent} from 'react'
 import {Icon, Radio,Select, message, Button,Input, DatePicker,Cascader  } from 'antd';
-// import BTIcon from "app/components/BTIcon"
 import BTIcon from '../../../../components/BTIcon'
 import BTAssetList from '../../../../components/BTAssetList'
 import "../styles.less"
@@ -10,6 +9,7 @@ import BTFetch from "../../../../utils/BTFetch";
 import {options} from '../../../../utils/option'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
+import {getAccount} from '../../../../tools/localStore'
 const PersonalAssetMessages = messages.PersonalAsset;
 const RangePicker = DatePicker.RangePicker;
 const { TextArea } = Input;
@@ -18,7 +18,7 @@ const RadioGroup = Radio.Group;
 
 const props = {
     name:'file',
-    action: 'http://10.104.10.152:8080/v2/asset/upload',
+    action: '/asset/upload',
     multiple: false,
     data:{
 
@@ -29,9 +29,9 @@ const props = {
             console.log(file, fileList);
         }
         if(file.status==='down'){
-            message.success(`${file.name} file uploaded successfully`);
+            message.Failed(window.localeInfo["PersonalAsset.FailedToUploadTheFile"]);
         }else if (file.status === 'error') {
-            message.error(`${file.name} file upload failed.`);
+            message.error(window.localeInfo["PersonalAsset.FailedToUploadTheFile"])
         }
     },
 
@@ -72,23 +72,18 @@ export default class BTUploadAsset extends PureComponent{
             expire_time:'',
             sample_hash:'',
             storage_hash:'',
-
+            username:'',
+            token:'',
         }
     }
-  /*  componentDidMount(){
-        let param={
-            "userName": username,
-            "random": Math.ceil(Math.random()*100),
-            "signatures": "0xxxx"
-        };
-        BTFetch('/asset/queryUploadedData','post',param)
-            .then(res=>{
-                if(res.code=='1'){
-                    this.setState({fileArr:res.data});
-                    console.log(JSON.parse(res.data));
-                };
+    componentDidMount(){
+        if(getAccount){
+            this.setState({
+                username:getAccount().username,
+                token:getAccount().token
             })
-    }*/
+        }
+    }
     onChangeDataAssetType(dates){
         const datas=dates[0]+dates[1]+dates[2]+dates[3];
         this.setState({
@@ -157,13 +152,13 @@ export default class BTUploadAsset extends PureComponent{
         console.log(this.state);
         for(const key in this.state){
             if(this.state[key]==''){
-                message.warning('请完善注册资产信息');
+                message.warning(window.localeInfo["PersonalAsset.PleaseImproveTheInformation"])
                 return;
             }
         }
         let _blockInfo = (await getBlockInfo());
         if(_blockInfo.code!=0){
-            message.error('获取区块信息失败')
+            message.error(window.localeInfo["PersonalAsset.FailedToGetTheBlockMessages"])
             return;
         }
         let blockInfo=_blockInfo.data;
@@ -173,17 +168,19 @@ export default class BTUploadAsset extends PureComponent{
             "args": {
                 "asset_id": window.uuid,
                 "basic_info": {
-                    "user_name": JSON.parse(window.localStorage.account_info).username,
-                    "session_id": JSON.parse(window.localStorage.account_info).token,
+                    "user_name":this.state.username,
+                    "session_id": this.state.token,
                     "asset_name": this.state.title,
                     "asset_type": this.state.dataAssetType,
                     "feature_tag1": this.state.tag1,
                     "feature_tag2": this.state.tag2,
                     "feature_tag3": this.state.tag3,
-                    "sample_path": this.state.sample_hash,
-                    "sample_hash": this.state.getExampleUrl,
-                    "storage_path": this.state.storage_hash,
-                    "storage_hash": this.state.getRealUrl,
+                    "sample_path": this.state.getExampleUrl,
+                    "sample_hash": this.state.sample_hash,
+                    "storage_path": this.state.getRealUrl,
+                    "storage_hash": this.state.storage_hash,
+                    "getFileNameTemp":this.state.getFileNameTemp,
+                    "getFileName":this.state.getFileName,
                     "expire_time": this.state.expire_time,
                     "price": this.state.price,
                     "description": this.state.description,
@@ -195,7 +192,7 @@ export default class BTUploadAsset extends PureComponent{
         console.log(data);
         let getDataBin = (await getDataInfo(data));
         if(getDataBin.code!=0){
-            message.error('获取getDataBin失败')
+            message.error(window.localeInfo["PersonalAsset.FailedToGetTheGetDataBin"])
             return
         }
         console.log(
@@ -220,17 +217,17 @@ export default class BTUploadAsset extends PureComponent{
             service:'service'
         }).then(repsonse=>{
             if(repsonse.code==1){
-                message.success('注册资产成功');
+                message.success(window.localeInfo["PersonalAsset.SuccessfulToRegisterTheAsset"])
 
             }else{
-                message.error('注册资产失败')
+                message.error(window.localeInfo["PersonalAsset.FailedToRegisterTheAsset"])
             }
             console.log(repsonse);
             this.setState({
                 data:repsonse.data
             })
         }).catch(error=>{
-            message.error('注册资产失败');
+            message.error(window.localeInfo["PersonalAsset.FailedToRegisterTheAsset"])
             console.log(error);
         })
 
@@ -252,40 +249,34 @@ export default class BTUploadAsset extends PureComponent{
                             <FormattedMessage {...PersonalAssetMessages.UploadTheSample}/>
                         </span>
                         <Button type="upload" examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>
-                            <FormattedMessage{...PersonalAssetMessages.SetScreening}/>
+                            <FormattedMessage{...PersonalAssetMessages.SetScreeningSample}/>
                         </Button>
                         <span>{this.state.getFileNameTemp}</span>
-                        {/*<Button>*/}
-                            {/*<span type="upload"  onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</span>*/}
-                        {/*</Button>*/}
                     </div>
                     <div className="upLoad">
                         <span className="align">
                              <FormattedMessage {...PersonalAssetMessages.UploadTheAsset}/>
                         </span>
                         <Button exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>
-                            <FormattedMessage {...PersonalAssetMessages.SetScreening}/>
+                            <FormattedMessage {...PersonalAssetMessages.SetScreeningFile}/>
                         </Button>
                         <span>{this.state.getFileName}</span>
-                        {/*<Button>*/}
-                            {/*<span onClick={()=>this.commitAsset('asset')}>资源库筛选</span>*/}
-                        {/*</Button>*/}
                     </div>
                     <div>
                         <span className="align">
                             <FormattedMessage {...PersonalAssetMessages.AssetName}/>
                         </span>
-                        <Input placeholder="Name" defaultValue={this.state.title} onChange={(e)=>this.title(e)} />
+                        <Input placeholder={window.localeInfo["PersonalAsset.Name"]} defaultValue={this.state.title} onChange={(e)=>this.title(e)} />
                     </div>
                     <div>
                         <span className="align">
                             <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>
                         </span>
-                        <Input placeholder='Price' defaultValue={this.state.price} onChange={(e)=>this.price(e)} />
+                        <Input placeholder={window.localeInfo["PersonalAsset.Price"]} defaultValue={this.state.price} onChange={(e)=>this.price(e)} />
                         <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
                     </div>
                     <div>
-                        <span className="align">截至时间 </span>
+                        <span>Expire Time </span>
                         <DatePicker onChange={(date,dateString)=>this.dataPicker(date,dateString)} />
                     </div>
                     <div>

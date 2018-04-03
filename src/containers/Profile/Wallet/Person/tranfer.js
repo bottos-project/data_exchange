@@ -51,7 +51,7 @@ export default class Transfer extends PureComponent{
            }],
            "signatures": []
        };
-        BTFetch('http://10.104.21.10:8080/v2/user/transfer','post',data,{
+       /* BTFetch('/user/transfer','post',data,{
             full_path:true,
         }).then(res=>{
             console.log(res);
@@ -60,7 +60,7 @@ export default class Transfer extends PureComponent{
             }else{
                 alert('转账失败')
             }
-        })
+        })*/
 
     }
     clear(){

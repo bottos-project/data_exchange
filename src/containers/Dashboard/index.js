@@ -14,275 +14,171 @@ export default class BTDashboard extends PureComponent{
         super(props);
         this.state={
             num:[],
-            getAccountNum:[],
-            getExchangeNum:[],
-            getExchangeCoin:[],
-            getNewAsset:[],
-            getNewRequire:[],
+            ExchangeNum:[],
+            ExchangeCoin:[],
+            NewAsset:[],
+            NewRequire:[],
             dataKey:'',
             type:'',
-            getAccountNumAll:''
+            AccountNumAll:'',
+            AccountNum:'',
+            AssetNum:'',
+            RequirementNum:'',
+            TxAmount:'',
+            TxNum:'',
         }
     }
     getAccount(){
-        this.setState({
-            num:this.state.getAccountNum,
-            dataKey:'getAccountNum',
+        BTFetch('/dashboard/getAccountNumByDay','post')
+            .then(res=>{
+                if(res&&res.code==1) {
+                    if(res.data.length==0){
+                        return;
+                    }
+                    let AccountNum = [], AccountNumAll = '';
+                    for (let i of res.data) {
+                        let time = (new Date(i.time * 1000)).toLocaleDateString();
+                        AccountNum.push({day: time, AccountNum: i.count})
+                    }
+                    this.setState({
+                        // AccountNum,
+                        num: AccountNum,
+                        dataKey: 'AccountNum',
+                        type: <FormattedMessage {...DashboardMessages.Registration}/>,
+                    })
+                }
+            });
+        /*this.setState({
+            num:this.state.AccountNum,
+            dataKey:'AccountNum',
             type:<FormattedMessage {...DashboardMessages.Registration}/>
-        })
+        })*/
     }
-    exchangeNum(){
+   async exchangeNum(){
+       await  BTFetch('/dashboard/GetTxNumByDay','post')
+           .then(res=>{
+               if(res&&res.code==1){
+                   if(res.data.length==0){
+                       return;
+                   }
+                   let ExchangeNum=[];
+                   for(let i of res.data){
+                       let time=(new Date(i.time *1000)).toLocaleDateString();
+                       ExchangeNum.push({day:time,ExchangeNum:i.count})
+                   };
+                   this.setState({
+                       ExchangeNum,
+                   })
+               }
+           });
         this.setState({
-            num:this.state.getExchangeNum,
-            dataKey:'getExchangeNum',
+            num:this.state.ExchangeNum,
+            dataKey:'ExchangeNum',
             type:<FormattedMessage {...DashboardMessages.VolumeOfTransaction}/>
         })
     }
-    exchangeCoin(){
+   async exchangeCoin(){
+       await BTFetch('/dashboard/GetTxAmountByDay','post')
+           .then(res=>{
+               if(res&&res.code==1){
+                   let ExchangeCoin=[];
+                   for(let i of res.data){
+                       let time=(new Date(i.time *1000)).toLocaleDateString();
+                       ExchangeCoin.push({day:time,ExchangeCoin:i.count})
+                   };
+                   this.setState({
+                       ExchangeCoin,
+                   })
+               }
+           });
         this.setState({
-            num:this.state.getExchangeCoin,
-            dataKey:'getExchangeCoin',
+            num:this.state.ExchangeCoin,
+            dataKey:'ExchangeCoin',
             type:<FormattedMessage {...DashboardMessages.TransactionAmount }/>
         })
     }
-    assetNum(){
+   async assetNum(){
+       await BTFetch('/dashboard/GetAssetNumByDay','post')
+           .then(res=>{
+               if(res.code==1){
+                   let NewAsset=[];
+                   for(let i of res.data){
+                       let time=(new Date(i.time *1000)).toLocaleDateString();
+                       NewAsset.push({day:time,NewAsset:i.count})
+                   };
+                   this.setState({
+                       NewAsset,
+                   })
+               }
+           });
         this.setState({
-            num:this.state.getNewAsset,
-            dataKey:'getNewAsset',
+            num:this.state.NewAsset,
+            dataKey:'NewAsset',
             type:<FormattedMessage {...DashboardMessages.IncrementalAsset }/>
         })
     }
-    requireNum(){
+    async requireNum(){
+        await BTFetch('/dashboard/GetRequirementNumByDay','post')
+            .then(res=>{
+                if(res.code==1){
+                    let NewRequire=[];
+                    for(let i of res.data){
+                        let time=(new Date(i.time *1000)).toLocaleDateString();
+                        NewRequire.push({day:time,NewRequire:i.count})
+                    };
+                    this.setState({
+                        NewRequire,
+                    })
+                }
+            });
         this.setState({
-            num:this.state.getNewRequire,
-            dataKey:'getNewRequire',
+            num:this.state.NewRequire,
+            dataKey:'NewRequire',
             type:<FormattedMessage {...DashboardMessages.IncrementalDemand }/>
         })
     }
+
     componentDidMount(){
-        //注册人数
-        BTFetch('http://10.104.10.152:8080/v2/dashboard/GetAccountNumByDay','post',{},{full_path:true,})
+        BTFetch('/dashboard/GetAllTypeTotal','post')
             .then(res=>{
-                // if(res.code==1){
-                //     let getAccountNum=[],getAccountNumAll='';
-                //     for(let i of res.data){
-                //         let time=(new Date(i.time *1000)).toLocaleDateString();
-                //         getAccountNum.push({day:time,getAccountNum:i.count})
-                //         // 今日总量
-                //         getAccountNumAll+=Number(i.count);
-                //
-                //     };
-                //     // 第一次初始加载为注册人数信息
-                //     this.setState({
-                //         getAccountNum,
-                //         num:getAccountNum,
-                //         dataKey:'getAccountNum',
-                //         type:<FormattedMessage {...DashboardMessages.Registration}/>,
-                //         getAccountNumAll
-                //     })
-                //
-                // }
-                let getAccountNum=[{
-                    day: '3-16',
-                    getAccountNum:420,
-                }, {
-                    day: '3-17',
-                    getAccountNum:377,
-                }, {
-                    day: '3-18',
-                    getAccountNum:552,
-                }, {
-                    day: '3-19',
-                    getAccountNum:605,
-                },{
-                    day: '3-20',
-                    getAccountNum:573,
-                },{
-                    day: '3-21',
-                    getAccountNum:674,
-                },{
-                    day: '3-22',
-                    getAccountNum:697,
-                }];
-                this.setState({
-                    getAccountNum,
-                    num:getAccountNum,
-                    dataKey:'getAccountNum',
-                    type:<FormattedMessage {...DashboardMessages.Registration}/>,
-                })
+                if(res&&res.code==0){
+                    let data=res.data;
+                    if(data.length==0){
+                        return;
+                    }
+                    for(let i in data){
+                        switch (data[i].type){
+                            case 'AccountNum':this.setState({AccountNum:data[i].total}); break;
+                            case 'AssetNum':this.setState({AssetNum:data[i].total}); break;
+                            case 'RequirementNum':this.setState({RequirementNum:data[i].total}); break;
+                            case 'TxAmount':this.setState({TxAmount:data[i].total}); break;
+                            case 'TxNum':this.setState({TxNum:data[i].total}); break;
+                            // default:message.error('暂无数据')
+                        }
+                    }
+                }
+
             });
-        /*this.setState({
-            num:this.state.getAccountNum,
-            dataKey:'getAccountNum',
-            type:'注册人数'
-        });*/
-        //交易量
-        // BTFetch('http://10.104.10.152:8080/v2/dashboard/GetTxNumByDay','post',{},{full_path:true,})
-        //     .then(res=>{
-                // if(res.code==1){
-                //     let getExchangeNum=[];
-                //     for(let i of res.data){
-                //         let time=(new Date(i.time *1000)).toLocaleDateString();
-                //         getExchangeNum.push({day:time,getExchangeNum:i.count})
-                //     };
-                //     this.setState({
-                //         getExchangeNum,
-                //     })
-                // }
-                let getExchangeNum=[{
-                    day: '3-16',
-                    getExchangeNum:1845,
-                }, {
-                    day: '3-17',
-                    getExchangeNum:1797,
-                }, {
-                    day: '3-18',
-                    getExchangeNum:2264,
-                }, {
-                    day: '3-19',
-                    getExchangeNum:2597,
-                },{
-                    day: '3-20',
-                    getExchangeNum:2356,
-                },{
-                    day: '3-21',
-                    getExchangeNum:2497,
-                },{
-                    day: '3-22',
-                    getExchangeNum:3064,
-                }];
-                this.setState({
-                    getExchangeNum,
-                    num:getExchangeNum,
-                    dataKey:'getExchangeNum',
-                        })
-            // });
-        //交易金额
-        // BTFetch('http://10.104.10.152:8080/v2/dashboard/GetTxAmountByDay','post',{},{full_path:true,})
-        //     .then(res=>{
-        //         if(res.code==1){
-        //             let getExchangeCoin=[];
-        //             for(let i of res.data){
-        //                 let time=(new Date(i.time *1000)).toLocaleDateString();
-        //                 getExchangeCoin.push({day:time,getExchangeCoin:i.count})
-        //             };
-        //             this.setState({
-        //                 getExchangeCoin,
-        //             })
-        //         }
-        //     });
-        let getExchangeCoin=[{
-            day: '3-16',
-            getExchangeCoin:185,
-        }, {
-            day: '3-17',
-            getExchangeCoin:197,
-        }, {
-            day: '3-18',
-            getExchangeCoin:224,
-        }, {
-            day: '3-19',
-            getExchangeCoin:297,
-        },{
-            day: '3-20',
-            getExchangeCoin:256,
-        },{
-            day: '3-21',
-            getExchangeCoin:341,
-        },{
-            day: '3-22',
-            getExchangeCoin:378,
-        }];
-        this.setState({
-            getExchangeCoin,
-            num:getExchangeCoin,
-            dataKey:'getExchangeCoin',
-        })
-        //新增资产
-        // BTFetch('http://10.104.10.152:8080/v2/dashboard/GetAssetNumByDay','post',{},{full_path:true,})
-        //     .then(res=>{
-        //         if(res.code==1){
-        //             let getNewAsset=[];
-        //             for(let i of res.data){
-        //                 let time=(new Date(i.time *1000)).toLocaleDateString();
-        //                 getNewAsset.push({day:time,getNewAsset:i.count})
-        //             };
-        //             this.setState({
-        //                 getNewAsset,
-        //             })
-        //         }
-        //     });
-        let getNewAsset=[{
-            day: '3-16',
-            getNewAsset:85,
-        }, {
-            day: '3-17',
-            getNewAsset:97,
-        }, {
-            day: '3-18',
-            getNewAsset:124,
-        }, {
-            day: '3-19',
-            getNewAsset:117,
-        },{
-            day: '3-20',
-            getNewAsset:146,
-        },{
-            day: '3-21',
-            getNewAsset:141,
-        },{
-            day: '3-22',
-            getNewAsset:178,
-        }];
-        this.setState({
-            getNewAsset,
-            num:getNewAsset,
-            dataKey:'getNewAsset',
-        })
-        //新增需求
-        // BTFetch('http://10.104.10.152:8080/v2/dashboard/GetRequirementNumByDay','post',{},{full_path:true,})
-        //     .then(res=>{
-        //         if(res.code==1){
-        //             let getNewRequire=[];
-        //             for(let i of res.data){
-        //                 let time=(new Date(i.time *1000)).toLocaleDateString();
-        //                 getNewRequire.push({
-        //                     day:time,
-        //                     getNewRequire:i.count
-        //                 })
-        //             };
-        //             this.setState({
-        //                 getNewRequire,
-        //             })
-        //         }
-        //     });
-        let getNewRequire=[{
-            day: '3-16',
-            getNewRequire:105,
-        }, {
-            day: '3-17',
-            getNewRequire:117,
-        }, {
-            day: '3-18',
-            getNewRequire:124,
-        }, {
-            day: '3-19',
-            getNewRequire:127,
-        },{
-            day: '3-20',
-            getNewRequire:146,
-        },{
-            day: '3-21',
-            getNewRequire:176,
-        },{
-            day: '3-22',
-            getNewRequire:181,
-        }];
-        this.setState({
-            getNewRequire,
-            num:getNewRequire,
-            dataKey:'getNewRequire',
-        })
+        //注册人数
+        BTFetch('/dashboard/getAccountNumByDay','post')
+            .then(res=>{
+                if(res&&res.code==1) {
+                    if(res.data.length==0){
+                        return;
+                    }
+                    let AccountNum = [], AccountNumAll = '';
+                    for (let i of res.data) {
+                        let time = (new Date(i.time * 1000)).toLocaleDateString();
+                        AccountNum.push({day: time, AccountNum: i.count})
+                    }
+                    this.setState({
+                        // AccountNum,
+                        num: AccountNum,
+                        dataKey: 'AccountNum',
+                        type: <FormattedMessage {...DashboardMessages.Registration}/>,
+                    })
+                }
+            });
 
     }
     render(){
@@ -298,46 +194,46 @@ export default class BTDashboard extends PureComponent{
                             <a style={{color:"#4F43B6",padding:"10px"}} onClick={()=>this.getAccount()}>
                                 <FormattedMessage {...DashboardMessages.Registration}/>
                             </a>
-                            <p>
+                            {/*<p>
                                 <FormattedMessage {...DashboardMessages.Yesterday}/>
-                            </p>
-                            <p>674</p>
+                            </p>*/}
+                            <p>{this.state.AccountNum}</p>
                         </div>
                         <div>
                             <a style={{color:"#4F43B6",padding:"10px"}} onClick={()=>this.exchangeNum()}>
                                 <FormattedMessage {...DashboardMessages.VolumeOfTransaction}/>
                             </a>
-                            <p>
+                           {/* <p>
                                 <FormattedMessage {...DashboardMessages.Yesterday}/>
-                            </p>
-                            <p>2497</p>
+                            </p>*/}
+                            <p>{this.state.TxNum}</p>
                         </div>
                         <div>
                             <a style={{color:"#4F43B6",padding:"10px"}} onClick={()=>this.exchangeCoin()}>
                                 <FormattedMessage {...DashboardMessages.TransactionAmount}/>
                             </a>
-                            <p>
+                           {/* <p>
                                 <FormattedMessage {...DashboardMessages.Yesterday}/>
-                            </p>
-                            <p>341</p>
+                            </p>*/}
+                            <p>{this.state.TxAmount}</p>
                         </div>
                         <div onClick={()=>this.assetNum()}>
                             <a style={{color:"#4F43B6",padding:"10px"}}>
                                 <FormattedMessage {...DashboardMessages.IncrementalAsset}/>
                             </a>
-                            <p>
+                           {/* <p>
                                 <FormattedMessage {...DashboardMessages.Yesterday}/>
-                            </p>
-                            <p>141</p>
+                            </p>*/}
+                            <p>{this.state.AssetNum}</p>
                         </div>
                         <div onClick={()=>this.requireNum()}>
                             <a style={{color:"#4F43B6",padding:"10px"}}>
                                 <FormattedMessage {...DashboardMessages.IncrementalDemand}/>
                             </a>
-                            <p>
-                                <FormattedMessage {...DashboardMessages.Yesterday}/>
-                            </p>
-                            <p>176</p>
+                            {/*<p>
+                                <FormattedMessage {...DsashboardMessages.Yesterday}/>
+                            </p>*/}
+                            <p>{this.state.RequirementNum}</p>
                         </div>
                     </div>
                 </div>

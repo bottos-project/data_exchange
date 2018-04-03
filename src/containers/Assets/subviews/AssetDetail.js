@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import { Carousel,Button,Tag, } from 'antd';
+import { Carousel,Button,Tag,Modal} from 'antd';
 import BTFetch from '../../../utils/BTFetch'
 import {getBlockInfo,getDataInfo} from '../../../utils/BTCommonApi'
 import {Input} from "antd/lib/index";
@@ -10,7 +10,7 @@ import {getAccount} from '../../../tools/localStore'
 const AssetMessages = messages.Asset;
 // 此处样式在Demand/subviews/styles.less中控制
 const { TextArea } = Input;
-
+const confirm = Modal.confirm;
 // const username=JSON.parse(window.localStorage.account_info).username||'';
 // const token=JSON.parse(window.localStorage.account_info).token||'';
 export default class BTAssetDetail extends PureComponent{
@@ -19,30 +19,40 @@ export default class BTAssetDetail extends PureComponent{
         this.state={
             data:this.props.location.query||[],
             username:'',
-            token:''
+            token:'',
+            getAssetType:'',
+            visible: false
         }
     }
-
-    componentDidMount(){
-        let account_info = getAccount()
-        if(account_info){
-            this.setState({
-                username:account_info.username,
-                token:account_info.token
-            })
-        }
+    handleCancel (e){
+        this.setState({
+            visible: false,
+        });
+    }
+    showModal(e) {
+        this.setState({
+            visible: true,
+        });
     }
 
-
-    async buy(){
-        if(this.state.data.username == this.state.username){
-            message.warn('不允许购买自己的资产！！！')
+    async handleOk(){
+        this.setState({
+            visible: false,
+        });
+        message.destroy();
+        if(!getAccount()){
+            message.warning(window.localeInfo["Asset.PleaseLogInFirst"])
             return;
         }
+        if(this.state.data.username == getAccount().username){
+            message.warning(window.localeInfo["Asset.YouAreNotAllowedToBuyYourOwnAssets"])
+            return;
+        }
+
         //获取区块信息
         let _block=(await getBlockInfo());
         if(_block.code != 0){
-            message.error('获取区块信息失败');
+            message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
             return;
         }
         let block=_block.data;
@@ -53,8 +63,8 @@ export default class BTAssetDetail extends PureComponent{
             "args":{
                 "data_deal_id":window.uuid,
                 "basic_info":{
-                    "user_name":this.state.username,
-                    "session_id":this.state.token,
+                    "user_name":getAccount().username,
+                    "session_id":getAccount().token,
                     "asset_id":this.state.data.asset_id,
                     "random_num":Math.ceil(Math.random()*100),
                     "signature":"0xxxxxxxx"
@@ -65,13 +75,13 @@ export default class BTAssetDetail extends PureComponent{
         console.log(getDataBin)*/
         let _getDataBin=(await getDataInfo(data));
         if(_getDataBin.code!=0){
-            message.error('获取区块数据失败');
+            message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
             return;
         }
         //数组排序
         let array=[
             "assetmng",
-            this.state.username,
+            getAccount().username,
             this.state.data.username,
             "datadealmng",
             "datafilemng"
@@ -95,21 +105,44 @@ export default class BTAssetDetail extends PureComponent{
             .then(res=>{
             console.log(res);
             if(res.code == 1){
-                message.success('购买成功')
+                message.success(window.localeInfo["Asset.SuccessfulPurchase"])
+            }else if(res.code == 4001){
+                message.warning(window.localeInfo["Asset.InsufficientBalance"])
             }else{
-                message.error('购买失败')
+                message.error(window.localeInfo["Asset.FailedPurchase"])
             }
+        }).catch(error=>{
+
         })
     }
-    download(index){
-        let iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-        iframe.src = index;
-        document.body.appendChild(iframe);
+    download(index) {
+        let a = document.createElement('a');
+        // let url = res.data;
+        let filename = '样例';
+        a.href = index;
+        a.download =filename;
+        a.click();
+    }
+    componentWillMount(){
+    }
+    componentWillReceiveProps(nextProps){
+        if(this.props==nextProps){
+            return;
+        }
+        let data=this.props.location.query;
+        let asset_type=data.asset_type.substring(0,2);
+        switch (asset_type){
+            case '11':this.setState({getAssetType:'Automatic Transmission'});break;
+            case '12':this.setState({getAssetType:'Medical'});break;
+            case '13':this.setState({getAssetType:'Finance'});break;
+            case '14':this.setState({getAssetType:'Retail'});break;
+            case '15':this.setState({getAssetType:'Security'});break;
+        }
+        console.log(asset_type)
     }
     render(){
         let data=this.props.location.query;
-        console.log(data);
+        let time=new Date((data.expire_time)*1000).toLocaleDateString();
         return(
             <div className="assetDetailBox">
                 <h2>
@@ -124,10 +157,15 @@ export default class BTAssetDetail extends PureComponent{
                         {data.asset_id}
                         </p>
                     <p>
+                        <FormattedMessage {...AssetMessages.Publisher}/>
+                        {data.username}
+                    </p>
+
+                    <p>
                         <span>
                             <FormattedMessage {...AssetMessages.AssetType}/>
                         </span>
-                        {data.type}
+                        {this.state.getAssetType}
                     </p>
                     <p>
                         <span>
@@ -139,20 +177,39 @@ export default class BTAssetDetail extends PureComponent{
                         <span>
                             <FormattedMessage {...AssetMessages.ExpireTime}/>
                         </span>
-                        {data.expire_time}
+                        {/*{data.expire_time}*/}{time}
                         </p>
-                    <Tag>{data.feature_tag}</Tag>
+                    {/*<Tag color="magenta">{data.feature_tag1}</Tag>*/}
+                    <div className="tag">
+                         <span>
+                             <FormattedMessage {...AssetMessages.FeatureTag}/>
+                            {/*<FormattedMessage {...AssetMessages.ExpireTime}/>*/}
+                        </span>
+                        <Tag>{data.feature_tag1}</Tag>
+                        <Tag>{data.feature_tag2}</Tag>
+                        <Tag>{data.feature_tag3}</Tag>
+                    </div>
+
                 </div>
                 <ul>
                     <li>
-                        <Button onClick={(e)=>this.buy(e)} type="primary" className="buyButton">
+                        <Button onClick={()=>this.showModal()} type="primary" className="buyButton">
                             <FormattedMessage {...AssetMessages.BuyAssets}/>
                         </Button>
                     </li>
                     <li>
-                        <Button onClick={(e)=>this.download(data.sample_path)} type="primary">
-                                <FormattedMessage {...AssetMessages.DownLoadTheSample}/>
+                        <Button onClick={()=>this.download(data.sample_path)} type="primary">
+                            <FormattedMessage {...AssetMessages.DownLoadTheSample}/>
                         </Button>
+                        <Modal
+                            visible={this.state.visible}
+                            onOk={(e)=>this.handleOk(e)}
+                            onCancel={(e)=>this.handleCancel(e)}
+                        >
+                            <p>
+                                <FormattedMessage {...AssetMessages.AreYouSureToBuyThisAsset}/>
+                            </p>
+                        </Modal>
                     </li>
                 </ul>
                 <div className="dataDescription">

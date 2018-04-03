@@ -8,6 +8,8 @@ import './styles.less'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {Icon} from 'antd'
+import {getAccount} from "../../../tools/localStore";
+
 const DemandMessages = messages.Demand;
 
 
@@ -22,11 +24,22 @@ export default class BTRequireCell extends PureComponent{
         super(props)
         this.state={
             exampledata:[],
+            username:'',
+            token:'',
         }
     }
+    componentDidMount(){
+
+    }
     commitAsset(){
+        if(getAccount()){
+
+        }else{
+            message.error(window.localeInfo["Demand.PleaseLogInFirst"])
+            return ;
+        }
         let param={
-            userName:JSON.parse(window.localStorage.account_info).username||'',
+            userName:getAccount().username||'',
             random:Math.ceil(Math.random()*100),
             signature:'0xxxx'
         };
@@ -34,20 +47,19 @@ export default class BTRequireCell extends PureComponent{
             .then(res=>{
                 if(res.code==0){
                     if(res.data.rowCount==0){
-                        message.warning('暂无数据');
+                        message.warning(window.localeInfo["Demand.ThereIsNoDataForTheTimeBeing"])
                         return;
                     };
-                    console.log(res.data.row,res.data)
                     this.setState({
                         exampledata:res.data.row,
                     });
                 }else{
-                    message.warning('获取文件资源库失败')
+                    message.warning(window.localeInfo["Demand.FailedToGetTheFileResourceSet"])
                     return;
                 }
             })
             .catch(error=>{
-                message.warning('获取文件资源库失败')
+                message.warning(window.localeInfo["Demand.FailedToGetTheFileResourceSet"])
             })
         this.assetListModal.setState({
             visible:true
@@ -59,7 +71,7 @@ export default class BTRequireCell extends PureComponent{
         console.log(fileInfo);
         let asset=fileInfo.value;
         if(!fileInfo.value){
-            message.error('暂无提交资产');
+            message.error(window.localeInfo["Demand.ThereIsNoAssetForTheTimeBeing"])
             return ;
         };
         let param={
@@ -68,8 +80,8 @@ export default class BTRequireCell extends PureComponent{
             "args":{
                 "data_presale_id":window.uuid,
                 "basic_info":{
-                    "user_name":JSON.parse(window.localStorage.account_info).username||'',
-                    "session_id":JSON.parse(window.localStorage.account_info).token||'',
+                    "user_name":this.state.username,
+                    "session_id":this.state.token,
                     "asset_id":fileInfo.value,
                     "asset_name":"assetidtest123",
                     "data_req_id":this.props.requirement_id,
@@ -83,7 +95,7 @@ export default class BTRequireCell extends PureComponent{
         let block=await getBlockInfo();
         let getDate=await getDataInfo(param);
         if(block.code!=0||getDate.code!=0){
-            message.error('获取区块信息失败');
+            message.error(window.localeInfo["Demand.FailedToGetTheBlockMessages"])
             return;
         }
         let data={
@@ -103,36 +115,38 @@ export default class BTRequireCell extends PureComponent{
         BTFetch('/user/AddNotice','post',data)
             .then(res=>{
                 if(res.code==1&&res.data!='null'){
-                    message.success('推销资产成功')
+                    message.success(window.localeInfo["Demand.SuccessfulPromote"])
                 }else{
-                    message.error('推销资产失败')
+                    message.error(window.localeInfo["Demand.FailedPromote"])
                 }
             })
     }
     render(){
         let data = this.props;
-        let linkto = this.props.linkto || '/'
+        let linkto = this.props.linkto || '/';
         let path = {
             pathname:linkto,
             state:data
         }
-
+        let time=new Date((data.expire_time)*1000).toLocaleString();
         return (
                 <div className="assetList">
                     <BTAssetList exampledata={this.state.exampledata} ref={(ref)=>this.assetListModal = ref} handleFile={(fileInfo)=>this.handleFile(fileInfo)}/>
                     <div>
-                        <h4 className="headAndShop"><Link to={path}>{data.requirement_name}</Link></h4>
+                        <h4 className="headAndShop"><Link to={path}>{data.requirement_name.length < 27 ? data.requirement_name:data.requirement_name.substring(0,27)+'...'}</Link></h4>
                         <p>
                             <FormattedMessage {...DemandMessages.Publisher}/>
                             {data.username}
                         </p>
                         <span>
                             <FormattedMessage {...DemandMessages.ExpireTime}/>
-                            {data.expire_time}
+                            {/*{data.expire_time}*/}
+                            {time}
                         </span>
                         <div>
-                            <img src="./img/token.png" width='12' alt=""/>
+                            <FormattedMessage {...DemandMessages.ExpectedPrice}/>
                             <span>{data.price}</span>
+                            <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
                         </div>
                     </div>
                 </div>
