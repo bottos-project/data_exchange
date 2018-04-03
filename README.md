@@ -12,20 +12,20 @@ Bottos web wallet is an application to transfer Bottos tokens. It provides an AI
 
 ## V2.0 Release note：
 
-   Improve the transaction speed with new consensus algorithm
+   Improve the transaction speed with new consensus algorithm.
    
-   Support user and account model
+   Support user and account model.
 
-   Improve data assets registration procedure including data uploading 
+   Improve data assets registration procedure including data uploading.
 
-   Support trading model and improving user experience
+   Support trading model and improving user experience.
 
-   Support distributed data storage big data storage 
+   Support distributed data storage big data storage.
 
-   Support multi-language version, including English and Mandarin 
+   Support multi-language version, including English and Mandarin.
 
-   Native block explorer, supporting node inquire and block statistics
+   Native block explorer, supporting node inquire and block statistics.
 
-   Wallet with ECDSA signature algorithm
+   Wallet with ECDSA signature algorithm.
 ## License
 GPLv3 licensed.
