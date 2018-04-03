@@ -1,20 +1,22 @@
+# [![Bottos Logo](https://github.com/Bottos-project/wallet/blob/master/pic/logo.png]v2.0 
+Bottos web wallet is an application that provides BTO transfer. It provides a AI data market, which allows user exchange and store AI data assets. 
 
-# Wallet code for Bottos
+V2.0 Release note：
 
-```
-    ●  Browser AI data market
+   Improve the transaction speed with new consensus algorithm
+   
+   Support user and account model
 
-    ●  Upload data files
+   Improve data assets registration procedure including data uploading 
 
-    ●  Register data assets
+   Support trading model and improving user experience
 
-    ●  Publish data requirements
+   Support distributed data storage big data storage 
 
-    ●  Exchange between providers and consumers
+   Support multi-language version, including English and Mandarin 
 
-    ●  Transfer tokens
-```
+   Native block explorer, supporting node inquire and block statistics
 
+   Wallet with ECDSA signature algorithm
 # License
-
 GPLv3 licensed.
