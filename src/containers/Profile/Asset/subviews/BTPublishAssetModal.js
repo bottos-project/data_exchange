@@ -14,6 +14,7 @@ import {options} from '../../../../utils/option'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import moment from "moment"
+import uuid from 'node-uuid'
 const PersonalAssetMessages = messages.PersonalAsset;
 const RangePicker = DatePicker.RangePicker;
 const { TextArea } = Input;
@@ -26,7 +27,12 @@ const children = [];
 for (let i = 10; i < 36; i++) {
     children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
 }
-
+String.prototype.trim=function() {
+    return this.replace(/(^\s*)/g,'');
+};
+String.prototype.trims=function() {
+    return this.replace(/(\s*$)/g,'');
+};
 export default class BTPublishAssetModal extends PureComponent{
     constructor(props){
         super(props)
@@ -59,7 +65,25 @@ export default class BTPublishAssetModal extends PureComponent{
     }
     onCancel(){
         this.setState({
-            visible:false
+            date11:'',
+            cascader:'',
+            value:1,
+            title:'',
+            number:'',
+            description:'',
+            tag1:'',
+            tag2:'',
+            tag3:'',
+            dataAssetType:'',
+            getFileNameTemp:'',
+            getFileName:'',
+            getExampleUrl:'',
+            getRealUrl:'',
+            expire_time:'',
+            sample_hash:'',
+            storage_hash:'',
+            visible:false,
+            // visible:false
         })
     }
     onChangeDataAssetType(dates){
@@ -139,18 +163,21 @@ export default class BTPublishAssetModal extends PureComponent{
     }
     title(e){
         this.setState({
-            title:e.target.value,
+            title:e.target.value.trim(),
         })
     }
-    handleNumberChange = (e) => {
-        const number = parseInt(e.target.value || 0, 10);
+    handleNumberChange(e) {
+        const number = parseFloat(e.target.value || 0, 10);
         if (isNaN(number)) {
             return;
         }
-        if (!('value' in this.props)) {
+        this.setState({number:e.target.value})
+
+
+        /*if (!('value' in this.props)) {
             this.setState({ number });
         }
-        this.triggerChange({ number });
+        this.triggerChange({ number });*/
     };
     triggerChange = (changedValue) => {
         // Should provide an event to pass value to Form.
@@ -166,7 +193,7 @@ export default class BTPublishAssetModal extends PureComponent{
     }*/
     description(e){
         this.setState({
-            description:e.target.value
+            description:e.target.value.trim()
         })
     }
     tag1(e){
@@ -194,14 +221,12 @@ export default class BTPublishAssetModal extends PureComponent{
     }
     getFileName(fileInfo){
         if(fileInfo.type=='asset'){
-            console.log('上传资产',fileInfo)
             this.setState({
                 getFileName:fileInfo.value,
                 storage_hash:fileInfo.hash,
                 getRealUrl:fileInfo.getRealUrl,
             })
         }else if(fileInfo.type=='assetTemp'){
-            console.log('上传样例',fileInfo)
             this.setState({
                 getFileNameTemp:fileInfo.value,
                 sample_hash:fileInfo.hash,
@@ -217,9 +242,16 @@ export default class BTPublishAssetModal extends PureComponent{
                 return;
             }
         }
-        if(this.state.price>0){
-            message.warning('发布需求价格需大于0')
+        if(this.state.number<=0||this.state.number>=10000000000){
+            message.warning(window.localeInfo["PersonalAsset.InputPrice"]);
+            return;
         }
+        let reg=/^\d+(?:\.\d{1,10})?$/
+        if(!reg.test(this.state.number)){
+            message.warning('输入正确的价格');
+            return;
+        }
+        console.log(this.state)
         let _blockInfo = (await getBlockInfo());
         if(_blockInfo.code!=0){
             message.error(window.localeInfo["PersonalAsset.FailedToGetTheBlockMessages"])
@@ -230,11 +262,11 @@ export default class BTPublishAssetModal extends PureComponent{
             "code": "assetmng",
             "action": "assetreg",
             "args": {
-                "asset_id": window.uuid,
+                "asset_id": uuid.v1(),
                 "basic_info": {
                     "user_name":getAccount().username||'',
                     "session_id": getAccount().token||'',
-                    "asset_name": this.state.title,
+                    "asset_name": this.state.title.trims(),
                     "asset_type": this.state.dataAssetType,
                     "feature_tag1": this.state.tag1,
                     "feature_tag2": this.state.tag2,
@@ -244,8 +276,8 @@ export default class BTPublishAssetModal extends PureComponent{
                     "storage_path": this.state.getRealUrl,
                     "storage_hash": this.state.storage_hash,
                     "expire_time": this.state.expire_time,
-                    "price": this.state.number,
-                    "description": this.state.description,
+                    "price": this.state.number*Math.pow(10,10),
+                    "description": this.state.description.trims(),
                     "upload_date": 1,
                     "signature": "0xxxx"
                 }
@@ -340,7 +372,13 @@ export default class BTPublishAssetModal extends PureComponent{
                             <Button style={{width:"170px"}} type="upload" examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>
                                 <FormattedMessage{...PersonalAssetMessages.SetScreeningSample}/>
                             </Button>
-                            <span>{this.state.getFileNameTemp}</span>
+                            <span className='filename'>{
+                                this.state.getFileNameTemp.length<=14
+                                ?
+                                this.state.getFileNameTemp
+                                :
+                                this.state.getFileNameTemp.split('.')[0].substring(0,5)+'...'+this.state.getFileNameTemp.split('.')[1]
+                            }</span>
                             {/*<Button>*/}
                             {/*<span type="upload"  onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</span>*/}
                             {/*</Button>*/}
@@ -352,7 +390,13 @@ export default class BTPublishAssetModal extends PureComponent{
                             <Button style={{width:"170px"}} exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>
                                 <FormattedMessage {...PersonalAssetMessages.SetScreeningFile}/>
                             </Button>
-                            <span>{this.state.getFileName}</span>
+                            <span className='filename'>{
+                                this.state.getFileName.length<=14
+                                    ?
+                                    this.state.getFileName
+                                    :
+                                    this.state.getFileName.split('.')[0].substring(0,5)+'...'+this.state.getFileName.split('.')[1]
+                            }</span>
                             {/*<Button>*/}
                             {/*<span onClick={()=>this.commitAsset('asset')}>资源库筛选</span>*/}
                             {/*</Button>*/}
@@ -361,7 +405,7 @@ export default class BTPublishAssetModal extends PureComponent{
                         <span className="align">
                             <FormattedMessage {...PersonalAssetMessages.AssetName}/>
                         </span>
-                            <Input placeholder={window.localeInfo["PersonalAsset.Name"]} value={this.state.password} value={this.state.title} onChange={(e)=>this.title(e)} />
+                            <Input placeholder={window.localeInfo["PersonalAsset.Name"]}  value={this.state.title} onChange={(e)=>this.title(e)} />
                         </div>
                         <div>
                         <span className="align">
@@ -370,7 +414,7 @@ export default class BTPublishAssetModal extends PureComponent{
                             <Input placeholder={window.localeInfo["PersonalAsset.Price"]}
                                    // value={this.state.price}
                                    value={this.state.number}
-                                   onChange={this.handleNumberChange}/* onChange={(e)=>this.price(e)} */
+                                   onChange={(e)=>this.handleNumberChange(e)}/* onChange={(e)=>this.price(e)} */
                             />
                             <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
                         </div>

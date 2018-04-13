@@ -7,6 +7,7 @@ import BTFetch from "../../../../utils/BTFetch";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import {getAccount} from '../../../../tools/localStore'
+import uuid from 'node-uuid'
 const PersonalDemandMessages = messages.PersonalDemand;
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const FormItem = Form.Item;
@@ -134,7 +135,7 @@ export default class BTPublishDemand extends PureComponent{
             code: "datareqmng",
             action: "datareqreg",
             args: {
-                data_req_id: window.uuid,
+                data_req_id: uuid.v1(),
                 basic_info: {
                     user_name: this.state.username,
                     session_id: this.state.token,

@@ -4,6 +4,8 @@ import BTFetch from '../../../../utils/BTFetch';
 import {getBlockInfo} from '../../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
+import BTCryptTool from '../../../../tools/BTCryptTool'
+import BTIPcRenderer from "../../../../tools/BTIpcRenderer";
 const WalletMessages = messages.Wallet;
 const FormItem = Form.Item;
 
@@ -22,7 +24,8 @@ export default class BTTransaction extends PureComponent{
     constructor(props){
         super(props)
         this.state = {
-            visible:false
+            visible:false,
+            keyStore:{},
         }
     }
 
@@ -35,6 +38,7 @@ export default class BTTransaction extends PureComponent{
     onHandleCancel(){
         this.setState({
             visible:false
+
         })
     }
 
@@ -61,7 +65,6 @@ class Transaction extends PureComponent{
     // 转账
     async onHandleSubmit(){
         message.destroy();
-        console.log(this.props)
         const { getFieldDecorator,getFieldsValue,getFieldValue,setFields } = this.props.form;
         let fieldValues = getFieldsValue()
 
@@ -72,10 +75,24 @@ class Transaction extends PureComponent{
         if(!fieldValues.quantity){
             message.error(window.localeInfo["Wallet.PleaseEnterTheMoneyToBeTransferred"])
             return}
-        if(!fieldValues.password) {
+       /* if(!fieldValues.password) {
             message.error(window.localeInfo["Wallet.PleaseEnterThePassword"])
+            return}*/
+        if(fieldValues.quantity<=0){
+            message.error(window.localeInfo["Wallet.PleaseEnterAvalidTransferAmount"])
             return}
 
+
+        //根据密码解密keysotre
+        // let keyStoreObj = BTIPcRenderer.importFile()
+
+        // console.log(keyStoreObj)
+        // let decryptoStr = BTCryptTool.aesDecrypto(keyStoreObj,fieldValues.password);
+        // let decryptoData = JSON.parse(decryptoStr);
+        /*if(decryptoData.code!='0'){
+            message.error(window.localeInfo["Header.TheWrongPassword"]);
+            return;
+        }*/
         // 通过密码获取from账户名
         let from = this.props.selectWallet;
         let to = fieldValues.to;
@@ -90,7 +107,7 @@ class Transaction extends PureComponent{
             args:{
                 from:from,
                 to:to,
-                quantity:parseFloat(quantity)
+                quantity:parseFloat(quantity)*Math.pow(10,10)
             }
         }
         let getDataResult = await BTFetch(reqUrl,'POST',dataParams);
@@ -147,7 +164,8 @@ class Transaction extends PureComponent{
             setFields({
                 from:'',
                 to:'',
-                password:''
+                password:'',
+                quantity:''
             })
             this.props.closeModal()
         }).catch(error=>{
@@ -169,14 +187,14 @@ class Transaction extends PureComponent{
                         <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout}>
                             {getFieldDecorator('quantity', {
                                 rules: [{ required: true, message: '请填写转账金额!' }],
-                            })(<div><InputNumber /><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div>)}
+                            })(<div><InputNumber min={0} max={Math.pow(10,10)}/><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div>)}
                         </FormItem>
 
-                        <FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
+                       {/* <FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
                             {getFieldDecorator('password', {
                                 rules: [{ required: true, message: '请填写账户密码!' }],
                             })(<Input type="password"/>)}
-                        </FormItem>
+                        </FormItem>*/}
 
                         <div className="container marginRight" style={{justifyContent:'flex-end'}}>
                             <Button onClick={()=>this.onHandleSubmit()}>

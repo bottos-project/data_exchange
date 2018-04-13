@@ -56,6 +56,9 @@ export default class BTDemand extends PureComponent{
         this.getPagination(1,12)
     }
     onChange(page,pageSize){
+        /*this.setState({
+            dataSource:[]
+        })*/
         this.getPagination(page,pageSize)
     }
     getPagination(page,pageSize){

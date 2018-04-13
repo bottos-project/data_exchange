@@ -42,10 +42,10 @@ export default class BTAssetDetail extends PureComponent{
                         </span>
                 }
             },
-            { title:  <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price',render:(item,record)=>{
+            { title:  <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price',render:(price)=>{
                        return <div>
                             {/*<img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>*/}
-                            <span>{this.renderColumns(item,record,'price')}</span>
+                            <span>{price/Math.pow(10,10)}</span>
                         </div>
                     }
             },

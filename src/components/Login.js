@@ -50,16 +50,17 @@ export default class Login extends PureComponent{
             return
         }
 
-        let keyStoreResult = BTIPcRenderer.getKeyStore({
-            username:username,
-            account_name:username
-        });
-        if(keyStoreResult.error){
-            message.error(window.localeInfo["Header.PleaseImportTheKeystoreFirst"]);
-            return;
-        }
-        let keyStoreStr = keyStoreResult.result;
-        let keyStoreObj = JSON.parse(keyStoreStr)
+        // let keyStoreResult = BTIPcRenderer.getKeyStore({
+        //     username:username,
+        //     account_name:username
+        // });
+        // if(keyStoreResult.error){
+        //     message.error(window.localeInfo["Header.PleaseImportTheKeystoreFirst"]);
+        //     return;
+        // }
+        // let keyStoreStr = keyStoreResult.result;
+        // let keyStoreObj = JSON.parse(keyStoreStr)
+        let keyStoreObj = this.state.keyStore
         // 用密码解密keyStore
         try{
             let decryptoStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
@@ -149,24 +150,30 @@ export default class Login extends PureComponent{
 
     importKeyStore(){
         let keyStoreObj = BTIPcRenderer.importFile()
-        if(keyStoreObj.error){
-            message.error(keyStoreObj.error)
-            return;
-        }
-        if(this.state.password==''){
-            message.error(window.localeInfo["Header.PleaseEnterThePassword"]);
-            return;
-        }
+        this.setState({
+            keyStore:keyStoreObj
+        })
+        // let account_name = keyStore.account_name;
+       // console.log(this.state.keyStore)
+        message.success(window.localeInfo["Header.ImportKeyStoreSuccess"])
+        // if(keyStoreObj.error){
+        //     message.error(keyStoreObj.error)
+        //     return;
+        // }
+        // if(this.state.password==''){
+        //     message.error(window.localeInfo["Header.PleaseEnterThePassword"]);
+        //     return;
+        // }
     
-        try{
-            let keyStoreStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
-            let keyStore = JSON.parse(keyStoreStr)
-            let account_name = keyStore.account_name;
-            // return;
-            BTIPcRenderer.saveKeyStore({username:account_name,account_name:account_name},keyStoreObj)
-        }catch(error){
-            message.error(window.localeInfo["Header.ThePasswordAndTheKeystoreDoNotMatch"]);
-        }
+        // try{
+        //     let keyStoreStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
+        //     let keyStore = JSON.parse(keyStoreStr)
+        //     let account_name = keyStore.account_name;
+        //     // return;
+        //     BTIPcRenderer.saveKeyStore({username:account_name,account_name:account_name},keyStoreObj)
+        // }catch(error){
+        //     message.error(window.localeInfo["Header.ThePasswordAndTheKeystoreDoNotMatch"]);
+        // }
     }
 
     render(){
@@ -185,6 +192,7 @@ export default class Login extends PureComponent{
                         this.state.hasKeystore ? <div></div> : (<div style={{marginTop:20}}><Button onClick={()=>this.importKeyStore()}><FormattedMessage {...LoginMessages.ImportTheKeyStore}/></Button></div>)
                     }
                 </div>
+                {/*<span>{this.state.keyStore}</span>*/}
             </Modal>
         )
     }

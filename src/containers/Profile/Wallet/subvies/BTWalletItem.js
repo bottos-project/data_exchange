@@ -24,8 +24,10 @@ export default class BTWalletItem extends PureComponent{
     }
 
     exportAccount(accountName){
+        console.log(accountName)
         let exportFileName = accountName
-        let keyStore = BTIpcRenderer.getKeyStore(accountName)
+        let keyStore = BTIpcRenderer.getKeyStore(accountName);
+        console.log(keyStore)
         if(!keyStore.error){
             BTIpcRenderer.exportKeyStore(accountName,JSON.parse(keyStore.result))
         }

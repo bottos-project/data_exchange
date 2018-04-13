@@ -24,7 +24,9 @@ export default class BTOtherExchange extends PureComponent{
                 }},
             { title: <FormattedMessage {...BlockBrowsingMessages.From}/>, dataIndex: 'from', key: 'from'},
             { title: <FormattedMessage {...BlockBrowsingMessages.To}/>, dataIndex: 'to', key: 'to'},
-            { title: <FormattedMessage {...BlockBrowsingMessages.Price}/>, dataIndex: 'price', key: 'price'},
+            { title: <FormattedMessage {...BlockBrowsingMessages.Price}/>, dataIndex: 'price', key: 'price',render:(price)=>{
+                return <span>{price/Math.pow(10,10)}</span>
+                }},
 
         ];
     }

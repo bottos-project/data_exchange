@@ -52,7 +52,7 @@ export default class BTAccountList extends PureComponent{
     }
 
     render(){
-        console.log(this.state.accoutList,this.props)
+        // console.log(this.state.accoutList,this.props)
         return(
             <div className="container">
                 <List

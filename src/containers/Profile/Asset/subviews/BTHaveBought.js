@@ -29,7 +29,7 @@ export default class BTHaveBought extends PureComponent{
             { title: <FormattedMessage {...PersonalAssetMessages.AssetTypePrice}/>, dataIndex: 'price', key: 'price',render:(price)=>
                     <div>
                         <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
-                        <span>{price}</span>
+                        <span>{price/Math.pow(10,10)}</span>
                     </div>
             },
            /* { title: <FormattedMessage {...PersonalAssetMessages.AssetTypePrice}/>, dataIndex: 'price', key: 'price1',render:(price)=>

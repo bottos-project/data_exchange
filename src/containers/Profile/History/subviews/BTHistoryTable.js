@@ -10,7 +10,9 @@ export default class BTHistoryTable extends PureComponent{
         super(props);
         this.state={
             data:[],
+            rowCount:'',
         }
+        this.onChange=this.onChange.bind(this)
     }
     columns(data){
         return [
@@ -20,7 +22,7 @@ export default class BTHistoryTable extends PureComponent{
             { title: <FormattedMessage {...HistoryMessages.Price}/>, dataIndex: 'price', key: 'price',render:(price)=>
                     <div>
                         <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
-                        <span>{price}</span>
+                        <span>{price/Math.pow(10,10)}</span>
                     </div>
             },
             { title: <FormattedMessage {...HistoryMessages.From}/>, dataIndex: 'from',key:'from'},
@@ -36,24 +38,44 @@ export default class BTHistoryTable extends PureComponent{
         ];
     }
     componentDidMount(){
-        BTFetch('/dashboard/GetRecentTxList','get').then(res=>{
-            if(res&&res.code==1){
-                if(res.data&&res.data.rowCount>0){
+        this.getPagination(1,10);
+    }
+    onChange(page, pageSize) {
+        this.getPagination(page, pageSize);
+    }
+    pagination(){
+        let pagination={
+            total:this.state.rowCount,
+            defaultCurrent:1,
+            pageSize:10,
+            showQuickJumper:true,
+            onChange:this.onChange
+        }
+        return pagination
+    }
+    getPagination(page,pageSize){
+        let param={
+            pageSize:pageSize,
+            pageNum:page
+        };
+        BTFetch('/dashboard/GetRecentTxList','POST',param).then(res => {
+            if (res&&res.code == 1) {
+                if(res.data.rowCount>0){
+                    let data=res.data.row;
                     this.setState({
-                        data:res.data.row,
-                    })
+                        data,
+                        rowCount:res.data.rowCount
+                    });
                 }
-            }else{
-                message.warning(window.localeInfo["Check.ThereIsNoHistoricalTransactionForTheTimeBeing"])
             }
-        })
+        });
     }
     render(){
         const { data } = this.state;
         const columns = this.columns(data);
         return(
             <div>
-                <Table className="shadow radius table" columns={columns} dataSource={this.state.data} size="middle" bordered />
+                <Table pagination={this.pagination()} className="shadow radius table" columns={columns} dataSource={this.state.data} size="middle" bordered />
             </div>
         )
     }

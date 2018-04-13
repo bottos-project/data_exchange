@@ -9,7 +9,7 @@ import BTAssetList from './BTAssetList'
 import {browerHistory} from 'react-router'
 import './styles.less'
 import {getAccount} from "../../../tools/localStore";
-
+import uuid from 'node-uuid'
 const DemandMessages = messages.Demand;
 const { TextArea } = Input;
 
@@ -66,7 +66,7 @@ export default class BTDemanDetail extends PureComponent{
             "code":"datadealmng",
             "action":"datapresale",
             "args":{
-                "data_presale_id":window.uuid,
+                "data_presale_id":uuid.v1(),
                 "basic_info":{
                     "user_name":this.props.location.state.username,
                     "session_id":'',
@@ -120,7 +120,7 @@ export default class BTDemanDetail extends PureComponent{
     }
     render(){
         let data = this.props.location.state||[];
-        let date=(new Date((data.expire_time)*1000)).toLocaleString()
+        let date=(new Date((data.expire_time)*1000)).toLocaleDateString()
         return(
             <div className="demandDetailBox">
                 <BTAssetList exampledata={this.state.exampledata} ref={(ref)=>this.assetListModal = ref} handleFile={(fileInfo)=>this.handleFile(fileInfo)}/>
@@ -143,7 +143,7 @@ export default class BTDemanDetail extends PureComponent{
                         <span>
                             <FormattedMessage {...DemandMessages.ExpectedPrice}/>
                         </span>
-                        {data.price}
+                        {data.price/Math.pow(10,10)}
                         <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
                     </p>
                     <p>

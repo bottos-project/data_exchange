@@ -7,6 +7,7 @@ import {message} from "antd/lib/index";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from '../../../tools/localStore'
+import uuid from 'node-uuid'
 const AssetMessages = messages.Asset;
 // 此处样式在Demand/subviews/styles.less中控制
 const { TextArea } = Input;
@@ -34,21 +35,7 @@ export default class BTAssetDetail extends PureComponent{
             visible: true,
         });
     }
-
-    async handleOk(){
-        this.setState({
-            visible: false,
-        });
-        message.destroy();
-        if(!getAccount()){
-            message.warning(window.localeInfo["Asset.PleaseLogInFirst"])
-            return;
-        }
-        if(this.state.data.username == getAccount().username){
-            message.warning(window.localeInfo["Asset.YouAreNotAllowedToBuyYourOwnAssets"])
-            return;
-        }
-
+    async buySureAsset(){
         //获取区块信息
         let _block=(await getBlockInfo());
         if(_block.code != 0){
@@ -61,7 +48,7 @@ export default class BTAssetDetail extends PureComponent{
             "code":"datadealmng",
             "action":"datapurchase",
             "args":{
-                "data_deal_id":window.uuid,
+                "data_deal_id":uuid.v1(),
                 "basic_info":{
                     "user_name":getAccount().username,
                     "session_id":getAccount().token,
@@ -71,8 +58,6 @@ export default class BTAssetDetail extends PureComponent{
                 }
             }
         };
-        /*let getDataBin=(await getDataInfo(data)).data.bin;
-        console.log(getDataBin)*/
         let _getDataBin=(await getDataInfo(data));
         if(_getDataBin.code!=0){
             message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
@@ -86,7 +71,6 @@ export default class BTAssetDetail extends PureComponent{
             "datadealmng",
             "datafilemng"
         ].sort();
-        console.log(array);
         let param={
             "ref_block_num": block.ref_block_num,
             "ref_block_prefix": block.ref_block_prefix,
@@ -103,17 +87,50 @@ export default class BTAssetDetail extends PureComponent{
         };
         BTFetch('/exchange/consumerBuy','post',param)
             .then(res=>{
-            console.log(res);
-            if(res.code == 1){
-                message.success(window.localeInfo["Asset.SuccessfulPurchase"])
-            }else if(res.code == 4001){
-                message.warning(window.localeInfo["Asset.InsufficientBalance"])
-            }else{
-                message.error(window.localeInfo["Asset.FailedPurchase"])
-            }
-        }).catch(error=>{
+                console.log(res);
+                if(res.code == 1){
+                    message.success(window.localeInfo["Asset.SuccessfulPurchase"])
+                }else if(res.code == 4001){
+                    message.warning(window.localeInfo["Asset.InsufficientBalance"])
+                }else{
+                    message.error(window.localeInfo["Asset.FailedPurchase"])
+                }
+            }).catch(error=>{
 
         })
+    }
+    async handleOk(){
+        this.setState({
+            visible: false,
+        });
+        message.destroy();
+        if(!getAccount()){
+            message.warning(window.localeInfo["Asset.PleaseLogInFirst"])
+            return;
+        }
+        if(this.state.data.username == getAccount().username){
+            message.warning(window.localeInfo["Asset.YouAreNotAllowedToBuyYourOwnAssets"])
+            return;
+        }
+        //查询是否已购买资产
+        let buysure={
+            "username":getAccount().username,
+            "random":Math.ceil(Math.random()*100),
+            "signatures":'0XXXX',
+            "asset_id":this.state.data.asset_id,
+        };
+        await BTFetch('/asset/GetUserPurchaseAssetList','post',buysure).then(res=>{
+            if(res&&res.code==0){
+                if(res.data.rowCount>=1){
+                    message.warning(window.localeInfo["Asset.CannotPurchaseAgain"]);
+                    return;
+                }else{
+                   this.buySureAsset()
+                }
+            }
+        }).catch(error=>{
+        });
+
     }
     download(index) {
         let a = document.createElement('a');
@@ -171,7 +188,7 @@ export default class BTAssetDetail extends PureComponent{
                         <span>
                             <FormattedMessage {...AssetMessages.ExpectedPrice}/>
                         </span>
-                        {data.price}
+                        {data.price/Math.pow(10,10)}
                     </p>
                     <p>
                         <span>

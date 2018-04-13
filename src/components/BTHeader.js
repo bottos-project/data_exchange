@@ -134,13 +134,13 @@ class BTHeader extends PureComponent{
             return;
         }
         BTFetch(url,'POST').then(response=>{
-            if(response && response.code=='0'){
+            // if(response && response.code=='0'){
                 deleteAccount()
                 this.setState({isLogin:false})
                 message.success(window.localeInfo["Header.SuccessToLogOut"]);
-            }else{
-                message.error(window.localeInfo["Header.FailedLogOut"]);
-            }
+            // }else{
+            //     message.error(window.localeInfo["Header.FailedLogOut"]);
+            // }
         }).catch(error=>{
             message.error(window.localeInfo["Header.FailedLogOut"]);
         })

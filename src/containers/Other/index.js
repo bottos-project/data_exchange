@@ -15,7 +15,8 @@ export default class BTOther extends PureComponent{
             Total_Trans:'',
             Total_Nodes:'',
             newblock:'',
-            Total_Block:''
+            Total_Block:'',
+            map:[]
         }
     }
     getNewBlock(){
@@ -30,6 +31,23 @@ export default class BTOther extends PureComponent{
             }
         });
     }
+    componentDidMount(){
+        BTFetch('/dashboard/GetNodeInfos','GET').then(res=>{
+            if(res&&res.code == 0){
+                if(res.data==null){
+                    return ;
+                }
+                let node=[];
+                for(let i of res.data){
+                    node.push(i.address.split('|'));
+                }
+                this.setState({
+                    Total_Nodes:res.data.length,
+                    map:node,
+                })
+            }
+        }).catch(error=>error)
+    }
     render(){
         return(
             <div className="container column">
@@ -37,10 +55,10 @@ export default class BTOther extends PureComponent{
                     <BTOtherTitle/>
                 </div>
                 <div>
-                    <BTOtherAllBlock lastBlock={this.state.Total_Block}/>
+                    <BTOtherAllBlock total={this.state.Total_Nodes} lastBlock={this.state.Total_Block}/>
                 </div>
                 <div>
-                    <BTMap/>
+                    <BTMap node={this.state.map} />
                 </div>
                 <div>
                     <BTOtherBlocks newblock={(block)=>this.getNewBlock(block)} />

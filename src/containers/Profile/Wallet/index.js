@@ -50,6 +50,7 @@ export default class BTWallet extends PureComponent{
                 selectWallet,
                 walletList
             })
+            // console.log(BTIpcRenderer.getKeyStore(username),selectWallet)
         }
     }
 
@@ -66,7 +67,6 @@ export default class BTWallet extends PureComponent{
             pathname:'/profile/wallet/walletlist',
             query:this.state.walletList
         }
-        console.log(this.state.walletList.toString().slice(0,-9))
         return(
             <div className="container column">
                 <div className="flex marginBottom walletWrap">
@@ -79,7 +79,7 @@ export default class BTWallet extends PureComponent{
                                 return (<CheckableTag checked={isChecked} onChange={()=>{this.checkWallet(item)}} style={tagStyle}>{item.slice(0,-9)}</CheckableTag>)
                             })
                         }
-                        <Link to={walletListPath}>更多>>></Link>
+                        <Link to={walletListPath}><FormattedMessage {...WalletMessages.More}/>>>></Link>
                     </div>
                     <BTAccountListHeader style={{float:'right'}}/>
 

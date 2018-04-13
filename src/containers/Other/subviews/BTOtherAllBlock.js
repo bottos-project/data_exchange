@@ -33,18 +33,7 @@ export default class BTOtherAllBlock extends PureComponent{
             }
         });
 
-        BTFetch('/dashboard/GetNodeInfos','GET').then(res=>{
-            if(res&&res.code == 0){
-                // let Total_Nodes=JSON.parse(res.data).length;
-                if(res.data==null){
-                    return ;
-                }
-                console.log(res.data)
-                this.setState({
-                    Total_Nodes:res.data.length
-                })
-            }
-        })
+
 
 
     }
@@ -82,7 +71,7 @@ export default class BTOtherAllBlock extends PureComponent{
                                  <FormattedMessage {...BlockBrowsingMessages.TotalNodes}/>
                              </span>
                         </div>
-                        <p>{this.state.Total_Nodes}</p>
+                        <p>{this.props.total}</p>
                     </div>
                 </div>
 

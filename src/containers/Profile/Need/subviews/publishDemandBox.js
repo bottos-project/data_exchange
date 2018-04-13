@@ -1,6 +1,6 @@
 import React,{PureComponent} from 'react'
 import moment from "moment"
-import {Upload,Modal,Form, Icon, Input, Button,DatePicker,TimePicker,message} from 'antd'
+import {Upload,Modal,Form, Icon, Input, Button,DatePicker,TimePicker,message,InputNumber} from 'antd'
 import BTUploadNeed from "./BTUploadAsset"
 import {getBlockInfo, getDataInfo} from "../../../../utils/BTCommonApi";
 import "../styles.less"
@@ -8,6 +8,7 @@ import BTFetch from "../../../../utils/BTFetch";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import {getAccount} from '../../../../tools/localStore'
+import uuid from 'node-uuid'
 const PersonalDemandMessages = messages.PersonalDemand;
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const FormItem = Form.Item;
@@ -22,6 +23,12 @@ const formItemLayout = {
         sm: { span: 12 },
     },
 };
+String.prototype.trim=function() {
+    return this.replace(/(^\s*)/g,'');
+};
+String.prototype.trims=function() {
+    return this.replace(/(\s*$)/g,'');
+};
 export default class BTPublishDemand extends PureComponent{
     constructor(props) {
         super(props)
@@ -29,7 +36,7 @@ export default class BTPublishDemand extends PureComponent{
             visible:false,
             title:"",
             textArea:"",
-            number: this.props.value || 0,
+            number: '',
             date:"",
             dateString:"",
             username:'',
@@ -58,7 +65,6 @@ export default class BTPublishDemand extends PureComponent{
         }
     }
     componentDidMount(){
-        // let getName = getAccount();
         if(getAccount()){
             this.setState({
                 username:getAccount().username,
@@ -74,23 +80,30 @@ export default class BTPublishDemand extends PureComponent{
     }
     handleCancel(){
         this.setState({
-            visible:false
+            visible:false,
+            title:"",
+            textArea:"",
+            number:'',
+            date:"",
+            date11:'',
+            dateString:'',
+            DatePicker:'',
         })
     }
     onChangeTitle(e){
+
         this.setState({
-            title:e.target.value
+            title:e.target.value.trim()
         })
     }
-    handleNumberChange = (e) => {
-        const number = parseInt(e.target.value || 0, 10);
+    handleNumberChange (e) {
+        message.destroy();
+        const number = parseFloat(e.target.value || 0, 10);
         if (isNaN(number)) {
             return;
         }
-        if (!('value' in this.props)) {
-            this.setState({ number });
-        }
-        this.triggerChange({ number });
+
+        this.setState({number:e.target.value})
     };
     triggerChange = (changedValue) => {
         // Should provide an event to pass value to Form.
@@ -116,16 +129,24 @@ export default class BTPublishDemand extends PureComponent{
     }
     onChangeTextArea(e){
         this.setState({
-            textArea:e.target.value
+            textArea:e.target.value.trim()
         })
     }
 
     //点击后数据收集、fetch
     async updata(){
-        console.log(this.state.dateString);
         message.destroy();
         if(!this.state.title || !this.state.date || !this.state.textArea){
             message.warning(window.localeInfo["PersonalDemand.PleaseImproveTheDemand"])
+            return;
+        }
+        if(this.state.number<=0||this.state.number>=10000000000){
+            message.warning(window.localeInfo["PersonalDemand.PleaseInputPrice"])
+            return;
+        }
+        let reg=/^\d+(?:\.\d{1,10})?$/
+        if(!reg.test(this.state.number)){
+            message.warning('输入正确的价格');
             return;
         }
         //链的data
@@ -133,23 +154,23 @@ export default class BTPublishDemand extends PureComponent{
             code: "datareqmng",
             action: "datareqreg",
             args: {
-                data_req_id: window.uuid,
+                data_req_id: uuid.v1(),
                 basic_info: {
                     user_name: getAccount().username,
                     session_id: getAccount().token,
-                    requirement_name: this.state.title,
+                    requirement_name: this.state.title.trims(),
                     feature_tag: 111,
                     sample_path: "pathtest",
                     sample_hash: "hashtest",
                     expire_time: (new Date(this.state.dateString).getTime())/1000,//截止时间时间戳
-                    price: this.state.number,
-                    description: this.state.textArea,
+                    price: this.state.number*Math.pow(10,10),
+                    description: this.state.textArea.trims(),
                     publish_date: '1',//当前时间戳
                     signature: "sigtest"
                 }
             }
         }
-
+        console.log(blockData)
         let blockInfo = await getBlockInfo();
         let blockDataBin = await getDataInfo(blockData);
         if(blockInfo.code!=0 || blockDataBin.code!=0){
@@ -181,7 +202,7 @@ export default class BTPublishDemand extends PureComponent{
                         visible: false,
                         title:"",
                         textArea:"",
-                        number:0,
+                        number:'',
                         date:"",
                         date11:'',
                         dateString:'',
@@ -220,8 +241,9 @@ export default class BTPublishDemand extends PureComponent{
                     </span>
                         <Input
                             type="text"
+                            onkeyup="value=value.replace(/[^\d.]/g,'')"
                             value={this.state.number}
-                            onChange={this.handleNumberChange}
+                            onChange={(e)=>this.handleNumberChange(e)}
                         />
                         <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
                     </div>

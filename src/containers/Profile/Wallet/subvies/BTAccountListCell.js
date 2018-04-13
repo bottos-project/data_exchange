@@ -32,10 +32,10 @@ export default class BTAccountListCell extends PureComponent{
                                 <FormattedMessage {...WalletMessages.AvailableCash}/>
                             </span>
                         </div>
-                        <div className="font25 colorRed">{props.coinNum}</div>
+                        <div className="font25 colorRed">{props.coinNum/Math.pow(10,10)}</div>
                     </div>
                     <div>
-                        <Button className="marginRight" type="primary" onClick={()=>this.transaction()}>转账</Button>
+                        <Button className="marginRight" type="primary" onClick={()=>this.transaction()}><FormattedMessage {...WalletMessages.Transfer}/></Button>
                         {/* <Button className="marginRight" type="primary" onClick={()=>this.changePwd(this.props.accountName)}>
                             <FormattedMessage {...WalletMessages.ModifyThePassword}/>
                         </Button>

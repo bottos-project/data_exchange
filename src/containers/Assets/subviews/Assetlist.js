@@ -7,7 +7,7 @@ import {getBlockInfo, getDataInfo} from "../../../utils/BTCommonApi";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from "../../../tools/localStore";
-
+import uuid from 'node-uuid'
 const AssetMessages = messages.Asset;
 const IconText = ({ type, text }) => (
     <span>
@@ -57,7 +57,7 @@ export default class Assetlist extends PureComponent{
              "code":"datadealmng",
              "action":"datapurchase",
              "args":{
-                 "data_deal_id":window.uuid,
+                 "data_deal_id":uuid.v1(),
                  "basic_info":{
                      "user_name":"btd121",
                      "session_id":"sessidtest",
@@ -160,7 +160,7 @@ export default class Assetlist extends PureComponent{
         BTFetch('/user/FavoriteMng','post',favorite)
             .then(res=>{
                 if(res.code==1){
-                    message.success(window.localeInfo["Asset.DeleteCollect"])
+                    message.success(window.localeInfo["Asset.SuccessfulCollect"])
                 }else{
                     message.error(window.localeInfo["Asset.FailedCollect"])
                 }
@@ -188,7 +188,7 @@ export default class Assetlist extends PureComponent{
                         <p>{data.feature_tag}</p>
                         <div>
                             <FormattedMessage {...AssetMessages.ExpectedPrice}/>
-                            <span>{data.price}</span>
+                            <span>{data.price/Math.pow(10,10)}</span>
                             <img src="./img/token.png" width='18' alt="" style={{paddingLeft:'4px'}}/>
                         </div>
                     </div>

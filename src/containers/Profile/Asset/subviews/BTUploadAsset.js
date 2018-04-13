@@ -10,6 +10,7 @@ import {options} from '../../../../utils/option'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import {getAccount} from '../../../../tools/localStore'
+import uuid from 'node-uuid'
 const PersonalAssetMessages = messages.PersonalAsset;
 const RangePicker = DatePicker.RangePicker;
 const { TextArea } = Input;
@@ -166,7 +167,7 @@ export default class BTUploadAsset extends PureComponent{
             "code": "assetmng",
             "action": "assetreg",
             "args": {
-                "asset_id": window.uuid,
+                "asset_id": uuid.v1(),
                 "basic_info": {
                     "user_name":this.state.username,
                     "session_id": this.state.token,

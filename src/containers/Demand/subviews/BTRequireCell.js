@@ -9,7 +9,7 @@ import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {Icon} from 'antd'
 import {getAccount} from "../../../tools/localStore";
-
+import uuid from 'node-uuid'
 const DemandMessages = messages.Demand;
 
 
@@ -78,7 +78,7 @@ export default class BTRequireCell extends PureComponent{
             "code":"datadealmng",
             "action":"datapresale",
             "args":{
-                "data_presale_id":window.uuid,
+                "data_presale_id":uuid.v1(),
                 "basic_info":{
                     "user_name":this.state.username,
                     "session_id":this.state.token,
@@ -128,7 +128,7 @@ export default class BTRequireCell extends PureComponent{
             pathname:linkto,
             state:data
         }
-        let time=new Date((data.expire_time)*1000).toLocaleString();
+        let time=new Date((data.expire_time)*1000).toLocaleDateString({...DemandMessages.En});
         return (
                 <div className="assetList">
                     <BTAssetList exampledata={this.state.exampledata} ref={(ref)=>this.assetListModal = ref} handleFile={(fileInfo)=>this.handleFile(fileInfo)}/>
@@ -145,7 +145,7 @@ export default class BTRequireCell extends PureComponent{
                         </span>
                         <div>
                             <FormattedMessage {...DemandMessages.ExpectedPrice}/>
-                            <span>{data.price}</span>
+                            <span>{data.price/Math.pow(10,10)}</span>
                             <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
                         </div>
                     </div>

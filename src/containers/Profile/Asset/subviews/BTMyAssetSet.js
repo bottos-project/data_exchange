@@ -7,7 +7,7 @@ import {getBlockInfo,getDataInfo} from '../../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import {getAccount} from "../../../../tools/localStore";
-
+import uuid from 'node-uuid'
 const PersonalAssetMessages = messages.PersonalAsset;
 const Dragger = Upload.Dragger;
 const callback_data = ''
@@ -17,7 +17,8 @@ const  props = {
     customRequest(info){
         //生成文件存储路径url
         const file=info.file;
-        if(file.size > 204800){
+        console.log(file.size,file)
+        if(file.size > 200*1024*1024){
             message.error(window.localeInfo["PersonalAsset.UploadFileSize"])
             return;
         }
@@ -95,7 +96,7 @@ const  props = {
                 "code":"datafilemng",
                 "action":"datafilereg",
                 "args":{
-                    "file_hash":window.uuid,
+                    "file_hash":uuid.v1(),
                     "basic_info":{
                         "user_name":getAccount().username,
                         "session_id":getAccount().token,

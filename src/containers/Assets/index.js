@@ -38,9 +38,6 @@ export default class BTAssets extends PureComponent{
         super(props);
         this.onChange=this.onChange.bind(this)
         this.state={
-            list:[1,2,3,4],
-            current:1,
-            data:[],
             dataSource:[],
             rowCount:'',
             pageNum:''
@@ -50,6 +47,7 @@ export default class BTAssets extends PureComponent{
         this.getPagination(1,12)
     }
     onChange(page,pageSize){
+        this.setState({dataSource:[]});
         this.getPagination(page,pageSize)
     }
     getPagination(page,pageSize){
@@ -63,15 +61,11 @@ export default class BTAssets extends PureComponent{
                 if(response.data.rowCount==0){
                     return;
                 }
-                let data=response.data.row;
                 let dataSource  = response.data && response.data.Row;
                 this.setState({
                     dataSource:response.data.row,
                     rowCount:response.data.rowCount,
                 });
-                this.setState({
-                    data:data,
-                })
             }else{
                 message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
             }

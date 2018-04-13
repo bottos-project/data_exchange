@@ -27,7 +27,9 @@ export default class BTAssetDetail extends PureComponent{
                 return <span>{title.length<25?title:title.substring(0,25)+'...'}</span>
                 } },
             // { title: <FormattedMessage {...PersonalDemandMessages.FeatureTag}/>, dataIndex: 'feature_tag', key: 'type' },
-            { title: <FormattedMessage {...PersonalDemandMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price' },
+            { title: <FormattedMessage {...PersonalDemandMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price' ,render:(price)=>{
+                return <span>{price/Math.pow(10,10)}</span>
+                }},
 
             { title: <FormattedMessage {...PersonalDemandMessages.DemandDescription}/>, dataIndex: 'description', key: 'description' ,render:(title)=>{
                 return <span>{title.length<25?title:title.substring(0,25)+'...'}</span>
