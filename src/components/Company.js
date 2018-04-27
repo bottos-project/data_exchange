@@ -1,6 +1,8 @@
+// 这个可以不要了
+
 import React,{PureComponent} from 'react'
 
-import { Form, Icon, Input, Button } from 'antd';
+import { Form, Icon, Input, Button, Row, Col } from 'antd';
 const FormItem = Form.Item;
 
 function hasErrors(fieldsError) {
@@ -58,11 +60,24 @@ class company extends PureComponent {
                 </FormItem>
                 <FormItem {...formItemLayout}>
                     {
-                        getFieldDecorator('newpassword',{
-                        })(
+                        getFieldDecorator('newpassword',{})(
                             <Input placeholder={window.localeInfo["Header.PleaseEnterTheSurePassword"]} type="password" id="error1"/>
                         )
                     }
+                </FormItem>
+                <FormItem>
+                  <Row gutter={8}>
+                    <Col span={12}>
+                      {
+                          getFieldDecorator('verificationCode',{})(
+                              <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} id="error1"/>
+                          )
+                      }
+                    </Col>
+                    <Col span={12}>
+                      <Button>Get captcha</Button>
+                    </Col>
+                  </Row>
                 </FormItem>
                 {/*<FormItem {...formItemLayout}>
                     {

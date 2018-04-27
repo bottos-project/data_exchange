@@ -1,7 +1,6 @@
 // 需求列表页
 
 import React,{PureComponent} from 'react'
-import './styles.less'
 import BTDemandCell from './subviews/DemandCell'
 import BTMyTag from '../../components/BTMyTag'
 import BTRequireCell from './subviews/BTRequireCell'
@@ -47,7 +46,7 @@ export default class BTDemand extends PureComponent{
         this.state = {
             dataSource:[],
             pageNum:'',
-            rowCount:''
+            rowCount: 0
         }
         this.onChange = this.onChange.bind(this)
     }
@@ -56,9 +55,6 @@ export default class BTDemand extends PureComponent{
         this.getPagination(1,12)
     }
     onChange(page,pageSize){
-        /*this.setState({
-            dataSource:[]
-        })*/
         this.getPagination(page,pageSize)
     }
     getPagination(page,pageSize){
@@ -68,19 +64,14 @@ export default class BTDemand extends PureComponent{
             "pageNum":page,
         }
         BTFetch(reqUrl,'POST',param).then(response=>{
-            console.log({
-                response
-            })
             if(response && response.code == 0){
-                if(response.data.rowCount == 0){
+              const {rowCount, row} = response.data
+                if(rowCount == 0 || !Array.isArray(row)){
                     // message.warning(window.localeInfo["Demand.ThereIsNoMarketDemandForTheTimeBeing"]);
                     return;
                 }
-                let dataSource  = response.data && response.data.row;
-                let rowCount= response.data.rowCount;
-                // console.log(this)
                 this.setState({
-                    dataSource:dataSource,
+                    dataSource: row,
                     rowCount,
                 })
             }
@@ -91,16 +82,21 @@ export default class BTDemand extends PureComponent{
             <div  style={{width:"100%"}}>
                 <BTDemandTitle/>
                 {/* <div><BTHeaderSearch/></div> */}
-               <div style={{width:"100%"}} >
-                    <List
-                        style={{flex:1}}
-                        dataSource={this.state.dataSource||[]}
-                        renderItem={(item)=>(
-                            <BTRequireCell linkto='/demand/detail' {...item}/>
-                        )}
-                    />
-               </div>
-                <Pagination hideOnSinglePage showQuickJumper defaultCurrent={1} pageSize={12} total={this.state.rowCount} onChange={this.onChange} />
+                <List
+                    style={{flex:1}}
+                    dataSource={this.state.dataSource||[]}
+                    renderItem={(item)=>(
+                        <BTRequireCell linkto='/demand/detail' {...item}/>
+                    )}
+                />
+                <Pagination
+                  hideOnSinglePage
+                  showQuickJumper
+                  defaultCurrent={1}
+                  pageSize={12}
+                  total={this.state.rowCount}
+                  onChange={this.onChange}
+                />
             </div>
         )
     }

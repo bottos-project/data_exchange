@@ -4,8 +4,9 @@ import BTFetch from '../../../../utils/BTFetch';
 import {getBlockInfo} from '../../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
-import BTCryptTool from '../../../../tools/BTCryptTool'
+import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import BTIPcRenderer from "../../../../tools/BTIpcRenderer";
+import BTNumberInput from '../../../../components/BTNumberInput'
 const WalletMessages = messages.Wallet;
 const FormItem = Form.Item;
 
@@ -38,8 +39,8 @@ export default class BTTransaction extends PureComponent{
     onHandleCancel(){
         this.setState({
             visible:false
-
         })
+        this.trxFrom.resetFields()
     }
 
     render(){
@@ -50,7 +51,7 @@ export default class BTTransaction extends PureComponent{
                 onCancel={()=>this.onHandleCancel()}
                 footer={null}
             >
-                <TransactionForm {...this.props} closeModal={()=>this.onHandleCancel()}/>
+                <TransactionForm ref={ref=>this.trxFrom = ref} {...this.props} closeModal={()=>this.onHandleCancel()}/>
             </Modal>
         )
     }
@@ -60,12 +61,16 @@ export default class BTTransaction extends PureComponent{
 class Transaction extends PureComponent{
     constructor(props){
         super(props)
+
+        this.state = {
+            quantity:''
+        }
     }
 
     // 转账
     async onHandleSubmit(){
         message.destroy();
-        const { getFieldDecorator,getFieldsValue,getFieldValue,setFields } = this.props.form;
+        const { getFieldDecorator,getFieldsValue,getFieldValue,setFields,resetFields } = this.props.form;
         let fieldValues = getFieldsValue()
 
         if(!fieldValues.to){
@@ -75,9 +80,9 @@ class Transaction extends PureComponent{
         if(!fieldValues.quantity){
             message.error(window.localeInfo["Wallet.PleaseEnterTheMoneyToBeTransferred"])
             return}
-       /* if(!fieldValues.password) {
-            message.error(window.localeInfo["Wallet.PleaseEnterThePassword"])
-            return}*/
+        // if(!fieldValues.password) {
+        //     message.error(window.localeInfo["Wallet.PleaseEnterThePassword"])
+        //     return}
         if(fieldValues.quantity<=0){
             message.error(window.localeInfo["Wallet.PleaseEnterAvalidTransferAmount"])
             return}
@@ -110,6 +115,7 @@ class Transaction extends PureComponent{
                 quantity:parseFloat(quantity)*Math.pow(10,10)
             }
         }
+        
         let getDataResult = await BTFetch(reqUrl,'POST',dataParams);
         if(!(getDataResult&&getDataResult.code=='0')){
             message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
@@ -160,16 +166,16 @@ class Transaction extends PureComponent{
                 message.error(window.localeInfo["Wallet.FailedToTransferAccounts"]);
                 return
             }
-
-            setFields({
-                from:'',
-                to:'',
-                password:'',
-                quantity:''
-            })
+            resetFields()
             this.props.closeModal()
         }).catch(error=>{
             message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
+        })
+    }
+
+    onChange(value){
+        this.setState({
+            quantity:value
         })
     }
 
@@ -187,14 +193,16 @@ class Transaction extends PureComponent{
                         <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout}>
                             {getFieldDecorator('quantity', {
                                 rules: [{ required: true, message: '请填写转账金额!' }],
-                            })(<div><InputNumber min={0} max={Math.pow(10,10)}/><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div>)}
+                            })(<BTNumberInput value={this.state.quantity} onChange={(e)=>this.onChange(e)}/>)}
+                            <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div>
+                            {/* })(<div className="flex row"><InputNumber value={this.state.quantity} onChange={(e)=>this.onChange(e)}/><div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div></div>)} */}
                         </FormItem>
 
-                       {/* <FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
+                        {/**<FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
                             {getFieldDecorator('password', {
                                 rules: [{ required: true, message: '请填写账户密码!' }],
                             })(<Input type="password"/>)}
-                        </FormItem>*/}
+                        </FormItem>**/}
 
                         <div className="container marginRight" style={{justifyContent:'flex-end'}}>
                             <Button onClick={()=>this.onHandleSubmit()}>
@@ -208,3 +216,23 @@ class Transaction extends PureComponent{
 }
 
 const TransactionForm = Form.create()(Transaction)
+
+// const mapStateToProps = (state) => {
+//     console.log({
+//         state
+//     })
+//     return {
+//         visible: state.profileWalletState.quantity
+//     }
+// }
+
+
+// const mapDispatchToProps = (dispatch) => {
+//     return {
+//         setQuantity(quantity) {
+            
+//         }
+//     }
+// }
+
+// export default connect(mapStateToProps, mapDispatchToProps)(BTTransaction)

@@ -3,7 +3,7 @@ import {Icon, Radio,Select, message, Button,Input, DatePicker,Cascader  } from '
 import BTIcon from '../../../../components/BTIcon'
 import BTAssetList from '../../../../components/BTAssetList'
 import "../styles.less"
-import BTCryptTool from '../../../../tools/BTCryptTool'
+import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import {getBlockInfo,getDataInfo} from '../../../../utils/BTCommonApi'
 import BTFetch from "../../../../utils/BTFetch";
 import {options} from '../../../../utils/option'

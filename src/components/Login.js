@@ -1,9 +1,12 @@
 import React,{PureComponent} from 'react'
+import { connect } from 'react-redux'
+import { toggleLoginViewVisible } from '../redux/actions/HeaderAction'
 import {Modal,Input,Button,Upload,Icon,message} from 'antd'
-import path from 'path'
-import BTCryptTool from '../tools/BTCryptTool'
+
+import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import BTFetch from '../utils/BTFetch';
-import {setAccount,getAccount,isLogin} from '../tools/localStore'
+import { getAccount } from '../tools/localStore'
+import { setAccountInfo } from '../redux/actions/HeaderAction'
 import BTIPcRenderer from '../tools/BTIpcRenderer'
 import {importFile} from '../utils/BTUtil'
 import {FormattedMessage} from 'react-intl'
@@ -11,15 +14,14 @@ import messages from '../locales/messages'
 const LoginMessages = messages.Login;
 const Buffer = require('buffer').Buffer;
 
-export default class Login extends PureComponent{
+class Login extends PureComponent{
     constructor(props){
         super(props)
 
         this.state = {
-            visible:false,
             username:'',
             password:'',
-            keyStore:{},
+            keyStore:'',
             hasKeystore:false
         }
     }
@@ -50,17 +52,25 @@ export default class Login extends PureComponent{
             return
         }
 
-        // let keyStoreResult = BTIPcRenderer.getKeyStore({
-        //     username:username,
-        //     account_name:username
-        // });
-        // if(keyStoreResult.error){
-        //     message.error(window.localeInfo["Header.PleaseImportTheKeystoreFirst"]);
-        //     return;
-        // }
-        // let keyStoreStr = keyStoreResult.result;
-        // let keyStoreObj = JSON.parse(keyStoreStr)
+        let keyStoreResult = BTIPcRenderer.getKeyStore({
+            username:username,
+            account_name:username
+        });
+
         let keyStoreObj = this.state.keyStore
+
+        if(keyStoreObj=='' && keyStoreResult.error){
+            message.error(window.localeInfo["Header.PleaseImportTheKeystoreFirst"]);
+            return;
+        }else{
+            if(keyStoreResult.error){
+                keyStoreObj = this.state.keyStore
+            }else{
+                let keyStoreStr = keyStoreResult.result;
+                keyStoreObj = JSON.parse(keyStoreStr)
+            }
+        }
+        
         // 用密码解密keyStore
         try{
             let decryptoStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
@@ -69,9 +79,12 @@ export default class Login extends PureComponent{
                 message.error(window.localeInfo["Header.TheWrongPassword"]);
                 return;
             }
-            
+            // 如果是导入的keystore，保存到本地
+            if(this.state.keyStore){this.saveKeyStore(keyStoreObj)}
+            this.setState({keyStore:''})
+
             let url = '/user/login'
-    
+
             let params = {
                 ref_block_num: blockInfo.data.ref_block_num,
                 "ref_block_prefix": blockInfo.data.ref_block_prefix,
@@ -101,9 +114,9 @@ export default class Login extends PureComponent{
                         username:decryptoData.account_name,
                         token:response.token
                     }
-                    setAccount(accountInfo)
+                    this.props.setAccountInfo(accountInfo)
+                    this.props.closeLoginView()
                     this.setState({
-                        visible:false,
                         password:'',
                         username:''
                     })
@@ -117,7 +130,7 @@ export default class Login extends PureComponent{
             })
         }catch(error){
             message.error(window.localeInfo["Header.TheWrongPassword"]);
-        } 
+        }
     }
 
     // 获取区块信息
@@ -130,8 +143,8 @@ export default class Login extends PureComponent{
     async getDataInfo(username){
         let reqUrl = '/user/GetDataBin'
         let params = {
-            "code":"usermng", 
-            "action":"userlogin", 
+            "code":"usermng",
+            "action":"userlogin",
             "args":{
                 "user_name":username,
                 "random_num":Math.round(Math.random()*1000)
@@ -141,45 +154,53 @@ export default class Login extends PureComponent{
     }
 
     closeModal(){
+        this.props.closeLoginView()
         this.setState({
-            visible:false,
             password:'',
-            username:''
+            username:'',
+            keyStore:{}
         })
     }
 
     importKeyStore(){
         let keyStoreObj = BTIPcRenderer.importFile()
-        this.setState({
-            keyStore:keyStoreObj
-        })
-        // let account_name = keyStore.account_name;
-       // console.log(this.state.keyStore)
-        message.success(window.localeInfo["Header.ImportKeyStoreSuccess"])
-        // if(keyStoreObj.error){
-        //     message.error(keyStoreObj.error)
-        //     return;
-        // }
-        // if(this.state.password==''){
-        //     message.error(window.localeInfo["Header.PleaseEnterThePassword"]);
-        //     return;
-        // }
-    
-        // try{
-        //     let keyStoreStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
-        //     let keyStore = JSON.parse(keyStoreStr)
-        //     let account_name = keyStore.account_name;
-        //     // return;
-        //     BTIPcRenderer.saveKeyStore({username:account_name,account_name:account_name},keyStoreObj)
-        // }catch(error){
-        //     message.error(window.localeInfo["Header.ThePasswordAndTheKeystoreDoNotMatch"]);
-        // }
+        if(!keyStoreObj.error){
+            this.setState({
+                keyStore:keyStoreObj
+            })
+            message.success(window.localeInfo["Header.ImportKeyStoreSuccess"])
+        }else{
+            message.error(window.localeInfo["Header.ImportKeyStoreFaild"])
+        }
     }
 
-    render(){
+    // keyStore文件保存
+    saveKeyStore(keyStoreObj){
+        if(keyStoreObj.error){
+            message.error(keyStoreObj.error)
+            return;
+        }
+        if(this.state.password==''){
+            message.error(window.localeInfo["Header.PleaseEnterThePassword"]);
+            return;
+        }
+
+        try{
+            let keyStoreStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
+            let keyStore = JSON.parse(keyStoreStr)
+            let account_name = keyStore.account_name;
+            // return;
+            console.log("saveKeyStore____________")
+            BTIPcRenderer.saveKeyStore({username:account_name,account_name:account_name},keyStoreObj)
+        }catch(error){
+            message.error(window.localeInfo["Header.ThePasswordAndTheKeystoreDoNotMatch"]);
+        }
+    }
+
+    render() {
         return(
             <Modal
-                visible={this.state.visible}
+                visible={this.props.visible}
                 onCancel={()=>this.closeModal()}
                 onOk={()=>{this.onHandleUnlock()}}
             >
@@ -192,8 +213,26 @@ export default class Login extends PureComponent{
                         this.state.hasKeystore ? <div></div> : (<div style={{marginTop:20}}><Button onClick={()=>this.importKeyStore()}><FormattedMessage {...LoginMessages.ImportTheKeyStore}/></Button></div>)
                     }
                 </div>
-                {/*<span>{this.state.keyStore}</span>*/}
             </Modal>
         )
     }
 }
+
+const mapStateToProps = (state) => {
+    return {
+        visible: state.headerState.login_visible
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        closeLoginView() {
+            dispatch( toggleLoginViewVisible(false) )
+        },
+        setAccountInfo(info) {
+            dispatch( setAccountInfo(info) )
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login)

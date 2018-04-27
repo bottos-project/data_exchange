@@ -5,22 +5,16 @@ import configureStore from './redux/store/ConfigureStore'
 import {LocaleProvider} from 'antd';
 import { IntlProvider } from 'react-intl';
 import 'antd/dist/antd.less';
-import './static/iconfont/iconfont.css'
 import appLocale from './locales'
 // 通用样式
 import './static/css/common.less'
 import RouterMap from './router/routerMap'
-import path from 'path'
 
 window.localeInfo = appLocale.messages;
 // 将config文件设置为全局window对象
 window.config = require('./utils/config')
 const store = configureStore();
 export default class App extends Component {
-  constructor(props){
-    super(props)
-  }
-
   render() {
     return (
       <LocaleProvider locale={appLocale.antd}>

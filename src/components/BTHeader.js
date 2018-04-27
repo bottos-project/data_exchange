@@ -14,7 +14,7 @@ import BTPublishDemand from '../containers/Profile/Need/subviews/publishDemandBo
 import BTFetch from '../utils/BTFetch'
 import {importFile,exportFile} from '../utils/BTUtil'
 import BTIpcRenderer from '../tools/BTIpcRenderer'
-import {deleteAccount,isLogin,getAccount} from '../tools/localStore'
+import { deleteAccount, isLogin, getAccount } from '../tools/localStore'
 import messages from "../locales/messages";
 const HeaderMessages = messages.Header;
 
@@ -56,35 +56,6 @@ class BTHeader extends PureComponent{
         })
     }
 
-
-    onLoginHandler(){
-        this.showLoginView()
-    }
-
-    showLoginView(){
-        this.props.headerActions.showLoginView({
-            isShow:true
-        })
-    }
-
-    hidLoginView(){
-        this.props.headerActions.showLoginView({
-            isShow:false
-        })
-    }
-
-    handleOk(){
-        this.props.headerActions.showLoginView({
-            isShow:false
-        })
-    }
-
-    handleCancel(e){
-        this.props.headerActions.showLoginView({
-            isShow:false
-        })
-    }
-
     handlePublishDemand(){
         message.destroy()
         if(!this.state.isLogin){
@@ -106,18 +77,8 @@ class BTHeader extends PureComponent{
             visible:true
         })
     }
-    isShowLogin(){
-        this.isLoginShow.setState({
-            visible:true
-        })
-    }
-    isRegister(){
-        this.isRegisterShow.setState({
-            visible:true
-        })
-    }
 
-    isLogin(isLogin){
+    setLogin(isLogin){
         this.setState({
             isLogin:isLogin
         })
@@ -126,22 +87,23 @@ class BTHeader extends PureComponent{
     logout(){
         let url = '/user/logout'
         let account = getAccount()
-        if(!account){
+        if (!account) {
             message.success(window.localeInfo["Header.SuccessToLogOut"]);
             this.setState({
                 isLogin:false
             })
             return;
         }
-        BTFetch(url,'POST').then(response=>{
+        BTFetch(url,'POST').then(response => {
             // if(response && response.code=='0'){
-                deleteAccount()
+                // deleteAccount()
+                this.props.setAccountInfo(null)
                 this.setState({isLogin:false})
                 message.success(window.localeInfo["Header.SuccessToLogOut"]);
             // }else{
             //     message.error(window.localeInfo["Header.FailedLogOut"]);
             // }
-        }).catch(error=>{
+        }).catch(error => {
             message.error(window.localeInfo["Header.FailedLogOut"]);
         })
     }
@@ -209,25 +171,18 @@ class BTHeader extends PureComponent{
         console.log("checkMessages")
     }
 
-
     render(){
+        const { toggleLoginViewVisible, toggleRegisterViewVisible } = this.props
         return(
             <div className="container header">
                 <BTPublishDemand ref={(ref)=>this.publishModal = ref}/>
 
                 <BTPublishAssetModal ref={(ref)=>this.publishAssetModal = ref}/>
 
-                <BTLogin ref={(ref)=>this.isLoginShow = ref} onHandleLogin={(isLogin)=>this.isLogin(isLogin)}/>
+                <BTLogin onHandleLogin={(isLogin)=>this.setLogin(isLogin)}/>
 
-                <IsRegister ref={(ref)=>this.isRegisterShow = ref}/>
-                <Modal
-                    title="Basic Modal"
-                    visible={this.props.headerState.isShow}
-                    onOk={()=>this.handleOk()}
-                    onCancel={()=>this.handleCancel()}
-                >
-                </Modal>
-
+                {/* 注册及登录框 */}
+                <IsRegister />
 
                 <div className="logoMenuStyle">
                     <div className="logoStyle">
@@ -244,7 +199,7 @@ class BTHeader extends PureComponent{
                     </Button>
                     <div>
                         {
-                            this.state.isLogin ? 
+                            this.state.isLogin ?
                             <div className="center">
                                 <Dropdown overlay={this.menu()}>
                                         <img className="userIcon"
@@ -256,10 +211,10 @@ class BTHeader extends PureComponent{
 
                             :
                             <div className='isLogin'>
-                                <span onClick={()=>this.isShowLogin()}>
+                                <span onClick={() => toggleLoginViewVisible(true)}>
                                     <FormattedMessage {...HeaderMessages.Login}/>
                                 </span>
-                                <span onClick={()=>this.isRegister()}>
+                                <span onClick={() => toggleRegisterViewVisible(true)}>
                                     <FormattedMessage {...HeaderMessages.Register}/>
                                 </span>
                             </div>
@@ -290,14 +245,12 @@ class BTHeader extends PureComponent{
 
 const mapStateToProps = (state)=>{
     return {
-        headerState:state.headerState
+        headerState: state.headerState
     }
 }
 
-const mapDispatchToProps = (dispatch)=>{
-    return {
-        headerActions:bindActionCreators(headerActions,dispatch)
-    }
+const mapDispatchToProps = (dispatch) => {
+    return { ...bindActionCreators(headerActions, dispatch) }
 }
 
-export default connect(mapStateToProps,mapDispatchToProps)(BTHeader)
+export default connect(mapStateToProps, mapDispatchToProps)(BTHeader)

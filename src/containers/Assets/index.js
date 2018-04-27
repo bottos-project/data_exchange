@@ -1,4 +1,4 @@
-import React,{PureComponent} from 'react'
+import React, {Component} from 'react'
 
 import BTAssetCell from './subviews/AssetCell'
 import {Pagination,message} from 'antd'
@@ -33,62 +33,74 @@ const BTHeaderSearch = () => (
     </div>
 ) ;
 
-export default class BTAssets extends PureComponent{
-    constructor(props){
+export default class BTAssets extends Component {
+    constructor(props) {
         super(props);
-        this.onChange=this.onChange.bind(this)
-        this.state={
-            dataSource:[],
-            rowCount:'',
-            pageNum:''
+        this.state = {
+            dataSource: [],
+            rowCount: 0,
+            pageNum: ''
         };
+
+        this.onChange = this.onChange.bind(this)
     }
-    componentDidMount(){
+
+    componentDidMount() {
         this.getPagination(1,12)
     }
-    onChange(page,pageSize){
-        this.setState({dataSource:[]});
+
+    onChange(page,pageSize) {
+        // this.setState({dataSource:[]});
         this.getPagination(page,pageSize)
     }
-    getPagination(page,pageSize){
+
+    getPagination(page,pageSize) {
         let reqUrl = '/asset/query';
-        let param={
-            "pageSize":pageSize,
-            "pageNum":page,
+        let param = {
+            "pageSize": pageSize,
+            "pageNum": page,
         };
         BTFetch(reqUrl,'POST',param).then(response=>{
-            if(response&&response.code==0){
-                if(response.data.rowCount==0){
-                    return;
+            if (response && response.code == 0) {
+              const {rowCount, row} = response.data
+                if (rowCount == 0 || !Array.isArray(row)) {
+                    return ;
                 }
-                let dataSource  = response.data && response.data.Row;
                 this.setState({
-                    dataSource:response.data.row,
-                    rowCount:response.data.rowCount,
+                    dataSource: row,
+                    rowCount,
                 });
-            }else{
+            } else {
                 message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
             }
-        }).catch(error=>{
+        }).catch(error => {
             console.log(error)
             message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
 
         });
     }
-    render(){
-        return(
+
+    render() {
+        return (
             <div style={{width:"100%"}}>
                 <BTAssetTitle />
                 {/* <BTHeaderSearch/> */}
-                <div style={{width:"100%"}}>
-                    <List
-                        dataSource={this.state.dataSource||[]}
-                        renderItem={(item)=>(
-                            <Assetlist list={item} />
-                        )}
-                    />
-                </div>
-                <Pagination hideOnSinglePage showQuickJumper total={this.state.rowCount} defaultCurrent={1} pageSize={12} onChange={this.onChange}/>
+
+                <List
+                  dataSource={this.state.dataSource}
+                  renderItem={(item) => (
+                    <Assetlist key={item.asset_id} list={item} />
+                  )}
+                />
+
+                <Pagination
+                  hideOnSinglePage
+                  showQuickJumper
+                  total={this.state.rowCount}
+                  defaultCurrent={1}
+                  pageSize={12}
+                  onChange={this.onChange}
+                />
 
             </div>
         )

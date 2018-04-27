@@ -47,7 +47,7 @@ export default class BTMap extends PureComponent{
         const YOUR_AMAP_KEY = '0ca394ad5386e23b5ebcca33db764d90'
         return (
             <div style={{display:"flex",height:"40vh",width:"100%",float:"right"}} >
-                {/*<img src="./img/map.png" width='100%' alt=""/>*/}
+                <img src="./img/map.png" width='100%' alt=""/>
                 {/*<GoogleMapReact
                     // bootstrapURLKeys={{ key: [YOUR_KEY] }}
                     // options={options}
@@ -73,21 +73,20 @@ export default class BTMap extends PureComponent{
                 >
                     {markers}
                 </GoogleMapReact>*/}
-                <Map
+               {/* <Map
                     amapkey={YOUR_AMAP_KEY}
-                    version={'1.4.0'}
                     zoom={0.9}
                     lang={this.state.lang}
-                    // zoomEnable={false}
+                    zoomEnable={false}
                     // markers={this.state.markers}
-                    useCluster={false}
-                    // isHotspot
+                    useCluster={true}
+                    isHotspot
                 >
 
                     <Markers
                         markers={this.state.markers}
                     />
-                </Map>
+                </Map>*/}
             </div>
         )
     }

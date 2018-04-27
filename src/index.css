@@ -2,7 +2,20 @@ body {
   margin: 0;
   padding: 0;
   font-family: sans-serif;
+  overflow: hidden;
 }
 ul,li{
   list-style: none;
+}
+
+/*单行溢出*/
+.one_txt_cut {
+	overflow-x: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+#root {
+  height: 100%;
+  overflow: hidden;
 }

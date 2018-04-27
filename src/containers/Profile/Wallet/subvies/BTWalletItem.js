@@ -1,7 +1,7 @@
 import React,{PureComponent} from 'react'
 import {Modal,Input,message,Button} from 'antd'
 import BTIpcRenderer from '../../../../tools/BTIpcRenderer'
-import BTCryptTool from '../../../../tools/BTCryptTool'
+import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import {Link} from 'react-router'
 import messages from '../../../../locales/messages'
 import {FormattedMessage} from 'react-intl'
@@ -24,10 +24,13 @@ export default class BTWalletItem extends PureComponent{
     }
 
     exportAccount(accountName){
-        console.log(accountName)
         let exportFileName = accountName
-        let keyStore = BTIpcRenderer.getKeyStore(accountName);
-        console.log(keyStore)
+        let account_info = JSON.parse(localStorage.account_info)
+        let accountInfo = {
+            username:account_info.username,
+            account_name:accountName
+        }
+        let keyStore = BTIpcRenderer.getKeyStore(accountInfo);
         if(!keyStore.error){
             BTIpcRenderer.exportKeyStore(accountName,JSON.parse(keyStore.result))
         }
@@ -74,7 +77,6 @@ export default class BTWalletItem extends PureComponent{
     }
 
     render(){
-        console.log(this.props)
         return(
             <div className="container accountItem">
 

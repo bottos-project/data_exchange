@@ -1,15 +1,24 @@
 import * as actionTypes from '../consts/HeaderConst'
 
-const initialState = {}
+import { getAccount } from '../../tools/localStore'
 
-const headerState = (state = initialState,action) => {
+const initialState = {
+  account_info: getAccount(),
+  login_visible: false,
+  register_visible: false,
+}
+
+const headerState = (state = initialState, action) => {
     switch(action.type){
-        case actionTypes.SHOW_LOGIN_VIEW:
-            return action.data
+        case actionTypes.SET_ACCOUNT_INFO:
+            return {...state, account_info: action.info}
 
-        case actionTypes.HID_LOGIN_VIEW:
-            return action.data
-        
+        case actionTypes.TOGGLE_LOGIN_VIEW_VISIBLE:
+            return {...state, login_visible: action.visible}
+
+        case actionTypes.TOGGLE_REGISTER_VIEW_VISIBLE:
+            return {...state, register_visible: action.visible}
+
         default:
             return state
     }

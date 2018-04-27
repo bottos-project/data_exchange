@@ -38,10 +38,14 @@
 }
 
 .header {
-    background-color: #FFFFFF;
-    box-shadow: 0 0 5px #CCCCCC;
-    flex: 1;
-    height: 80px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-color: #FFFFFF;
+  box-shadow: 0 0 5px #CCCCCC;
+  flex: 1;
+  height: 80px;
+  z-index: 1;
 }
 
 .center {
@@ -54,6 +58,11 @@
 }
 
 .content {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  padding-top: 80px;
     flex-direction: row;
 
     .menu {
@@ -62,9 +71,9 @@
     }
 
     .contentbody {
-        margin-left: @marginLeft;
-        margin-right: @marginRight;
-        margin-top:@marginTop;
+        padding: 20px;
+        height: 100%;
+        overflow-y: auto;
     }
 }
 .register .ant-modal-body{
@@ -72,4 +81,8 @@
 }
 .register .ant-input{
     width: 50%;
+}
+
+.contentbody .ant-pagination {
+    padding-bottom: 20px;
 }

@@ -11,7 +11,7 @@
         flex-direction: row;
         box-shadow: 0 0 5px #CCCCCC;
     }
-    
+
     .logoStyle {
         display: flex;
         width: @sideWidth;
@@ -30,7 +30,7 @@
   .isLogin{
     margin:0 20px;
   }
-    
+
     .loginBtnStyle {
         display: flex;
         justify-content: center;
@@ -67,25 +67,19 @@
         padding-right: 0;
     }
 }
-.register .ant-row{
-  display: flex;
-  justify-content: center;
-}
-.register .ant-row div{
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
-.register .ant-row .ant-form-item-children{
-  display: flex;
-  justify-content: center;
-  width: 100%;
-}
+
 .register .ant-row input{
   display: flex;
   flex: 1;
   width: 100%;
 }
+.register .ant-form-item-children > .ant-row {
+  width: 100%;
+}
+.register .ant-row.ant-form-item {
+  justify-content: flex-start
+}
+
 .ant-menu.ant-menu-dark .ant-menu-item-selected, .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected{
     background-color: #5951f2;
     border-top:1px solid #2e318e ;

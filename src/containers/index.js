@@ -7,6 +7,11 @@ import {connect} from 'react-redux'
 import {Button} from 'antd'
 import './styles.less'
 
+// 获取package.json
+
+const pkg = require('../../package.json')
+
+ 
 class App extends PureComponent{
     constructor(props){
         super(props)
@@ -35,14 +40,20 @@ class App extends PureComponent{
         let headerState = homeState.headerState
         return(
             <div className="container column">
-               <div className="header">
+               {/* <div className="header"> */}
                     <BTHeader setLocale={()=>this.setLocale()} {...headerState}/>
-               </div>
+               {/* </div> */}
                <div className="container content">
-               
-                   <div className="menu">
+
+                   <div className="menu" style={{position: 'relative'}}>
                     <BTMenu/>
+                    <div style={{position: 'absolute', bottom: 0, marginLeft: 20}}>
+                      版本号：{pkg.version}
+                      <br />
+                      发布日期：{pkg.publishDate}
+                    </div>
                    </div>
+
                    <div className="container contentbody">
                     {this.props.children}
                    </div>

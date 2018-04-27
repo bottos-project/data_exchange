@@ -1,8 +1,7 @@
 import BTFetch from "../../../utils/BTFetch";
 import {getBlockInfo, getDataInfo} from "../../../utils/BTCommonApi";
-import {message} from "antd/lib/index";
 import React,{PureComponent} from 'react'
-import { Carousel,Button,Tag,Input } from 'antd';
+import { Carousel, Button, Tag, Input, message } from 'antd';
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import BTAssetList from './BTAssetList'
@@ -68,12 +67,12 @@ export default class BTDemanDetail extends PureComponent{
             "args":{
                 "data_presale_id":uuid.v1(),
                 "basic_info":{
-                    "user_name":this.props.location.state.username,
+                    "user_name":this.props.location.query.username,
                     "session_id":'',
                     "asset_id":fileInfo.value,
                     "asset_name":fileInfo.name,
-                    "data_req_id":this.props.location.state.requirement_id,
-                    "data_req_name":this.props.location.state.requirement_name,
+                    "data_req_id":this.props.location.query.requirement_id,
+                    "data_req_name":this.props.location.query.requirement_name,
                     "consumer":getAccount().username,
                     "random_num":Math.ceil(Math.random()*100),
                     "signature":"sigtest"
@@ -110,6 +109,8 @@ export default class BTDemanDetail extends PureComponent{
             })
     }
     componentDidMount(){
+
+      console.log('this.props.location', this.props.location);
     }
     download(href){
         console.log(href);
@@ -119,7 +120,7 @@ export default class BTDemanDetail extends PureComponent{
         document.body.appendChild(iframe);
     }
     render(){
-        let data = this.props.location.state||[];
+        let data = this.props.location.query||[];
         let date=(new Date((data.expire_time)*1000)).toLocaleDateString()
         return(
             <div className="demandDetailBox">
@@ -148,7 +149,7 @@ export default class BTDemanDetail extends PureComponent{
                     </p>
                     <p>
                         <span>
-                            <FormattedMessage {...DemandMessages.FailureTime}/>
+                            <FormattedMessage {...DemandMessages.ExpireTime}/>
                         </span>
                         {date}
                     </p>
@@ -169,7 +170,7 @@ export default class BTDemanDetail extends PureComponent{
                     <span>
                         <FormattedMessage {...DemandMessages.DataDescription}/>
                     </span>
-                    <TextArea disabled rows={4}>{data.description}</TextArea>
+                    <TextArea disabled rows={4} defaultValue={data.description} />
                 </div>
             </div>
         )

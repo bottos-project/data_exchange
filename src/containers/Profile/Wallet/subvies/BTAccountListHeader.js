@@ -3,7 +3,7 @@ import {FormattedMessage} from 'react-intl'
 import {message,Modal,Button,Input} from 'antd'
 import BTIpcRenderer from '../../../../tools/BTIpcRenderer'
 import * as localStore from '../../../../tools/localStore'
-import BTCryptTool from '../../../../tools/BTCryptTool'
+import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import messages from '../../../../locales/messages'
 const WalletMessages = messages.Wallet;
 

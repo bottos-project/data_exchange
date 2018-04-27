@@ -1,6 +1,6 @@
-import React,{PureComponent} from 'react'
+import React, {PureComponent} from 'react'
 import moment from "moment"
-import {Upload,Modal,Form, Icon, Input, Button,DatePicker,TimePicker,message,InputNumber} from 'antd'
+import { Modal, Form, Icon, Input, Button, DatePicker, message } from 'antd'
 import BTUploadNeed from "./BTUploadAsset"
 import {getBlockInfo, getDataInfo} from "../../../../utils/BTCommonApi";
 import "../styles.less"
@@ -96,14 +96,18 @@ export default class BTPublishDemand extends PureComponent{
             title:e.target.value.trim()
         })
     }
-    handleNumberChange (e) {
+    handleNumberChange = (e) => {
         message.destroy();
-        const number = parseFloat(e.target.value || 0, 10);
+        var number = e.target.value
+        // console.log('number', number);
         if (isNaN(number)) {
-            return;
+          return;
+        }
+        if (number >= 1e7) {
+          number = 1e7 - 1
         }
 
-        this.setState({number:e.target.value})
+        this.setState({number})
     };
     triggerChange = (changedValue) => {
         // Should provide an event to pass value to Form.
@@ -240,10 +244,10 @@ export default class BTPublishDemand extends PureComponent{
                         <FormattedMessage {...PersonalDemandMessages.RecruitmentPrice}/>
                     </span>
                         <Input
-                            type="text"
-                            onkeyup="value=value.replace(/[^\d.]/g,'')"
-                            value={this.state.number}
-                            onChange={(e)=>this.handleNumberChange(e)}
+                          type='number'
+                          defaultValue={0}
+                          value={this.state.number}
+                          onChange={this.handleNumberChange}
                         />
                         <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
                     </div>
@@ -277,4 +281,3 @@ export default class BTPublishDemand extends PureComponent{
         )
     }
 }
-

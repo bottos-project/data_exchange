@@ -4,7 +4,7 @@ import './styles.less';
 import BTPerson from "./subviews/person"
 import BTCompany from "./subviews/company"
 import BTFetch from '../../../utils/BTFetch'
-import BTCryptTool from '../../../tools/BTCryptTool'
+import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import BTSettingTitle from "./subviews/BTSettingTitle";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'

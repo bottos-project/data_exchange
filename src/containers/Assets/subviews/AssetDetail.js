@@ -1,9 +1,7 @@
 import React,{PureComponent} from 'react'
-import { Carousel,Button,Tag,Modal} from 'antd';
+import { Carousel, Button, Tag, Modal, Input, message} from 'antd';
 import BTFetch from '../../../utils/BTFetch'
 import {getBlockInfo,getDataInfo} from '../../../utils/BTCommonApi'
-import {Input} from "antd/lib/index";
-import {message} from "antd/lib/index";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from '../../../tools/localStore'
@@ -15,17 +13,17 @@ const confirm = Modal.confirm;
 // const username=JSON.parse(window.localStorage.account_info).username||'';
 // const token=JSON.parse(window.localStorage.account_info).token||'';
 export default class BTAssetDetail extends PureComponent{
-    constructor(props){
+    constructor(props) {
         super(props)
-        this.state={
-            data:this.props.location.query||[],
-            username:'',
-            token:'',
-            getAssetType:'',
+        this.state = {
+            data: this.props.location.query||[],
+            username: '',
+            token: '',
+            getAssetType: '',
             visible: false
         }
     }
-    handleCancel (e){
+    handleCancel(e) {
         this.setState({
             visible: false,
         });
@@ -35,7 +33,7 @@ export default class BTAssetDetail extends PureComponent{
             visible: true,
         });
     }
-    async buySureAsset(){
+    async buySureAsset() {
         //获取区块信息
         let _block=(await getBlockInfo());
         if(_block.code != 0){
@@ -104,31 +102,32 @@ export default class BTAssetDetail extends PureComponent{
             visible: false,
         });
         message.destroy();
-        if(!getAccount()){
+        if (!getAccount()){
             message.warning(window.localeInfo["Asset.PleaseLogInFirst"])
             return;
         }
-        if(this.state.data.username == getAccount().username){
+        if (this.state.data.username == getAccount().username) {
             message.warning(window.localeInfo["Asset.YouAreNotAllowedToBuyYourOwnAssets"])
             return;
         }
         //查询是否已购买资产
-        let buysure={
+        let buysure = {
             "username":getAccount().username,
             "random":Math.ceil(Math.random()*100),
             "signatures":'0XXXX',
             "asset_id":this.state.data.asset_id,
         };
         await BTFetch('/asset/GetUserPurchaseAssetList','post',buysure).then(res=>{
-            if(res&&res.code==0){
-                if(res.data.rowCount>=1){
+            if (res && res.code == 0) {
+              // console.log('res.data', res.data);
+                if (res.data.rowCount >= 1) {
                     message.warning(window.localeInfo["Asset.CannotPurchaseAgain"]);
                     return;
-                }else{
+                } else {
                    this.buySureAsset()
                 }
             }
-        }).catch(error=>{
+        }).catch(error => {
         });
 
     }
@@ -137,13 +136,12 @@ export default class BTAssetDetail extends PureComponent{
         // let url = res.data;
         let filename = '样例';
         a.href = index;
-        a.download =filename;
+        a.download = filename;
         a.click();
     }
-    componentWillMount(){
-    }
-    componentWillReceiveProps(nextProps){
-        if(this.props==nextProps){
+
+    componentWillReceiveProps(nextProps) {
+        if(this.props == nextProps){
             return;
         }
         let data=this.props.location.query;
@@ -157,10 +155,11 @@ export default class BTAssetDetail extends PureComponent{
         }
         console.log(asset_type)
     }
-    render(){
+
+    render() {
         let data=this.props.location.query;
         let time=new Date((data.expire_time)*1000).toLocaleDateString();
-        return(
+        return (
             <div className="assetDetailBox">
                 <h2>
                     <FormattedMessage {...AssetMessages.DataDetails}/>
@@ -188,7 +187,8 @@ export default class BTAssetDetail extends PureComponent{
                         <span>
                             <FormattedMessage {...AssetMessages.ExpectedPrice}/>
                         </span>
-                        {data.price/Math.pow(10,10)}
+                        {data.price / Math.pow(10,10)}
+                        <img src='./img/token.png' width='15' style={{marginLeft:6}} />
                     </p>
                     <p>
                         <span>
@@ -233,7 +233,7 @@ export default class BTAssetDetail extends PureComponent{
                     <span>
                         <FormattedMessage {...AssetMessages.DataDescription}/>
                     </span>
-                    <TextArea disabled rows={4}>{data.description}</TextArea>
+                    <TextArea disabled rows={4} defaultValue={data.description} />
                 </div>
             </div>
         )

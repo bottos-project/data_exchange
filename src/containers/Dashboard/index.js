@@ -84,7 +84,7 @@ export default class BTDashboard extends PureComponent{
                    let ExchangeCoin=[];
                    for(let i of res.data){
                        let time=(new Date(i.time *1000)).toLocaleDateString();
-                       ExchangeCoin.push({day:time,ExchangeCoin:i.count/Math.pow(10,10)})
+                       ExchangeCoin.push({day:time,ExchangeCoin:i.count / Math.pow(10, 10)})
                    };
                    this.setState({
                        ExchangeCoin,
@@ -151,7 +151,11 @@ export default class BTDashboard extends PureComponent{
                             case 'AccountNum':this.setState({AccountNum:data[i].total}); break;
                             case 'AssetNum':this.setState({AssetNum:data[i].total}); break;
                             case 'RequirementNum':this.setState({RequirementNum:data[i].total}); break;
-                            case 'TxAmount':this.setState({TxAmount:(data[i].total/Math.pow(10,10)).toFixed(0)}); break;
+                            case 'TxAmount':
+                              this.setState({
+                                TxAmount: parseFloat((data[i].total / Math.pow(10, 10)).toFixed(3))
+                              });
+                              break;
                             case 'TxNum':this.setState({TxNum:data[i].total}); break;
                             // default:message.error('暂无数据')
                         }

@@ -177,6 +177,10 @@ module.exports = {
             id:'Demand.Publisher',
             defaultMessage:'发布人：'
         },
+        En:{
+            id:'Demand.En',
+            defaultMessage:'cn'
+        },
         ExpireTime:{
             id:'Demand.ExpireTime',
             defaultMessage:'有效时间：'
@@ -695,6 +699,10 @@ module.exports = {
             id:"Wallet.ModifyThePassword",
             defaultMessage:"修改密码"
         },
+        More:{
+            id:"Wallet.More",
+            defaultMessage:"更多"
+        },
         ExportTheAccount:{
             id:"Wallet.ExportTheAccount",
             defaultMessage:"导出账号"
@@ -745,7 +753,7 @@ module.exports = {
         },
         Transfer:{
             id:"Wallet.Transfer",
-            defaultMessage:"交易"
+            defaultMessage:"转账"
         },
         Token:{
             id:"Wallet.Token",

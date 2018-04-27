@@ -1,8 +1,8 @@
-import React,{PureComponent} from 'react'
+import React, { Component } from 'react'
 import {Popconfirm,Table, Upload, Icon, message} from 'antd';
 import "./styles.less"
 import BTFetch from "../../../../utils/BTFetch"
-import BTCryptTool from '../../../../tools/BTCryptTool'
+import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import {getBlockInfo,getDataInfo} from '../../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
@@ -11,55 +11,131 @@ import uuid from 'node-uuid'
 const PersonalAssetMessages = messages.PersonalAsset;
 const Dragger = Upload.Dragger;
 const callback_data = ''
-var fileHashArr=[];
-const  props = {
 
-    customRequest(info){
-        //生成文件存储路径url
-        const file=info.file;
-        console.log(file.size,file)
-        if(file.size > 200*1024*1024){
-            message.error(window.localeInfo["PersonalAsset.UploadFileSize"])
-            return;
+
+function beforeUpload(file, fileList) {
+  console.log('file', file.size)
+  if (file.size > 200 << 20){
+    message.error(window.localeInfo["PersonalAsset.UploadFileSize"])
+    return false;
+  }
+}
+
+
+
+export default class BTMyAssetSet extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            data:[],
+            hash:'',
+            username:'',
+            token:'',
+            fileList: []
         }
+    };
+
+    columns(data) {
+        // console.log(data);
+            return [
+                {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name', key: 'fileName',
+                    render:(item)=>{
+                        return <span>
+                           {item.length < 30? item:item.substring(0,30)+'...'}
+                        </span>
+                    }},
+                {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size', key: 'fileSize'},
+                /*{title: <FormattedMessage {...PersonalAssetMessages.AssetSampleName}/>, dataIndex: 'sampleName', key: 'sampleName'},
+                {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleSize}/>, dataIndex: 'sampleSize', key: 'sampleSize'},*/
+                {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date'},
+                {
+                    title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_name', key: 'x', render: (item)=>{
+                        return(
+                            <a onClick={()=>this.download1(item)}>
+                                <Icon type="download"/>
+                            </a>
+                        )
+                    }
+                },
+            ];
+     }
+     download1(dataIndex){
+        BTFetch('/asset/getDownLoadURL','post',{
+            'userName':getAccount().username,
+            'fileName':dataIndex
+        }).then(res=>{
+            console.log(this)
+            if(res.code==1){
+                this.setState({href:res.data});
+                console.log(res.data);
+                let a = document.createElement('a');
+                let url = res.data;
+                let filename = dataIndex;
+                a.href = url;
+                a.download=filename;
+                a.click();
+            }else{
+                message.error(window.localeInfo["PersonalAsset.FailedToDownloadTheFile"])
+            }
+        }).catch(error=>{
+            message.error(window.localeInfo["PersonalAsset.FailedToDownloadTheFile"])
+        })
+    }
+
+    customRequest = ({ file, onSuccess }) => {
+        //生成文件存储路径url
+        console.log('file', file)
         let param={
             "userName": getAccount().username,
             "fileName": file.name,
             "fileSize": file.size,
             "filePolicy": "public",
             "fileNumber": "1",
-            "fileHash":BTCryptTool.sha256(JSON.stringify(info.file)),
+            "fileHash":BTCryptTool.sha256(JSON.stringify(file)),
             "signatures": "0xxxx"
         };
         BTFetch('/asset/getFileUploadURL','post',param,{service:'service'})
-            .then(res=>{
-                if(res.code==1){
-                    let url=res.data;
-                    up_ajax(url);
-                }else{
-                    message.error(`${info.file} window.localeInfo["PersonalAsset.FailedToGetUrlOfDocumentStorage"]`)
-                }
-            }).catch(error=>{
-            message.error(`${info.file} window.localeInfo["PersonalAsset.FailedToGetUrlOfDocumentStorage"]`)
+        .then(res => {
+            if(res.code==1){
+                // 将文件添加到列表
+                const fileList = this.state.fileList
+                const {uid, name} = file
+                this.setState({
+                  fileList: fileList.concat({uid, name, status: 'uploading'})
+                })
 
+                let url=res.data;
+                up_ajax.call(this, url);
+            }else{
+                message.error(`${file} window.localeInfo["PersonalAsset.FailedToGetUrlOfDocumentStorage"]`)
+            }
+        }).catch(error=>{
+          message.error(`${file} window.localeInfo["PersonalAsset.FailedToGetUrlOfDocumentStorage"]`)
         });
+
         let myHeaders=new Headers();
-        myHeaders.append('Content-Type','text/plain')
+        myHeaders.append('Content-Type', 'text/plain')
 
         //上传到存储路径中
-        function up_ajax(url){
-            fetch(url,{
-                method:'PUT',
-                header:myHeaders,
-                body:info.file
+        function up_ajax(url) {
+          console.log('time1', new Date().getTime());
+            fetch(url, {
+                method: 'PUT',
+                body: file
             })
-                .then(res=>{
-                    info.onSuccess();
-                    console.log(res)
-                    inquire();//查询状态
+            .then(res => {
+                // console.log(res)
+                const fileList = this.state.fileList
+                const {uid, name} = file
+                this.setState({
+                  fileList: fileList.slice(0, -1).concat({uid, name, status: 'done'})
+                })
 
-                }).catch(error=>{
-                console.log('错误')
+                console.log('time2', new Date().getTime());
+                inquire();//查询状态
+
+            }).catch(error => {
+                console.error('错误', error)
             })
         }
         /*
@@ -75,15 +151,15 @@ const  props = {
                 "userName": getAccount().username,
                 "fileName": file.name
             };
-           BTFetch('/asset/getFileUploadStat','post',data,{service:'service'})
-                .then(res=>{
-                    if(res.code=='1'){
-                        makeRequest();
-                    }else{
-                        message.error(window.localeInfo["PersonalAsset.FailedToUploadTheFile"])
-                        return ;
-                    }
-                }).catch(error=>{
+            BTFetch('/asset/getFileUploadStat','post',data,{service:'service'})
+              .then(res=>{
+                  if(res.code=='1'){
+                      makeRequest();
+                  }else{
+                      message.error(window.localeInfo["PersonalAsset.FailedToUploadTheFile"])
+                      return ;
+                  }
+              }).catch(error=>{
                message.error(window.localeInfo["PersonalAsset.FailedToUploadTheFile"])
             });
 
@@ -139,83 +215,13 @@ const  props = {
             });
         };
 
-    },
-    onChange(info) {
-        const status = info.file.status;
-        if (status !== 'uploading') {
-            console.log(info.file, info.fileList);
-        }
-        if (status === 'done') {
-            // message.success(`${info.file.name} file uploaded successfully.`);
-            //message.success(window.localeInfo["PersonalAsset.SuccessfulToUploadTheFile"])
-        } else if (status === 'error') {
-            message.error(window.localeInfo["PersonalAsset.FailedToUploadTheFile"])
-        }
-    },
-};
-export default class BTMyAssetSet extends PureComponent{
-    constructor(props){
-        super(props);
-        this.state = {
-            data:[]||callback_data,
-            hash:'',
-            username:'',
-            token:''
-        }
-    };
-
-    columns(data) {
-        // console.log(data);
-            return [
-                {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name', key: 'fileName',
-                    render:(item)=>{
-                        return <span>
-                           {item.length < 30? item:item.substring(0,30)+'...'}
-                        </span>
-                    }},
-                {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size', key: 'fileSize'},
-                /*{title: <FormattedMessage {...PersonalAssetMessages.AssetSampleName}/>, dataIndex: 'sampleName', key: 'sampleName'},
-                {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleSize}/>, dataIndex: 'sampleSize', key: 'sampleSize'},*/
-                {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date'},
-                {
-                    title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_name', key: 'x', render: (item)=>{
-                        return(
-                            <a onClick={()=>this.download1(item)}>
-                                <Icon type="download"/>
-                            </a>
-                        )
-                    }
-                },
-            ];
-     }
-     download1(dataIndex){
-        BTFetch('/asset/getDownLoadURL','post',{
-            'userName':getAccount().username,
-            'fileName':dataIndex
-        }).then(res=>{
-            console.log(this)
-            if(res.code==1){
-                this.setState({href:res.data});
-                console.log(res.data);
-                let a = document.createElement('a');
-                let url = res.data;
-                let filename = dataIndex;
-                a.href = url;
-                a.download=filename;
-                a.click();
-            }else{
-                message.error(window.localeInfo["PersonalAsset.FailedToDownloadTheFile"])
-            }
-        }).catch(error=>{
-            message.error(window.localeInfo["PersonalAsset.FailedToDownloadTheFile"])
-        })
     }
-
 
     onDelete(key){
         const data = [...this.state.data];
         this.setState({ data: data.filter(item => item.key !== key) });
     }
+
     componentDidMount() {
             let data={
                 "userName": getAccount().username||'',
@@ -223,34 +229,36 @@ export default class BTMyAssetSet extends PureComponent{
                 "signatures": "0xxxx"
             };
             BTFetch('/asset/queryUploadedData','post',data)
-                .then(res=>{
-                    if(res && res.code == 0 ){
-                        if(res.data.rowCount == 0 ){
-                           // message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
-                            return ;
-                        }
-                        this.setState({
-                            data:res.data.row
-                        });
-                        for(let i of res.data.row){
-                            fileHashArr.push(i.file_hash)
-                        }
-
-                    }else{
-
+            .then(res => {
+                if(res && res.code == 0 ){
+                    if(res.data.rowCount == 0 ){
+                       // message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+                        return ;
                     }
-                }).catch(error=>{
-                    console.log(error)
+                    this.setState({
+                        data: res.data.row.map(ele => ({...ele, key: ele.file_hash}))
+                    });
+
+                }else{
+
+                }
+            }).catch(error=>{
+                console.log(error)
             });
 
 
     }
+
     render(){
         const { data } = this.state;
         const columns = this.columns(data);
         return(
             <div className="set">
-                <Dragger {...props}>
+                <Dragger
+                  beforeUpload={beforeUpload}
+                  customRequest={this.customRequest}
+                  fileList={this.state.fileList}
+                  >
                     <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />
                     </p>
@@ -269,6 +277,3 @@ export default class BTMyAssetSet extends PureComponent{
         )
     }
 }
-
-
-

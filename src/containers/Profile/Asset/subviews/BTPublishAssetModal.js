@@ -7,7 +7,7 @@ import {Icon, Radio,Select, message, Button,Input, DatePicker,Cascader  } from '
 import BTIcon from '../../../../components/BTIcon'
 import BTAssetList from '../../../../components/BTAssetList'
 import "../styles.less"
-import BTCryptTool from '../../../../tools/BTCryptTool'
+import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import {getBlockInfo,getDataInfo} from '../../../../utils/BTCommonApi'
 import BTFetch from "../../../../utils/BTFetch";
 import {options} from '../../../../utils/option'
@@ -166,13 +166,16 @@ export default class BTPublishAssetModal extends PureComponent{
             title:e.target.value.trim(),
         })
     }
-    handleNumberChange(e) {
-        const number = parseFloat(e.target.value || 0, 10);
+    handleNumberChange = (e) => {
+      var number = e.target.value
         if (isNaN(number)) {
             return;
         }
-        this.setState({number:e.target.value})
+        if (number >= 1e7) {
+          number = 1e7 - 1
+        }
 
+        this.setState({number})
 
         /*if (!('value' in this.props)) {
             this.setState({ number });
@@ -412,9 +415,9 @@ export default class BTPublishAssetModal extends PureComponent{
                             <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>
                         </span>
                             <Input placeholder={window.localeInfo["PersonalAsset.Price"]}
-                                   // value={this.state.price}
+                                   type='number'
                                    value={this.state.number}
-                                   onChange={(e)=>this.handleNumberChange(e)}/* onChange={(e)=>this.price(e)} */
+                                   onChange={this.handleNumberChange}/* onChange={(e)=>this.price(e)} */
                             />
                             <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
                         </div>
@@ -430,10 +433,14 @@ export default class BTPublishAssetModal extends PureComponent{
                             />
                         </div>
                         <div>
-                        <span className="align90">
-                            <FormattedMessage {...PersonalAssetMessages.AssetType}/>
-                        </span>
-                            <Cascader value={this.state.cascader} options={options} onChange={(datas)=>this.onChangeDataAssetType(datas)} placeholder={window.localeInfo["PersonalAsset.PleaseSelect"]} />
+                            <span className="align90">
+                                <FormattedMessage {...PersonalAssetMessages.AssetType}/>
+                            </span>
+                            <Cascader value={this.state.cascader}
+                              options={options}
+                              onChange={(datas)=>this.onChangeDataAssetType(datas)}
+                              placeholder={window.localeInfo["PersonalAsset.PleaseSelect"]}
+                            />
                         </div>
                         <div className="featureTag">
                         <span className="align90">

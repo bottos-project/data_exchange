@@ -1,7 +1,6 @@
 import React,{PureComponent} from 'react'
-import { Radio, Row, Col,Modal } from 'antd';
+import { Radio, Row, Col, Modal, message } from 'antd';
 import BTFetch from "../../../utils/BTFetch";
-import {message} from "antd/lib/index";
 const RadioGroup = Radio.Group;
 
 export default class BTAssetList extends PureComponent{
@@ -35,8 +34,7 @@ export default class BTAssetList extends PureComponent{
     onChange(e){
         this.setState({value:e.target.value});
     }
-    componentDidMount(){
-    }
+
     render(){
         // console.log(this.props);
         let exampledata=this.props.exampledata||[];

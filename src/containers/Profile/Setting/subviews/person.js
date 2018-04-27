@@ -1,7 +1,7 @@
 import React,{PureComponent} from 'react'
 import { Tabs, Input, Ico,Button,Select,message } from 'antd';
 import BTFetch from "../../../../utils/BTFetch"
-import BTCryptTool from '../../../../tools/BTCryptTool'
+import BTCryptTool from '@bottos-project/bottos-crypto-js'
 // import saveAs from '../../../../tools/FileSaver'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'

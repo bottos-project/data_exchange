@@ -12,28 +12,28 @@ export default class BTWalletList extends PureComponent{
     }
 
     componentDidMount(){
-        console.log('componentDidMount')
+        let walletList = this.getWalletList()
+        this.setState({
+            walletList
+        })
+    }
+
+    getWalletList(){
         let params = this.props.location.query
         const walletList = []
 
        for(let index in params){
            let item = params[index]
-           walletList.push(item)
+           let extern = item.slice(item.length-9,item.length)
+           if(extern=='.keystore'){
+            walletList.push(item)
+           }
        }
-       
-        // this.setState({
-        //     walletList:walletList
-        // })
+       return walletList;
     }
 
     render(){
-        let params = this.props.location.query
-        let walletList = []
-
-       for(let index in params){
-           let item = params[index]
-           walletList.push(item)
-       }
+        let walletList = this.getWalletList()
         return(
             <div className="flex container column" style={{height:200}}>
                 {/* <BTAccountListHeader/> */}

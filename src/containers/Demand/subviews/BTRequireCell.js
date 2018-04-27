@@ -1,13 +1,14 @@
 import React,{PureComponent} from 'react'
 import BTAssetList from './BTAssetList'
-import {Link} from 'react-router'
-import {message} from 'antd'
+import { hashHistory } from 'react-router'
+import querystring from 'querystring'
+
+import {message, Icon} from 'antd'
 import BTFetch from '../../../utils/BTFetch'
 import {getBlockInfo,getDataInfo} from '../../../utils/BTCommonApi'
 import './styles.less'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
-import {Icon} from 'antd'
 import {getAccount} from "../../../tools/localStore";
 import uuid from 'node-uuid'
 const DemandMessages = messages.Demand;
@@ -121,6 +122,14 @@ export default class BTRequireCell extends PureComponent{
                 }
             })
     }
+
+    handleClick = () => {
+      // console.log('hashHistory', hashHistory);
+      const { linkto, ...queryObject } = this.props
+      const q = '?' + querystring.stringify(queryObject)
+      hashHistory.push(linkto + q)
+    }
+
     render(){
         let data = this.props;
         let linkto = this.props.linkto || '/';
@@ -130,26 +139,26 @@ export default class BTRequireCell extends PureComponent{
         }
         let time=new Date((data.expire_time)*1000).toLocaleDateString({...DemandMessages.En});
         return (
-                <div className="assetList">
-                    <BTAssetList exampledata={this.state.exampledata} ref={(ref)=>this.assetListModal = ref} handleFile={(fileInfo)=>this.handleFile(fileInfo)}/>
-                    <div>
-                        <h4 className="headAndShop"><Link to={path}>{data.requirement_name.length < 27 ? data.requirement_name:data.requirement_name.substring(0,27)+'...'}</Link></h4>
-                        <p>
-                            <FormattedMessage {...DemandMessages.Publisher}/>
-                            {data.username}
-                        </p>
-                        <span>
-                            <FormattedMessage {...DemandMessages.ExpireTime}/>
-                            {/*{data.expire_time}*/}
-                            {time}
-                        </span>
-                        <div>
-                            <FormattedMessage {...DemandMessages.ExpectedPrice}/>
-                            <span>{data.price/Math.pow(10,10)}</span>
-                            <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
-                        </div>
-                    </div>
+            <div className="assetList" onClick={this.handleClick}>
+                <BTAssetList exampledata={this.state.exampledata} ref={(ref)=>this.assetListModal = ref} handleFile={(fileInfo)=>this.handleFile(fileInfo)}/>
+                <h4 className="headAndShop">
+                    {data.requirement_name.length < 27 ? data.requirement_name:data.requirement_name.substring(0,27)+'...'}
+                </h4>
+                <p>
+                  <FormattedMessage {...DemandMessages.Publisher}/>
+                  {data.username}
+                </p>
+                <div>
+                  <FormattedMessage {...DemandMessages.ExpectedPrice}/>
+                  <span>{data.price/Math.pow(10,10)}</span>
+                  <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
                 </div>
+                <span>
+                  <FormattedMessage {...DemandMessages.ExpireTime}/>
+                  {/*{data.expire_time}*/}
+                  {time}
+                </span>
+            </div>
         )
     }
 }
