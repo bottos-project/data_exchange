@@ -1,9 +1,9 @@
 import React,{PureComponent} from 'react'
-import './styles.less'
-import {Link,hashHistory} from 'react-router'
 import {bindActionCreators} from 'redux'
+import { Link } from 'react-router'
+import { connect } from 'react-redux'
+import './styles.less'
 import * as headerActions from '../redux/actions/HeaderAction'
-import {connect} from 'react-redux'
 import {Button,Modal,Menu, Dropdown, Icon,message} from 'antd'
 import BTLogin from './Login'
 import IsRegister from './Register'
@@ -42,13 +42,6 @@ class BTHeader extends PureComponent{
         }
     }
 
-    // 设置本地化语言
-    setLocale(){
-        this.props.setLocale();
-        // 主动刷新当前页面
-        window.location.reload()
-    }
-
     componentDidMount(){
         let loginState = isLogin()
         this.setState({
@@ -58,7 +51,8 @@ class BTHeader extends PureComponent{
 
     handlePublishDemand(){
         message.destroy()
-        if(!this.state.isLogin){
+
+        if( this.props.account_info == null ) {
             message.info(window.localeInfo["Header.PleaseLogInFirst"]);
             return
         }
@@ -69,7 +63,7 @@ class BTHeader extends PureComponent{
 
     handlePublishAsset(){
         message.destroy()
-        if(!this.state.isLogin){
+        if( this.props.account_info == null ) {
             message.info(window.localeInfo["Header.PleaseLogInFirst"]);
             return
         }
@@ -108,38 +102,14 @@ class BTHeader extends PureComponent{
         })
     }
 
-    menu(){
-        return(
-            <Menu>
-                <Menu.Item key="0">
-                    <Link to="/profile/asset">
-                        <FormattedMessage {...HeaderMessages.Asset}/>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="1">
-                    <Link to="/profile/need">
-                        <FormattedMessage {...HeaderMessages.Demand}/>
-                    </Link>
-                </Menu.Item>
-                <Menu.Item key="2">
-                    <Link to="/profile/collect">
-                        <FormattedMessage {...HeaderMessages.Collect}/>
-                    </Link>
-                </Menu.Item>
-                 <Menu.Item key="3">
-                    <Link to="/profile/wallet">
-                        {/*<FormattedMessage {...HeaderMessages.Setting}/>*/}
-                        <FormattedMessage {...HeaderMessages.Wallet}/>
-                    </Link>
-                </Menu.Item>
-                <Menu.Divider/>
-                <Menu.Item key="4">
-                    <a href="#" onClick={()=>{this.logout()}}>
-                        <FormattedMessage {...HeaderMessages.Logout}/>
-                    </a>
-                </Menu.Item>
-            </Menu>
-        )
+    menu() {
+        return <Menu>
+            <Menu.Item key="1">
+              <a href="#" onClick={()=>{this.logout()}}>
+                  <FormattedMessage {...HeaderMessages.Logout}/>
+              </a>
+            </Menu.Item>
+        </Menu>
     }
 
     importKeyStore(){
@@ -167,27 +137,36 @@ class BTHeader extends PureComponent{
         )
     }
 
-    checkMessages(){
-        console.log("checkMessages")
+    setLocale = () => {
+        let storage = window.localStorage;
+        let locale = storage.getItem('locale');
+        if(locale == 'en-US'){
+            storage.setItem('locale','zh-CN')
+            this.props.setLocale('zh-CN')
+        }else{
+            storage.setItem('locale','en-US')
+            this.props.setLocale('en-US')
+        }
+        // 主动刷新当前页面
+        window.location.reload()
+
     }
 
     render(){
-        const { toggleLoginViewVisible, toggleRegisterViewVisible } = this.props
+        const { account_info, toggleLoginViewVisible, toggleRegisterViewVisible } = this.props
         return(
             <div className="container header">
                 <BTPublishDemand ref={(ref)=>this.publishModal = ref}/>
 
                 <BTPublishAssetModal ref={(ref)=>this.publishAssetModal = ref}/>
 
-                <BTLogin onHandleLogin={(isLogin)=>this.setLogin(isLogin)}/>
+                <BTLogin />
 
                 {/* 注册及登录框 */}
                 <IsRegister />
 
-                <div className="logoMenuStyle">
-                    <div className="logoStyle">
-                        <img src="./img/newLogo.svg" style={{maxWidth:150,minHeight:80}} alt=""/>
-                    </div>
+                <div className="logoStyle">
+                    <img src="./img/newLogo.svg" alt=""/>
                 </div>
 
                 <div className="loginBtnStyle">
@@ -197,29 +176,31 @@ class BTHeader extends PureComponent{
                     <Button onClick={()=>this.handlePublishAsset()} >
                         <FormattedMessage {...HeaderMessages.PublishAsset}/>
                     </Button>
-                    <div>
-                        {
-                            this.state.isLogin ?
-                            <div className="center">
-                                <Dropdown overlay={this.menu()}>
-                                        <img className="userIcon"
-                                            src="https://www.botfans.org/uc_server/images/noavatar_middle.gif"
-                                        />
-                                </Dropdown>
-                                <Link to="/profile/check" style={{color:'rgba(0, 0, 0, 0.65)'}}><i className="iconfont icon-email" style={{fontSize:20,marginLeft:10}} onClick={()=>{this.checkMessages()}}/></Link>
-                            </div>
 
-                            :
-                            <div className='isLogin'>
-                                <span onClick={() => toggleLoginViewVisible(true)}>
-                                    <FormattedMessage {...HeaderMessages.Login}/>
-                                </span>
-                                <span onClick={() => toggleRegisterViewVisible(true)}>
-                                    <FormattedMessage {...HeaderMessages.Register}/>
-                                </span>
-                            </div>
-                        }
-                    </div>
+                    {
+                      account_info != null
+                      ?
+                      <div className="center">
+                        <Dropdown overlay={this.menu()}>
+                          <div className='header-username'>{account_info.username}</div>
+                          {/* <img className="userIcon"
+                              src="https://www.botfans.org/uc_server/images/noavatar_middle.gif"
+                          /> */}
+                        </Dropdown>
+                        <Link to="/profile/check" style={{color:'rgba(0, 0, 0, 0.65)'}}>
+                          <i className="iconfont icon-email" style={{ fontSize:20 }} />
+                        </Link>
+                      </div>
+                      :
+                      <div className='isLogin'>
+                        <span onClick={() => toggleLoginViewVisible(true)}>
+                          <FormattedMessage {...HeaderMessages.Login}/>
+                        </span>
+                        <span onClick={() => toggleRegisterViewVisible(true)}>
+                          <FormattedMessage {...HeaderMessages.Register}/>
+                        </span>
+                      </div>
+                    }
 
                     {/* <div>
                         <Dropdown overlay={this.keyStoreMenu()}>
@@ -230,12 +211,12 @@ class BTHeader extends PureComponent{
                     {/* <div className="marginLeft marginRight">
                         <BTIcon type="icon-email" style={{fontSize:20}}/>
                     </div> */}
-                    <div>
-                        <Button onClick={()=>this.setLocale()}>
-                            {(this.props.locale == 'en-US') ? '中文' : 'English'}
-                        </Button>
-                    </div>
 
+                </div>
+                <div className='switch-locate'>
+                  <Button onClick={this.setLocale}>
+                    {(this.props.locale == 'en-US') ? '中文' : 'English'}
+                  </Button>
                 </div>
             </div>
         )
@@ -245,7 +226,7 @@ class BTHeader extends PureComponent{
 
 const mapStateToProps = (state)=>{
     return {
-        headerState: state.headerState
+        account_info: state.headerState.account_info
     }
 }
 

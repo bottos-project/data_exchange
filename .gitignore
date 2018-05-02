@@ -32,3 +32,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# zip file
+*.zip
+
+# developer tools
+/devtools

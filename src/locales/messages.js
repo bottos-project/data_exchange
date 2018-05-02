@@ -2,7 +2,7 @@ module.exports = {
     Menu:{
         Dashboard:{
             id:'Menu.Dashboard',
-            defaultMessage:'仪表盘'
+            defaultMessage:'市场概览'
         },
         Demand:{
             id:'Menu.Demand',
@@ -31,7 +31,15 @@ module.exports = {
         Wallet:{
             id:'Menu.Wallet',
             defaultMessage:'钱包'
-        }
+        },
+        DemandDetails:{
+            id:'Menu.DemandDetails',
+            defaultMessage:'需求详情'
+        },
+        AssetDetails:{
+            id:'Menu.AssetDetails',
+            defaultMessage:'资产详情'
+        },
     },
     Header:{
         PleaseLogInFirst:{

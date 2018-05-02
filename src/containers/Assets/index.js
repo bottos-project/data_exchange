@@ -7,7 +7,6 @@ import BTMyTag from '../../components/BTMyTag'
 import BTFetch from '../../utils/BTFetch'
 import {List} from 'antd'
 
-import BTAssetTitle from "./subviews/BTAssetTitle";
 const BTHeaderSearch = () => (
     <div className="searchViewStyle">
         <div>
@@ -81,11 +80,12 @@ export default class BTAssets extends Component {
     }
 
     render() {
+
+      if ( React.isValidElement(this.props.children) ) {
+        return this.props.children
+      }
         return (
             <div style={{width:"100%"}}>
-                <BTAssetTitle />
-                {/* <BTHeaderSearch/> */}
-
                 <List
                   dataSource={this.state.dataSource}
                   renderItem={(item) => (

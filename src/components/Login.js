@@ -70,7 +70,7 @@ class Login extends PureComponent{
                 keyStoreObj = JSON.parse(keyStoreStr)
             }
         }
-        
+
         // 用密码解密keyStore
         try{
             let decryptoStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
@@ -120,7 +120,6 @@ class Login extends PureComponent{
                         password:'',
                         username:''
                     })
-                    this.props.onHandleLogin(true)
                     // window.location.reload()
                 }else{
                     message.error(window.localeInfo["Header.LoginFailure"]);

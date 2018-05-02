@@ -189,9 +189,6 @@ export default class BTDashboard extends PureComponent{
         return(
             <div className="container column">
                 <div>
-                    <BTDashboardTitle/>
-                </div>
-                <div>
                     {/*<BTDashboardBlock handleFile={(fileName)=>this.getFileName(fileName)}/>*/}
                     <div className="DashboardBlockDetails radius shadow" >
                         <div>
@@ -241,12 +238,7 @@ export default class BTDashboard extends PureComponent{
                         </div>
                     </div>
                 </div>
-                <div>
-                    <BTDashboardChart type={this.state.type} dkey={this.state.dataKey} num={this.state.num}/>
-                </div>
-                <div>
-                    {/*<BTDashboardTable/>*/}
-                </div>
+                <BTDashboardChart type={this.state.type} dkey={this.state.dataKey} num={this.state.num}/>
             </div>
         )
     }

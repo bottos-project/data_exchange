@@ -7,7 +7,6 @@ import BTRequireCell from './subviews/BTRequireCell'
 import {getAccount} from '../../tools/localStore'
 import BTFetch from '../../utils/BTFetch';
 import {List,message,Pagination} from 'antd'
-import BTDemandTitle from "./subviews/BTDemandTitle";
 
 const BTHeaderSearch = () => (
     <div className="searchViewStyle">
@@ -78,9 +77,12 @@ export default class BTDemand extends PureComponent{
         })
     }
     render(){
+      if ( React.isValidElement(this.props.children) ) {
+        return this.props.children
+      }
+
         return(
             <div  style={{width:"100%"}}>
-                <BTDemandTitle/>
                 {/* <div><BTHeaderSearch/></div> */}
                 <List
                     style={{flex:1}}

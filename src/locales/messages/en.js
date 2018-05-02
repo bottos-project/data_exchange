@@ -315,8 +315,8 @@ module.exports = {
     //check
     "Check.AssetID":"Asset Name",
     "Check.Consumer":"Promoter",
-    "Check.DataPresaleId":"Demand Titlee",
-    "Check.DataTime":"Time",
+    "Check.DataPresaleId":"Demand Title",
+    "Check.DataReqId":"Time",
     "Check.UserName":"User Name",
     "Check.View":"View",
     "Check.MyMessages":"My Messages",

@@ -31,9 +31,12 @@ function createWindow () {
   // 然后加载应用的 index.html。
   // package中的DEV为true时，开启调试窗口。为false时使用编译发布版本
   if(pkg.DEV){
-    BrowserWindow.addDevToolsExtension(path.join(__dirname, './public/fmkadmapgofadopljbjfkapdkoienihi/3.2.1_0'))  // React Developer Tools
-    BrowserWindow.addDevToolsExtension(path.join(__dirname, './public/lmhkpmbekcpmknklioeibfkpmmfibljd/2.15.2_0'))  // Redux Developer Tools
+    BrowserWindow.addDevToolsExtension(path.join(__dirname, './devtools/fmkadmapgofadopljbjfkapdkoienihi/3.2.1_0'))  // React Developer Tools
+    BrowserWindow.addDevToolsExtension(path.join(__dirname, './devtools/lmhkpmbekcpmknklioeibfkpmmfibljd/2.15.2_0'))  // Redux Developer Tools
     win.loadURL('http://localhost:3000/')
+    // 打开开发者工具。
+    win.webContents.openDevTools()
+
   }else{
     win.loadURL(url.format({
       pathname: path.join(__dirname, './build/index.html'),
@@ -41,9 +44,6 @@ function createWindow () {
       slashes: true
     }))
   }
-
-  // 打开开发者工具。
-  // win.webContents.openDevTools()
 
   win.once('ready-to-show', () => {
     win.show()

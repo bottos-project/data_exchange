@@ -2,6 +2,14 @@ import * as actionTypes from '../consts/HeaderConst'
 // account
 import { deleteAccount, setAccount } from '../../tools/localStore'
 
+// // 设置地点
+export const setLocale = (locale) => {
+    return {
+        type: actionTypes.SET_LOCALE,
+        locale
+    }
+}
+
 // 登录页面
 export const toggleLoginViewVisible = (visible) => {
     return {

@@ -1,5 +1,4 @@
 import React,{PureComponent} from 'react'
-import "./index.less"
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 const CollectMessages = messages.Collect;

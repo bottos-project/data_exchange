@@ -1,9 +1,8 @@
 import React,{PureComponent} from 'react'
-import {Modal} from 'antd'
 import {getAccount} from "../../../../tools/localStore";
 // import BTUploadAsset from './BTUploadAsset'
 // import messages from '../../../../locales/messages'
-import {Icon, Radio,Select, message, Button,Input, DatePicker,Cascader  } from 'antd';
+import {Icon, Modal, Radio, Select, message, Button, Input, DatePicker, Cascader } from 'antd';
 import BTIcon from '../../../../components/BTIcon'
 import BTAssetList from '../../../../components/BTAssetList'
 import "../styles.less"

@@ -11,7 +11,7 @@ export default class BTDashboardChart extends PureComponent{
                     <h3 style={{color:"#666666"}}>{this.props.type}</h3>
                 </div>
                 <div className="dashboardChart shadow radius">
-                    <LineChart style={{margin:'0 auto'}} width={1000}  height={250} data={this.props.num}>
+                    <LineChart style={{margin:'0 auto'}} width={900} height={250} data={this.props.num}>
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="day" />
                         <YAxis />

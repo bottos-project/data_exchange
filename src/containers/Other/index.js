@@ -1,5 +1,4 @@
 import React,{PureComponent} from 'react'
-import BTOtherTitle from "./subviews/BTOtherTitle"
 import BTOtherAllBlock from "./subviews/BTOtherAllBlock";
 import BTMap from "./subviews/BTMap"
 import BTOtherBlocks from "./subviews/BTOtherBlocks";
@@ -51,9 +50,6 @@ export default class BTOther extends PureComponent{
     render(){
         return(
             <div className="container column">
-                <div>
-                    <BTOtherTitle/>
-                </div>
                 <div>
                     <BTOtherAllBlock total={this.state.Total_Nodes} lastBlock={this.state.Total_Block}/>
                 </div>

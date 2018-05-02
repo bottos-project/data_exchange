@@ -32,32 +32,38 @@ export default class BTAssetDetail extends PureComponent{
             token:''
         }
     }
-    columns(data){
+    columns(data) {
         // console.log(data)
         return [
-            {title: <FormattedMessage {...PersonalAssetMessages.AssetName}/>, dataIndex: 'asset_name',
-                render:(item)=>{
-                    return <span>
-                           {item.length < 25? item:item.substring(0,25)+'...'}
-                        </span>
-                }
+            {
+              title: <FormattedMessage {...PersonalAssetMessages.AssetName}/>,
+              dataIndex: 'asset_name',
+              render: (item) => {
+                return <span>
+                   {item.length < 25? item:item.substring(0,25)+'...'}
+                </span>
+              }
             },
-            { title:  <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price',render:(price)=>{
-                       return <div>
-                            {/*<img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>*/}
-                            <span>{price/Math.pow(10,10)}</span>
-                        </div>
-                    }
+            {
+              title: <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>,
+              dataIndex: 'price',
+              key: 'price',
+              render: (price) => <div>
+                  {/*<img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>*/}
+                  <span>{price/Math.pow(10,10)}</span>
+              </div>
             },
-            { title: <FormattedMessage {...PersonalAssetMessages.ExpireTime}/>, dataIndex: 'expire_time', key: 'date',
-                render: (text, record) => this.renderColumns(new Date(text*1000).toLocaleDateString(), record, 'date'),
+            {
+              title: <FormattedMessage {...PersonalAssetMessages.ExpireTime}/>,
+              dataIndex: 'expire_time',
+              key: 'date',
+              render: (text, record) => this.renderColumns(new Date(text*1000).toLocaleDateString(), record, 'date'),
             },
-            { title: <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>, dataIndex: 'description', key: 'description',
-                render:(item)=>{
-                    return <span>
-                           {item.length < 30? item:item.substring(0,30)+'...'}
-                        </span>
-                }
+            {
+              title: <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>,
+              dataIndex: 'description',
+              key: 'description',
+              render: (item) => <span>{item.length < 30 ? item : item.substring(0,30) + '...'}</span>
             },
             //修改操作
             /*{ title: <FormattedMessage {...PersonalAssetMessages.AssetOperation}/>,
@@ -86,7 +92,7 @@ export default class BTAssetDetail extends PureComponent{
                     );
                 },
             }*/
-            ];
+          ];
     }
     renderColumns(text, record, column) {
         return (
@@ -209,22 +215,22 @@ export default class BTAssetDetail extends PureComponent{
             "random": Math.ceil(Math.random()*100),
             "signatures": "0xxxx"
         }
-        BTFetch("/asset/query",'post',param)
-            .then(res=>{
-                   if(res.code==0){
-                       if(res.data.rowCount==0){
-                           // message.warning('暂无数据');
-                           //message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
-                           return;
-                       }
-                       console.log(res.data)
-                       this.setState({
-                          data:res.data.row
-                       })
-                   }
-            }).catch(error=>{
-                message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
 
+        BTFetch("/asset/query",'post',param)
+        .then(res=>{
+           if(res.code==0){
+               if(res.data.rowCount==0){
+                   // message.warning('暂无数据');
+                   //message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+                   return;
+               }
+               // console.log(res.data)
+               this.setState({
+                  data: res.data.row
+               })
+           }
+        }).catch(error=>{
+            message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
         })
     }
     render() {
@@ -232,7 +238,13 @@ export default class BTAssetDetail extends PureComponent{
         const columns = this.columns(data);
         return (
             <div>
-                <Table className="shadow radius table" bordered dataSource={this.state.data} columns={columns} />
+                <Table
+                  className="shadow radius table"
+                  bordered
+                  dataSource={this.state.data}
+                  rowKey='asset_id'
+                  columns={columns}
+                />
             </div>
         );
     }

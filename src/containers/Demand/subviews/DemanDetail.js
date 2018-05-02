@@ -5,7 +5,6 @@ import { Carousel, Button, Tag, Input, message } from 'antd';
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import BTAssetList from './BTAssetList'
-import {browerHistory} from 'react-router'
 import './styles.less'
 import {getAccount} from "../../../tools/localStore";
 import uuid from 'node-uuid'

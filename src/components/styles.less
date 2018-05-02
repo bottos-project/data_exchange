@@ -5,40 +5,40 @@
 
 .header {
     justify-content: space-between;
-    .logoMenuStyle {
-      background-color:#FFFFFF ;
-        display: flex;
-        flex-direction: row;
-        box-shadow: 0 0 5px #CCCCCC;
-    }
 
     .logoStyle {
-        display: flex;
         width: @sideWidth;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        //background-color: black;
-        font-size: 30px;
-        height:75px;
-        z-index:9999;
-        img{
-            width:100%;
-            height:100%;
+        height: 75px;
+        text-align: center;
+        z-index: 3;
+        img {
+            width: 100%;
+            height: 100%;
+            max-width: 150px;
         }
     }
+
   .isLogin{
     margin:0 20px;
   }
 
     .loginBtnStyle {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 100%;
+      padding-left: @sideWidth;
+      padding-right: 100px;
+
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-right: 200px;
+
         button{
           margin: 0 5px;
         }
+
         button:hover,button:focus,button:active{
           border:1px solid #4A90E2;
           color:#4A90E2;
@@ -66,6 +66,24 @@
     span:last-child{
         padding-right: 0;
     }
+}
+
+.header-username {
+  display: inline-block;
+  font-size: 16px;
+  color: #262626;
+  margin: 0 15px;
+}
+
+.switch-locate {
+  position: absolute;
+  right: 1%;
+  top: 0;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .register .ant-row input{

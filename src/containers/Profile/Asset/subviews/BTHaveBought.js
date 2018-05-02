@@ -95,6 +95,7 @@ export default class BTHaveBought extends PureComponent{
                 className="shadow radius table"
                 columns={columns}
                 bordered
+                rowKey='asset_id'
                 style={{width:"100%"}}
                 dataSource={this.state.data}
             />

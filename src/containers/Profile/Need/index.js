@@ -37,17 +37,3 @@ export default class BTProfileNeed extends PureComponent{
         )
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

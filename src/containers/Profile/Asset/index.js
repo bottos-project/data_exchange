@@ -1,6 +1,5 @@
 import React,{PureComponent} from 'react'
-import { Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input,Cascader  } from 'antd';
-import moment from 'moment';
+import { Tabs } from 'antd';
 import './styles.less';
 import BTList from '../../../components/BTList'
 
@@ -12,8 +11,8 @@ import BTFetch from "../../../utils/BTFetch";
 import BTAssetTitle from "./subviews/BTAssetTitle";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
-const PersonalAssetMessages = messages.PersonalAsset;
 const TabPane = Tabs.TabPane;
+const PersonalAssetMessages = messages.PersonalAsset;
 
 export default class BTProfileAsset extends PureComponent{
     constructor(props){
@@ -44,17 +43,3 @@ export default class BTProfileAsset extends PureComponent{
         )
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

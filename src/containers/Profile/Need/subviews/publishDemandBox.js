@@ -29,27 +29,26 @@ String.prototype.trim=function() {
 String.prototype.trims=function() {
     return this.replace(/(\s*$)/g,'');
 };
+
+const initialState = {
+    visible:false,
+    title:"",
+    textArea:"",
+    number: '',
+    date:"",
+    dateString:"",
+    ddatePicker:'',
+    date11: null,
+}
+
 export default class BTPublishDemand extends PureComponent{
     constructor(props) {
         super(props)
-        this.state = {
-            visible:false,
-            title:"",
-            textArea:"",
-            number: '',
-            date:"",
-            dateString:"",
-            username:'',
-            token:'',
-            ddatePicker:'',
-            date11:'',
-        }
+        this.state = initialState
     }
 
-    handleCancel(){
-        this.setState({
-            visible:false
-        })
+    handleCancel = () => {
+      this.setState(initialState)
     }
 
     handleOk(){
@@ -64,32 +63,13 @@ export default class BTPublishDemand extends PureComponent{
             this.setState(value);
         }
     }
-    componentDidMount(){
-        if(getAccount()){
-            this.setState({
-                username:getAccount().username,
-                token:getAccount().token,
-            })
-        }
 
-    }
     onChange(e){
         this.setState({
             value:e.target.value
         })
     }
-    handleCancel(){
-        this.setState({
-            visible:false,
-            title:"",
-            textArea:"",
-            number:'',
-            date:"",
-            date11:'',
-            dateString:'',
-            DatePicker:'',
-        })
-    }
+
     onChangeTitle(e){
 
         this.setState({
@@ -224,11 +204,12 @@ export default class BTPublishDemand extends PureComponent{
     render(){
         return(
             <Modal visible={this.state.visible}
-                   onCancel={()=>this.handleCancel()}
+                   onCancel={this.handleCancel}
                    className="modalAsset"
                    okText = "立即发布"
                    cancelText = "取消"
                    footer={null}
+                   destroyOnClose
                    title={<FormattedMessage {...PersonalDemandMessages.PublishTheDemand}/>}
             >
                 {/*<BTUploadNeed/>*/}
