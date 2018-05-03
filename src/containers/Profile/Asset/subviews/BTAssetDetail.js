@@ -24,6 +24,10 @@ function handleChange(value) {
 export default class BTAssetDetail extends PureComponent{
     constructor(props) {
         super(props);
+        console.log('getAccount', getAccount());
+        if (!getAccount()) {
+          location.hash = '#/dashboard'
+        }
         const data = [];
         this.cacheData = data.map(item => ({ ...item }));
         this.state = {

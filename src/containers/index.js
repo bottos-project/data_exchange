@@ -8,10 +8,6 @@ import { FormattedMessage } from 'react-intl'
 import messages from '../locales/messages'
 const MenuMessages = messages.Menu;
 
-// 获取package.json
-const pkg = require('../../package.json')
-
-
 class App extends PureComponent {
   render() {
     const { routes } = this.props
@@ -24,11 +20,6 @@ class App extends PureComponent {
         <div className="container content">
             <div className="menu" style={{position: 'relative'}}>
               <BTMenu />
-              <div style={{position: 'absolute', bottom: 0, marginLeft: 20}}>
-                版本号：{pkg.version}
-                <br />
-                发布日期：{pkg.publishDate}
-              </div>
             </div>
 
             <div className="container contentbody column">

@@ -28,10 +28,6 @@ module.exports = {
             id:'Menu.Check',
             defaultMessage:'审核'
         },
-        Wallet:{
-            id:'Menu.Wallet',
-            defaultMessage:'钱包'
-        },
         DemandDetails:{
             id:'Menu.DemandDetails',
             defaultMessage:'需求详情'
@@ -39,6 +35,30 @@ module.exports = {
         AssetDetails:{
             id:'Menu.AssetDetails',
             defaultMessage:'资产详情'
+        },
+        ProfileAsset:{
+            id:'Menu.ProfileAsset',
+            defaultMessage:'个人资产'
+        },
+        Collect:{
+            id:'Menu.Collect',
+            defaultMessage:'收藏'
+        },
+        Check:{
+            id:'Menu.Check',
+            defaultMessage:'消息'
+        },
+        ProfileNeed:{
+            id:'Menu.ProfileNeed',
+            defaultMessage:'个人需求'
+        },
+        Wallet:{
+          id:'Menu.Wallet',
+          defaultMessage:'钱包'
+        },
+        Walletlist:{
+          id:'Menu.Walletlist',
+          defaultMessage:'钱包列表'
         },
     },
     Header:{

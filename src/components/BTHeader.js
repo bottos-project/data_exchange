@@ -19,6 +19,7 @@ import messages from "../locales/messages";
 const HeaderMessages = messages.Header;
 
 const {dialog} = window.electron.remote
+const pkg = require('../../package.json')
 
 class MenuLink extends PureComponent{
     constructor(props){
@@ -156,6 +157,7 @@ class BTHeader extends PureComponent{
         const { account_info, toggleLoginViewVisible, toggleRegisterViewVisible } = this.props
         return(
             <div className="container header">
+              <div style={{position: 'absolute', top: 0, right: 10}}>v: {pkg.version}</div>
                 <BTPublishDemand ref={(ref)=>this.publishModal = ref}/>
 
                 <BTPublishAssetModal ref={(ref)=>this.publishAssetModal = ref}/>
@@ -224,10 +226,9 @@ class BTHeader extends PureComponent{
 }
 
 
-const mapStateToProps = (state)=>{
-    return {
-        account_info: state.headerState.account_info
-    }
+const mapStateToProps = (state) => {
+  const { account_info, locale } = state.headerState
+    return { account_info, locale }
 }
 
 const mapDispatchToProps = (dispatch) => {

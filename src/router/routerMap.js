@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { Router, Route, IndexRedirect, IndexRoute } from 'react-router'
+import { Router, Route, IndexRedirect, IndexRoute, Redirect } from 'react-router'
 
 import App from '../containers'
 
@@ -24,7 +24,6 @@ import BTWallet from '../containers/Profile/Wallet'
 import BTShopCart from '../containers/Profile/ShopCart'
 import BTSetting from '../containers/Profile/Setting'
 import BTWalletList from '../containers/Profile/Wallet/subvies/BTWalletList'
-import BTAccountList from '../containers/Profile/Wallet';
 
 
 export default class RouterMap extends PureComponent {
@@ -50,15 +49,18 @@ export default class RouterMap extends PureComponent {
           <Route path="signIn" name='signIn' breadcrumbName='signIn' component = {BTSignIn}/>
           <Route path="signUp" name='signUp' breadcrumbName='signUp' component = {BTSignUp}/>
 
-          <Route path="profile/asset" breadcrumbName='profile/asset' component={BTProfileAsset}/>
-          <Route path="profile/wallet" component={BTWallet}/>
-          <Route path="profile/need" component={BTProfileNeed}/>
-          <Route path="profile/check" component={BTCheck}/>
-          <Route path="profile/collect" component={BTCollect}/>
-          <Route path="profile/shopcart" component={BTShopCart}/>
-          <Route path="profile/setting" component={BTSetting}/>
-          <Route path="profile/wallet/walletlist" component={BTWalletList}/>
-          <Route path="profile/wallet/accountlist" component={BTAccountList}/>
+          <Redirect from="profile" to="profile/asset" />
+          <Route path="profile" breadcrumbName='Profile'>
+            <Route path="asset" name='ProfileAsset' breadcrumbName='Asset' component={BTProfileAsset} />
+            <Route path="need" name='ProfileNeed' breadcrumbName='Need' component={BTProfileNeed} />
+            <Route path="check" name='Check' breadcrumbName='Check' component={BTCheck} />
+            <Route path="collect" name='Collect' breadcrumbName='Collect' component={BTCollect} />
+            {/* <Route path="shopcart" breadcrumbName='Shopcart' component={BTShopCart} /> */}
+            {/* <Route path="setting" breadcrumbName='Setting' component={BTSetting} /> */}
+            <Route path="wallet" name='Wallet' breadcrumbName='Wallet' component={BTWallet}>
+              <Route path="walletlist" name='Walletlist' breadcrumbName='Walletlist' component={BTWalletList} />
+            </Route>
+          </Route>
         </Route>
       </Router>
     )

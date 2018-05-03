@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import BTListCell from './BTListCell' 
+import BTListCell from './BTListCell'
 import {Icon,Checkbox,Row,Col,message,Table,Button,Popconfirm} from 'antd'
 import BTFetch from '../utils/BTFetch'
 import {getBlockInfo,getDataInfo} from '../utils/BTCommonApi'
@@ -167,7 +167,7 @@ export default class BTList extends PureComponent{
                 message.warning('暂无资产加入收藏')
             }
         }).catch(error=>{
-            console.log(error)
+            console.error(error)
         })
     }
     render(){

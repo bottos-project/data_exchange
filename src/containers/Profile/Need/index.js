@@ -6,7 +6,6 @@ import BTList from '../../../components/BTList'
 import BTAssetDetail from './subviews/BTAssetDetail'
 import BTUploadAsset from './subviews/BTUploadAsset'
 import BTMyAssetSet from "./subviews/BTMyAssetSet"
-import BTDemandTitle from "./subviews/BTAssetTitle";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 const PersonalDemandMessages = messages.PersonalDemand;
@@ -21,7 +20,6 @@ export default class BTProfileNeed extends PureComponent{
 
         return(
             <div style={{width:"100%"}}>
-                <BTDemandTitle/>
                 <Tabs>
                     {/*<TabPane tab="发布需求" key="1">*/}
                         {/*<BTUploadAsset/>*/}

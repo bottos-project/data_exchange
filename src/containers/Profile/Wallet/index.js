@@ -67,18 +67,24 @@ export default class BTWallet extends PureComponent{
             pathname:'/profile/wallet/walletlist',
             query:this.state.walletList
         }
+
+        let list = this.state.walletList.map((item, index) => {
+            let account = item.slice(0, -9)
+            let isChecked = account == this.state.selectWallet;
+            let tagStyle = isChecked ? checkedStyle : unCheckedStyle
+            if (index > 2) return null;
+            return (
+              <CheckableTag key={account} checked={isChecked} onChange={()=>{this.checkWallet(item)}} style={tagStyle}>
+                {account}
+              </CheckableTag>
+            )
+        })
+
         return(
             <div className="container column">
                 <div className="flex marginBottom walletWrap">
                     <div>
-                        {
-                            this.state.walletList.map((item,index)=>{
-                                let isChecked = item.slice(0,-9)==this.state.selectWallet;
-                                let tagStyle = isChecked ? checkedStyle : unCheckedStyle
-                                if(index>2) return;
-                                return (<CheckableTag checked={isChecked} onChange={()=>{this.checkWallet(item)}} style={tagStyle}>{item.slice(0,-9)}</CheckableTag>)
-                            })
-                        }
+                        {list}
                         <Link to={walletListPath}><FormattedMessage {...WalletMessages.More}/>>>></Link>
                     </div>
                     <BTAccountListHeader style={{float:'right'}}/>
@@ -92,7 +98,9 @@ export default class BTWallet extends PureComponent{
     }
 
     render(){
-        
+      if ( React.isValidElement(this.props.children) ) {
+        return this.props.children
+      }
         return (
             <div className="container">
                 {
@@ -102,4 +110,3 @@ export default class BTWallet extends PureComponent{
         )
     }
 }
-

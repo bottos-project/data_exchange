@@ -1,8 +1,8 @@
-@sideWidth:200px;
+@sideWidth:260px;
 @margin:20px;
 @userIconW:50px;
 @userIconH:50px;
-
+@radius: 10px;
 .header {
     justify-content: space-between;
 
@@ -74,6 +74,71 @@
   color: #262626;
   margin: 0 15px;
 }
+
+.content {
+  position: absolute;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  padding-top: 80px;
+  flex-direction: row;
+
+  .menu {
+    min-width: @sideWidth;
+    background-color: #FFFFFF;
+    padding: 20px;
+  }
+
+  .contentbody {
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+  }
+}
+
+// 左侧菜单栏
+.menu-container {
+  padding: 20px;
+  width: 220px;
+  height: 100%;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.3);
+  border-radius: @radius;
+  > a:focus {
+    text-decoration: none;
+  }
+}
+
+.menu-link {
+  margin: 10px 0;
+  height: 60px;
+  line-height: 60px;
+  color: #bbb;
+  text-align: center;
+  font-size: 20px;
+  border-radius: 5px;
+}
+
+.menu-link-active > .menu-link {
+  color: white;
+  background-image: -webkit-linear-gradient(bottom, #5F72D8 0%, #6366C7 30%, #6E479D 100%);
+  background-image: linear-gradient(bottom, #5F72D8 0%, #6366C7 30%, #6E479D 100%);
+}
+
+.contentbody > .everyTitle {
+  background-color: #fff;
+  padding: 10px 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #CCC;
+  h3 {
+    color: #4f43B6;
+    font-size: 20px;
+  }
+  p {
+    color:#999999;
+  }
+}
+
 
 .switch-locate {
   position: absolute;
