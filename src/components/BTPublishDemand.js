@@ -1,18 +1,18 @@
 import React, {PureComponent} from 'react'
 import moment from "moment"
-import { Modal, Form, Icon, Input, Button, DatePicker, message } from 'antd'
-import BTUploadNeed from "./BTUploadAsset"
-import {getBlockInfo, getDataInfo} from "../../../../utils/BTCommonApi";
-import "../styles.less"
-import BTFetch from "../../../../utils/BTFetch";
+import { Form, Input, DatePicker, message } from 'antd'
+import {getBlockInfo, getDataInfo} from "../utils/BTCommonApi";
+import BTFetch from "../utils/BTFetch";
 import {FormattedMessage} from 'react-intl'
-import messages from '../../../../locales/messages'
-import {getAccount} from '../../../../tools/localStore'
+import messages from '../locales/messages'
+import {getAccount} from '../tools/localStore'
 import uuid from 'node-uuid'
 const PersonalDemandMessages = messages.PersonalDemand;
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const FormItem = Form.Item;
 const { TextArea } = Input;
+import ConfirmButton from './ConfirmButton'
+
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -31,7 +31,6 @@ String.prototype.trims=function() {
 };
 
 const initialState = {
-    visible:false,
     title:"",
     textArea:"",
     number: '',
@@ -45,29 +44,6 @@ export default class BTPublishDemand extends PureComponent{
     constructor(props) {
         super(props)
         this.state = initialState
-    }
-
-    handleCancel = () => {
-      this.setState(initialState)
-    }
-
-    handleOk(){
-        this.setState({
-            visible:false
-        })
-    }
-    componentWillReceiveProps(nextProps) {
-        // Should be a controlled component.
-        if ('value' in nextProps) {
-            const value = nextProps.value;
-            this.setState(value);
-        }
-    }
-
-    onChange(e){
-        this.setState({
-            value:e.target.value
-        })
     }
 
     onChangeTitle(e){
@@ -88,13 +64,6 @@ export default class BTPublishDemand extends PureComponent{
         }
 
         this.setState({number})
-    };
-    triggerChange = (changedValue) => {
-        // Should provide an event to pass value to Form.
-        const onChange = this.props.onChange;
-        if (onChange) {
-            onChange(Object.assign({}, this.state, changedValue));
-        }
     };
     //datePicker
     onChangeDate(date,dateString) {
@@ -183,7 +152,6 @@ export default class BTPublishDemand extends PureComponent{
                 if(res.code==0) {
                     // alert("successful")
                     this.setState({
-                        visible: false,
                         title:"",
                         textArea:"",
                         number:'',
@@ -201,64 +169,49 @@ export default class BTPublishDemand extends PureComponent{
             message.error(window.localeInfo["PersonalDemand.FailedToPublishTheDemand"])
         })
     }
-    render(){
-        return(
-            <Modal visible={this.state.visible}
-                   onCancel={this.handleCancel}
-                   className="modalAsset"
-                   okText = "立即发布"
-                   cancelText = "取消"
-                   footer={null}
-                   destroyOnClose
-                   title={<FormattedMessage {...PersonalDemandMessages.PublishTheDemand}/>}
-            >
-                {/*<BTUploadNeed/>*/}
-                <div className="upLoadNeed">
-                    <div>
-                    <span>
-                         <FormattedMessage {...PersonalDemandMessages.DemandName}/>
-                    </span>
-                        <Input style={{width:170}} value={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
-                    </div>
-                    <div>
-                    <span>
-                        <FormattedMessage {...PersonalDemandMessages.RecruitmentPrice}/>
-                    </span>
-                        <Input
-                          type='number'
-                          defaultValue={0}
-                          value={this.state.number}
-                          onChange={this.handleNumberChange}
-                        />
-                        <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
-                    </div>
-                    <div>
-                    <span>
-                         <FormattedMessage {...PersonalDemandMessages.DemandDescription}/>
-                    </span>
-                        <TextArea rows={4} value={this.state.textArea} onChange={(e)=>this.onChangeTextArea(e)} />
-                    </div>
-                    <div>
-                    <span>
-                        <FormattedMessage {...PersonalDemandMessages.Deadline}/>
-                    </span>
-                        <br/>
-                        <DatePicker
-                            placeholder={window.localeInfo["PersonalDemand.SelectDate"]}
-                            onChange={(date,dateString)=>this.onChangeDate(date,dateString)}
-                            onOpenChange={(date)=>this.onOpenChangeDate(date)}
-                            disabledDate = {(current)=>this.disabledDate(current)}
-                            value={this.state.date11}
-                            // showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
-                        />
-                    </div>
-                    <div className="uploadNeedSubmit">
-                        <Button type="submit" onClick={(e)=>this.updata(e)}>
-                            <FormattedMessage {...PersonalDemandMessages.Publish}/>
-                        </Button>
-                    </div>
-                </div>
-            </Modal>
+
+    render() {
+        return (
+          <div className="upLoadNeed route-children-bg">
+            <div className='route-children-container-title'>
+              <FormattedMessage {...PersonalDemandMessages.PublishTheDemand} />
+            </div>
+            <div>
+              <FormattedMessage {...PersonalDemandMessages.DemandName} />
+              <Input style={{width:170}} value={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
+            </div>
+            <div>
+              <FormattedMessage {...PersonalDemandMessages.RecruitmentPrice}/>
+              <Input
+                type='number'
+                defaultValue={0}
+                value={this.state.number}
+                onChange={this.handleNumberChange}
+              />
+              <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
+            </div>
+            <div>
+              <FormattedMessage {...PersonalDemandMessages.Deadline}/>
+              <br/>
+              <DatePicker
+                placeholder={window.localeInfo["PersonalDemand.SelectDate"]}
+                onChange={(date,dateString)=>this.onChangeDate(date,dateString)}
+                onOpenChange={(date)=>this.onOpenChangeDate(date)}
+                disabledDate = {(current)=>this.disabledDate(current)}
+                value={this.state.date11}
+                // showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
+              />
+            </div>
+            <div>
+                <FormattedMessage {...PersonalDemandMessages.DemandDescription}/>
+                <TextArea rows={4} value={this.state.textArea} onChange={(e)=>this.onChangeTextArea(e)} />
+            </div>
+            <div className="uploadNeedSubmit">
+              <ConfirmButton type="submit" onClick={(e)=>this.updata(e)}>
+                <FormattedMessage {...PersonalDemandMessages.Publish}/>
+              </ConfirmButton>
+            </div>
+          </div>
         )
     }
 }

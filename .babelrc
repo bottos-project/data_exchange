@@ -1,0 +1,15 @@
+{
+  "presets": [
+    "react"
+  ],
+  "plugins": [
+    ["transform-object-rest-spread", { "useBuiltIns": true }],
+    "transform-class-properties",
+    ["import", {
+      "libraryName": "antd",
+      "libraryDirectory": "es",
+      "style": true
+    }],
+    "react-hot-loader/babel"
+  ]
+} 

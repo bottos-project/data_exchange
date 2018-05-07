@@ -1,8 +1,6 @@
 import React, { Component, PureComponent } from 'react'
-import { connect } from 'react-redux'
-import { toggleRegisterViewVisible } from '../redux/actions/HeaderAction'
 
-import { Modal, Form, Icon, Input, Button, Radio, Checkbox, message, Row, Col } from 'antd'
+import { Modal, Form, Icon, Input, Button, Radio, message, Row, Col } from 'antd'
 import BTFetch from '../utils/BTFetch'
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import './styles.less'
@@ -11,8 +9,11 @@ import {exportFile} from '../utils/BTUtil'
 // import PersonUser from "./Person";
 // import CompanyUser from "./Company";
 import {FormattedMessage} from 'react-intl'
-import messages from '../locales/messages'
 import {isUserName} from '../tools/BTCheck'
+
+import ConfirmButton from './ConfirmButton'
+
+import messages from '../locales/messages'
 const HeaderMessages = messages.Header;
 const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
@@ -209,9 +210,6 @@ class Regist extends PureComponent{
         })
         .catch(error => {
             message.error(window.localeInfo["Header.FailedRegister"],error);
-            this.setState({
-                visible:false
-            })
         })
 
     }
@@ -266,7 +264,8 @@ class Regist extends PureComponent{
 
         return(
             <div className="register">
-                <Form onSubmit={(e) => this.onHandleSubmit(e)}>
+              <div className='route-children-container-title'><FormattedMessage {...HeaderMessages.Register}/></div>
+              <Form onSubmit={(e) => this.onHandleSubmit(e)}>
                 <FormItem
                     mapPropsToFields
                     {...formItemLayout}
@@ -340,13 +339,13 @@ class Regist extends PureComponent{
                   </Row>
                 </FormItem> */}
 
-                <div style={{display:'flex',justifyContent:'flex-end'}}>
-                    <Button type="primary" htmlType="submit">
-                        <FormattedMessage {...HeaderMessages.Register}/>
-                    </Button>
+                <div style={{textAlign: 'center'}}>
+                    <ConfirmButton htmlType="submit">
+                        <FormattedMessage {...HeaderMessages.Register} />
+                    </ConfirmButton>
                 </div>
 
-                </Form>
+              </Form>
             </div>
         )
     }
@@ -355,34 +354,4 @@ class Regist extends PureComponent{
 const RegistForm = Form.create()(Regist);
 
 
-class IsRegister extends Component {
-    render() {
-        return (
-        <Modal visible={this.props.visible}
-               width={400}
-               onCancel={this.props.closeRegisterView}
-               destroyOnClose
-               title={<FormattedMessage {...HeaderMessages.Register}/>}
-               maskClosable={false}
-               footer={null}
-        >
-            <RegistForm />
-        </Modal>)
-    }
-}
-
-const mapStateToProps = (state) => {
-    return {
-        visible: state.headerState.register_visible
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return {
-        closeRegisterView() {
-            dispatch( toggleRegisterViewVisible(false) )
-        }
-    }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(IsRegister)
+export default RegistForm

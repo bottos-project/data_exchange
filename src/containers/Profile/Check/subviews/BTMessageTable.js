@@ -109,24 +109,14 @@ export default class BTMessageTable extends PureComponent{
     render(){
         const { data } = this.state;
         const columns = this.columns(data);
-        return(
-            <div>
-                <h3 style={{padding:20,color:"#666666"}}>
-                    <FormattedMessage {...CheckMessages.MyMessages}/>
-                </h3>
-                <Table
-                    className="shadow radius table"
-                    bordered
-                    columns={columns}
-                    // expandedRowRender={record => <p style={{ margin: 0 }}>{record.description}</p>}
-                    dataSource={this.state.data}
-                />
-            </div>
+        return (
+            <Table
+                className="shadow radius table"
+                bordered
+                columns={columns}
+                // expandedRowRender={record => <p style={{ margin: 0 }}>{record.description}</p>}
+                dataSource={this.state.data}
+            />
         )
     }
 }
-
-
-
-
-

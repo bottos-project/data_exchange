@@ -1,6 +1,5 @@
 import React,{PureComponent} from 'react'
 import {Icon, Radio,Select, message, Button,Input, DatePicker,Cascader  } from 'antd';
-import BTIcon from '../../../../components/BTIcon'
 import BTAssetList from '../../../../components/BTAssetList'
 import "../styles.less"
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
@@ -313,4 +312,3 @@ export default class BTUploadAsset extends PureComponent{
         )
     }
 }
-

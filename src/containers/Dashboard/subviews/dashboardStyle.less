@@ -1,35 +1,36 @@
 .DashboardBlockDetails{
-  background: linear-gradient(to right, rgba(255,105,164,0.61) , rgba(255,146,48,0.61));
+  // background: linear-gradient(to right, rgba(255,105,164,0.61) , rgba(255,146,48,0.61));
+  background-image: linear-gradient(225deg, #FAB13E 0%, #FF69A4 100%);
   display: flex;
   flex-direction: row;
   column-count:5;
   margin-bottom: 20px;
-  div{
-    width: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-weight: lighter;
-    h4{
-      color:#FFFFFF;
-      font-size:18px;
-    }
-    p{
-      color:#FFFFFF;
-      font-size: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+}
+
+.dashboard-detail-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 85px;
+  width: 20%;
+  color: #FFF;
+  font-weight: lighter;
+  cursor: pointer;
+  > span {
+    height: 24px;
   }
+}
+.dashboard-detail-container.active {
+  border: 1px solid #FFFFFF;
+  border-radius: 10px;
 }
 //引入图标中的下标
 .recharts-default-legend{
   display: none;
 }
 .dashboardChart{
-  padding: 20px;
+  padding: 20px 20px 20px 0;
   background-color: #FFFFFF;
   margin-bottom: 20px;
 }
@@ -37,7 +38,7 @@
   box-shadow: 0 0 5px #CCCCCC;
 }
 .radius{
-  border-radius: 5px;
+  border-radius: 10px;
 }
 .table{
   background-color: #FFFFFF;

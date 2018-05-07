@@ -25,12 +25,16 @@ import BTShopCart from '../containers/Profile/ShopCart'
 import BTSetting from '../containers/Profile/Setting'
 import BTWalletList from '../containers/Profile/Wallet/subvies/BTWalletList'
 
+import BTPublishDemand from '../components/BTPublishDemand'
+import BTPublishAssetModal from '../components/BTPublishAssetModal'
+import LoginOrRegister from '../components/LoginOrRegister'
+
 
 export default class RouterMap extends PureComponent {
   render() {
     return (
       <Router history={this.props.history}>
-        <Route path='/' breadcrumbName='Home' component={App}>
+        <Route path='/' name='Home' breadcrumbName='Home' component={App}>
           <IndexRedirect to="/dashboard" />
           <Route path="dashboard" name='Dashboard' breadcrumbName='Dashboard' component={BTDashboard}/>
 
@@ -42,15 +46,19 @@ export default class RouterMap extends PureComponent {
             <Route path="detail" name='AssetDetails' breadcrumbName='Detail' component={BTAssetDetail} />
           </Route>
 
-          <Route path="history" name='History' breadcrumbName='History' component={BTHistory}/>
+          <Route path="history" name='History' breadcrumbName='History' component={BTHistory} />
 
-          <Route path="other" name='Blocks' breadcrumbName='Blocks' component={BTBlockList}/>
+          <Route path="blocks" name='Blocks' breadcrumbName='Blocks' component={BTBlockList} />
 
-          <Route path="signIn" name='signIn' breadcrumbName='signIn' component = {BTSignIn}/>
-          <Route path="signUp" name='signUp' breadcrumbName='signUp' component = {BTSignUp}/>
+          <Route path="signIn" name='signIn' breadcrumbName='signIn' component={BTSignIn} />
+          <Route path="signUp" name='signUp' breadcrumbName='signUp' component={BTSignUp} />
+
+          <Route path="publishDemand" name='PublishDemand' breadcrumbName='PublishDemand' component={BTPublishDemand} />
+          <Route path="publishAsset" name='PublishAsset' breadcrumbName='PublishAsset' component={BTPublishAssetModal} />
+          <Route path="loginOrRegister" name='LoginOrRegister' breadcrumbName='LoginOrRegister' component={LoginOrRegister} />
 
           <Redirect from="profile" to="profile/asset" />
-          <Route path="profile" breadcrumbName='Profile'>
+          <Route path="profile" name='Profile' breadcrumbName='Profile'>
             <Route path="asset" name='ProfileAsset' breadcrumbName='Asset' component={BTProfileAsset} />
             <Route path="need" name='ProfileNeed' breadcrumbName='Need' component={BTProfileNeed} />
             <Route path="check" name='Check' breadcrumbName='Check' component={BTCheck} />

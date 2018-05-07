@@ -5,33 +5,17 @@ import { connect } from 'react-redux'
 import './styles.less'
 import * as headerActions from '../redux/actions/HeaderAction'
 import {Button,Modal,Menu, Dropdown, Icon,message} from 'antd'
-import BTLogin from './Login'
-import IsRegister from './Register'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
-import BTPublishAssetModal from '../containers/Profile/Asset/subviews/BTPublishAssetModal'
-import BTIcon from '../components/BTIcon'
-import BTPublishDemand from '../containers/Profile/Need/subviews/publishDemandBox'
 import BTFetch from '../utils/BTFetch'
 import {importFile,exportFile} from '../utils/BTUtil'
 import BTIpcRenderer from '../tools/BTIpcRenderer'
-import { deleteAccount, isLogin, getAccount } from '../tools/localStore'
+import { getAccount } from '../tools/localStore'
 import messages from "../locales/messages";
 const HeaderMessages = messages.Header;
+const MenuMessages = messages.Menu;
 
 const {dialog} = window.electron.remote
 const pkg = require('../../package.json')
-
-class MenuLink extends PureComponent{
-    constructor(props){
-        super(props)
-    }
-
-    render(){
-        return(
-            <Link style={{color:'white'}} {...this.props}/>
-        )
-    }
-}
 
 class BTHeader extends PureComponent{
     constructor(props){
@@ -39,67 +23,34 @@ class BTHeader extends PureComponent{
 
         this.state = {
             visible:true,
-            isLogin:false
         }
+
+        this.checkAccount = this.checkAccount.bind(this)
     }
 
-    componentDidMount(){
-        let loginState = isLogin()
-        this.setState({
-            isLogin:loginState
-        })
+    checkAccount(e) {
+      message.destroy()
+      if( this.props.account_info == null ) {
+        // 如果未登录，则提示
+        message.info(window.localeInfo["Header.PleaseLogInFirst"]);
+        return e.preventDefault()
+      }
     }
 
-    handlePublishDemand(){
-        message.destroy()
-
-        if( this.props.account_info == null ) {
-            message.info(window.localeInfo["Header.PleaseLogInFirst"]);
-            return
-        }
-        this.publishModal.setState({
-            visible:true
-        })
-    }
-
-    handlePublishAsset(){
-        message.destroy()
-        if( this.props.account_info == null ) {
-            message.info(window.localeInfo["Header.PleaseLogInFirst"]);
-            return
-        }
-        this.publishAssetModal.setState({
-            visible:true
-        })
-    }
-
-    setLogin(isLogin){
-        this.setState({
-            isLogin:isLogin
-        })
-    }
-
-    logout(){
+    logout() {
         let url = '/user/logout'
         let account = getAccount()
         if (!account) {
-            message.success(window.localeInfo["Header.SuccessToLogOut"]);
-            this.setState({
-                isLogin:false
-            })
-            return;
+          this.props.setAccountInfo(null)
+          message.success(window.localeInfo["Header.SuccessToLogOut"]);
+          return;
         }
         BTFetch(url,'POST').then(response => {
-            // if(response && response.code=='0'){
-                // deleteAccount()
-                this.props.setAccountInfo(null)
-                this.setState({isLogin:false})
-                message.success(window.localeInfo["Header.SuccessToLogOut"]);
-            // }else{
-            //     message.error(window.localeInfo["Header.FailedLogOut"]);
-            // }
+          this.props.setAccountInfo(null)
+          message.success(window.localeInfo["Header.SuccessToLogOut"]);
         }).catch(error => {
-            message.error(window.localeInfo["Header.FailedLogOut"]);
+          console.error('logout error', error);
+          message.error(window.localeInfo["Header.FailedLogOut"]);
         })
     }
 
@@ -154,65 +105,61 @@ class BTHeader extends PureComponent{
     }
 
     render(){
-        const { account_info, toggleLoginViewVisible, toggleRegisterViewVisible } = this.props
+        const { account_info } = this.props
         return(
             <div className="container header">
               <div style={{position: 'absolute', top: 0, right: 10}}>v: {pkg.version}</div>
-                <BTPublishDemand ref={(ref)=>this.publishModal = ref}/>
-
-                <BTPublishAssetModal ref={(ref)=>this.publishAssetModal = ref}/>
-
-                <BTLogin />
-
-                {/* 注册及登录框 */}
-                <IsRegister />
 
                 <div className="logoStyle">
-                    <img src="./img/newLogo.svg" alt=""/>
+                    <img src="./img/logo.svg" alt=""/>
                 </div>
 
                 <div className="loginBtnStyle">
-                    <Button onClick={()=>this.handlePublishDemand()} >
-                        <FormattedMessage {...HeaderMessages.PublishDemand}/>
-                    </Button>
-                    <Button onClick={()=>this.handlePublishAsset()} >
-                        <FormattedMessage {...HeaderMessages.PublishAsset}/>
-                    </Button>
+                  <Link to='/publishDemand' onClick={this.checkAccount}>
+                    <img src='./img/publishDemand.svg' />
+                    <FormattedMessage {...HeaderMessages.PublishDemand}/>
+                  </Link>
+                  <Link to='/publishAsset' onClick={this.checkAccount} >
+                    <img src='./img/publishAsset.svg' />
+                    <FormattedMessage {...HeaderMessages.PublishAsset}/>
+                  </Link>
+                  {
+                    account_info != null
+                    ?
+                    <div className="center">
+                      <Dropdown overlay={this.menu()}>
+                        <div className='header-username'>{account_info.username}</div>
+                        {/* <img className="userIcon"
+                            src="https://www.botfans.org/uc_server/images/noavatar_middle.gif"
+                        /> */}
+                      </Dropdown>
+                    </div>
+                    :
 
-                    {
-                      account_info != null
-                      ?
-                      <div className="center">
-                        <Dropdown overlay={this.menu()}>
-                          <div className='header-username'>{account_info.username}</div>
-                          {/* <img className="userIcon"
-                              src="https://www.botfans.org/uc_server/images/noavatar_middle.gif"
-                          /> */}
-                        </Dropdown>
-                        <Link to="/profile/check" style={{color:'rgba(0, 0, 0, 0.65)'}}>
-                          <i className="iconfont icon-email" style={{ fontSize:20 }} />
-                        </Link>
+                    <Link to='/loginOrRegister'>
+                      <div className='flex center' style={{width: 47, height: 47}}>
+                        <img src='./img/profile.svg' />
                       </div>
-                      :
-                      <div className='isLogin'>
-                        <span onClick={() => toggleLoginViewVisible(true)}>
-                          <FormattedMessage {...HeaderMessages.Login}/>
-                        </span>
-                        <span onClick={() => toggleRegisterViewVisible(true)}>
-                          <FormattedMessage {...HeaderMessages.Register}/>
-                        </span>
-                      </div>
-                    }
+                      <FormattedMessage {...MenuMessages.LoginOrRegister}/>
+                    </Link>
 
-                    {/* <div>
-                        <Dropdown overlay={this.keyStoreMenu()}>
-                            <i className="iconfont icon-key" style={{fontSize:25,marginLeft:10}}/>
-                        </Dropdown>
-                    </div> */}
+                  }
 
-                    {/* <div className="marginLeft marginRight">
-                        <BTIcon type="icon-email" style={{fontSize:20}}/>
-                    </div> */}
+                  <Link to='/profile/wallet' onClick={this.checkAccount}>
+                    <img src='./img/wallet.svg' />
+                    <FormattedMessage {...MenuMessages.Wallet} />
+                  </Link>
+
+                  <Link to='/profile/check' onClick={this.checkAccount}>
+                    <img src='./img/check.svg' />
+                    <FormattedMessage {...MenuMessages.Check} />
+                  </Link>
+
+                  {/* <div>
+                      <Dropdown overlay={this.keyStoreMenu()}>
+                          <i className="iconfont icon-key" style={{fontSize:25,marginLeft:10}}/>
+                      </Dropdown>
+                  </div> */}
 
                 </div>
                 <div className='switch-locate'>
@@ -228,11 +175,11 @@ class BTHeader extends PureComponent{
 
 const mapStateToProps = (state) => {
   const { account_info, locale } = state.headerState
-    return { account_info, locale }
+  return { account_info, locale }
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return { ...bindActionCreators(headerActions, dispatch) }
+  return bindActionCreators(headerActions, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BTHeader)

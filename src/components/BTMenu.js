@@ -11,10 +11,10 @@ const HeaderMessages = messages.Header;
 
 function NavLink({to, intlMessage}) {
   return <Link to={to} activeClassName='menu-link-active'>
-  <div className='menu-link'>
-    <FormattedMessage {...intlMessage} />
-  </div>
-</Link>
+    <div className='menu-link'>
+      <FormattedMessage {...intlMessage} />
+    </div>
+  </Link>
 }
 
 function BTPersonalMenu({routeName}) {
@@ -24,6 +24,7 @@ function BTPersonalMenu({routeName}) {
     'need': 'Demand',
     'collect': 'Collect',
     'wallet': 'Wallet',
+    'check': 'MyMessages',
   }
   var list = []
   for (var to in personalMenu) {
@@ -43,11 +44,14 @@ function BTPersonalMenu({routeName}) {
   )
 }
 
+const otherRouteNames = ['PublishDemand', 'PublishAsset', 'LoginOrRegister']
+
 class BTMenu extends PureComponent{
   constructor(props) {
     super(props);
     this.state = {
-      personal: false
+      personal: false,
+      isProfileClassActive: false
     };
 
     this.homeMenu = {
@@ -55,11 +59,12 @@ class BTMenu extends PureComponent{
       demand: 'Demand',
       assets: 'Asset',
       history: 'History',
-      other: 'Blocks',
+      blocks: 'Blocks',
     }
   }
 
   jumpToProfile = (e) => {
+    console.log('this.props.isLogin', this.props.isLogin);
     if (this.props.isLogin) {
       this.props.router.push('/profile/asset')
     } else {
@@ -87,10 +92,12 @@ class BTMenu extends PureComponent{
         <NavLink key={to} to={'/' + to} intlMessage={MenuMessages[this.homeMenu[to]]} />
       )
     }
+
+    let isProfileClassActive = otherRouteNames.includes(routeName)
     return (
       <div className='menu-container'>
         {list}
-        <Link activeClassName='menu-link-active'>
+        <Link className={isProfileClassActive ? 'menu-link-active' : ''}>
           <div className='menu-link' onClick={this.jumpToProfile}>
             <FormattedMessage {...MenuMessages.Profile} />
           </div>

@@ -77,7 +77,12 @@ export default class BTOtherExchange extends PureComponent{
                     </h3>
                     {/*<a >查看所有&lt;</a>*/}
                 </div>
-                    <Table bordered pagination={this.pagination()} columns={columns} dataSource={this.state.data}
+                    <Table
+                      bordered
+                      pagination={this.pagination()}
+                      columns={columns}
+                      dataSource={this.state.data}
+                      rowKey='transaction_id'
                     />
                 {/*</div>*/}
             </div>

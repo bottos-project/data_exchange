@@ -1,5 +1,9 @@
 module.exports = {
     Menu:{
+        Home:{
+            id:'Menu.Home',
+            defaultMessage:'主页'
+        },
         Dashboard:{
             id:'Menu.Dashboard',
             defaultMessage:'市场概览'
@@ -24,10 +28,6 @@ module.exports = {
             id:'Menu.Profile',
             defaultMessage:'个人中心'
         },
-        Check:{
-            id:'Menu.Check',
-            defaultMessage:'审核'
-        },
         DemandDetails:{
             id:'Menu.DemandDetails',
             defaultMessage:'需求详情'
@@ -47,6 +47,10 @@ module.exports = {
         Check:{
             id:'Menu.Check',
             defaultMessage:'消息'
+        },
+        LoginOrRegister:{
+            id:'Menu.LoginOrRegister',
+            defaultMessage:'登录/注册'
         },
         ProfileNeed:{
             id:'Menu.ProfileNeed',
@@ -82,6 +86,11 @@ module.exports = {
             id:'Header.Collect',
             defaultMessage:'收藏'
         },
+        MyMessages:{
+            id:"Message.MyMessages",
+            defaultMessage:"消息"
+        },
+
         Setting:{
             id:'Header.Setting',
             defaultMessage:'设置'
@@ -183,6 +192,14 @@ module.exports = {
 
     },
     Login:{
+        Account:{
+          id:'Login.Account',
+          defaultMessage:'账户'
+        },
+        Password:{
+          id:'Login.Password',
+          defaultMessage:'密码'
+        },
         ImportTheKeyStore:{
             id:'Login.ImportTheKeyStore',
             defaultMessage:'导入Keystore文件'

@@ -7,8 +7,6 @@ const initLocale = window.localStorage.getItem('locale') || navigator.language |
 const initialState = {
   locale: initLocale,
   account_info: getAccount(),
-  login_visible: false,
-  register_visible: false,
 }
 
 const headerState = (state = initialState, action) => {
@@ -18,12 +16,6 @@ const headerState = (state = initialState, action) => {
 
       case actionTypes.SET_ACCOUNT_INFO:
         return {...state, account_info: action.info}
-
-      case actionTypes.TOGGLE_LOGIN_VIEW_VISIBLE:
-        return {...state, login_visible: action.visible}
-
-      case actionTypes.TOGGLE_REGISTER_VIEW_VISIBLE:
-        return {...state, register_visible: action.visible}
 
       default:
         return state

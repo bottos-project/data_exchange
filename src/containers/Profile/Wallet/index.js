@@ -97,16 +97,14 @@ export default class BTWallet extends PureComponent{
         )
     }
 
-    render(){
+    render() {
       if ( React.isValidElement(this.props.children) ) {
         return this.props.children
+      } else if (this.state.isLogin) {
+        return this.initComponent()
+      } else {
+        return <div className="container center"><BTUnlogin/></div>
       }
-        return (
-            <div className="container">
-                {
-                    this.state.isLogin ? this.initComponent() : <div className="container center"><BTUnlogin/></div>
-                }
-            </div>
-        )
+
     }
 }

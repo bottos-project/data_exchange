@@ -1,7 +1,6 @@
 // const {app, BrowserWindow} = require('electron')
-// const {app,BrowserWindow,webContents} = require('electron')
 const electron = require('electron');
-const {app, BrowserWindow, Menu, ipcMain, webContents,dialog} = electron;
+const {app, BrowserWindow} = electron;
 const path = require('path')
 const url = require('url')
 const pkg = require('./package.json')
@@ -15,7 +14,7 @@ function createWindow () {
   win = new BrowserWindow({
     width: 1920,
     height: 1080,
-    minWidth: 980,
+    minWidth: 1000,
     minHeight: 600,
     autoHideMenuBar: true,
     fullscreenable: false,

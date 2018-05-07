@@ -4,6 +4,13 @@
 @marginTop:20px;
 @marginBottom:20px;
 
+// @route-children-bs: 0 0 10px 0 rgba(0,0,0,0.07);
+.route-children-bg {
+  background-color: #FFF;
+  box-shadow: 0 0 10px 0 rgba(0,0,0,0.07);
+  border-radius: 10px;
+}
+
 .flex {
     display: flex;
 }
@@ -64,6 +71,22 @@
     width: 50%;
 }
 
+.login-container, .register {
+  margin: 0 auto;
+  width: 400px;
+}
+
 .contentbody .ant-pagination {
     padding-bottom: 20px;
+}
+
+.route-children-container {
+  flex: 1;
+}
+.route-children-container .route-children-container-title {
+  margin: 20px auto;
+  text-align: center;
+  > span {
+    font-size: 24px;
+  }
 }

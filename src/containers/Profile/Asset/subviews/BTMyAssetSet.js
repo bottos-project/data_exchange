@@ -94,6 +94,54 @@ export default class BTMyAssetSet extends Component{
             "fileHash":BTCryptTool.sha256(JSON.stringify(file)),
             "signatures": "0xxxx"
         };
+
+        // 这部分是大文件上传的逻辑，先注释掉
+
+        // param = {
+        //     "guid": new Date().getTime() + getAccount().username,
+        //     "file_name": file.name,
+        //     "chunks"
+        // }
+        //
+        // fetch('http://139.217.206.43:8080/v2/data/getFileUploadURL', {
+        //   method: 'post',
+        //   body: JSON.stringify(param)
+        // }).then(res => {
+        //   return res.json()
+        // }).then(res => {
+        //   console.log('res', res);
+        //   if (res.result == 200 && res.message == 'OK') {
+        //     // up_ajax.call(this, res.cache_url);
+        //     fetch(res.cache_url, {
+        //         method: 'PUT',
+        //         body: file
+        //     }).then(res => {
+        //       console.log('res', res);
+        //
+        //       fetch('http://139.217.206.43:8080/v2/data/getUploadProgress', {
+        //           method: 'POST',
+        //           body: JSON.stringify({
+        //             guid: param.guid,
+        //             slice:
+        //               "userName": getAccount().username,
+        //               "fileName": file.name
+        //           })
+        //       }).then(res => {
+        //         console.log('res', res);
+        //
+        //
+        //
+        //       })
+        //
+        //
+        //     })
+        //
+        //   }
+        // })
+        //
+        // return
+
+
         BTFetch('/asset/getFileUploadURL','post',param,{service:'service'})
         .then(res => {
             if(res.code==1){
@@ -124,7 +172,7 @@ export default class BTMyAssetSet extends Component{
                 body: file
             })
             .then(res => {
-                // console.log(res)
+                console.log('res', res)
                 const fileList = this.state.fileList
                 const {uid, name} = file
                 this.setState({

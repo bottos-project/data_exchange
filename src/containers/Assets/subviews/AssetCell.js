@@ -3,7 +3,6 @@ import './styles.less'
 import {Button,Icon,Tag} from 'antd'
 import {Link} from 'react-router'
 import {isLogin} from '../../../tools/localStore'
-import BTLogin from '../../../components/Login'
 
 const IconText = ({ type, text }) => (
     <span>
@@ -21,9 +20,6 @@ export default class BTAssetCell extends PureComponent{
         console.log('buyButtonClick')
         // let loginState = isLogin()
         // if(!loginState){
-            this.loginModel.setState({
-                visible:true
-            })
         // }
     }
 
@@ -31,7 +27,6 @@ export default class BTAssetCell extends PureComponent{
         let linkto = this.props.linkto || '/'
         return(
             <div className="listCellStyle">
-                <BTLogin ref={ref=>this.loginModel = ref}/>
 
                 <div className="ant-list-item-extra" style={{backgroundColor:'red'}}>
                     <img src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" alt="logo" width="272"/>
@@ -47,7 +42,7 @@ export default class BTAssetCell extends PureComponent{
                                 <img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,marginLeft:5}} alt=""/>
                             </span>
                         </div>
-                        
+
                         <div style={{marginTop:10}}>
                             <Tag color="cyan">数据清洗</Tag>
                             <Tag color="cyan">挖掘</Tag>

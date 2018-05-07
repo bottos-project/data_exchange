@@ -1,5 +1,6 @@
 module.exports = {
     //menu
+    "Menu.Home":"Home",
     "Menu.Dashboard":"Dashboard",
     "Menu.Demand":"Demand",
     "Menu.Asset":"Asset",
@@ -8,6 +9,9 @@ module.exports = {
     "Menu.Profile":'Profile',
     "Menu.Check":"Check",
     "Menu.Wallet":"Wallet",
+    "Menu.DemandDetails":"Demand Details",
+    "Menu.AssetDetails":"Asset Details",
+    "Menu.LoginOrRegister":"Login/Register",
 
     //header
     "Header.Asset":"Asset",
@@ -55,6 +59,8 @@ module.exports = {
 
 
     //login
+    "Login.Account":"Account",
+    "Login.Password":"Password",
     "Login.ImportTheKeyStore":"Import The KeyStore",
 
     //dashboard

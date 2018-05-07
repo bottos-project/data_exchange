@@ -1,18 +1,21 @@
 import React,{PureComponent} from 'react'
 import { connect } from 'react-redux'
-import { toggleLoginViewVisible } from '../redux/actions/HeaderAction'
-import {Modal,Input,Button,Upload,Icon,message} from 'antd'
+import { hashHistory } from 'react-router'
 
+import { Input, Button, message } from 'antd'
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import BTFetch from '../utils/BTFetch';
 import { getAccount } from '../tools/localStore'
 import { setAccountInfo } from '../redux/actions/HeaderAction'
 import BTIPcRenderer from '../tools/BTIpcRenderer'
 import {importFile} from '../utils/BTUtil'
+
+import ConfirmButton from './ConfirmButton'
+
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
 const LoginMessages = messages.Login;
-const Buffer = require('buffer').Buffer;
+const HeaderMessages = messages.Header;
 
 class Login extends PureComponent{
     constructor(props){
@@ -24,6 +27,8 @@ class Login extends PureComponent{
             keyStore:'',
             hasKeystore:false
         }
+
+        this.onHandleUnlock = this.onHandleUnlock.bind(this)
     }
 
     async onHandleUnlock(){
@@ -115,11 +120,9 @@ class Login extends PureComponent{
                         token:response.token
                     }
                     this.props.setAccountInfo(accountInfo)
-                    this.props.closeLoginView()
-                    this.setState({
-                        password:'',
-                        username:''
-                    })
+
+                    hashHistory.replace('/dashboard')
+
                     // window.location.reload()
                 }else{
                     message.error(window.localeInfo["Header.LoginFailure"]);
@@ -150,15 +153,6 @@ class Login extends PureComponent{
             }
         }
         return await BTFetch(reqUrl,'POST',params)
-    }
-
-    closeModal(){
-        this.props.closeLoginView()
-        this.setState({
-            password:'',
-            username:'',
-            keyStore:{}
-        })
     }
 
     importKeyStore(){
@@ -197,41 +191,48 @@ class Login extends PureComponent{
     }
 
     render() {
-        return(
-            <Modal
-                visible={this.props.visible}
-                onCancel={()=>this.closeModal()}
-                onOk={()=>{this.onHandleUnlock()}}
-            >
-                <div className="marginRight">
-                    <div className="marginBottom marginRight" ><Input placeholder={window.localeInfo["Header.PleaseEnterTheUserName"]} value={this.state.username} onChange={(e)=>{this.setState({username:e.target.value})}}/></div>
-                    <div className="container row marginTop">
-                        <Input type="password" placeholder={window.localeInfo["Header.PleaseEnterThePassword"]} className="marginRight" value={this.state.password} onChange={(e)=>{this.setState({password:e.target.value})}}/>
-                    </div>
-                    {
-                        this.state.hasKeystore ? <div></div> : (<div style={{marginTop:20}}><Button onClick={()=>this.importKeyStore()}><FormattedMessage {...LoginMessages.ImportTheKeyStore}/></Button></div>)
-                    }
-                </div>
-            </Modal>
+      const inputContainerStyle = {
+        minWidth: 300,
+        display: 'flex',
+        alignItem: 'center',
+      }
+        return (
+          <div className="container column login-container">
+            <div className='route-children-container-title'><FormattedMessage {...HeaderMessages.Login} /></div>
+            <div style={inputContainerStyle}>
+              <span style={{width: 90, lineHeight: '32px'}}><FormattedMessage {...LoginMessages.Account} /></span>
+              <Input placeholder={window.localeInfo["Header.PleaseEnterTheUserName"]} value={this.state.username} onChange={(e)=>{this.setState({username:e.target.value})}}/>
+            </div>
+            <div className="row marginTop" style={inputContainerStyle}>
+              <span style={{width: 90, lineHeight: '32px'}}><FormattedMessage {...LoginMessages.Password} /></span>
+              <Input type="password" placeholder={window.localeInfo["Header.PleaseEnterThePassword"]} className="marginRight" value={this.state.password} onChange={(e)=>{this.setState({password:e.target.value})}}/>
+            </div>
+            {
+                this.state.hasKeystore
+                ?
+                <div></div>
+                :
+                (<div style={{marginTop:20}}>
+                  <Button onClick={()=>this.importKeyStore()}>
+                    <FormattedMessage {...LoginMessages.ImportTheKeyStore}/>
+                  </Button>
+                </div>)
+            }
+            <div style={{textAlign: 'center'}}>
+              <ConfirmButton onClick={this.onHandleUnlock}><FormattedMessage {...HeaderMessages.Login} /></ConfirmButton>
+            </div>
+          </div>
         )
     }
 }
 
-const mapStateToProps = (state) => {
-    return {
-        visible: state.headerState.login_visible
-    }
-}
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        closeLoginView() {
-            dispatch( toggleLoginViewVisible(false) )
-        },
         setAccountInfo(info) {
             dispatch( setAccountInfo(info) )
         }
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login)
+export default connect(null, mapDispatchToProps)(Login)
