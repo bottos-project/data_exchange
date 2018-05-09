@@ -64,29 +64,53 @@
     background-color: red
 }
 
-.register .ant-modal-body{
-    padding: 0 30px;
-}
-.register .ant-input{
-    width: 50%;
+
+.login-container .label {
+  line-height: 32px;
+  &::after {
+    content: ' ';
+    margin-right: 8px;
+  }
 }
 
 .login-container, .register {
   margin: 0 auto;
-  width: 400px;
+  max-width: 600px;
 }
 
 .contentbody .ant-pagination {
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .route-children-container {
-  flex: 1;
+  position: relative;
+  flex-grow: 1;
 }
-.route-children-container .route-children-container-title {
+.route-children-container-title {
   margin: 20px auto;
   text-align: center;
   > span {
     font-size: 24px;
   }
+}
+
+// 需求和资产的共有样式
+.dataDescription{
+    width: 600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    position: relative;
+    flex-direction: column;
+    font-size: 16px;
+    > span {
+      margin-left: 5px;
+      margin-bottom: 5px;
+      &::after {
+        content: ':';
+      }
+    }
+    span,textarea{
+        color: #444444;
+    }
 }

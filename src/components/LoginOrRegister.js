@@ -9,28 +9,40 @@ import { FormattedMessage } from 'react-intl'
 import messages from '../locales/messages'
 const HeaderMessages = messages.Header;
 
+import CustomTabBar from './CustomTabBar'
 
-const style = {
-  background: '#FFF',
-  boxShadow: '0 0 10px 0 rgba(0,0,0,0.07)',
-  borderRadius: 10,
-}
 
-function callback(key) {
-  console.log(key);
+const keyMap = {
+  Login: <FormattedMessage {...HeaderMessages.Login} />,
+  Register: <FormattedMessage {...HeaderMessages.Register} />
 }
 
 class LoginOrRegister extends Component {
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeKey: 'Login'
+    };
+  }
+  handleChange = (key) => {
+    this.setState({
+      activeKey: key
+    });
+  }
   render() {
     return (
-      <React.Fragment>
-        <Tabs defaultActiveKey="Login" onChange={callback}>
-          <TabPane tab={<FormattedMessage {...HeaderMessages.Login} />} key="Login"><Login /></TabPane>
-          <TabPane tab={<FormattedMessage {...HeaderMessages.Register} />} key="Register"><Register /></TabPane>
-        </Tabs>
-
-      </React.Fragment>
+      <div className='container column' style={{height: '100%'}}>
+        <CustomTabBar onChange={this.handleChange} keyMap={keyMap} activeKey={this.state.activeKey} />
+        <div className='route-children-bg' style={{flex: 1, height: '100%'}}>
+          <Tabs
+            defaultActiveKey="Login"
+            activeKey={this.state.activeKey}
+            >
+              <TabPane tab={<FormattedMessage {...HeaderMessages.Login} />} key="Login"><Login /></TabPane>
+              <TabPane tab={<FormattedMessage {...HeaderMessages.Register} />} key="Register"><Register /></TabPane>
+            </Tabs>
+        </div>
+      </div>
     );
   }
 

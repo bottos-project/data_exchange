@@ -17,7 +17,7 @@ export default class BTAccountListHeader extends PureComponent{
         }
     }
 
-    importAccount(){
+    importAccount = () => {
         this.setState({
             visible:true,
             keyStoreStr:''
@@ -42,17 +42,17 @@ export default class BTAccountListHeader extends PureComponent{
             message.error('请先登录')
             return
         }
-        try{
-                let keyStoreCryptStr = BTCryptTool.aesDecrypto(this.state.keyStoreStr,this.state.password)
-                let keyStore = JSON.parse(keyStoreCryptStr);
-                let accountInfo = {
-                    username:account.username,
-                    account_name:keyStore.account_name
-                }
-                BTIpcRenderer.saveKeyStore(accountInfo,this.state.keyStoreStr);
-                this.setState({password:'',visible:false})
-                window.location.reload()
-        }catch(error){
+        try {
+            let keyStoreCryptStr = BTCryptTool.aesDecrypto(this.state.keyStoreStr,this.state.password)
+            let keyStore = JSON.parse(keyStoreCryptStr);
+            let accountInfo = {
+                username:account.username,
+                account_name:keyStore.account_name
+            }
+            BTIpcRenderer.saveKeyStore(accountInfo,this.state.keyStoreStr);
+            this.setState({password:'',visible:false})
+            window.location.reload()
+        } catch(error) {
             message.error('密码错误')
         }
     }
@@ -63,23 +63,23 @@ export default class BTAccountListHeader extends PureComponent{
         })
     }
 
-    render(){
-        return(
-            <div className=" accountListHeader">
-                <Modal 
-                    visible={this.state.visible}
-                    onOk={()=>this.onHandleOk()}
-                    onCancel={()=>this.onHandleCancel()}
-                >
-                    <Button onClick={()=>this.importKeyStore()}>
-                        <FormattedMessage {...WalletMessages.ImportTheKeyStore}/>
-                    </Button>
-                    <Input style={{marginBottom:10}} type="password" name="password" placeholder="请输入导入keystore的密码" value={this.state.password} onChange={(e)=>this.setState({password:e.target.value})}></Input>
-                </Modal>
-                <Button onClick={()=>this.importAccount()}>
-                    <FormattedMessage {...WalletMessages.ImportTheAccount}/>
-                </Button>
-            </div>
-        )
+    render() {
+      return (
+        <div className=" accountListHeader">
+          <Button onClick={this.importAccount}>
+            <FormattedMessage {...WalletMessages.ImportTheAccount}/>
+          </Button>
+          <Modal
+            visible={this.state.visible}
+            onOk={()=>this.onHandleOk()}
+            onCancel={()=>this.onHandleCancel()}
+          >
+            <Button onClick={()=>this.importKeyStore()}>
+              <FormattedMessage {...WalletMessages.ImportTheKeyStore}/>
+            </Button>
+            <Input style={{marginBottom:10}} type="password" name="password" placeholder="请输入导入keystore的密码" value={this.state.password} onChange={(e)=>this.setState({password:e.target.value})}></Input>
+          </Modal>
+        </div>
+      )
     }
 }

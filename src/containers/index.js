@@ -49,9 +49,7 @@ class App extends PureComponent {
                   <Breadcrumb itemRender={itemRender} routes={routes} separator=">" />
                   {/* <FormattedMessage {...DashboardMessages.WelcomeToMarketDashboard}/> */}
               </div>
-              <div className='route-children-container'>
-                {this.props.children}
-              </div>
+              {this.props.children}
             </div>
         </div>
       </div>

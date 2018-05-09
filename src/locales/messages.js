@@ -78,6 +78,10 @@ module.exports = {
             id:'Header.Demand',
             defaultMessage:'需求'
         },
+        File:{
+            id:'Header.File',
+            defaultMessage:'文件'
+        },
         Wallet:{
             id:'Header.Wallet',
             defaultMessage:'钱包'
@@ -199,6 +203,10 @@ module.exports = {
         Password:{
           id:'Login.Password',
           defaultMessage:'密码'
+        },
+        ConfirmPassword:{
+          id:'Login.ConfirmPassword',
+          defaultMessage:'确认密码'
         },
         ImportTheKeyStore:{
             id:'Login.ImportTheKeyStore',
@@ -412,9 +420,10 @@ module.exports = {
             id:'BlockBrowsing.Price',
             defaultMessage:'价格'
         },
-
-
-
+        All:{
+            id:'BlockBrowsing.All',
+            defaultMessage:'所有'
+        }
     },
     Message:{
         PersonalCenter:{

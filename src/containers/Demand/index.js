@@ -1,40 +1,14 @@
 // 需求列表页
 
 import React,{PureComponent} from 'react'
-import BTDemandCell from './subviews/DemandCell'
-import BTMyTag from '../../components/BTMyTag'
 import BTRequireCell from './subviews/BTRequireCell'
 import {getAccount} from '../../tools/localStore'
 import BTFetch from '../../utils/BTFetch';
 import {List,message,Pagination} from 'antd'
+import CustomTabBar from '@/components/CustomTabBar'
 
-const BTHeaderSearch = () => (
-    <div className="searchViewStyle">
-        <div>
-            <BTMyTag>全部</BTMyTag>
-            <BTMyTag>图像</BTMyTag>
-            <BTMyTag>数据清洗</BTMyTag>
+const keyMap = ['All', 'Text', 'Picture', 'Voice', 'Video']
 
-            <BTMyTag>全部</BTMyTag>
-            <BTMyTag>视频</BTMyTag>
-            <BTMyTag>音频</BTMyTag>
-            <BTMyTag>图片</BTMyTag>
-        </div>
-        <div style={{marginTop:20}}>
-            <BTMyTag>全部</BTMyTag>
-            <BTMyTag>数据挖掘</BTMyTag>
-            <BTMyTag>图像</BTMyTag>
-            <BTMyTag>数据清洗</BTMyTag>
-
-            <BTMyTag>全部</BTMyTag>
-            <BTMyTag>视频</BTMyTag>
-            <BTMyTag>音频</BTMyTag>
-        </div>
-    </div>
-) ;
-const BTOption=()=>{
-
-};
 function onChange(pageNumber){
     console.log(pageNumber)
 }
@@ -45,7 +19,8 @@ export default class BTDemand extends PureComponent{
         this.state = {
             dataSource:[],
             pageNum:'',
-            rowCount: 0
+            rowCount: 0,
+            activeKey: '0',
         }
         this.onChange = this.onChange.bind(this)
     }
@@ -76,30 +51,37 @@ export default class BTDemand extends PureComponent{
             }
         })
     }
+
+    handleChange = (activeKey) => {
+      this.setState({ activeKey });
+    }
+
     render(){
       if ( React.isValidElement(this.props.children) ) {
         return this.props.children
       }
 
-        return(
-            <div  style={{width:"100%"}}>
-                {/* <div><BTHeaderSearch/></div> */}
-                <List
-                    style={{flex:1}}
-                    dataSource={this.state.dataSource||[]}
-                    renderItem={(item)=>(
-                        <BTRequireCell linkto='/demand/detail' {...item}/>
-                    )}
-                />
-                <Pagination
-                  hideOnSinglePage
-                  showQuickJumper
-                  defaultCurrent={1}
-                  pageSize={12}
-                  total={this.state.rowCount}
-                  onChange={this.onChange}
-                />
-            </div>
-        )
+      return (
+        <div className='container column'>
+          <CustomTabBar onChange={this.handleChange} keyMap={keyMap} activeKey={this.state.activeKey} />
+          <List
+            grid={{ gutter: 16, column: 4 }}
+            dataSource={this.state.dataSource||[]}
+            renderItem={(item)=>(
+              <List.Item>
+                <BTRequireCell linkto='/demand/detail' {...item}/>
+              </List.Item>
+            )}
+          />
+          <Pagination
+            hideOnSinglePage
+            showQuickJumper
+            defaultCurrent={1}
+            pageSize={12}
+            total={this.state.rowCount}
+            onChange={this.onChange}
+          />
+        </div>
+      )
     }
 }

@@ -176,7 +176,7 @@ export default class BTList extends PureComponent{
         return (
             <div className="container column">
                 <div style={{width:"100%"}}>
-                    <Table bordered  columns={columns} dataSource={this.state.data}
+                    <Table columns={columns} dataSource={this.state.data}
                     />
                 </div>
                {/* <div>

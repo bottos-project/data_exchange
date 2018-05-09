@@ -335,111 +335,111 @@ export default class BTPublishAssetModal extends PureComponent{
         })
     }
     render() {
-        return (
-          <div>
-              <BTAssetList  ref={(ref)=>this.assetListModal = ref} newdata={this.state.newdata} handleFile={(fileName)=>this.getFileName(fileName)}/>
-              <div className="uploadAsset">
-                <div className='route-children-container-title'>
-                  <FormattedMessage {...HeaderMessages.PublishAsset}/>
-                </div>
+      return (
+        <div>
+          <BTAssetList  ref={(ref)=>this.assetListModal = ref} newdata={this.state.newdata} handleFile={(fileName)=>this.getFileName(fileName)}/>
+          <div className="uploadAsset">
+            <div className='route-children-container-title'>
+              <FormattedMessage {...HeaderMessages.PublishAsset}/>
+            </div>
 
-                  <div className="upLoad">
-                  <span className="align">
-                      <FormattedMessage {...PersonalAssetMessages.UploadTheSample}/>
-                  </span>
-                      <Button style={{width:"170px"}} type="upload" examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>
-                          <FormattedMessage{...PersonalAssetMessages.SetScreeningSample}/>
-                      </Button>
-                      <span className='filename'>{
-                          this.state.getFileNameTemp.length<=14
-                          ?
-                          this.state.getFileNameTemp
-                          :
-                          this.state.getFileNameTemp.split('.')[0].substring(0,5)+'...'+this.state.getFileNameTemp.split('.')[1]
-                      }</span>
-                      {/*<Button>*/}
-                      {/*<span type="upload"  onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</span>*/}
-                      {/*</Button>*/}
-                  </div>
-                  <div className="upLoad">
-                  <span className="align">
-                       <FormattedMessage {...PersonalAssetMessages.UploadTheAsset}/>
-                  </span>
-                      <Button style={{width:"170px"}} exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>
-                          <FormattedMessage {...PersonalAssetMessages.SetScreeningFile}/>
-                      </Button>
-                      <span className='filename'>{
-                          this.state.getFileName.length<=14
-                              ?
-                              this.state.getFileName
-                              :
-                              this.state.getFileName.split('.')[0].substring(0,5)+'...'+this.state.getFileName.split('.')[1]
-                      }</span>
-                      {/*<Button>*/}
-                      {/*<span onClick={()=>this.commitAsset('asset')}>资源库筛选</span>*/}
-                      {/*</Button>*/}
-                  </div>
-                  <div>
-                  <span className="align">
-                      <FormattedMessage {...PersonalAssetMessages.AssetName}/>
-                  </span>
-                      <Input placeholder={window.localeInfo["PersonalAsset.Name"]}  value={this.state.title} onChange={(e)=>this.title(e)} />
-                  </div>
-                  <div>
-                  <span className="align">
-                      <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>
-                  </span>
-                      <Input placeholder={window.localeInfo["PersonalAsset.Price"]}
-                             type='number'
-                             value={this.state.number}
-                             onChange={this.handleNumberChange}/* onChange={(e)=>this.price(e)} */
-                      />
-                      <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
-                  </div>
-                  <div>
-                      <span className="align">
-                          <FormattedMessage {...PersonalAssetMessages.Deadline}/>
-                      </span>
-                      <DatePicker
-                          placeholder={window.localeInfo["PersonalAsset.SelectDate"]}
-                          onChange={(date,dateString)=>this.dataPicker(date,dateString)}
-                          disabledDate = {(current)=>this.disabledDate(current)}
-                          value={this.state.date11}
-                      />
-                  </div>
-                  <div>
-                      <span className="align90">
-                          <FormattedMessage {...PersonalAssetMessages.AssetType}/>
-                      </span>
-                      <Cascader value={this.state.cascader}
-                        options={options}
-                        onChange={(datas)=>this.onChangeDataAssetType(datas)}
-                        placeholder={window.localeInfo["PersonalAsset.PleaseSelect"]}
-                      />
-                  </div>
-                  <div className="featureTag">
-                  <span className="align90">
-                      <FormattedMessage {...PersonalAssetMessages.AssetFeatureTag}/>
-                  </span>
-                      <div>
-                          <Input type="text" value={this.state.tag1} onChange={(e)=>this.tag1(e)}/>
-                          <Input type="text" value={this.state.tag2} onChange={(e)=>this.tag2(e)}/>
-                          <Input type="text" value={this.state.tag3} onChange={(e)=>this.tag3(e)}/>
-                      </div>
-                  </div>
-                  <div>
-                  <span className="align90">
-                      <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>
-                  </span>
-                      <TextArea value={this.state.description} onChange={(e)=>this.description(e)} rows={4} />
-                  </div>
-                  <div className="uploadNeedSubmit">
-                      <ConfirmButton type="submit" onClick={(e)=>this.updata(e)}>
-                          <FormattedMessage {...PersonalAssetMessages.Publish}/>
-                      </ConfirmButton>
-                  </div>
+            <div className="upLoad">
+              <span className="align">
+                <FormattedMessage {...PersonalAssetMessages.UploadTheSample}/>
+              </span>
+              <Button style={{width:"170px"}} type="upload" examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>
+                  <FormattedMessage {...PersonalAssetMessages.SetScreeningSample}/>
+              </Button>
+              <span className='filename'>{
+                  this.state.getFileNameTemp.length<=14
+                  ?
+                  this.state.getFileNameTemp
+                  :
+                  this.state.getFileNameTemp.split('.')[0].substring(0,5)+'...'+this.state.getFileNameTemp.split('.')[1]
+              }</span>
+              {/*<Button>*/}
+              {/*<span type="upload"  onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</span>*/}
+              {/*</Button>*/}
+            </div>
+            <div className="upLoad">
+              <span className="align">
+                   <FormattedMessage {...PersonalAssetMessages.UploadTheAsset}/>
+              </span>
+              <Button style={{width:"170px"}} exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>
+                  <FormattedMessage {...PersonalAssetMessages.SetScreeningFile}/>
+              </Button>
+              <span className='filename'>{
+                  this.state.getFileName.length<=14
+                      ?
+                      this.state.getFileName
+                      :
+                      this.state.getFileName.split('.')[0].substring(0,5)+'...'+this.state.getFileName.split('.')[1]
+              }</span>
+              {/*<Button>*/}
+              {/*<span onClick={()=>this.commitAsset('asset')}>资源库筛选</span>*/}
+              {/*</Button>*/}
+            </div>
+            <div>
+              <span className="align">
+                <FormattedMessage {...PersonalAssetMessages.AssetName}/>
+              </span>
+              <Input placeholder={window.localeInfo["PersonalAsset.Name"]}  value={this.state.title} onChange={(e)=>this.title(e)} />
+            </div>
+            <div>
+              <span className="align">
+                <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>
+              </span>
+              <Input placeholder={window.localeInfo["PersonalAsset.Price"]}
+                     type='number'
+                     value={this.state.number}
+                     onChange={this.handleNumberChange}/* onChange={(e)=>this.price(e)} */
+              />
+              <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
+            </div>
+            <div>
+              <span className="align">
+                <FormattedMessage {...PersonalAssetMessages.Deadline}/>
+              </span>
+              <DatePicker
+                  placeholder={window.localeInfo["PersonalAsset.SelectDate"]}
+                  onChange={(date,dateString)=>this.dataPicker(date,dateString)}
+                  disabledDate = {(current)=>this.disabledDate(current)}
+                  value={this.state.date11}
+              />
+            </div>
+            <div>
+              <span className="align90">
+                  <FormattedMessage {...PersonalAssetMessages.AssetType}/>
+              </span>
+              <Cascader value={this.state.cascader}
+                options={options}
+                onChange={(datas)=>this.onChangeDataAssetType(datas)}
+                placeholder={window.localeInfo["PersonalAsset.PleaseSelect"]}
+              />
+            </div>
+            <div className="featureTag">
+              <span className="align90">
+                <FormattedMessage {...PersonalAssetMessages.AssetFeatureTag}/>
+              </span>
+              <div>
+                <Input type="text" value={this.state.tag1} onChange={(e)=>this.tag1(e)}/>
+                <Input type="text" value={this.state.tag2} onChange={(e)=>this.tag2(e)}/>
+                <Input type="text" value={this.state.tag3} onChange={(e)=>this.tag3(e)}/>
               </div>
+            </div>
+            <div>
+              <span className="align90">
+                <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>
+              </span>
+              <TextArea value={this.state.description} onChange={(e)=>this.description(e)} rows={4} />
+            </div>
+            <div className="uploadNeedSubmit marginTop">
+              <ConfirmButton type="submit" onClick={(e)=>this.updata(e)}>
+                <FormattedMessage {...PersonalAssetMessages.Publish}/>
+              </ConfirmButton>
+            </div>
           </div>
-        )
+        </div>
+      )
     }
 }

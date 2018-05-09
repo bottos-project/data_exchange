@@ -2,7 +2,7 @@ import React,{PureComponent} from 'react'
 import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 
-import { Input, Button, message } from 'antd'
+import { Icon, Input, Button, message, Row, Col } from 'antd'
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import BTFetch from '../utils/BTFetch';
 import { getAccount } from '../tools/localStore'
@@ -14,18 +14,21 @@ import ConfirmButton from './ConfirmButton'
 
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
+
 const LoginMessages = messages.Login;
 const HeaderMessages = messages.Header;
+
+const { TextArea } = Input;
 
 class Login extends PureComponent{
     constructor(props){
         super(props)
 
         this.state = {
-            username:'',
-            password:'',
-            keyStore:'',
-            hasKeystore:false
+            username: '',
+            password: '',
+            keyStore: null,
+
         }
 
         this.onHandleUnlock = this.onHandleUnlock.bind(this)
@@ -45,13 +48,13 @@ class Login extends PureComponent{
 
         let username = this.state.username;
         let blockInfo = await this.getBlockInfo();
-        let data = await this.getDataInfo(username)
 
         if(!(blockInfo&&blockInfo.code=="0")) {
             message.error(window.localeInfo["Header.LoginFailure"]);
             return
         }
 
+        let data = await this.getDataInfo(username)
         if(!(data && data.code=="0")){
             message.error(window.localeInfo["Header.LoginFailure"]);
             return
@@ -64,13 +67,14 @@ class Login extends PureComponent{
 
         let keyStoreObj = this.state.keyStore
 
-        if(keyStoreObj=='' && keyStoreResult.error){
+        if (keyStoreObj == '' && keyStoreResult.error) {
             message.error(window.localeInfo["Header.PleaseImportTheKeystoreFirst"]);
             return;
-        }else{
-            if(keyStoreResult.error){
-                keyStoreObj = this.state.keyStore
-            }else{
+        } else {
+          // WARNING: 这里的逻辑是，如果本地 userData 文件夹内的 keystore 文件存在
+          // 那么就读这个文件，手动导入的文件无关
+          // 如果这个文件被篡改的话，那么这个用户就无法登陆了
+            if (!keyStoreResult.error) {
                 let keyStoreStr = keyStoreResult.result;
                 keyStoreObj = JSON.parse(keyStoreStr)
             }
@@ -121,7 +125,7 @@ class Login extends PureComponent{
                     }
                     this.props.setAccountInfo(accountInfo)
 
-                    hashHistory.replace('/dashboard')
+                    hashHistory.push('/profile/asset')
 
                     // window.location.reload()
                 }else{
@@ -155,11 +159,13 @@ class Login extends PureComponent{
         return await BTFetch(reqUrl,'POST',params)
     }
 
-    importKeyStore(){
+    importKeyStore = () => {
         let keyStoreObj = BTIPcRenderer.importFile()
         if(!keyStoreObj.error){
+          console.log('keyStoreObj', keyStoreObj);
             this.setState({
-                keyStore:keyStoreObj
+                keyStore:keyStoreObj,
+                username:keyStoreObj.user_name
             })
             message.success(window.localeInfo["Header.ImportKeyStoreSuccess"])
         }else{
@@ -191,38 +197,57 @@ class Login extends PureComponent{
     }
 
     render() {
-      const inputContainerStyle = {
-        minWidth: 300,
-        display: 'flex',
-        alignItem: 'center',
+      const rowStyle = {
+        maxWidth: 560,
+        marginTop: 20,
       }
-        return (
-          <div className="container column login-container">
-            <div className='route-children-container-title'><FormattedMessage {...HeaderMessages.Login} /></div>
-            <div style={inputContainerStyle}>
-              <span style={{width: 90, lineHeight: '32px'}}><FormattedMessage {...LoginMessages.Account} /></span>
-              <Input placeholder={window.localeInfo["Header.PleaseEnterTheUserName"]} value={this.state.username} onChange={(e)=>{this.setState({username:e.target.value})}}/>
-            </div>
-            <div className="row marginTop" style={inputContainerStyle}>
-              <span style={{width: 90, lineHeight: '32px'}}><FormattedMessage {...LoginMessages.Password} /></span>
+      return (
+        <div className="container column login-container">
+          <div className='route-children-container-title'><FormattedMessage {...HeaderMessages.Login} /></div>
+          <Row style={rowStyle}>
+            <Col span={5} style={{ textAlign: 'right' }}>
+              <span className='label'><FormattedMessage {...LoginMessages.Account} /></span>
+            </Col>
+            <Col span={18}>
+              <TextArea
+                disabled={!!this.state.username}
+                placeholder={window.localeInfo["Header.PleaseEnterTheUserName"]}
+                rows={6}
+              />
+            </Col>
+          </Row>
+
+          {this.state.username && <div className='flex center'>
+            <Icon type="file" />{this.state.username}.keystore
+          </div>}
+
+          <Row style={rowStyle}>
+            {/* <Col span={5} style={{height: '100%'}}></Col> */}
+            <Col span={18} offset={5}>
+              <Row type='flex' justify='space-around'>
+                <Button type='primary'>粘贴 Keystore 文本</Button>
+
+                <Button type='primary' onClick={this.importKeyStore}>
+                  <FormattedMessage {...LoginMessages.ImportTheKeyStore}/>
+                </Button>
+              </Row>
+            </Col>
+          </Row>
+
+          <Row style={rowStyle}>
+            <Col span={5} style={{ textAlign: 'right' }}>
+              <span className='label'><FormattedMessage {...LoginMessages.Password} /></span>
+            </Col>
+            <Col span={18}>
               <Input type="password" placeholder={window.localeInfo["Header.PleaseEnterThePassword"]} className="marginRight" value={this.state.password} onChange={(e)=>{this.setState({password:e.target.value})}}/>
-            </div>
-            {
-                this.state.hasKeystore
-                ?
-                <div></div>
-                :
-                (<div style={{marginTop:20}}>
-                  <Button onClick={()=>this.importKeyStore()}>
-                    <FormattedMessage {...LoginMessages.ImportTheKeyStore}/>
-                  </Button>
-                </div>)
-            }
-            <div style={{textAlign: 'center'}}>
-              <ConfirmButton onClick={this.onHandleUnlock}><FormattedMessage {...HeaderMessages.Login} /></ConfirmButton>
-            </div>
+            </Col>
+          </Row>
+
+          <div className='flex center marginTop'>
+            <ConfirmButton onClick={this.onHandleUnlock}><FormattedMessage {...HeaderMessages.Login} /></ConfirmButton>
           </div>
-        )
+        </div>
+      )
     }
 }
 

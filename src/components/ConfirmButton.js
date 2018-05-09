@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Button } from 'antd'
 
 const style = {
-  marginTop: 20,
   padding: '0 30px',
   backgroundImage: '-webkit-linear-gradient(7deg, #5F72D8 0%, #6366C7 31%, #6E479D 100%)',
   boxShadow: '0 0 5px 0 #896ACF',

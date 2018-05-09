@@ -1,5 +1,5 @@
-import React,{PureComponent} from 'react'
-import { Table, Badge, Menu, Dropdown, Icon,Upload, message, Button, Tabs, Input,Cascader  } from 'antd';
+import React, { PureComponent } from 'react'
+import { Tabs } from 'antd';
 import moment from 'moment';
 import './styles.less';
 import BTList from '../../../components/BTList'

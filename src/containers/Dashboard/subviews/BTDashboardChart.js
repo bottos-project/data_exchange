@@ -9,26 +9,27 @@ export default class BTDashboardChart extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      width: 1200
+      width: window.innerWidth - 260 - 40 - 20
     };
     this.changeWidth = this.changeWidth.bind(this)
   }
 
-  changeWidth(e) {
+  changeWidth() {
     // console.dir(this.chartDiv);
     const width = this.chartDiv.clientWidth - 20
-    // console.log('this.chartDiv.clientWidth', width);
+    console.log('width', width);
     this.setState({
       width: Math.max(width, 800)
     });
   }
 
   componentDidMount() {
-    window.addEventListener('resize', debounce(this.changeWidth, 200))
+    this.debounced = debounce(this.changeWidth, 200)
+    window.addEventListener('resize', this.debounced)
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.changeWidth)
+    window.removeEventListener('resize', this.debounced)
   }
 
   render() {
@@ -39,12 +40,12 @@ export default class BTDashboardChart extends Component {
               </div>
               <div className="dashboardChart shadow radius" ref={div => this.chartDiv = div}>
                   <LineChart style={{margin:'0 auto'}} width={this.state.width} height={250} data={this.props.num}>
-                      <CartesianGrid strokeDasharray="3 3" />
+                      <CartesianGrid vertical={false} />
                       <XAxis dataKey="day" />
                       <YAxis />
                       <Tooltip />
                       <Legend />
-                      <Line type="monotone" dataKey={this.props.dkey} stroke="#C86DD7"/>
+                      <Line type="monotone" dataKey={this.props.dkey} stroke="#C86DD7" strokeWidth={2} />
                      {/* <Line type="monotone" dataKey="assetNumPerDay" stroke="#3023AE"/>
                        <Line type="monotone" dataKey="data" stroke="#8884d8" />
                       <Line type="monotone" dataKey="requirement" stroke="#0596d8" />*/}

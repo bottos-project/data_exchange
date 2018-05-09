@@ -206,7 +206,7 @@ export default class BTPublishDemand extends PureComponent{
                 <FormattedMessage {...PersonalDemandMessages.DemandDescription}/>
                 <TextArea rows={4} value={this.state.textArea} onChange={(e)=>this.onChangeTextArea(e)} />
             </div>
-            <div className="uploadNeedSubmit">
+            <div className="uploadNeedSubmit marginTop">
               <ConfirmButton type="submit" onClick={(e)=>this.updata(e)}>
                 <FormattedMessage {...PersonalDemandMessages.Publish}/>
               </ConfirmButton>

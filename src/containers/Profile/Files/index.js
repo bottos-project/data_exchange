@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import {Popconfirm,Table, Upload, Icon, message} from 'antd';
-import "./styles.less"
-import BTFetch from "../../../../utils/BTFetch"
+import BTFetch from "../../../utils/BTFetch"
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
-import {getBlockInfo,getDataInfo} from '../../../../utils/BTCommonApi'
+import {getBlockInfo,getDataInfo} from '../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
-import messages from '../../../../locales/messages'
-import {getAccount} from "../../../../tools/localStore";
+import messages from '../../../locales/messages'
+import {getAccount} from "../../../tools/localStore";
 import uuid from 'node-uuid'
 const PersonalAssetMessages = messages.PersonalAsset;
 const Dragger = Upload.Dragger;
@@ -316,7 +315,6 @@ export default class BTMyAssetSet extends Component{
                 </Dragger>
                 <Table
                     className="shadow radius table"
-                    bordered
                     columns={columns}
                     dataSource={this.state.data}
                 />

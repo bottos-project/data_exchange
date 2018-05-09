@@ -245,7 +245,6 @@ export default class BTAssetDetail extends PureComponent{
             <div>
                 <Table
                   className="shadow radius table"
-                  bordered
                   dataSource={this.state.data}
                   rowKey='asset_id'
                   columns={columns}

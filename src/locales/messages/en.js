@@ -61,6 +61,7 @@ module.exports = {
     //login
     "Login.Account":"Account",
     "Login.Password":"Password",
+    "Login.ConfirmPassword":"Confirm Password",
     "Login.ImportTheKeyStore":"Import The KeyStore",
 
     //dashboard

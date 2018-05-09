@@ -24,21 +24,28 @@ ipcMain.on(ipcEventName.get_key_store,(event,accountInfo)=>{
 ipcMain.on(ipcEventName.import_file,(event,options)=>{
     dialog.showOpenDialog(options,(filePaths)=>{
         if(filePaths!=undefined) {
-            for(let i=0;i<filePaths.length;i++){
-                let filePath = filePaths[i]
 
-                let fileExtern = filePath.substr(filePath.length-9,9);
-                if(fileExtern!='.keystore'){
-                    event.returnValue = {
-                        error:'请导入正确的keystore文件'
+            let filePath = filePaths[0]
+            // console.log('filePath', filePath);
+            let parsedPath = path.parse(filePath);
+            // console.log('parsedPath', parsedPath);
+            let { ext: fileExtern, name } = parsedPath
+            if (fileExtern != '.keystore') {
+                event.returnValue = {
+                    error:'请导入正确的keystore文件'
+                }
+            }else{
+                fs.readFile(filePath,'utf8',(error,result)=>{
+                    let keyStoreObj = JSON.parse(result)
+                    // TODO: 在 V3.0 版本，新的 keystore 会包含 username 字段
+                    // 下面这一段就可以删除了
+                    if (!keyStoreObj.username) {
+                      keyStoreObj.username = name
                     }
-                }else{
-                    fs.readFile(filePath,'utf8',(error,result)=>{
-                        let keyStoreObj = JSON.parse(result)
-                        event.returnValue = keyStoreObj
-                    })
-                }  
+                    event.returnValue = keyStoreObj
+                })
             }
+
         }else{
             event.returnValue = {
                 error:'read file failure'
@@ -80,14 +87,16 @@ ipcMain.on(ipcEventName.save_key_store,(event,accountInfo,params)=>{
 
     let keyStorePath = path.join(appPath,userName+'/'+accountName+'.keystore')
     let keyStoreStr = JSON.stringify(params)
-    try{
-        fs.writeFileSync(keyStorePath,keyStoreStr)
-        dialog.showMessageBox({message:"keystore导入成功"})
-    }catch(error){
+    console.log('keyStorePath', keyStorePath);
+    fs.writeFile(keyStorePath, keyStoreStr, (err) => {
+      if (err) {
         dialog.showMessageBox({
             message:"keystore导入失败"
         })
-    }
+      } else {
+        dialog.showMessageBox({message:"keystore导入成功"})
+      }
+    })
 })
 
 ipcMain.on(ipcEventName.export_key_store,(event,accountName,params)=>{
@@ -116,9 +125,3 @@ ipcMain.on(ipcEventName.key_store_list,(event,username)=>{
         event.returnValue = []
     }
 })
-
-
-
-
-
-

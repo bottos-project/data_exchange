@@ -19,6 +19,7 @@ import BTCollect from '../containers/Profile/Collect'
 import BTCheck from '../containers/Profile/Check'
 import BTProfileAsset from '../containers/Profile/Asset'
 import BTProfileNeed from '../containers/Profile/Need'
+import BTMyAssetSet from '../containers/Profile/Files'
 // import BTAccount from '../containers/Profile/Account'
 import BTWallet from '../containers/Profile/Wallet'
 import BTShopCart from '../containers/Profile/ShopCart'
@@ -30,7 +31,7 @@ import BTPublishAssetModal from '../components/BTPublishAssetModal'
 import LoginOrRegister from '../components/LoginOrRegister'
 
 
-export default class RouterMap extends PureComponent {
+class RouterMap extends PureComponent {
   render() {
     return (
       <Router history={this.props.history}>
@@ -61,6 +62,7 @@ export default class RouterMap extends PureComponent {
           <Route path="profile" name='Profile' breadcrumbName='Profile'>
             <Route path="asset" name='ProfileAsset' breadcrumbName='Asset' component={BTProfileAsset} />
             <Route path="need" name='ProfileNeed' breadcrumbName='Need' component={BTProfileNeed} />
+            <Route path="file" name='ProfileFile' breadcrumbName='File' component={BTMyAssetSet} />
             <Route path="check" name='Check' breadcrumbName='Check' component={BTCheck} />
             <Route path="collect" name='Collect' breadcrumbName='Collect' component={BTCollect} />
             {/* <Route path="shopcart" breadcrumbName='Shopcart' component={BTShopCart} /> */}
@@ -74,3 +76,5 @@ export default class RouterMap extends PureComponent {
     )
   }
 }
+
+export default RouterMap

@@ -1,36 +1,13 @@
 import React, {Component} from 'react'
 
-import BTAssetCell from './subviews/AssetCell'
-import {Pagination,message} from 'antd'
+// import BTAssetCell from './subviews/AssetCell'
+import {Pagination,message,List} from 'antd'
 import Assetlist from './subviews/Assetlist'
 import BTMyTag from '../../components/BTMyTag'
 import BTFetch from '../../utils/BTFetch'
-import {List} from 'antd'
+import CustomTabBar from '@/components/CustomTabBar'
 
-const BTHeaderSearch = () => (
-    <div className="searchViewStyle">
-        <div>
-            <BTMyTag>全部</BTMyTag>
-            <BTMyTag>图像</BTMyTag>
-            <BTMyTag>数据清洗</BTMyTag>
-
-            <BTMyTag>全部</BTMyTag>
-            <BTMyTag>视频</BTMyTag>
-            <BTMyTag>音频</BTMyTag>
-            <BTMyTag>图片</BTMyTag>
-        </div>
-        <div style={{marginTop:20}}>
-        <BTMyTag>全部</BTMyTag>
-        <BTMyTag>数据挖掘</BTMyTag>
-        <BTMyTag>图像</BTMyTag>
-        <BTMyTag>数据清洗</BTMyTag>
-
-        <BTMyTag>全部</BTMyTag>
-        <BTMyTag>视频</BTMyTag>
-        <BTMyTag>音频</BTMyTag>
-        </div>
-    </div>
-) ;
+const keyMap = ['All', 'Text', 'Picture', 'Voice', 'Video']
 
 export default class BTAssets extends Component {
     constructor(props) {
@@ -38,7 +15,8 @@ export default class BTAssets extends Component {
         this.state = {
             dataSource: [],
             rowCount: 0,
-            pageNum: ''
+            pageNum: '',
+            activeKey: '0',
         };
 
         this.onChange = this.onChange.bind(this)
@@ -79,30 +57,39 @@ export default class BTAssets extends Component {
         });
     }
 
+    handleChange = (activeKey) => {
+      // console.log('activeKey', activeKey);
+      this.setState({ activeKey });
+    }
+
     render() {
 
       if ( React.isValidElement(this.props.children) ) {
         return this.props.children
       }
-        return (
-            <div style={{width:"100%"}}>
-                <List
-                  dataSource={this.state.dataSource}
-                  renderItem={(item) => (
-                    <Assetlist key={item.asset_id} list={item} />
-                  )}
-                />
+      return (
+        <div className='container column'>
+          <CustomTabBar onChange={this.handleChange} keyMap={keyMap} activeKey={this.state.activeKey} />
+          <List
+            grid={{ gutter: 16, column: 4 }}
+            dataSource={this.state.dataSource}
+            renderItem={item => (
+              <List.Item>
+                <Assetlist key={item.asset_id} list={item} />
+              </List.Item>
+            )}
+          />
 
-                <Pagination
-                  hideOnSinglePage
-                  showQuickJumper
-                  total={this.state.rowCount}
-                  defaultCurrent={1}
-                  pageSize={12}
-                  onChange={this.onChange}
-                />
+          <Pagination
+            hideOnSinglePage
+            showQuickJumper
+            total={this.state.rowCount}
+            defaultCurrent={1}
+            pageSize={12}
+            onChange={this.onChange}
+          />
 
-            </div>
-        )
+        </div>
+      )
     }
 }

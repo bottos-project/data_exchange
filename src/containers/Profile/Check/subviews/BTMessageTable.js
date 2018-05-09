@@ -112,7 +112,6 @@ export default class BTMessageTable extends PureComponent{
         return (
             <Table
                 className="shadow radius table"
-                bordered
                 columns={columns}
                 // expandedRowRender={record => <p style={{ margin: 0 }}>{record.description}</p>}
                 dataSource={this.state.data}

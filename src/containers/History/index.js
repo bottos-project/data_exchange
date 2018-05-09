@@ -2,13 +2,11 @@ import React,{PureComponent} from 'react'
 import { Table,message } from 'antd';
 import BTFetch from '../../utils/BTFetch'
 import {FormattedMessage} from 'react-intl'
+import { getDateAndTime } from '@/utils/dateTimeFormat'
+import './style.less'
 import messages from '../../locales/messages'
 const HistoryMessages = messages.History;
 
-function formatDate(dataString) {
-  var d = new Date(dataString)
-  return d.toLocaleDateString() + ' ' + d.toTimeString().slice(0, 8)
-}
 
 export default class BTDashboard extends PureComponent{
   constructor(props){
@@ -24,18 +22,19 @@ export default class BTDashboard extends PureComponent{
           { title: <FormattedMessage {...HistoryMessages.TransactionID}/>, dataIndex: 'transaction_id',key:'transaction_id',render:(item)=>{
                   return <span>{item.substring(0,15)+'...'}</span>
               }},
-          { title: <FormattedMessage {...HistoryMessages.Price}/>, dataIndex: 'price', key: 'price',render:(price)=>
-                  <div>
-                      <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
-                      <span>{price/Math.pow(10,10)}</span>
-                  </div>
+          { title: <FormattedMessage {...HistoryMessages.Price}/>, dataIndex: 'price', key: 'price',
+            render: (price) => <div className=''>
+                        <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
+                        <span>{price/Math.pow(10,10)}</span>
+                    </div>,
+            align: 'left'
           },
           { title: <FormattedMessage {...HistoryMessages.From}/>, dataIndex: 'from',key:'from'},
           { title: <FormattedMessage {...HistoryMessages.To}/>, dataIndex: 'to',key:'to'},
           /*{ title: 'FileName', dataIndex: 'fileName', key: 'fileName' },
           { title: 'FileSize', dataIndex: 'fileSize', key: 'fileSize' },*/
           { title: <FormattedMessage {...HistoryMessages.Date}/>, dataIndex: 'date',key:'date',render:(data)=>{
-                  return <span>{ formatDate(data) }</span>
+                  return <span>{ getDateAndTime(data) }</span>
               }},
           { title: <FormattedMessage {...HistoryMessages.Block}/>, dataIndex: 'block_id',key:'block_id'},
 
@@ -86,7 +85,6 @@ export default class BTDashboard extends PureComponent{
             dataSource={this.state.data}
             size="middle"
             rowKey='transaction_id'
-            bordered
           />
         </div>
       )

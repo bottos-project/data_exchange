@@ -1,7 +1,5 @@
 import React,{PureComponent} from 'react'
-import { Pagination } from 'antd';
-import {Table} from 'antd'
-import {Icon} from 'antd'
+import { Pagination, Icon } from 'antd';
 import BTFetch from '../../../../utils/BTFetch'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'

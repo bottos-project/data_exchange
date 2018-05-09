@@ -172,7 +172,7 @@ class EditableTable extends React.Component {
         }
     }
     render() {
-        return <Table bordered dataSource={this.state.data} columns={this.columns} />;
+        return <Table dataSource={this.state.data} columns={this.columns} />;
     }
 }
 

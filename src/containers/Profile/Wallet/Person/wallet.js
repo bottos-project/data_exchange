@@ -1,5 +1,4 @@
-import React,{PureComponent} from 'react'
-import {Table,Icon} from 'antd'
+import React, { PureComponent } from 'react'
 import Walletall from './walletall'
 import '../styles.less'
 import * as BTUtil from '../../../../utils/BTUtil'

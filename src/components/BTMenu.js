@@ -22,6 +22,7 @@ function BTPersonalMenu({routeName}) {
     // dashboard:
     'asset': 'Asset',
     'need': 'Demand',
+    'file': 'File',
     'collect': 'Collect',
     'wallet': 'Wallet',
     'check': 'MyMessages',
@@ -29,7 +30,7 @@ function BTPersonalMenu({routeName}) {
   var list = []
   for (var to in personalMenu) {
     list.push(
-      <NavLink to={"/profile/" + to} intlMessage={HeaderMessages[personalMenu[to]]} />
+      <NavLink key={to} to={"/profile/" + to} intlMessage={HeaderMessages[personalMenu[to]]} />
     )
   }
   return (

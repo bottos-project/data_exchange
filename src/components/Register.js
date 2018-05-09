@@ -1,13 +1,11 @@
 import React, { Component, PureComponent } from 'react'
 
-import { Modal, Form, Icon, Input, Button, Radio, message, Row, Col } from 'antd'
+import { Form, Icon, Input, Button, message, Row, Col } from 'antd'
 import BTFetch from '../utils/BTFetch'
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import './styles.less'
 import BTIpcRenderer from '../tools/BTIpcRenderer'
 import {exportFile} from '../utils/BTUtil'
-// import PersonUser from "./Person";
-// import CompanyUser from "./Company";
 import {FormattedMessage} from 'react-intl'
 import {isUserName} from '../tools/BTCheck'
 
@@ -15,7 +13,7 @@ import ConfirmButton from './ConfirmButton'
 
 import messages from '../locales/messages'
 const HeaderMessages = messages.Header;
-const RadioGroup = Radio.Group;
+const LoginMessages = messages.Login;
 const FormItem = Form.Item;
 
 
@@ -42,11 +40,11 @@ class BTRegistSuccess extends PureComponent{
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
-        sm: { span: 5 },
+        sm: { span: 8 },
     },
     wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 18 },
+        sm: { span: 16 },
     },
 };
 
@@ -54,7 +52,6 @@ class Regist extends PureComponent{
     constructor(props){
         super(props);
         this.state = {
-            user_type: 0,
             img_data:'', // 验证码图片
             id_key: '', // 验证码 id
             isRegistered: false,
@@ -105,7 +102,6 @@ class Regist extends PureComponent{
         let phone = fieldValues.phone;
         let contacts = fieldValues.contacts;
         let contactsPhone = fieldValues.contactsPhone;
-        let companyName = fieldValues.companyName;
 
         // !(new RegExp(/^{8,}$/, "g").test(password))
         if(username==undefined){message.error(window.localeInfo["Header.PleaseEnterTheUserName"]); return}
@@ -163,8 +159,6 @@ class Regist extends PureComponent{
             username:username,
             user_info:{
                 encypted_info:encypted_info.toString(),
-                user_type: this.state.user_type, // 0:个人  1:公司
-                company_name:companyName
                 // role_type, // 0:数据提供  1:数据招募 2:数据审核
             },
             owner_pub_key:owner_pub_key_param,
@@ -224,13 +218,6 @@ class Regist extends PureComponent{
     //     })
     // }
 
-    handleRadioChange = (e) => {
-        console.log(e.target.value);
-        this.clearFields()
-        this.setState({
-            user_type: e.target.value,
-        })
-    }
 
     // TODO: 等后端部署了验证码功能，就可以用了
     // requestVerificationCode = () => {
@@ -248,7 +235,7 @@ class Regist extends PureComponent{
     //   })
     //
     // }
-
+    //
     // componentDidMount() {
     //   this.requestVerificationCode()
     // }
@@ -260,94 +247,70 @@ class Regist extends PureComponent{
         return <BTRegistSuccess cryptStr={cryptStr} username={username} />
       }
 
-        const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+      const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
 
-        return(
-            <div className="register">
-              <div className='route-children-container-title'><FormattedMessage {...HeaderMessages.Register}/></div>
-              <Form onSubmit={(e) => this.onHandleSubmit(e)}>
-                <FormItem
-                    mapPropsToFields
-                    {...formItemLayout}
-                >
-                    <div style={{margin: '0 auto'}}>
-                      <RadioGroup onChange={this.handleRadioChange} value={this.state.user_type}>
-                        <Radio value={0}>
-                          <FormattedMessage {...HeaderMessages.PersonalUser}/>
-                        </Radio>
-                        <Radio value={1}>
-                          <FormattedMessage {...HeaderMessages.EnterpriseUser}/>
-                        </Radio>
-                      </RadioGroup>
-                    </div>
-                </FormItem>
+      return (
 
-                <FormItem {...formItemLayout} >
+        <div className="register">
+            <div className='route-children-container-title'><FormattedMessage {...HeaderMessages.Register}/></div>
+            <Form onSubmit={(e) => this.onHandleSubmit(e)} style={{maxWidth: 560, paddingRight: '10%'}}>
+
+              <FormItem {...formItemLayout} colon={false} label={<FormattedMessage {...LoginMessages.Account} />}>
+
+                  {
+                      getFieldDecorator('username',{})(
+                          <Input placeholder={window.localeInfo["Header.PleaseEnterTheUserName"]} id="error1" />
+                      )
+                  }
+              </FormItem>
+              <FormItem {...formItemLayout} colon={false} label={<FormattedMessage {...LoginMessages.Password} />}>
+                  {
+                      getFieldDecorator('password',{})(
+                          <Input placeholder={window.localeInfo["Header.PleaseEnterThePassword"]} type="password" id="error2" />
+                      )
+                  }
+              </FormItem>
+              <FormItem {...formItemLayout} colon={false} label={<FormattedMessage {...LoginMessages.ConfirmPassword} />}>
+                  {
+                      getFieldDecorator('newpassword',{})(
+                          <Input placeholder={window.localeInfo["Header.PleaseEnterTheSurePassword"]} type="password" id="error1"/>
+                      )
+                  }
+              </FormItem>
+
+              {/* 这部分是验证码功能，先暂时隐藏起来 */}
+              {/* <FormItem {...formItemLayout}>
+                <Row gutter={8}>
+                  <Col span={16}>
                     {
-                        getFieldDecorator('username',{})(
-                            <Input placeholder={window.localeInfo["Header.PleaseEnterTheUserName"]} id="error1" />
-                        )
+                      getFieldDecorator('verificationCode', {}) (
+                        <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} id="error1"/>
+                      )
                     }
-                </FormItem>
-                <FormItem {...formItemLayout} >
-                    {
-                        getFieldDecorator('password',{})(
-                            <Input placeholder={window.localeInfo["Header.PleaseEnterThePassword"]} type="password" id="error2" />
-                        )
+                  </Col>
+                  <Col span={8}>
+                    {this.state.img_data
+                      ?
+                      <img height='28px'
+                        style={{marginBottom: 6, cursor: 'pointer'}}
+                        onClick={this.requestVerificationCode}
+                        src={this.state.img_data} />
+                      :
+                      <Icon type='spin' />
                     }
-                </FormItem>
-                <FormItem {...formItemLayout}>
-                    {
-                        getFieldDecorator('newpassword',{})(
-                            <Input placeholder={window.localeInfo["Header.PleaseEnterTheSurePassword"]} type="password" id="error1"/>
-                        )
-                    }
-                </FormItem>
+                  </Col>
+                </Row>
+              </FormItem> */}
 
-                {
-                    this.state.user_type !== 0 &&
-                    <FormItem {...formItemLayout}>
-                        {
-                          getFieldDecorator('companyName',{})(
-                            <Input placeholder={window.localeInfo["Header.PleaseEnterTheCompanyName"]} id="error2" />
-                          )
-                        }
-                    </FormItem>
-                }
+            </Form>
 
-                {/* 这部分是验证码功能，先暂时隐藏起来 */}
-                {/* <FormItem {...formItemLayout}>
-                  <Row gutter={8}>
-                    <Col span={16}>
-                      {
-                        getFieldDecorator('verificationCode', {}) (
-                          <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} id="error1"/>
-                        )
-                      }
-                    </Col>
-                    <Col span={8}>
-                      {this.state.img_data
-                        ?
-                        <img height='28px'
-                          style={{marginBottom: 6, cursor: 'pointer'}}
-                          onClick={this.requestVerificationCode}
-                          src={this.state.img_data} />
-                        :
-                        <Icon type='spin' />
-                      }
-                    </Col>
-                  </Row>
-                </FormItem> */}
-
-                <div style={{textAlign: 'center'}}>
-                    <ConfirmButton htmlType="submit">
-                        <FormattedMessage {...HeaderMessages.Register} />
-                    </ConfirmButton>
-                </div>
-
-              </Form>
+            <div style={{textAlign: 'center'}}>
+              <ConfirmButton htmlType="submit">
+                <FormattedMessage {...HeaderMessages.Register} />
+              </ConfirmButton>
             </div>
-        )
+        </div>
+      )
     }
 }
 

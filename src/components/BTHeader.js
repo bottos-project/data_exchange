@@ -9,12 +9,10 @@ import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import BTFetch from '../utils/BTFetch'
 import {importFile,exportFile} from '../utils/BTUtil'
 import BTIpcRenderer from '../tools/BTIpcRenderer'
-import { getAccount } from '../tools/localStore'
 import messages from "../locales/messages";
 const HeaderMessages = messages.Header;
 const MenuMessages = messages.Menu;
 
-const {dialog} = window.electron.remote
 const pkg = require('../../package.json')
 
 class BTHeader extends PureComponent{
@@ -37,27 +35,16 @@ class BTHeader extends PureComponent{
       }
     }
 
-    logout() {
-        let url = '/user/logout'
-        let account = getAccount()
-        if (!account) {
-          this.props.setAccountInfo(null)
-          message.success(window.localeInfo["Header.SuccessToLogOut"]);
-          return;
-        }
-        BTFetch(url,'POST').then(response => {
-          this.props.setAccountInfo(null)
-          message.success(window.localeInfo["Header.SuccessToLogOut"]);
-        }).catch(error => {
-          console.error('logout error', error);
-          message.error(window.localeInfo["Header.FailedLogOut"]);
-        })
+    logout = () => {
+      BTFetch('/user/logout', 'POST')
+      this.props.setAccountInfo(null)
+      message.success(window.localeInfo["Header.SuccessToLogOut"]);
     }
 
     menu() {
         return <Menu>
             <Menu.Item key="1">
-              <a href="#" onClick={()=>{this.logout()}}>
+              <a href="#" onClick={this.logout}>
                   <FormattedMessage {...HeaderMessages.Logout}/>
               </a>
             </Menu.Item>
@@ -115,13 +102,13 @@ class BTHeader extends PureComponent{
                 </div>
 
                 <div className="loginBtnStyle">
-                  <Link to='/publishDemand' onClick={this.checkAccount}>
-                    <img src='./img/publishDemand.svg' />
-                    <FormattedMessage {...HeaderMessages.PublishDemand}/>
-                  </Link>
                   <Link to='/publishAsset' onClick={this.checkAccount} >
                     <img src='./img/publishAsset.svg' />
                     <FormattedMessage {...HeaderMessages.PublishAsset}/>
+                  </Link>
+                  <Link to='/publishDemand' onClick={this.checkAccount}>
+                    <img src='./img/publishDemand.svg' />
+                    <FormattedMessage {...HeaderMessages.PublishDemand}/>
                   </Link>
                   {
                     account_info != null

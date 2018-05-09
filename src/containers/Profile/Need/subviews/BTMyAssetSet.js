@@ -89,16 +89,12 @@ export default class BTMyAssetSet extends PureComponent{
                         <FormattedMessage {...PersonalDemandMessages.ClickOrDragFileToThisAreaToUpload}/>
                     </p>
                 </Dragger>
-                    <Table
-                        bordered
-                        columns={columns}
-                        dataSource={data}
-                        className="shadow radius table"
-                    />
+                <Table
+                    columns={columns}
+                    dataSource={data}
+                    className="shadow radius table"
+                />
             </div>
         )
     }
 }
-
-
-

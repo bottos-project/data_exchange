@@ -1,8 +1,10 @@
 import React,{PureComponent} from 'react'
-import BlockList from './blockList'
+import { Link } from 'react-router'
 import BTFetch from "../../../utils/BTFetch";
 import {Table} from 'antd'
 import {FormattedMessage} from 'react-intl'
+import { getDateAndTime } from '@/utils/dateTimeFormat'
+
 import messages from '../../../locales/messages'
 const BlockBrowsingMessages = messages.BlockBrowsing;
 export default class BTOtherBlocks extends PureComponent{
@@ -21,12 +23,12 @@ export default class BTOtherBlocks extends PureComponent{
             { title: <FormattedMessage {...BlockBrowsingMessages.BlockNumber}/>, dataIndex: 'block_num', key: 'title'/*,render:(data)=>{
                 return <span>{data.substring(0,16)+'...'}</span>
                 }*/ },
-            { title: <FormattedMessage {...BlockBrowsingMessages.Date}/>, dataIndex: 'timestamp', key: 'date',render:(date)=>{
-                return <span>{date.split(' ')[0]}</span>
-                }},
-            { title: <FormattedMessage {...BlockBrowsingMessages.Transaction}/>, dataIndex: 'transaction_merkle_root', key: 'looker',render:(data)=>{
-                    return <span>{data.substring(0,16)+'...'}</span>
-                }},
+            { title: <FormattedMessage {...BlockBrowsingMessages.Date}/>, dataIndex: 'timestamp', key: 'date',
+              render: (date) => <span>{getDateAndTime(date)}</span>
+            },
+            { title: <FormattedMessage {...BlockBrowsingMessages.Transaction}/>, dataIndex: 'transaction_merkle_root', key: 'looker',
+              render: (data) => <span title={data}>{data.substring(0, 12)+'...'}</span>
+            },
             { title: <FormattedMessage {...BlockBrowsingMessages.Producer}/>,dataIndex: 'producer',key: 'x'},
         ];
     }
@@ -75,20 +77,21 @@ export default class BTOtherBlocks extends PureComponent{
 
         return(
             <div className="OtherBlocksMessage">
-                {/*<div style={{width:"100%"}}>*/}
-                    <div className="blockView">
-                        <h3>
-                            <FormattedMessage {...BlockBrowsingMessages.Block}/>
-                        </h3>
-                        {/*<a >查看所有&lt;</a>*/}
-                    </div>
-                    <Table
-                      bordered
-                      pagination={this.pagination()}
-                      columns={columns}
-                      dataSource={this.state.data}
-                      rowKey='block_id'
-                    />
+                <div className="blockView">
+                    <h3>
+                        <FormattedMessage {...BlockBrowsingMessages.Block}/>
+                    </h3>
+                    <Link>
+                      <FormattedMessage {...BlockBrowsingMessages.All} />
+                      &gt;&gt;&gt;
+                    </Link>
+                </div>
+                <Table
+                  pagination={this.pagination()}
+                  columns={columns}
+                  dataSource={this.state.data}
+                  rowKey='block_id'
+                />
                 {/*</div>*/}
             </div>
         )

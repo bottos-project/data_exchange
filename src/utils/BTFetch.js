@@ -1,6 +1,7 @@
 import config from './config.js'
-import * as localStore from '../tools/localStore'
+import { getAccount } from '../tools/localStore'
 import {message} from 'antd'
+import emitter from './eventEmitter'
 const pkg = require('../../package.json')
 
 export default (url,method,params,options={
@@ -20,7 +21,7 @@ export default (url,method,params,options={
     }
 
     // 设置token
-    let account = localStore.getAccount()
+    let account = getAccount()
     let token = ''
     if(account&&account.token){
         token = account.token;
@@ -34,7 +35,7 @@ export default (url,method,params,options={
         method: methodUpStr,
         headers: {
             'Content-Type': 'application/json',
-            token:token
+            token
         }
     };
 
@@ -50,7 +51,7 @@ export default (url,method,params,options={
             if (response.code == 1999) {
                 // token过期
                 message.error('登录过期，请重新登录')
-                localStore.deleteAccount()
+                emitter.emit('token_expire');
                 location.hash = '#/dashboard'
                 return;
             }

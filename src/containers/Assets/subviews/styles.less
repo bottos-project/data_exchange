@@ -6,13 +6,12 @@
 .assetDetailBox{
   color: #FFFFFF;
   width: 100%;
-  background-color: #FFFFFF;
   display: flex;
   justify-content: center;
   flex-direction: column;
   position: relative;
 
-  h2,ul,div,.dataDescription{
+  h2,ul,div{
     display: flex;
     justify-content: center;
 
@@ -48,31 +47,14 @@
     height: 28px;
     padding: 0 30px;
   }
-  button:hover{
-    border: 2px solid #4A60E2;
-    background-color: #4A90E2;
-  }
-  .dataDescription{
-    width: 600px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    flex-direction: column;
-    span,textarea{
-      color: #444444;
-    }
-  }
+
 }
 //assetList
 .assetList{
-  float: left;
-  display: inline-block;
-  margin: 1%;
   padding: 10px;
-  height: 21vh;
-  color: #FFFFFF;
-  width: 23%;
+  min-height: 145px;
+  height: 15vh;
+  color: #FFF;
   background-image: linear-gradient(-45deg, #66A2EA 0%, #CDC8F8 100%);
   border-radius: 5px;
   cursor: pointer;
@@ -80,7 +62,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    height: 6vh;
+    height: 5em;
   }
   h4{
     margin-bottom: 10px;

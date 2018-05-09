@@ -36,6 +36,9 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.less'],
     modules: ['node_modules'],
+    alias: {
+      '@': paths.appSrc,
+    }
   },
 
 

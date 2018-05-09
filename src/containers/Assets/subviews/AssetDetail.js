@@ -6,6 +6,9 @@ import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from '../../../tools/localStore'
 import uuid from 'node-uuid'
+
+import CloseBack from '@/components/CloseBack'
+
 const AssetMessages = messages.Asset;
 // 此处样式在Demand/subviews/styles.less中控制
 const { TextArea } = Input;
@@ -160,8 +163,10 @@ export default class BTAssetDetail extends PureComponent{
         let data=this.props.location.query;
         let time=new Date((data.expire_time)*1000).toLocaleDateString();
         return (
+          <div className='route-children-container route-children-bg'>
+            <CloseBack />
             <div className="assetDetailBox">
-                <h2>
+                <h2 className='route-children-container-title'>
                     <FormattedMessage {...AssetMessages.DataDetails}/>
                 </h2>
                 <div className="mainData">
@@ -230,12 +235,13 @@ export default class BTAssetDetail extends PureComponent{
                     </li>
                 </ul>
                 <div className="dataDescription">
-                    <span>
-                        <FormattedMessage {...AssetMessages.DataDescription}/>
-                    </span>
-                    <TextArea disabled rows={4} defaultValue={data.description} />
+                  <span>
+                    <FormattedMessage {...AssetMessages.DataDescription}/>
+                  </span>
+                  <TextArea readOnly rows={4} defaultValue={data.description} />
                 </div>
             </div>
+          </div>
         )
     }
 }

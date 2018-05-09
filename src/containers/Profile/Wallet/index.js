@@ -1,6 +1,7 @@
 import React,{PureComponent} from 'react'
+import { connect } from 'react-redux'
 // import {Wallet,Transfer,History} from './Person'
-import { Tabs,List,Button, Row,Col,Modal,Input,message,Tag } from 'antd';
+import { List, Button, Input, message } from 'antd';
 import {Link} from 'react-router'
 import Walletall from './Person/walletall'
 import './styles.less'
@@ -8,30 +9,40 @@ import {exportFile} from '../../../utils/BTUtil'
 import BTIpcRenderer from '../../../tools/BTIpcRenderer'
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import BTUnlogin from '../../../components/BTUnlogin'
-import * as localStore from '../../../tools/localStore'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import BTAccountListCell from './subvies/BTAccountListCell'
 import BTAccountListHeader from './subvies/BTAccountListHeader'
 import BTWalletList from './subvies/BTWalletList'
 import BTAccountList from './subvies/BTAccountList'
-import {getAccount} from '../../../tools/localStore'
-const WalletMessages = messages.Wallet;
-const TabPane = Tabs.TabPane;
-const CheckableTag = Tag.CheckableTag
+import CustomTabBar from '@/components/CustomTabBar'
 
-export default class BTWallet extends PureComponent{
+const WalletMessages = messages.Wallet;
+
+
+class BTWallet extends PureComponent {
     constructor(props){
         super(props)
+        let currentAccount = props.account_info ? props.account_info.username : ''
         this.state = {
-            isLogin:false,
-            walletList:[],
-            selectWallet:''
+            walletList: [],
+            accountList: [currentAccount],
+            selectWallet: '',
+            activeKey: '0',
         }
+    }
+    handleChange = (key) => {
+      // console.log('key', key);
+      // console.log('this.state.accountList[key]', this.state.accountList[key]);
+      this.setState({
+        activeKey: key,
+        selectWallet: this.state.accountList[key]
+      });
     }
 
     componentDidMount(){
         let props = this.props;
+        console.log('props', props);
         if(props.location) {
             this.setLoginState(props.location.query.selectWallet)
         }else{
@@ -40,18 +51,18 @@ export default class BTWallet extends PureComponent{
     }
 
     setLoginState(username){
-        let isLogin = localStore.isLogin();
-        this.setState({isLogin})
-        if(isLogin){
-            let walletList = BTIpcRenderer.getKeyStoreList()
-            let userInfo = getAccount()
-            let selectWallet = username ? username : userInfo.username
-            this.setState({
-                selectWallet,
-                walletList
-            })
-            // console.log(BTIpcRenderer.getKeyStore(username),selectWallet)
-        }
+      const { account_info, isLogin } = this.props
+      if (isLogin) {
+        let walletList = BTIpcRenderer.getKeyStoreList()
+        let accountList = walletList.map(item => item.endsWith('.keystore') ? item.slice(0,-9) : item)
+        let selectWallet = username ? username : account_info.username
+        this.setState({
+            selectWallet,
+            walletList,
+            accountList
+        })
+          // console.log(BTIpcRenderer.getKeyStore(username),selectWallet)
+      }
     }
 
     checkWallet(item){
@@ -60,7 +71,7 @@ export default class BTWallet extends PureComponent{
         })
     }
 
-    initComponent(){
+    initComponent() {
         let checkedStyle = {backgroundColor:'rgb(154,125,224)'}
         let unCheckedStyle = {borderColor:'rgb(154,125,224)'}
         let walletListPath = {
@@ -68,43 +79,40 @@ export default class BTWallet extends PureComponent{
             query:this.state.walletList
         }
 
-        let list = this.state.walletList.map((item, index) => {
-            let account = item.slice(0, -9)
-            let isChecked = account == this.state.selectWallet;
-            let tagStyle = isChecked ? checkedStyle : unCheckedStyle
-            if (index > 2) return null;
-            return (
-              <CheckableTag key={account} checked={isChecked} onChange={()=>{this.checkWallet(item)}} style={tagStyle}>
-                {account}
-              </CheckableTag>
-            )
-        })
+        return (
+          <div className='container column'>
+            <CustomTabBar style={{position: 'relative'}} onChange={this.handleChange} keyMap={this.state.accountList} activeKey={this.state.activeKey}>
+              <Link className='custom-tabs-tab' style={{fontSize: 14, borderBottom: 'none'}} to={walletListPath}></Link>
+              <Link to={walletListPath}><button className='wallet-management'><FormattedMessage {...WalletMessages.More}/>>>></button></Link>
+            </CustomTabBar>
 
-        return(
-            <div className="container column">
-                <div className="flex marginBottom walletWrap">
-                    <div>
-                        {list}
-                        <Link to={walletListPath}><FormattedMessage {...WalletMessages.More}/>>>></Link>
-                    </div>
-                    <BTAccountListHeader style={{float:'right'}}/>
-
-                </div>
-                <div className="container marginTop">
-                    <BTAccountList className="flex" selectWallet = {this.state.selectWallet}/>
-                </div>
+            <div className="flex marginBottom walletWrap">
+              <BTAccountListHeader style={{float:'right'}}/>
             </div>
+            <div className="container marginTop">
+                <BTAccountList className="flex" selectWallet = {this.state.selectWallet}/>
+            </div>
+          </div>
         )
     }
 
     render() {
-      if ( React.isValidElement(this.props.children) ) {
-        return this.props.children
-      } else if (this.state.isLogin) {
+      const { children, isLogin } = this.props
+      if ( React.isValidElement(children) ) {
+        return children
+      } else if (isLogin) {
         return this.initComponent()
       } else {
-        return <div className="container center"><BTUnlogin/></div>
+        return <div className="container center"><BTUnlogin /></div>
       }
 
     }
 }
+
+const mapStateToProps = (state) => {
+  const account_info = state.headerState.account_info
+  const isLogin = account_info != null
+  return { account_info, isLogin }
+}
+
+export default connect(mapStateToProps)(BTWallet)
