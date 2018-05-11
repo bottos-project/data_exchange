@@ -69,6 +69,8 @@ define([
 
             md5.loadFromBlob( blob );
 
+            console.log('md5', md5);
+
             return deferred.promise();
         }
     });

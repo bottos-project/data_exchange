@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {Popconfirm,Table, Upload, Icon, message} from 'antd';
 import BTFetch from "../../../utils/BTFetch"
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
@@ -11,22 +12,26 @@ import uuid from 'node-uuid'
 import uploader from './uploader'
 
 const PersonalAssetMessages = messages.PersonalAsset;
+
 const Dragger = Upload.Dragger;
 const callback_data = ''
 
+const GigaByte = Math.pow(2, 30)
+const MegaByte = 1 << 20
 
-
-function beforeUpload(file, fileList) {
+function beforeUpload(file) {
   // console.log('file.size', file.size)
-  if (file.size > 200 << 20){
+  // if (file.size > 2 * GigaByte) {
+  if (file.size > 200 * MegaByte) {
+    // 文件大小大于 2G
+    // 不支持上传
     message.error(window.localeInfo["PersonalAsset.UploadFileSize"])
     return false;
   }
 }
 
 
-
-export default class BTMyAssetSet extends Component{
+class BTMyAssetSet extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -87,6 +92,10 @@ export default class BTMyAssetSet extends Component{
     }
 
     customRequest = ({ file, onSuccess }) => {
+      const account_info = this.props.account_info
+      if (account_info == null) {
+        return message.info(window.localeInfo["Header.PleaseLogInFirst"]);;
+      }
         //生成文件存储路径url
         console.log('file', file)
         let param={
@@ -100,10 +109,18 @@ export default class BTMyAssetSet extends Component{
         };
 
         // 这部分是大文件上传的逻辑，先注释掉
+        // 这里是 guid 的生成
+        file.guid = new Date().getTime() + account_info.username
 
-        // console.log('uploader', uploader);
+        // if (file.size > 200 * MegaByte) {
+         // 文件大小大于 200M
+         // 需要分片上传
+         console.log('uploader', uploader);
+         uploader.addFile(file)
 
-        // uploader.addFile(file)
+         // return false
+       // }
+
 
         // param = {
         //     "guid": new Date().getTime() + getAccount().username,
@@ -147,7 +164,7 @@ export default class BTMyAssetSet extends Component{
         //   }
         // })
 
-        // return
+        return
 
 
         BTFetch('/asset/getFileUploadURL','post',param,{service:'service'})
@@ -332,3 +349,10 @@ export default class BTMyAssetSet extends Component{
         )
     }
 }
+
+function mapStateToProps(state) {
+  const account_info = state.headerState.account_info
+  return { account_info }
+}
+
+export default connect(mapStateToProps)(BTMyAssetSet)

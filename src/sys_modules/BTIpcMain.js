@@ -42,13 +42,14 @@ ipcMain.on(ipcEventName.import_file,(event,options)=>{
                     event.returnValue = {
                       error: '文件读取错误'
                     }
+                    return ;
                   }
 
                   event.returnValue = {
                     username: name,
                     result
                   }
-                  
+
                 })
             }
 

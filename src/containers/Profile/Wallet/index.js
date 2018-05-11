@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 // import {Wallet,Transfer,History} from './Person'
 import { List, Button, Input, message } from 'antd';
 import {Link} from 'react-router'
-import Walletall from './Person/walletall'
 import './styles.less'
 import {exportFile} from '../../../utils/BTUtil'
 import BTIpcRenderer from '../../../tools/BTIpcRenderer'
@@ -11,8 +10,6 @@ import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import BTUnlogin from '../../../components/BTUnlogin'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
-import BTCointListCell from './subvies/BTCointListCell'
-import BTWalletList from './subvies/BTWalletList'
 import BTCointList from './subvies/BTCointList'
 import CustomTabBar from '@/components/CustomTabBar'
 
@@ -41,7 +38,7 @@ class BTWallet extends PureComponent {
 
     componentDidMount(){
         let props = this.props;
-        console.log('props', props);
+        // console.log('props', props);
         if(props.location) {
             this.setLoginState(props.location.query.selectWallet)
         }else{

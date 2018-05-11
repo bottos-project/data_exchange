@@ -115,7 +115,7 @@ class Transaction extends PureComponent{
                 quantity:parseFloat(quantity)*Math.pow(10,10)
             }
         }
-        
+
         let getDataResult = await BTFetch(reqUrl,'POST',dataParams);
         if(!(getDataResult&&getDataResult.code=='0')){
             message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
@@ -148,7 +148,7 @@ class Transaction extends PureComponent{
 
         BTFetch(transactionUrl,'POST',transactionParams).then(response=>{
             message.destroy()
-            
+
             if(response){
                 if(response.code==0){
                     message.success(window.localeInfo["Wallet.SuccessfulToTransferAccounts"])
@@ -184,32 +184,32 @@ class Transaction extends PureComponent{
         return(
             <div>
                 <Form onSubmit={()=>this.onHandleSubmit()} style={{marginTop:15}}>
-                        <FormItem label={<FormattedMessage {...WalletMessages.TargetAccount}/>} {...formItemLayout}>
-                            {getFieldDecorator('to', {
-                                rules: [{ required: true, message: '请填写对方账号!' }],
-                            })(<Input />)}
-                        </FormItem>
+                    <FormItem label={<FormattedMessage {...WalletMessages.TargetAccount}/>} {...formItemLayout}>
+                        {getFieldDecorator('to', {
+                            rules: [{ required: true, message: '请填写对方账号!' }],
+                        })(<Input />)}
+                    </FormItem>
 
-                        <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout}>
-                            {getFieldDecorator('quantity', {
-                                rules: [{ required: true, message: '请填写转账金额!' }],
-                            })(<BTNumberInput value={this.state.quantity} onChange={(e)=>this.onChange(e)}/>)}
-                            <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div>
-                            {/* })(<div className="flex row"><InputNumber value={this.state.quantity} onChange={(e)=>this.onChange(e)}/><div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div></div>)} */}
-                        </FormItem>
+                    <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout}>
+                        {getFieldDecorator('quantity', {
+                            rules: [{ required: true, message: '请填写转账金额!' }],
+                        })(<BTNumberInput value={this.state.quantity} onChange={(e)=>this.onChange(e)}/>)}
+                        <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div>
+                        {/* })(<div className="flex row"><InputNumber value={this.state.quantity} onChange={(e)=>this.onChange(e)}/><div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div></div>)} */}
+                    </FormItem>
 
-                        {/**<FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
-                            {getFieldDecorator('password', {
-                                rules: [{ required: true, message: '请填写账户密码!' }],
-                            })(<Input type="password"/>)}
-                        </FormItem>**/}
+                    {/**<FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
+                        {getFieldDecorator('password', {
+                            rules: [{ required: true, message: '请填写账户密码!' }],
+                        })(<Input type="password"/>)}
+                    </FormItem>**/}
 
-                        <div className="container marginRight" style={{justifyContent:'flex-end'}}>
-                            <Button onClick={()=>this.onHandleSubmit()}>
-                                <FormattedMessage {...WalletMessages.Submit}/>
-                            </Button>
-                        </div>
-                    </Form>
+                    <div className="container marginRight" style={{justifyContent:'flex-end'}}>
+                        <Button onClick={()=>this.onHandleSubmit()}>
+                            <FormattedMessage {...WalletMessages.Submit}/>
+                        </Button>
+                    </div>
+                </Form>
             </div>
         )
     }
@@ -230,7 +230,7 @@ const TransactionForm = Form.create()(Transaction)
 // const mapDispatchToProps = (dispatch) => {
 //     return {
 //         setQuantity(quantity) {
-            
+
 //         }
 //     }
 // }

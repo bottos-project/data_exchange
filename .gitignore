@@ -36,3 +36,6 @@ yarn-error.log*
 
 # developer tools
 /devtools
+
+# Installer
+/dist

@@ -2,20 +2,15 @@ import React,{PureComponent} from 'react'
 
 import {List,Button} from 'antd'
 import BTFetch from '../../../../utils/BTFetch';
-import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
-import BTTransaction from './BTTransaction'
 import {getAccount} from "../../../../tools/localStore";
 import BTCointListCell from './BTCointListCell'
-const WalletMessages = messages.Wallet;
 
 export default class BTAccountList extends PureComponent{
     constructor(props){
         super(props)
         this.state = {
             accoutList:[],
-            username:'',
-            token:''
         }
     }
     componentDidMount(){

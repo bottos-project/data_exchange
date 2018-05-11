@@ -62,7 +62,7 @@ define([
                 runtimeOrder: 'html5'
             }, function() {
                 me._ruid = runtime.getRuid();
-                console.log('me._ruid', me._ruid);
+                // console.log('me._ruid', me._ruid);
                 deferred.resolve();
             });
             return deferred.promise();
@@ -75,8 +75,8 @@ define([
             if ( !(file instanceof WUFile) ) {
 
                 if ( !(file instanceof File) ) {
-                  console.log('this', this);
-                  console.log('this._ruid', this._ruid);
+                  // console.log('this', this);
+                  // console.log('this._ruid', this._ruid);
                     if ( !this._ruid ) {
                         throw new Error('Can\'t add external files.');
                     }

@@ -179,6 +179,7 @@ export default class BTList extends PureComponent{
                   className="table route-children-bg"
                   columns={columns}
                   dataSource={this.state.data}
+                  rowKey='goodsId'
                 />
             </div>
         );
