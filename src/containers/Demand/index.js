@@ -26,7 +26,7 @@ export default class BTDemand extends PureComponent{
     }
 
     componentDidMount(){
-        this.getPagination(1,12)
+        this.getPagination(1, 16)
     }
     onChange(page,pageSize){
         this.getPagination(page,pageSize)
@@ -77,7 +77,7 @@ export default class BTDemand extends PureComponent{
             hideOnSinglePage
             showQuickJumper
             defaultCurrent={1}
-            pageSize={12}
+            pageSize={16}
             total={this.state.rowCount}
             onChange={this.onChange}
           />

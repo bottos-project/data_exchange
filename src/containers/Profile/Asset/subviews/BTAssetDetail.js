@@ -65,6 +65,12 @@ export default class BTAssetDetail extends PureComponent{
               key: 'description',
               render: (item) => <span>{item.length < 30 ? item : item.substring(0,30) + '...'}</span>
             },
+            { title: <FormattedMessage {...PersonalAssetMessages.AssetOperation} />, dataIndex: 'sample_path',
+              render: (item) => <a onClick={()=>this.download(item)}>
+                  <Icon type="download" style={{color:"black",fontWeight:900}} />
+              </a>
+            },
+
             //修改操作
             /*{ title: <FormattedMessage {...PersonalAssetMessages.AssetOperation}/>,
                 key:'y',
@@ -94,6 +100,16 @@ export default class BTAssetDetail extends PureComponent{
             }*/
           ];
     }
+
+    download(item){
+        let a = document.createElement('a');
+        let url = item;
+        let filename = 'bottos';
+        a.href = url;
+        a.download=filename;
+        a.click();
+    }
+
     renderColumns(text, record, column) {
         return (
             <EditableCell
@@ -103,6 +119,7 @@ export default class BTAssetDetail extends PureComponent{
             />
         );
     }
+    
     handleChange(value, key, column) {
         const newData = [...this.state.data];
         const target = newData.filter(item => key === item.key)[0];

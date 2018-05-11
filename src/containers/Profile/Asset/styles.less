@@ -2,43 +2,15 @@
   width: 100%;
 }
 .uploadAsset{
-  .align{
-    width: 170px;
-  }
-  .align90{
-    width: 100px;
-  }
   display: flex;
   flex-direction: column;
-  span{
-    display: flex;
-    align-items: center;
+  padding: 20px;
+  > .ant-row {
+    margin: 10px 0;
   }
   div {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin: 8px;
-    span {
-      display: flex;
-      align-items: center;
-      font-size: 18px;
-      margin: 0 5px;
-    }
-    .filename{
-      font-size: 14px;
-    }
-    input{
-      display: flex;
-      align-items: center;
-      height: 28px;
-      width: 170px;
-      border-radius: 5px;
-    }
     textarea{
       border-radius: 6px;
-      display: flex;
-      flex: 1;
       resize:none;
     }
     button span {
@@ -58,54 +30,36 @@
   .ant-calendar-picker-icon {
     margin-top: -7px;
   }
-  .ant-calendar-picker{
-    margin: 0;
-    div {
-      margin: 0;
+
+}
+
+.filename{
+  margin-left: 5px;
+}
+
+.label {
+  text-align: right;
+  font-size: 18px;
+}
+
+.upLoad {
+  button {
+    border: none;
+    font-weight: lighter;
+    i {
+      display: none;
+    }
+    span{
+      font-size: 16px;
     }
   }
-  .upLoad {
-      button {
-        background: -webkit-linear-gradient(#9A7DE0, #6147BD);
-        box-shadow: 0 0 4px 0 #9B85DB;
-        border: none;
-        padding: 0 20px;
-        max-height: 28px;
-        font-weight: lighter;
-        i {
-          display: none;
-        }
-        span{
-          color:#FFFFFF;
-          font-size: 16px;
-        }
-      }
-      button:hover{
-        border:1px solid #6127BD;
-      }
-      div{
-        margin: 0;
-        span{
-          margin: 0;
-        }
-      }
+  button:hover{
+    border:1px solid #6127BD;
   }
-}
-
-.uploadAsset .featureTag div{
-  margin: 0;
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-.uploadAsset .featureTag input{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100px;
 
 }
+
+
 .set{
   .ant-upload.ant-upload-drag p.ant-upload-text{
     color:white;

@@ -293,6 +293,7 @@ module.exports = {
     "Wallet.TurnOut":"TurnOut",
     "Wallet.Price":"Price",
     "Wallet.To":"To",
+    "Wallet.CreateNewAccount":"Create a New Account",
     "Wallet.ImportTheAccount":"Import the Account",
     "Wallet.AvailableCash":"Cash Available",
     "Wallet.PleaseEnterTheOriginalPassword":"Please Enter Your Current Password",

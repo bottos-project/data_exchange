@@ -7,13 +7,17 @@ import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from "../../../tools/localStore";
 import uuid from 'node-uuid'
+
+import uploader from './uploader'
+
 const PersonalAssetMessages = messages.PersonalAsset;
 const Dragger = Upload.Dragger;
 const callback_data = ''
 
 
+
 function beforeUpload(file, fileList) {
-  console.log('file', file.size)
+  // console.log('file.size', file.size)
   if (file.size > 200 << 20){
     message.error(window.localeInfo["PersonalAsset.UploadFileSize"])
     return false;
@@ -36,29 +40,30 @@ export default class BTMyAssetSet extends Component{
 
     columns(data) {
         // console.log(data);
-            return [
-                {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name', key: 'fileName',
-                    render:(item)=>{
-                        return <span>
-                           {item.length < 30? item:item.substring(0,30)+'...'}
-                        </span>
-                    }},
-                {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size', key: 'fileSize'},
-                /*{title: <FormattedMessage {...PersonalAssetMessages.AssetSampleName}/>, dataIndex: 'sampleName', key: 'sampleName'},
-                {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleSize}/>, dataIndex: 'sampleSize', key: 'sampleSize'},*/
-                {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date'},
-                {
-                    title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_name', key: 'x', render: (item)=>{
-                        return(
-                            <a onClick={()=>this.download1(item)}>
-                                <Icon type="download"/>
-                            </a>
-                        )
-                    }
-                },
-            ];
-     }
-     download1(dataIndex){
+        return [
+            {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name', key: 'fileName',
+                render:(item)=>{
+                    return <span>
+                       {item.length < 30? item:item.substring(0,30)+'...'}
+                    </span>
+                }},
+            {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size', key: 'fileSize'},
+            /*{title: <FormattedMessage {...PersonalAssetMessages.AssetSampleName}/>, dataIndex: 'sampleName', key: 'sampleName'},
+            {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleSize}/>, dataIndex: 'sampleSize', key: 'sampleSize'},*/
+            {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date'},
+            {
+                title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_name', key: 'x', render: (item)=>{
+                    return(
+                        <a onClick={()=>this.download1(item)}>
+                            <Icon type="download"/>
+                        </a>
+                    )
+                }
+            },
+        ];
+    }
+
+    download1(dataIndex){
         BTFetch('/asset/getDownLoadURL','post',{
             'userName':getAccount().username,
             'fileName':dataIndex
@@ -95,6 +100,10 @@ export default class BTMyAssetSet extends Component{
         };
 
         // 这部分是大文件上传的逻辑，先注释掉
+
+        // console.log('uploader', uploader);
+
+        // uploader.addFile(file)
 
         // param = {
         //     "guid": new Date().getTime() + getAccount().username,
@@ -137,7 +146,7 @@ export default class BTMyAssetSet extends Component{
         //
         //   }
         // })
-        //
+
         // return
 
 

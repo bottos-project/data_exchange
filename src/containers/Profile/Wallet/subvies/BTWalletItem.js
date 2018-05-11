@@ -78,9 +78,9 @@ export default class BTWalletItem extends PureComponent{
 
     render(){
         return(
-            <div className="container accountItem">
+          <div className="container route-children-bg accountItem">
 
-            <Modal 
+            <Modal
                 visible={this.state.visible}
                 onOk={()=>this.onHandleOk()}
                 onCancel={()=>this.onHandleCancel()}
@@ -90,27 +90,28 @@ export default class BTWalletItem extends PureComponent{
                 <Input type="password" placeholder="请再次确认新密码" value={this.state.reNewPassword} onChange={(e)=>this.setState({reNewPassword:e.target.value})}/>
             </Modal>
 
-
-                <div className="flex accountLeft">
-                    <div>
-                        <Link to={{
-                                pathname:'/profile/wallet/accountlist',
-                                query:{selectWallet:this.props.accountName}
-                            }}><span className="font25 colorTitle">{this.props.accountName}</span></Link>
-                        
-                        {/* <span>可用现金</span> */}
-                    </div>
-                    {/* <div className="font25 colorRed">{this.props.accounts}</div> */}
-                </div>
+            <div className="flex accountLeft">
                 <div>
-                    {/* <Button className="marginRight" type="primary" onClick={()=>this.changePwd(this.props.accountName)}>
-                        <FormattedMessage {...WalletMessages.ModifyThePassword}/>
-                    </Button> */}
-                    <Button type="primary" onClick={()=>this.exportAccount(this.props.accountName)}>
-                        <FormattedMessage {...WalletMessages.ExportTheAccount }/>
-                    </Button>
+                    <Link to={{
+                        pathname:'/profile/wallet/walletlist',
+                        query:{selectWallet:this.props.accountName}
+                    }}><span className="font25 colorTitle">{this.props.accountName}</span></Link>
+
+                    {/* <span>可用现金</span> */}
                 </div>
+                {/* <div className="font25 colorRed">{this.props.accounts}</div> */}
             </div>
+
+            <div>
+                {/* <Button className="marginRight" type="primary" onClick={()=>this.changePwd(this.props.accountName)}>
+                    <FormattedMessage {...WalletMessages.ModifyThePassword}/>
+                </Button> */}
+                <Button type="primary" onClick={()=>this.exportAccount(this.props.accountName)}>
+                    <FormattedMessage {...WalletMessages.ExportTheAccount }/>
+                </Button>
+            </div>
+
+          </div>
         )
     }
 }

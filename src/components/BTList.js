@@ -175,13 +175,11 @@ export default class BTList extends PureComponent{
         const columns = this.columns(data);
         return (
             <div className="container column">
-                <div style={{width:"100%"}}>
-                    <Table columns={columns} dataSource={this.state.data}
-                    />
-                </div>
-               {/* <div>
-                    <Button onClick={()=>this.clearShopping()} type="primary">结算</Button>
-                </div>*/}
+                <Table
+                  className="table route-children-bg"
+                  columns={columns}
+                  dataSource={this.state.data}
+                />
             </div>
         );
     }

@@ -10,7 +10,7 @@ const style = {
 }
 
 function ConfirmButton(props) {
-  console.log('props', props);
+  // console.log('props', props);
   return (
     <Button {...props} size='large' style={style}>
       {props.children}

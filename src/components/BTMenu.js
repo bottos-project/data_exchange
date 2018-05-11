@@ -23,9 +23,9 @@ function BTPersonalMenu({routeName}) {
     'asset': 'Asset',
     'need': 'Demand',
     'file': 'File',
-    'collect': 'Collect',
     'wallet': 'Wallet',
     'check': 'MyMessages',
+    'collect': 'Collect',
   }
   var list = []
   for (var to in personalMenu) {

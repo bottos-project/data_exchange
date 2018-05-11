@@ -11,10 +11,9 @@ import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import BTUnlogin from '../../../components/BTUnlogin'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
-import BTAccountListCell from './subvies/BTAccountListCell'
-import BTAccountListHeader from './subvies/BTAccountListHeader'
+import BTCointListCell from './subvies/BTCointListCell'
 import BTWalletList from './subvies/BTWalletList'
-import BTAccountList from './subvies/BTAccountList'
+import BTCointList from './subvies/BTCointList'
 import CustomTabBar from '@/components/CustomTabBar'
 
 const WalletMessages = messages.Wallet;
@@ -71,40 +70,40 @@ class BTWallet extends PureComponent {
         })
     }
 
-    initComponent() {
-        let checkedStyle = {backgroundColor:'rgb(154,125,224)'}
-        let unCheckedStyle = {borderColor:'rgb(154,125,224)'}
-        let walletListPath = {
-            pathname:'/profile/wallet/walletlist',
-            query:this.state.walletList
-        }
-
-        return (
-          <div className='container column'>
-            <CustomTabBar style={{position: 'relative'}} onChange={this.handleChange} keyMap={this.state.accountList} activeKey={this.state.activeKey}>
-              <Link className='custom-tabs-tab' style={{fontSize: 14, borderBottom: 'none'}} to={walletListPath}></Link>
-              <Link to={walletListPath}><button className='wallet-management'><FormattedMessage {...WalletMessages.More}/>>>></button></Link>
-            </CustomTabBar>
-
-            <div className="flex marginBottom walletWrap">
-              <BTAccountListHeader style={{float:'right'}}/>
-            </div>
-            <div className="container marginTop">
-                <BTAccountList className="flex" selectWallet = {this.state.selectWallet}/>
-            </div>
-          </div>
-        )
-    }
-
     render() {
       const { children, isLogin } = this.props
       if ( React.isValidElement(children) ) {
         return children
-      } else if (isLogin) {
-        return this.initComponent()
-      } else {
+      } else if (!isLogin) {
         return <div className="container center"><BTUnlogin /></div>
       }
+
+      let checkedStyle = {backgroundColor:'rgb(154,125,224)'}
+      let unCheckedStyle = {borderColor:'rgb(154,125,224)'}
+      let walletListPath = {
+          pathname:'/profile/wallet/walletlist',
+          query:this.state.walletList
+      }
+
+      return (
+        <div className='container column'>
+          <CustomTabBar
+            style={{position: 'relative'}}
+            onChange={this.handleChange}
+            keyMap={this.state.accountList}
+            activeKey={this.state.activeKey}
+          >
+            <Link to={walletListPath}>
+              <button className='wallet-management'>
+                <FormattedMessage {...WalletMessages.More}/>>>>
+              </button>
+            </Link>
+          </CustomTabBar>
+
+          <BTCointList className="flex" selectWallet={this.state.selectWallet}/>
+        </div>
+      )
+
 
     }
 }

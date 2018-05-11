@@ -4,6 +4,8 @@ import {message,Modal,Button,Input} from 'antd'
 import BTIpcRenderer from '../../../../tools/BTIpcRenderer'
 import * as localStore from '../../../../tools/localStore'
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
+import ColorfulButton from '@/components/BTButton/ColorfulButton'
+
 import messages from '../../../../locales/messages'
 const WalletMessages = messages.Wallet;
 
@@ -65,10 +67,13 @@ export default class BTAccountListHeader extends PureComponent{
 
     render() {
       return (
-        <div className=" accountListHeader">
-          <Button onClick={this.importAccount}>
+        <div className="route-children-bg accountListHeader flex center">
+          <ColorfulButton style={{margin: '0 20px'}}>
+            <FormattedMessage {...WalletMessages.CreateNewAccount}/>
+          </ColorfulButton>
+          <ColorfulButton style={{margin: '0 20px'}} onClick={this.importAccount}>
             <FormattedMessage {...WalletMessages.ImportTheAccount}/>
-          </Button>
+          </ColorfulButton>
           <Modal
             visible={this.state.visible}
             onOk={()=>this.onHandleOk()}

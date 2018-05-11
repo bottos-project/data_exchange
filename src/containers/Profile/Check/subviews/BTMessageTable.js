@@ -5,11 +5,9 @@ import {hashHistory} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import {getAccount} from "../../../../tools/localStore";
+import { getDateAndTime } from '@/utils/dateTimeFormat'
 
 const CheckMessages = messages.Check;
-
-
-
 
 export default class BTMessageTable extends PureComponent{
     constructor(props){
@@ -36,7 +34,9 @@ export default class BTMessageTable extends PureComponent{
                 render:(item)=>{
                     return <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
                 }},
-            { title: <FormattedMessage {...CheckMessages.DataTime}/>, dataIndex: 'createTime', key:'data_req_id' },
+            { title: <FormattedMessage {...CheckMessages.DataTime}/>, dataIndex: 'createTime', key:'data_req_id',
+              render: item => getDateAndTime(item)
+            },
             // { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username', key:'user_name' },
             { title: <FormattedMessage {...CheckMessages.View}/>,dataIndex:'asset_id',key:'x',render:(item)=>
                     <Button onClick={()=>this.lookfor(item)}>

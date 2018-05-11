@@ -1,10 +1,12 @@
 import React,{PureComponent} from 'react'
+import { connect } from 'react-redux'
 import BTFetch from '../../../utils/BTFetch'
 import "../styles.less"
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 const BlockBrowsingMessages = messages.BlockBrowsing;
-export default class BTOtherAllBlock extends PureComponent{
+
+class BTOtherAllBlock extends PureComponent{
     constructor(props){
         super(props);
         this.state={
@@ -12,7 +14,6 @@ export default class BTOtherAllBlock extends PureComponent{
             Total_BTO:'',
             Total_Trans:'',
             Total_Nodes:'',
-            Total_Block:''
         }
     }
     componentDidMount(){
@@ -33,10 +34,8 @@ export default class BTOtherAllBlock extends PureComponent{
             }
         });
 
-
-
-
     }
+
     render(){
         return (
             <div>
@@ -55,7 +54,7 @@ export default class BTOtherAllBlock extends PureComponent{
                                 <FormattedMessage {...BlockBrowsingMessages.LastBlock}/>
                             </span>
                         </div>
-                        <p>{this.props.lastBlock} </p>
+                        <p>{this.props.lastBlockNum} </p>
                     </div>
                     <div>
                         <div>
@@ -71,7 +70,7 @@ export default class BTOtherAllBlock extends PureComponent{
                                  <FormattedMessage {...BlockBrowsingMessages.TotalNodes}/>
                              </span>
                         </div>
-                        <p>{this.props.total}</p>
+                        <p>{this.props.totalNodeNum}</p>
                     </div>
                 </div>
 
@@ -79,3 +78,12 @@ export default class BTOtherAllBlock extends PureComponent{
         )
     }
 }
+
+function mapStateToProps(state) {
+  const { latestBlock, nodeInfos } = state.blockState
+  const lastBlockNum = latestBlock ? latestBlock.block_num : 0
+  const totalNodeNum = nodeInfos.length
+  return { lastBlockNum, totalNodeNum }
+}
+
+export default connect(mapStateToProps)(BTOtherAllBlock)

@@ -1,5 +1,4 @@
 import React,{PureComponent} from 'react'
-import { Link } from 'react-router'
 import BTFetch from "../../../utils/BTFetch";
 import {Table,message} from 'antd'
 import {FormattedMessage} from 'react-intl'
@@ -76,23 +75,12 @@ export default class BTOtherExchange extends PureComponent{
         const columns = this.columns(data);
         return(
             <div className="BTOtherExchange">
-                {/*<div style={{width:"100%"}}>*/}
-                <div className="blockView">
-                    <h3>
-                        <FormattedMessage {...BlockBrowsingMessages.Transaction} />
-                    </h3>
-                    <Link>
-                      <FormattedMessage {...BlockBrowsingMessages.All} />
-                      &gt;&gt;&gt;
-                    </Link>
-                </div>
-                    <Table
-                      pagination={this.pagination()}
-                      columns={columns}
-                      dataSource={this.state.data}
-                      rowKey='transaction_id'
-                    />
-                {/*</div>*/}
+              <Table
+                pagination={this.pagination()}
+                columns={columns}
+                dataSource={this.state.data}
+                rowKey='transaction_id'
+              />
             </div>
         )
     }

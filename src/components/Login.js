@@ -160,17 +160,18 @@ class Login extends PureComponent{
     }
 
     importKeyStore = () => {
-        let keyStoreObj = BTIPcRenderer.importFile()
-        if(!keyStoreObj.error){
-          console.log('keyStoreObj', keyStoreObj);
-            this.setState({
-                keyStore:keyStoreObj,
-                username:keyStoreObj.user_name
-            })
-            message.success(window.localeInfo["Header.ImportKeyStoreSuccess"])
-        }else{
-            message.error(window.localeInfo["Header.ImportKeyStoreFaild"])
-        }
+      let keyStoreInfo = BTIPcRenderer.importFile()
+      if(!keyStoreInfo.error){
+        console.log('keyStoreInfo', keyStoreInfo);
+        let keyStoreObj = JSON.parse(keyStoreInfo.result)
+        this.setState({
+          keyStore: keyStoreObj,
+          username: keyStoreInfo.username
+        })
+        message.success(window.localeInfo["Header.ImportKeyStoreSuccess"])
+      }else{
+        message.error(window.localeInfo["Header.ImportKeyStoreFaild"])
+      }
     }
 
     // keyStore文件保存

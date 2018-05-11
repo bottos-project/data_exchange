@@ -6,8 +6,7 @@ import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import BTTransaction from './BTTransaction'
 import {getAccount} from "../../../../tools/localStore";
-import BTAccountListCell from './BTAccountListCell'
-import BTAccountListHeader from './BTAccountListHeader'
+import BTCointListCell from './BTCointListCell'
 const WalletMessages = messages.Wallet;
 
 export default class BTAccountList extends PureComponent{
@@ -60,12 +59,10 @@ export default class BTAccountList extends PureComponent{
                     style={{flex:1}}
                     renderItem={(item)=>{
                         let newItem = Object.assign(item,this.props)
-                        return <BTAccountListCell {...newItem}/>
+                        return <BTCointListCell {...newItem}/>
                     }}
                 />
             </div>
         )
     }
 }
-
-

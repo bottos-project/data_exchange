@@ -35,14 +35,20 @@ ipcMain.on(ipcEventName.import_file,(event,options)=>{
                     error:'请导入正确的keystore文件'
                 }
             }else{
-                fs.readFile(filePath,'utf8',(error,result)=>{
-                    let keyStoreObj = JSON.parse(result)
-                    // TODO: 在 V3.0 版本，新的 keystore 会包含 username 字段
-                    // 下面这一段就可以删除了
-                    if (!keyStoreObj.username) {
-                      keyStoreObj.username = name
+                fs.readFile(filePath, 'utf8', (error,result) => {
+
+                  if (error) {
+                    console.error(error);
+                    event.returnValue = {
+                      error: '文件读取错误'
                     }
-                    event.returnValue = keyStoreObj
+                  }
+
+                  event.returnValue = {
+                    username: name,
+                    result
+                  }
+                  
                 })
             }
 

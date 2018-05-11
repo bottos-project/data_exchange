@@ -2,7 +2,7 @@ import React,{PureComponent} from 'react'
 import {getAccount} from "../tools/localStore";
 // import BTUploadAsset from './BTUploadAsset'
 // import messages from '../locales/messages'
-import {Icon, Modal, Radio, Select, message, Button, Input, DatePicker, Cascader } from 'antd';
+import {Icon, Modal, Radio, Select, message, Button, Input, DatePicker, Cascader, Col, Row } from 'antd';
 import BTAssetList from './BTAssetList'
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import {getBlockInfo,getDataInfo} from '../utils/BTCommonApi'
@@ -21,9 +21,7 @@ const RangePicker = DatePicker.RangePicker;
 const { TextArea } = Input;
 const RadioGroup = Radio.Group;
 
-
 const Option = Select.Option;
-
 
 
 const children = [];
@@ -57,7 +55,7 @@ export default class BTPublishAssetModal extends PureComponent{
             sample_hash:'',
             storage_hash:'',
             newdata:[],
-            date11:'',
+            date11: null,
             cascader:'',
         }
     }
@@ -74,44 +72,43 @@ export default class BTPublishAssetModal extends PureComponent{
             cascader:dates,
         });
     }
-    commitAsset(type){
-        message.destroy()
 
-        this.assetListModal.setState({
-            visible:true,
-            type:type,
-            // newdata:res.data.row,
-        });
-       /* this.setState({
+    commitAsset(type){
+
+      message.destroy()
+
+      this.assetListModal.setState({
+          visible:true,
+          type:type,
+      });
+
+      let param={
+          userName:getAccount().username,
+          random:Math.ceil(Math.random()*100),
+          signature:'0xxxx'
+      };
+
+      BTFetch('/asset/queryUploadedData','post',param).then(res=>{
+        if (res.code == 0) {
+          if (res.data.rowCount == 0) {
+            message.warning(window.localeInfo["Header.ThereIsNoFileResourceSetForTheTimeBeing"]);
+            return;
+          }
+          // return res.data.row;
+          this.setState({
             newdata:res.data.row
-        })*/
-        let param={
-            userName:getAccount().username,
-            random:Math.ceil(Math.random()*100),
-            signature:'0xxxx'
-        };
-         BTFetch('/asset/queryUploadedData','post',param)
-            .then(res=>{
-                if(res.code==0){
-                    if(res.data.rowCount==0){
-                        message.warning(window.localeInfo["Header.ThereIsNoFileResourceSetForTheTimeBeing"]);
-                        return;
-                    }
-                    // return res.data.row;
-                    this.setState({
-                        newdata:res.data.row
-                    })
-                }else{
-                    message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
-                    return;
-                }
-            })
-            .catch(error=>{
-                message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
-            })
+          })
+        } else {
+          message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
+          return;
+        }
+      }).catch(error=>{
+        message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
+      })
 
     }
-   async beFetch(){
+
+    async beFetch() {
         let param={
             userName:getAccount().username,
             random:Math.ceil(Math.random()*100),
@@ -137,16 +134,19 @@ export default class BTPublishAssetModal extends PureComponent{
                 message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
             })
     }
+
     onChange(e){
         this.setState({
             value:e.target.value
         })
     }
+
     title(e){
         this.setState({
             title:e.target.value.trim(),
         })
     }
+
     handleNumberChange = (e) => {
       var number = e.target.value
         if (isNaN(number)) {
@@ -163,6 +163,7 @@ export default class BTPublishAssetModal extends PureComponent{
         }
         this.triggerChange({ number });*/
     };
+
     triggerChange = (changedValue) => {
         // Should provide an event to pass value to Form.
         const onChange = this.props.onChange;
@@ -170,39 +171,37 @@ export default class BTPublishAssetModal extends PureComponent{
             onChange(Object.assign({}, this.state, changedValue));
         }
     };
+
     /*price(e){
         this.setState({
             price:e.target.value,
         })
     }*/
+
     description(e){
         this.setState({
             description:e.target.value.trim()
         })
     }
+
     tag1(e){
         this.setState({
             tag1:e.target.value,
         })
     }
+
     tag2(e){
         this.setState({
             tag2:e.target.value,
         })
     }
+
     tag3(e){
         this.setState({
             tag3:e.target.value,
         })
     }
-    componentDidMount(){
-        /*if(getAccount()){
-            this.setState({
-                username:getAccount().username,
-                token:getAccount().token,
-            })
-        }*/
-    }
+
     getFileName(fileInfo){
         if(fileInfo.type=='asset'){
             this.setState({
@@ -218,6 +217,7 @@ export default class BTPublishAssetModal extends PureComponent{
             })
         }
     }
+
     async updata(){
         message.destroy();
         for(const key in this.state){
@@ -336,103 +336,129 @@ export default class BTPublishAssetModal extends PureComponent{
     }
     render() {
       return (
-        <div>
+        <div className='route-children-container route-children-bg'>
           <BTAssetList  ref={(ref)=>this.assetListModal = ref} newdata={this.state.newdata} handleFile={(fileName)=>this.getFileName(fileName)}/>
           <div className="uploadAsset">
-            <div className='route-children-container-title'>
+            <h2 className='route-children-container-title'>
               <FormattedMessage {...HeaderMessages.PublishAsset}/>
-            </div>
+            </h2>
 
-            <div className="upLoad">
-              <span className="align">
+            {/* 上传样例 */}
+            <Row gutter={16}>
+              <Col className='label' span={6}>
                 <FormattedMessage {...PersonalAssetMessages.UploadTheSample}/>
-              </span>
-              <Button style={{width:"170px"}} type="upload" examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>
-                  <FormattedMessage {...PersonalAssetMessages.SetScreeningSample}/>
-              </Button>
-              <span className='filename'>{
-                  this.state.getFileNameTemp.length<=14
-                  ?
-                  this.state.getFileNameTemp
-                  :
-                  this.state.getFileNameTemp.split('.')[0].substring(0,5)+'...'+this.state.getFileNameTemp.split('.')[1]
-              }</span>
-              {/*<Button>*/}
-              {/*<span type="upload"  onClick={()=>this.commitAsset('assetTemp')}>资源库筛选</span>*/}
-              {/*</Button>*/}
-            </div>
-            <div className="upLoad">
-              <span className="align">
-                   <FormattedMessage {...PersonalAssetMessages.UploadTheAsset}/>
-              </span>
-              <Button style={{width:"170px"}} exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>
+              </Col>
+              <Col span={18}>
+                <Button type='primary' examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>
+                    <FormattedMessage {...PersonalAssetMessages.SetScreeningSample}/>
+                </Button>
+                <span className='filename'>{
+                    this.state.getFileNameTemp.length<=14
+                    ?
+                    this.state.getFileNameTemp
+                    :
+                    this.state.getFileNameTemp.split('.')[0].substring(0,5)+'...'+this.state.getFileNameTemp.split('.')[1]
+                }</span>
+              </Col>
+            </Row>
+
+            {/* 选择资产文件 */}
+            <Row gutter={16}>
+              <Col className='label' span={6}>
+                <FormattedMessage {...PersonalAssetMessages.UploadTheAsset}/>
+              </Col>
+              <Col span={18}>
+                <Button type='primary' exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>
                   <FormattedMessage {...PersonalAssetMessages.SetScreeningFile}/>
-              </Button>
-              <span className='filename'>{
+                </Button>
+                <span className='filename'>{
                   this.state.getFileName.length<=14
-                      ?
-                      this.state.getFileName
-                      :
-                      this.state.getFileName.split('.')[0].substring(0,5)+'...'+this.state.getFileName.split('.')[1]
-              }</span>
-              {/*<Button>*/}
-              {/*<span onClick={()=>this.commitAsset('asset')}>资源库筛选</span>*/}
-              {/*</Button>*/}
-            </div>
-            <div>
-              <span className="align">
+                  ?
+                  this.state.getFileName
+                  :
+                  this.state.getFileName.split('.')[0].substring(0,5)+'...'+this.state.getFileName.split('.')[1]
+                }</span>
+              </Col>
+            </Row>
+
+
+            <Row gutter={16}>
+              <Col className='label' span={6}>
                 <FormattedMessage {...PersonalAssetMessages.AssetName}/>
-              </span>
-              <Input placeholder={window.localeInfo["PersonalAsset.Name"]}  value={this.state.title} onChange={(e)=>this.title(e)} />
-            </div>
-            <div>
-              <span className="align">
+              </Col>
+              <Col span={8}>
+                <Input placeholder={window.localeInfo["PersonalAsset.Name"]} value={this.state.title} onChange={(e)=>this.title(e)} />
+              </Col>
+            </Row>
+
+            <Row gutter={16}>
+              <Col className='label' span={6}>
                 <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>
-              </span>
-              <Input placeholder={window.localeInfo["PersonalAsset.Price"]}
-                     type='number'
-                     value={this.state.number}
-                     onChange={this.handleNumberChange}/* onChange={(e)=>this.price(e)} */
-              />
-              <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
-            </div>
-            <div>
-              <span className="align">
+              </Col>
+              <Col span={8}>
+                <Input placeholder={window.localeInfo["PersonalAsset.Price"]}
+                       type='number'
+                       value={this.state.number}
+                       onChange={this.handleNumberChange}/* onChange={(e)=>this.price(e)} */
+                />
+              </Col>
+              <Col span={4}>
+                <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
+              </Col>
+            </Row>
+
+
+
+            <Row gutter={16}>
+              <Col className='label' span={6}>
                 <FormattedMessage {...PersonalAssetMessages.Deadline}/>
-              </span>
-              <DatePicker
-                  placeholder={window.localeInfo["PersonalAsset.SelectDate"]}
-                  onChange={(date,dateString)=>this.dataPicker(date,dateString)}
-                  disabledDate = {(current)=>this.disabledDate(current)}
-                  value={this.state.date11}
-              />
-            </div>
-            <div>
-              <span className="align90">
-                  <FormattedMessage {...PersonalAssetMessages.AssetType}/>
-              </span>
-              <Cascader value={this.state.cascader}
-                options={options}
-                onChange={(datas)=>this.onChangeDataAssetType(datas)}
-                placeholder={window.localeInfo["PersonalAsset.PleaseSelect"]}
-              />
-            </div>
-            <div className="featureTag">
-              <span className="align90">
+              </Col>
+              <Col span={12}>
+                <DatePicker
+                    placeholder={window.localeInfo["PersonalAsset.SelectDate"]}
+                    onChange={(date,dateString)=>this.dataPicker(date,dateString)}
+                    disabledDate = {(current)=>this.disabledDate(current)}
+                    value={this.state.date11}
+                />
+              </Col>
+            </Row>
+
+
+            <Row gutter={16}>
+              <Col className='label' span={6}>
+                <FormattedMessage {...PersonalAssetMessages.AssetType}/>
+              </Col>
+              <Col span={12}>
+                <Cascader value={this.state.cascader}
+                  options={options}
+                  onChange={(datas)=>this.onChangeDataAssetType(datas)}
+                  placeholder={window.localeInfo["PersonalAsset.PleaseSelect"]}
+                />
+              </Col>
+            </Row>
+
+            <Row className="featureTag" gutter={16}>
+              <Col className='label' span={6}>
                 <FormattedMessage {...PersonalAssetMessages.AssetFeatureTag}/>
-              </span>
-              <div>
-                <Input type="text" value={this.state.tag1} onChange={(e)=>this.tag1(e)}/>
-                <Input type="text" value={this.state.tag2} onChange={(e)=>this.tag2(e)}/>
-                <Input type="text" value={this.state.tag3} onChange={(e)=>this.tag3(e)}/>
-              </div>
-            </div>
-            <div>
-              <span className="align90">
+              </Col>
+              <Col span={12}>
+                <Row type="flex" justify="space-between">
+                  <Col span={6}><Input type="text" value={this.state.tag1} onChange={(e)=>this.tag1(e)}/></Col>
+                  <Col span={6}><Input type="text" value={this.state.tag2} onChange={(e)=>this.tag2(e)}/></Col>
+                  <Col span={6}><Input type="text" value={this.state.tag3} onChange={(e)=>this.tag3(e)}/></Col>
+                </Row>
+              </Col>
+            </Row>
+
+            <Row gutter={16}>
+              <Col className='label' span={6}>
                 <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>
-              </span>
-              <TextArea value={this.state.description} onChange={(e)=>this.description(e)} rows={4} />
-            </div>
+              </Col>
+              <Col span={12}>
+                <TextArea maxLength='120' value={this.state.description} onChange={(e)=>this.description(e)} rows={4} />
+              </Col>
+            </Row>
+
             <div className="uploadNeedSubmit marginTop">
               <ConfirmButton type="submit" onClick={(e)=>this.updata(e)}>
                 <FormattedMessage {...PersonalAssetMessages.Publish}/>

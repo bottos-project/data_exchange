@@ -5,6 +5,7 @@ import BTFetch from '../../../../utils/BTFetch'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import {getAccount} from "../../../../tools/localStore";
+import { getDateAndTime } from "@/utils/dateTimeFormat";
 
 const PersonalAssetMessages = messages.PersonalAsset;
 
@@ -40,14 +41,16 @@ export default class BTHaveBought extends PureComponent{
             },*/
            /* { title: 'fileName', dataIndex: 'fileName', key: 'fileName' },
             { title: 'fileSize', dataIndex: 'fileSize', key: 'fileSize' },*/
-            { title: <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>, dataIndex: 'description', key: 'description', render:(item)=>{
-                return <span>{item.length <= 20 ? item : item.substring(0,20)+'...'}</span>
-                }},
-            { title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date' },
-            { title: <FormattedMessage {...PersonalAssetMessages.AssetOperation}/>, dataIndex: 'storage_path', key: 'x', render: (item) =>
-                    <a onClick={()=>this.download(item)}>
-                        <Icon type="download" style={{color:"black",fontWeight:900}}/>
-                    </a>
+            { title: <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>, dataIndex: 'description', key: 'description',
+              render: (item) => <span>{item.length <= 20 ? item : item.substring(0,20)+'...'}</span>
+            },
+            { title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date',
+              render: item => getDateAndTime(item)
+            },
+            { title: <FormattedMessage {...PersonalAssetMessages.AssetOperation} />, dataIndex: 'storage_path', key: 'x',
+              render: (item) => <a onClick={()=>this.download(item)}>
+                  <Icon type="download" style={{color:"black",fontWeight:900}} />
+              </a>
             },
             /*{ title: 'From', dataIndex: '', key: 'y', render:() =>
                     <div>

@@ -17,23 +17,21 @@ const LoginMessages = messages.Login;
 const FormItem = Form.Item;
 
 
-class BTRegistSuccess extends PureComponent{
-    downloadKeystore(){
-        BTIpcRenderer.exportKeyStore(this.props.username, this.props.cryptStr);
-    }
+function BTRegistSuccess(props) {
+  function downloadKeystore() {
+    BTIpcRenderer.exportKeyStore(props.username, props.cryptStr);
+  }
 
-    render(){
-        return(
-            <div>
-                <p>
-                    <FormattedMessage {...HeaderMessages.YourAccountHasBeenRegisteredSuccessfully}/>
-                </p>
-                <Button type="primary" onClick={()=>{this.downloadKeystore()}}>
-                    <FormattedMessage {...HeaderMessages.BackupYourKeystore}/>
-                </Button>
-            </div>
-        )
-    }
+  return (
+    <div style={{textAlign: 'center'}}>
+      <p style={{margin: '20px auto', fontSize: 16}}>
+        <FormattedMessage {...HeaderMessages.YourAccountHasBeenRegisteredSuccessfully}/>
+      </p>
+      <Button type="primary" onClick={downloadKeystore}>
+        <FormattedMessage {...HeaderMessages.BackupYourKeystore}/>
+      </Button>
+    </div>
+  )
 }
 
 
@@ -48,7 +46,7 @@ const formItemLayout = {
     },
 };
 
-class Regist extends PureComponent{
+class Regist extends PureComponent {
     constructor(props){
         super(props);
         this.state = {
@@ -60,6 +58,7 @@ class Regist extends PureComponent{
             cryptStr: ''
         }
 
+        this.onHandleSubmit = this.onHandleSubmit.bind(this)
     }
 
     registSuccess({cryptStr, username}) {
@@ -253,10 +252,9 @@ class Regist extends PureComponent{
 
         <div className="register">
             <div className='route-children-container-title'><FormattedMessage {...HeaderMessages.Register}/></div>
-            <Form onSubmit={(e) => this.onHandleSubmit(e)} style={{maxWidth: 560, paddingRight: '10%'}}>
+            <Form style={{maxWidth: 560, paddingRight: '10%'}}>
 
               <FormItem {...formItemLayout} colon={false} label={<FormattedMessage {...LoginMessages.Account} />}>
-
                   {
                       getFieldDecorator('username',{})(
                           <Input placeholder={window.localeInfo["Header.PleaseEnterTheUserName"]} id="error1" />
@@ -305,7 +303,7 @@ class Regist extends PureComponent{
             </Form>
 
             <div style={{textAlign: 'center'}}>
-              <ConfirmButton htmlType="submit">
+              <ConfirmButton onClick={this.onHandleSubmit} htmlType="submit">
                 <FormattedMessage {...HeaderMessages.Register} />
               </ConfirmButton>
             </div>

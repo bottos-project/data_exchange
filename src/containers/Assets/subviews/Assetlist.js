@@ -15,6 +15,14 @@ const AssetMessages = messages.Asset;
 
 const lockTimeSecond = 20
 
+const typeMap = {
+  1: 'voice',
+  2: 'video',
+  3: 'nature',
+  4: 'picture',
+  5: 'text'
+}
+
 class Assetlist extends Component {
     constructor(props){
         super(props)
@@ -196,8 +204,13 @@ class Assetlist extends Component {
 
     render() {
         let data = this.props.list;
+        const asset_type = data.asset_type
+        if (asset_type.length == 8) {
+          var type = asset_type[5]
+        }
+        let className = 'assetList ' + typeMap[type]
         return (
-            <div className="assetList" onClick={this.handleClick}>
+            <div className={className} onClick={this.handleClick}>
                 <div className="headAndShop">
                   <h4 className='txt_cut'>
                     {data.asset_name}

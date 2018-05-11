@@ -23,7 +23,7 @@ export default class BTAssets extends Component {
     }
 
     componentDidMount() {
-        this.getPagination(1,12)
+        this.getPagination(1, 16)
     }
 
     onChange(page,pageSize) {
@@ -85,7 +85,7 @@ export default class BTAssets extends Component {
             showQuickJumper
             total={this.state.rowCount}
             defaultCurrent={1}
-            pageSize={12}
+            pageSize={16}
             onChange={this.onChange}
           />
 

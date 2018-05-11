@@ -837,6 +837,10 @@ module.exports = {
             id:"Wallet.AvailableCash",
             defaultMessage:"可用现金"
         },
+        CreateNewAccount:{
+            id:"Wallet.CreateNewAccount",
+            defaultMessage:"创建新账号"
+        },
         ImportTheAccount:{
             id:"Wallet.ImportTheAccount",
             defaultMessage:"导入账号"
