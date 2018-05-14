@@ -12,11 +12,15 @@ module.exports = {
     "Menu.DemandDetails":"Demand Details",
     "Menu.AssetDetails":"Asset Details",
     "Menu.LoginOrRegister":"Login/Register",
+    "Menu.AllBlocks":"AllBlocks",
+    "Menu.AllTransaction":"AllTransaction",
 
     //header
     "Header.Asset":"Asset",
     "Header.Demand":"Demand",
     "Header.Collect":"Favorite",
+    "Header.File":"File",
+    "Header.ProfileFile":"My File",
     "Header.Setting":"Settings",
     "Header.Logout":"Logout",
     "Header.Wallet":"Wallet",

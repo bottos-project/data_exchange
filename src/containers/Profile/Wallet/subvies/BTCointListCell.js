@@ -1,29 +1,33 @@
-
-import React,{PureComponent} from 'react'
-import BTTransaction from './BTTransaction'
-import {FormattedMessage} from 'react-intl'
+import React, { PureComponent } from 'react'
+import { Button } from 'antd'
+import TransactionForm from './BTTransaction'
+import { FormattedMessage } from 'react-intl'
 import messages from '../../../../locales/messages'
-import {Button} from 'antd'
+import BTTransitionHeight from '@/components/BTTransitionHeight'
 
 const WalletMessages = messages.Wallet;
 
 export default class BTCointListCell extends PureComponent{
-    constructor(props){
+    constructor(props) {
         super(props)
+        this.state = {
+          visible: false,
+        }
     }
 
-    transaction(){
-        this.transactionModal.setState({
-            visible:true
-        })
+    transaction() {
+      this.setState(preState => ({ visible: !preState.visible }))
+    }
+
+    onHandleCancel = () => {
+      this.setState({ visible: false })
     }
 
     render(){
       let props = this.props;
       console.log(this.props)
       return (
-        <div className="container">
-            <BTTransaction ref={(ref)=>this.transactionModal = ref} {...this.props} />
+        <div className="container column">
             <div className="container route-children-bg accountItem">
               <div className="flex accountLeft">
                   <div>
@@ -46,6 +50,9 @@ export default class BTCointListCell extends PureComponent{
                   </Button> */}
               </div>
             </div>
+            <BTTransitionHeight show={this.state.visible} height={170}>
+              <TransactionForm {...this.props} closeModal={()=>this.onHandleCancel()}/>
+            </BTTransitionHeight>
         </div>
       )
     }

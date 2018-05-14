@@ -1,6 +1,5 @@
-// import * as actionTypes from '../consts/HeaderConst'
 
-// import { SELECT_ACCOUNT } from '../actions/'
+import { SELECT_ACCOUNT } from '../actions/walletAction'
 
 const initialState = {
   selectedAccount: '',

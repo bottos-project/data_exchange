@@ -42,7 +42,6 @@
   },
   "dependencies": {
     "@bottos-project/bottos-crypto-js": "^1.0.5",
-    "antd": "^3.2.1",
     "asar": "^0.14.3",
     "buffer": "^5.1.0",
     "crypto-js": "^3.1.9-1",
@@ -56,7 +55,6 @@
     "react-intl": "^2.4.0",
     "react-redux": "^5.0.7",
     "react-router": "^3.2.0",
-    "react-scripts": "1.1.1",
     "recharts": "^1.0.0-beta.10",
     "redux": "^3.7.2"
   },
@@ -72,6 +70,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
+    "antd": "^3.2.2",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-plugin-import": "^1.6.5",
@@ -88,6 +87,7 @@
     "lodash": "^4.17.10",
     "prop-types": "^15.6.1",
     "react-hot-loader": "^4.1.1",
+    "react-transition-group": "^2.3.1",
     "style-loader": "^0.21.0",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "^4.6.0",

@@ -24,6 +24,14 @@ module.exports = {
             id:'Menu.Blocks',
             defaultMessage:'区块浏览'
         },
+        AllBlocks:{
+            id:'BlockBrowsing.AllBlocks',
+            defaultMessage:'所有区块'
+        },
+        AllTransaction:{
+            id:'BlockBrowsing.AllTransaction',
+            defaultMessage:'所有交易'
+        },
         Profile:{
             id:'Menu.Profile',
             defaultMessage:'个人中心'
@@ -55,6 +63,10 @@ module.exports = {
         ProfileNeed:{
             id:'Menu.ProfileNeed',
             defaultMessage:'个人需求'
+        },
+        ProfileFile:{
+            id:'Menu.ProfileFile',
+            defaultMessage:'我的文件'
         },
         Wallet:{
           id:'Menu.Wallet',

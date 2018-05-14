@@ -1,5 +1,6 @@
-import React,{PureComponent} from 'react'
-import {Modal,Button,Input,Form,message,InputNumber} from 'antd'
+import React, { PureComponent } from 'react'
+import PropTypes from 'prop-types';
+import { Button, Input, Form, message, InputNumber, Col, Row } from 'antd'
 import BTFetch from '../../../../utils/BTFetch';
 import {getBlockInfo} from '../../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
@@ -7,6 +8,7 @@ import messages from '../../../../locales/messages'
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import BTIPcRenderer from "../../../../tools/BTIpcRenderer";
 import BTNumberInput from '../../../../components/BTNumberInput'
+import ConfirmButton from '@/components/ConfirmButton'
 const WalletMessages = messages.Wallet;
 const FormItem = Form.Item;
 
@@ -21,42 +23,6 @@ const formItemLayout = {
     },
 };
 
-export default class BTTransaction extends PureComponent{
-    constructor(props){
-        super(props)
-        this.state = {
-            visible:false,
-            keyStore:{},
-        }
-    }
-
-    commitTransaction(){
-        this.setState({
-            visible:false
-        })
-    }
-
-    onHandleCancel(){
-        this.setState({
-            visible:false
-        })
-        this.trxFrom.resetFields()
-    }
-
-    render(){
-        return(
-            <Modal
-                visible={this.state.visible}
-                onOk={()=>this.commitTransaction()}
-                onCancel={()=>this.onHandleCancel()}
-                footer={null}
-            >
-                <TransactionForm ref={ref=>this.trxFrom = ref} {...this.props} closeModal={()=>this.onHandleCancel()}/>
-            </Modal>
-        )
-    }
-}
-
 
 class Transaction extends PureComponent{
     constructor(props){
@@ -70,7 +36,7 @@ class Transaction extends PureComponent{
     // 转账
     async onHandleSubmit(){
         message.destroy();
-        const { getFieldDecorator,getFieldsValue,getFieldValue,setFields,resetFields } = this.props.form;
+        const { getFieldDecorator,getFieldsValue,getFieldValue,setFields } = this.props.form;
         let fieldValues = getFieldsValue()
 
         if(!fieldValues.to){
@@ -166,7 +132,7 @@ class Transaction extends PureComponent{
                 message.error(window.localeInfo["Wallet.FailedToTransferAccounts"]);
                 return
             }
-            resetFields()
+
             this.props.closeModal()
         }).catch(error=>{
             message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
@@ -182,40 +148,44 @@ class Transaction extends PureComponent{
     render(){
         const { getFieldDecorator } = this.props.form;
         return(
-            <div>
-                <Form onSubmit={()=>this.onHandleSubmit()} style={{marginTop:15}}>
+            <div className='transaction-form-container route-children-bg'>
+              <Form onSubmit={()=>this.onHandleSubmit()} style={{marginTop: 25}}>
+                <Row>
+                  <Col span='18'>
                     <FormItem label={<FormattedMessage {...WalletMessages.TargetAccount}/>} {...formItemLayout}>
-                        {getFieldDecorator('to', {
-                            rules: [{ required: true, message: '请填写对方账号!' }],
-                        })(<Input />)}
+                      {getFieldDecorator('to', {
+                        rules: [{ required: true, message: '请填写对方账号!' }],
+                      })(<Input />)}
                     </FormItem>
 
                     <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout}>
-                        {getFieldDecorator('quantity', {
-                            rules: [{ required: true, message: '请填写转账金额!' }],
-                        })(<BTNumberInput value={this.state.quantity} onChange={(e)=>this.onChange(e)}/>)}
-                        <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div>
-                        {/* })(<div className="flex row"><InputNumber value={this.state.quantity} onChange={(e)=>this.onChange(e)}/><div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div></div>)} */}
+                      {getFieldDecorator('quantity', { rules: [{ required: true, message: '请填写转账金额!' }], })(
+                        <BTNumberInput value={this.state.quantity} onChange={(e)=>this.onChange(e)}/>
+                      )}
+                      <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div>
+                      {/* })(<div className="flex row"><InputNumber value={this.state.quantity} onChange={(e)=>this.onChange(e)}/><div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div></div>)} */}
                     </FormItem>
-
-                    {/**<FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
-                        {getFieldDecorator('password', {
-                            rules: [{ required: true, message: '请填写账户密码!' }],
-                        })(<Input type="password"/>)}
-                    </FormItem>**/}
-
-                    <div className="container marginRight" style={{justifyContent:'flex-end'}}>
-                        <Button onClick={()=>this.onHandleSubmit()}>
+                  </Col>
+                  <Col span='6'>
+                    <div className="container marginRight" style={{ height: 100, paddingTop: 60, paddingLeft: 30 }}>
+                        <ConfirmButton onClick={()=>this.onHandleSubmit()}>
                             <FormattedMessage {...WalletMessages.Submit}/>
-                        </Button>
+                        </ConfirmButton>
                     </div>
-                </Form>
+                  </Col>
+                </Row>
+                  {/**<FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
+                      {getFieldDecorator('password', {
+                          rules: [{ required: true, message: '请填写账户密码!' }],
+                      })(<Input type="password"/>)}
+                  </FormItem>**/}
+              </Form>
             </div>
         )
     }
 }
 
-const TransactionForm = Form.create()(Transaction)
+export default Form.create()(Transaction)
 
 // const mapStateToProps = (state) => {
 //     console.log({
