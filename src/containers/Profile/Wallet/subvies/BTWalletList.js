@@ -34,6 +34,9 @@ export default class BTWalletList extends PureComponent{
     }
 
     render() {
+      if ( React.isValidElement(this.props.children) ) {
+        return <div className='route-children-bg' style={{flexGrow: 1}}>{this.props.children}</div>
+      }
         let walletList = this.getWalletList()
         return (
             <div className="flex container column">

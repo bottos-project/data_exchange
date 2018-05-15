@@ -1,4 +1,5 @@
 import React,{PureComponent} from 'react'
+import { Link } from 'react-router'
 import {FormattedMessage} from 'react-intl'
 import {message,Modal,Button,Input} from 'antd'
 import BTIpcRenderer from '../../../../tools/BTIpcRenderer'
@@ -68,9 +69,11 @@ export default class BTAccountListHeader extends PureComponent{
     render() {
       return (
         <div className="route-children-bg accountListHeader flex center">
-          <ColorfulButton style={{margin: '0 20px'}}>
-            <FormattedMessage {...WalletMessages.CreateNewAccount}/>
-          </ColorfulButton>
+          {/* <Link to='/profile/wallet/walletlist/new'> */}
+            {/* <ColorfulButton style={{margin: '0 20px'}}>
+                <FormattedMessage {...WalletMessages.CreateNewAccount}/>
+            </ColorfulButton> */}
+          {/* </Link> */}
           <ColorfulButton style={{margin: '0 20px'}} onClick={this.importAccount}>
             <FormattedMessage {...WalletMessages.ImportTheAccount}/>
           </ColorfulButton>
