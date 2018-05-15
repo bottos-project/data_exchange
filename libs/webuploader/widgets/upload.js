@@ -532,7 +532,8 @@ define([
                         return null;
                     }
 
-                    act = CuteFile( file, opts.chunked ? opts.chunkSize : 0 );
+                    console.log('file', file);
+                    act = CuteFile( file, opts.chunked ? file.chunkSize : 0 );
                     me.stack.push(act);
                     return act.shift();
                 };

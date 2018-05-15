@@ -8,7 +8,7 @@ import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from "../../../tools/localStore";
 import uuid from 'node-uuid'
-
+import { getDateAndTime } from '@/utils/dateTimeFormat'
 import uploader from './uploader'
 
 const PersonalAssetMessages = messages.PersonalAsset;
@@ -21,8 +21,8 @@ const MegaByte = 1 << 20
 
 function beforeUpload(file) {
   // console.log('file.size', file.size)
-  // if (file.size > 2 * GigaByte) {
-  if (file.size > 200 * MegaByte) {
+  if (file.size > 2 * GigaByte) {
+  // if (file.size > 200 * MegaByte) {
     // 文件大小大于 2G
     // 不支持上传
     message.error(window.localeInfo["PersonalAsset.UploadFileSize"])
@@ -55,15 +55,16 @@ class BTMyAssetSet extends Component{
             {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size', key: 'fileSize'},
             /*{title: <FormattedMessage {...PersonalAssetMessages.AssetSampleName}/>, dataIndex: 'sampleName', key: 'sampleName'},
             {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleSize}/>, dataIndex: 'sampleSize', key: 'sampleSize'},*/
-            {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date'},
+            {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date',
+              render: item => getDateAndTime(item)
+            },
             {
-                title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_name', key: 'x', render: (item)=>{
-                    return(
-                        <a onClick={()=>this.download1(item)}>
-                            <Icon type="download"/>
-                        </a>
-                    )
-                }
+                title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_name', key: 'x',
+                render: (item) => (
+                    <a onClick={()=>this.download1(item)}>
+                        <Icon type="download"/>
+                    </a>
+                )
             },
         ];
     }
@@ -110,7 +111,8 @@ class BTMyAssetSet extends Component{
 
         // 这部分是大文件上传的逻辑，先注释掉
         // 这里是 guid 的生成
-        file.guid = new Date().getTime() + account_info.username
+        // file.guid = new Date().getTime() + account_info.username
+        file.guid = '1526371921332aaaa'
 
         // if (file.size > 200 * MegaByte) {
          // 文件大小大于 200M
@@ -352,7 +354,8 @@ class BTMyAssetSet extends Component{
 
 function mapStateToProps(state) {
   const account_info = state.headerState.account_info
-  return { account_info }
+  const fileList = state.uploaderState.fileList
+  return { account_info, fileList }
 }
 
 export default connect(mapStateToProps)(BTMyAssetSet)
