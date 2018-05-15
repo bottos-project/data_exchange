@@ -31,6 +31,7 @@ import BTWalletList from '../containers/Profile/Wallet/subvies/BTWalletList'
 import BTPublishDemand from '../components/BTPublishDemand'
 import BTPublishAssetModal from '../components/BTPublishAssetModal'
 import LoginOrRegister from '../components/LoginOrRegister'
+import Register from '../components/Register'
 
 
 class RouterMap extends PureComponent {
@@ -69,7 +70,9 @@ class RouterMap extends PureComponent {
             <Route path="need" name='ProfileNeed' breadcrumbName='Need' component={BTProfileNeed} />
             <Route path="file" name='ProfileFile' breadcrumbName='File' component={BTMyAssetSet} />
             <Route path="wallet" name='Wallet' breadcrumbName='Wallet' component={BTWallet}>
-              <Route path="walletlist" name='Walletlist' breadcrumbName='Walletlist' component={BTWalletList} />
+              <Route path="walletlist" name='Walletlist' breadcrumbName='Walletlist' component={BTWalletList}>
+                <Route path="new" name='CreateNewAccount' breadcrumbName='CreateNewAccount' component={Register} />
+              </Route>
             </Route>
             <Route path="check" name='Check' breadcrumbName='Check' component={BTCheck} />
             <Route path="collect" name='Collect' breadcrumbName='Collect' component={BTCollect} />
