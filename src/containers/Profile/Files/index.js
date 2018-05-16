@@ -11,6 +11,9 @@ import uuid from 'node-uuid'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import uploader from './uploader'
 
+import ProgressList from './ProgressList'
+import './style.less'
+
 const PersonalAssetMessages = messages.PersonalAsset;
 
 const Dragger = Upload.Dragger;
@@ -98,7 +101,7 @@ class BTMyAssetSet extends Component{
         return message.info(window.localeInfo["Header.PleaseLogInFirst"]);;
       }
         //生成文件存储路径url
-        console.log('file', file)
+        console.log('origin file', file)
         let param={
             "userName": getAccount().username,
             "fileName": file.name,
@@ -111,8 +114,6 @@ class BTMyAssetSet extends Component{
 
         // 这部分是大文件上传的逻辑，先注释掉
         // 这里是 guid 的生成
-        // file.guid = new Date().getTime() + account_info.username
-        file.guid = '1526371921332aaaa'
 
         // if (file.size > 200 * MegaByte) {
          // 文件大小大于 200M
@@ -330,9 +331,9 @@ class BTMyAssetSet extends Component{
         return(
             <div className="set">
                 <Dragger
+                  showUploadList={false}
                   beforeUpload={beforeUpload}
                   customRequest={this.customRequest}
-                  fileList={this.state.fileList}
                   >
                     <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />
@@ -341,6 +342,7 @@ class BTMyAssetSet extends Component{
                         <FormattedMessage {...PersonalAssetMessages.ClickOrDragFileToThisAreaToUpload}/>
                     </p>
                 </Dragger>
+                <ProgressList />
                 <Table
                     className="shadow radius table"
                     columns={columns}

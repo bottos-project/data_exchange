@@ -26,11 +26,17 @@ define([
                 server = opts.server,
                 formData, binary, fr;
 
+                // console.log('this', this);
+                // console.log('opts', opts);
+                // console.log('owner', owner);
+
             if ( opts.sendAsBinary ) {
                 server += opts.attachInfoToQuery !== false ? ((/\?/.test( server ) ? '&' : '?') +
                         $.param( owner._formData )) : '';
 
+                console.log('server', server);
                 binary = blob.getSource();
+                console.log('binary', binary);
             } else {
                 formData = new FormData();
                 $.each( owner._formData, function( k, v ) {
@@ -45,7 +51,6 @@ define([
                 xhr.open( opts.method, server, true );
                 xhr.withCredentials = true;
             } else {
-              console.log('server', server);
                 xhr.open( opts.method, server );
             }
 
