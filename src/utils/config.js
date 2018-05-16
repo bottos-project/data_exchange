@@ -4,6 +4,6 @@ module.exports = {
         version:'v2'
     },
     mock:{
-        base_url:"http://localhost:3005"
+        base_url:"http://192.168.8.211:8080"
     }
 }

@@ -2,7 +2,7 @@ import React, { Component, PureComponent } from 'react'
 
 import { Modal, Form, Icon, Input, Button, Radio, message, Row, Col } from 'antd'
 import BTFetch from '../utils/BTFetch'
-import BTCryptTool from '@bottos-project/bottos-crypto-js'
+import BTCryptTool from 'bottos-js-crypto'
 import './styles.less'
 import BTIpcRenderer from '../tools/BTIpcRenderer'
 import {exportFile} from '../utils/BTUtil'
@@ -12,12 +12,12 @@ import {FormattedMessage} from 'react-intl'
 import {isUserName} from '../tools/BTCheck'
 
 import ConfirmButton from './ConfirmButton'
-
 import messages from '../locales/messages'
+const msgpack = require('../lib/msgpack/msgpack')
+
 const HeaderMessages = messages.Header;
 const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
-
 
 class BTRegistSuccess extends PureComponent{
     downloadKeystore(){
@@ -85,6 +85,8 @@ class Regist extends PureComponent{
     }
 
     async onHandleSubmit(e) {
+        console.log("registbutton")
+
         e.preventDefault()
         message.destroy();
         const { getFieldsValue } = this.props.form;
@@ -107,111 +109,240 @@ class Regist extends PureComponent{
         let contactsPhone = fieldValues.contactsPhone;
         let companyName = fieldValues.companyName;
 
-        // !(new RegExp(/^{8,}$/, "g").test(password))
-        if(username==undefined){message.error(window.localeInfo["Header.PleaseEnterTheUserName"]); return}
-        if(password==undefined){message.error(window.localeInfo["Header.PleaseEnterThePassword"]); return}
-        else if(password.length < 8){
-            message.error(window.localeInfo["Header.ThePasswordShouldContainAtLeast8BitCharacters"]);
-            return;
-        }
-        if(password != surePassword){
-            message.error(window.localeInfo["Header.IncorrectPasswordEnteredTwice"]);
-            return;
-        }
+        // // !(new RegExp(/^{8,}$/, "g").test(password))
+        // if(username==undefined){message.error(window.localeInfo["Header.PleaseEnterTheUserName"]); return}
+        // if(password==undefined){message.error(window.localeInfo["Header.PleaseEnterThePassword"]); return}
+        // else if(password.length < 8){
+        //     message.error(window.localeInfo["Header.ThePasswordShouldContainAtLeast8BitCharacters"]);
+        //     return;
+        // }
+        // if(password != surePassword){
+        //     message.error(window.localeInfo["Header.IncorrectPasswordEnteredTwice"]);
+        //     return;
+        // }
 
-        // 判断验证码
+        // // 判断验证码
         // if(verificationCode==undefined){message.error(window.localeInfo["Header.PleaseEnterTheVerificationCode"]); return}
 
-        // 生成两对公私钥
-        let owner_keys = await BTCryptTool.createPubPrivateKeys();
-        let active_keys = await BTCryptTool.createPubPrivateKeys();
+        // // 生成两对公私钥
+        // let owner_keys = await BTCryptTool.createPubPrivateKeys();
+        // let active_keys = await BTCryptTool.createPubPrivateKeys();
 
-        // 两对公钥
-        let owner_pub_key = owner_keys.publicKey;
-        let active_pub_key = active_keys.publicKey;
+        // // 两对公钥
+        // let owner_pub_key = owner_keys.publicKey;
+        // let active_pub_key = active_keys.publicKey;
 
-        let owner_pub_key_str = owner_pub_key.toString()
-        let active_pub_key_str = active_pub_key.toString()
+        // let owner_pub_key_str = owner_pub_key.toString()
+        // let active_pub_key_str = active_pub_key.toString()
 
-        let owner_pub_key_param = owner_pub_key_str.slice(3,owner_pub_key_str.length)
-        let active_pub_key_param = active_pub_key_str.slice(3,active_pub_key_str.length)
+        // let owner_pub_key_param = owner_pub_key_str.slice(3,owner_pub_key_str.length)
+        // let active_pub_key_param = active_pub_key_str.slice(3,active_pub_key_str.length)
 
-        // 两对私钥
-        let owner_private_key = owner_keys.privateKey;
-        let active_private_key = active_keys.privateKey;
+        // // 两对私钥
+        // let owner_private_key = owner_keys.privateKey;
+        // let active_private_key = active_keys.privateKey;
 
-        // 两对sign时用的私钥
-        let owner_private_wif = owner_keys.privateWif;
-        let active_private_wif = active_keys.privateWif;
+        // // 两对sign时用的私钥
+        // let owner_private_wif = owner_keys.privateWif;
+        // let active_private_wif = active_keys.privateWif;
 
-        // 生成encypted_info  owner_pub_key
-        let info = {email}
-        let encypted_info = BTCryptTool.aesEncrypto(JSON.stringify(info),password);
-        let decrypted = BTCryptTool.aesDecrypto(encypted_info,password)
+        // // 生成encypted_info  owner_pub_key
+        // let info = {email}
+        // let encypted_info = BTCryptTool.aesEncrypto(JSON.stringify(info),password);
+        // let decrypted = BTCryptTool.aesDecrypto(encypted_info,password)
 
-        // 创建签名  username +owner_pub_key +active_pub_key
-        let signKey = username + owner_pub_key + active_pub_key;
-        let signature_account = BTCryptTool.sign(signKey,owner_private_wif);
+        // // 创建签名  username +owner_pub_key +active_pub_key
+        // let signKey = username + owner_pub_key + active_pub_key;
+        // let signature_account = BTCryptTool.sign(signKey,owner_private_wif);
 
-        // 创建signature_user  username +owner_pub_key +active_pub_key +info +signature_account
-        let signature_user_key = username + owner_pub_key + active_pub_key + signature_account;
-        let signature_user = BTCryptTool.sign(signature_user_key,owner_private_wif);
+        // // 创建signature_user  username +owner_pub_key +active_pub_key +info +signature_account
+        // let signature_user_key = username + owner_pub_key + active_pub_key + signature_account;
+        // let signature_user = BTCryptTool.sign(signature_user_key,owner_private_wif);
 
-        // 发送注册请求
-        let params = {};
-        params = {
-            username:username,
-            user_info:{
-                encypted_info:encypted_info.toString(),
-                user_type: this.state.user_type, // 0:个人  1:公司
-                company_name:companyName
-                // role_type, // 0:数据提供  1:数据招募 2:数据审核
+        // // 发送注册请求
+        // let params = {};
+        // params = {
+        //     username:username,
+        //     user_info:{
+        //         encypted_info:encypted_info.toString(),
+        //         user_type: this.state.user_type, // 0:个人  1:公司
+        //         company_name:companyName
+        //         // role_type, // 0:数据提供  1:数据招募 2:数据审核
+        //     },
+        //     owner_pub_key:owner_pub_key_param,
+        //     active_pub_key:active_pub_key_param,
+        //     signature_account:signature_account,
+        //     signature_user:signature_user,
+        //     id_key: this.state.id_key,
+        //     verify_value: verificationCode
+        // }
+        // // 将两对私钥加密以后存储到本地
+        // let privateKeys = {
+        //     account_name:username,
+        //     code:'0',
+        //     owner_private_key:owner_private_key.toString(),
+        //     owner_private_wif,
+        //     active_private_key:active_private_key.toString(),
+        //     active_private_wif
+        // }
+
+        // // 对两对私钥进行加密后存储成keystore文件
+        // let reqUrl = '/user/register'
+        // BTFetch(reqUrl,'POST',params)
+        // .then(response => {
+        //     if (response && response.code == '0') {
+        //         message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
+        //         let privateKeyStr = JSON.stringify(privateKeys)
+        //         let cryptStr = BTCryptTool.aesEncrypto(privateKeyStr,password)
+        //         // 创建本地用户目录
+        //         BTIpcRenderer.mkdir(username)
+        //         // 存储keystore文件到本地
+        //         BTIpcRenderer.saveKeyStore({username:username,account_name:username},cryptStr)
+
+        //         this.registSuccess({ cryptStr, username })
+        //         this.clearFields()
+        //     } else if (response && response.code=='1103') {
+        //         message.warning(window.localeInfo["Header.AccountHasAlreadyExisted"]);
+        //     } else if (response && response.code=='-8') {
+        //         // message.warning(window.localeInfo["Header.AccountHasAlreadyExisted"]);
+        //         message.warning('验证码错误');
+        //     } else {
+        //         message.error(window.localeInfo["Header.FailedRegister"]);
+        //     }
+        // })
+        // .catch(error => {
+        //     message.error(window.localeInfo["Header.FailedRegister"],error);
+        // })
+
+         let result = await this.registClick(username)
+
+        
+    }
+
+     async registClick(accountName){
+        // let paramPackStr = msgpack.encode(didParam).toString('hex')
+        let keys = BTCryptTool.createPubPrivateKeys()
+        let blockHeader = await BTFetch('/v3/user/GetBlockHeader','GET')
+        if(!(blockHeader && blockHeader.code==1)){
+            message.error('注册失败')
+            return
+        }
+
+        let data = blockHeader.data
+        let cursor_label = data.cursor_label
+        let cursor_num = data.head_block_num
+        let lifetime = data.head_block_time
+
+        // did
+        let didParam = this.getDid(accountName,keys)
+        console.log({
+            didParam
+        })
+        let arrSize = msgpack.PackArraySize(2)
+        let arrid = msgpack.PackStr16(didParam.Didid)
+        let arrStr = msgpack.PackStr16(JSON.stringify(didParam.Didinfo))
+        let len = arrSize.byteLength + arrid.byteLength + arrStr.byteLength
+        let buf = new Uint8Array(len)
+        buf = [...arrSize,...arrid,...arrStr]
+
+        let newuser = {
+            version:1,
+            cursor_num:cursor_num,
+            cursor_label:cursor_label,
+            lifetime:lifetime,
+            sender:"bottos",
+            contract:"usermng",
+            method:"reguser",
+            param: buf,
+            sig_alg:1
+        }
+
+        let signObj = this.getSign(keys,newuser)
+        newuser.param = BTCryptTool.buf2hex(buf)
+        newuser.signature = signObj.toString('hex')
+
+        let registParams = {
+            account:{
+                Name:accountName,
+                Pubkey:keys.publicKey.toString('hex')
             },
-            owner_pub_key:owner_pub_key_param,
-            active_pub_key:active_pub_key_param,
-            signature_account:signature_account,
-            signature_user:signature_user,
-            id_key: this.state.id_key,
-            verify_value: verificationCode
-        }
-        // 将两对私钥加密以后存储到本地
-        let privateKeys = {
-            account_name:username,
-            code:'0',
-            owner_private_key:owner_private_key.toString(),
-            owner_private_wif,
-            active_private_key:active_private_key.toString(),
-            active_private_wif
+            user:newuser,
+            verify_id:"123456789",
+            verify_value:"abc123"
         }
 
-        // 对两对私钥进行加密后存储成keystore文件
-        let reqUrl = '/user/register'
-        BTFetch(reqUrl,'POST',params)
-        .then(response => {
-            if (response && response.code == '0') {
-                message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
-                let privateKeyStr = JSON.stringify(privateKeys)
-                let cryptStr = BTCryptTool.aesEncrypto(privateKeyStr,password)
-                // 创建本地用户目录
-                BTIpcRenderer.mkdir(username)
-                // 存储keystore文件到本地
-                BTIpcRenderer.saveKeyStore({username:username,account_name:username},cryptStr)
-
-                this.registSuccess({ cryptStr, username })
-                this.clearFields()
-            } else if (response && response.code=='1103') {
-                message.warning(window.localeInfo["Header.AccountHasAlreadyExisted"]);
-            } else if (response && response.code=='-8') {
-                // message.warning(window.localeInfo["Header.AccountHasAlreadyExisted"]);
-                message.warning('验证码错误');
-            } else {
-                message.error(window.localeInfo["Header.FailedRegister"]);
+        console.log({registParams})
+        let registUrl = '/v3/user/register'
+        BTFetch(registUrl,'POST',registParams)
+        .then(response=>{
+            console.log({response})
+            if(response && response.code == 1){
+                message.success('注册成功')
+            }else{
+                message.error('注册失败')
             }
+        }).catch(error=>{
+            console.log({error})
+            message.error("注册失败")
         })
-        .catch(error => {
-            message.error(window.localeInfo["Header.FailedRegister"],error);
-        })
+    }
 
+    getDid(accountName,keys){
+        let publicKey = keys.publicKey
+        let privateKey = keys.privateKey
+        let publicKeyStr = publicKey.toString('hex')
+        let didid = "did:bot:"+publicKeyStr.slice(0,32)
+        let didParam = {
+            "Didid": didid, // account公钥截取前32位
+            "Didinfo": {
+                "@context": "https://bottos.org/did/v1",
+                "nameBase58": accountName,  // 当前用户名
+                "version": "0.1",  
+                "botid": didid,  // didid
+                "account": [{
+                    "nameBase58": accountName,
+                    "role": "owner",
+                    "expires": new Date().getTime()+30*24*60*60,
+                    "publicKey": publicKeyStr
+                }],
+                "control": [{
+                    "type": "OrControl",
+                    "controller": [{
+                        "botid": didid,
+                        "type": "EcdsaVerificationKey2018",
+                        "owner": didid,  // 当前用户自己
+                        "publicKey": publicKeyStr
+                    }]
+                }],
+                "service": {
+        
+                },
+                "created": new Date().getTime(),
+                "updated": new Date().getTime()
+            }
+        }
+
+        let hash = BTCryptTool.sha256(JSON.stringify(didParam))
+
+        let signature = BTCryptTool.sign(hash,privateKey)
+        didParam.signature = {
+            "type": "EcdsaVerificationKey2018",
+            "created": new Date().getTime(),
+            "creator": didid,  // 谁签名写谁的
+            "signatureValue": signature
+        }
+
+        return didParam
+    }
+
+    getSign(keys,msg){
+        let signObj = Object.assign({},msg)
+        let priKey = keys.privateKey
+        const regist_pb = require('../lib/proto/regist_pb')
+        let encodeBuf = BTCryptTool.protobufEncode(regist_pb,msg)
+        let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(encodeBuf))
+        let sign = BTCryptTool.sign(hash,priKey)
+        return sign
     }
 
     // 将两对私钥加密后存储到本地
