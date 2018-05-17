@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 
 import { Input, Button, message } from 'antd'
-import BTCryptTool from '@bottos-project/bottos-crypto-js'
+import BTCryptTool from 'bottos-js-crypto'
 import BTFetch from '../utils/BTFetch';
 import { getAccount } from '../tools/localStore'
 import { setAccountInfo } from '../redux/actions/HeaderAction'
@@ -14,6 +14,7 @@ import ConfirmButton from './ConfirmButton'
 
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
+import {queryProtoEncode} from '../lib/proto/index'
 const LoginMessages = messages.Login;
 const HeaderMessages = messages.Header;
 
@@ -33,106 +34,131 @@ class Login extends PureComponent{
 
     async onHandleUnlock(){
         message.destroy()
-        if(this.state.username==''){
-            message.error(window.localeInfo["Header.PleaseEnterTheUserName"]);
-            return
-        }
+        // if(this.state.username==''){
+        //     message.error(window.localeInfo["Header.PleaseEnterTheUserName"]);
+        //     return
+        // }
 
-        if(this.state.password == ''){
-            message.error(window.localeInfo["Header.PleaseEnterThePassword"]);
-            return
-        }
+        // if(this.state.password == ''){
+        //     message.error(window.localeInfo["Header.PleaseEnterThePassword"]);
+        //     return
+        // }
 
         let username = this.state.username;
-        let blockInfo = await this.getBlockInfo();
-        let data = await this.getDataInfo(username)
+        // let blockInfo = await this.getBlockInfo();
+        // let data = await this.getDataInfo(username)
 
-        if(!(blockInfo&&blockInfo.code=="0")) {
-            message.error(window.localeInfo["Header.LoginFailure"]);
-            return
-        }
+        // if(!(blockInfo&&blockInfo.code=="0")) {
+        //     message.error(window.localeInfo["Header.LoginFailure"]);
+        //     return
+        // }
 
-        if(!(data && data.code=="0")){
-            message.error(window.localeInfo["Header.LoginFailure"]);
-            return
-        }
+        // if(!(data && data.code=="0")){
+        //     message.error(window.localeInfo["Header.LoginFailure"]);
+        //     return
+        // }
 
-        let keyStoreResult = BTIPcRenderer.getKeyStore({
-            username:username,
-            account_name:username
-        });
+        // let keyStoreResult = BTIPcRenderer.getKeyStore({
+        //     username:username,
+        //     account_name:username
+        // });
 
-        let keyStoreObj = this.state.keyStore
+        // let keyStoreObj = this.state.keyStore
 
-        if(keyStoreObj=='' && keyStoreResult.error){
-            message.error(window.localeInfo["Header.PleaseImportTheKeystoreFirst"]);
-            return;
-        }else{
-            if(keyStoreResult.error){
-                keyStoreObj = this.state.keyStore
-            }else{
-                let keyStoreStr = keyStoreResult.result;
-                keyStoreObj = JSON.parse(keyStoreStr)
-            }
-        }
+        // if(keyStoreObj=='' && keyStoreResult.error){
+        //     message.error(window.localeInfo["Header.PleaseImportTheKeystoreFirst"]);
+        //     return;
+        // }else{
+        //     if(keyStoreResult.error){
+        //         keyStoreObj = this.state.keyStore
+        //     }else{
+        //         let keyStoreStr = keyStoreResult.result;
+        //         keyStoreObj = JSON.parse(keyStoreStr)
+        //     }
+        // }
 
         // 用密码解密keyStore
-        try{
-            let decryptoStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
-            let decryptoData = JSON.parse(decryptoStr);
-            if(decryptoData.code!='0'){
-                message.error(window.localeInfo["Header.TheWrongPassword"]);
-                return;
-            }
-            // 如果是导入的keystore，保存到本地
-            if(this.state.keyStore){this.saveKeyStore(keyStoreObj)}
-            this.setState({keyStore:''})
+        // try{
+        //     let decryptoStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
+        //     let decryptoData = JSON.parse(decryptoStr);
+        //     if(decryptoData.code!='0'){
+        //         message.error(window.localeInfo["Header.TheWrongPassword"]);
+        //         return;
+        //     }
+        //     // 如果是导入的keystore，保存到本地
+        //     if(this.state.keyStore){this.saveKeyStore(keyStoreObj)}
+        //     this.setState({keyStore:''})
+        //     let url = '/user/login'
 
-            let url = '/user/login'
+            // let params = {
+            //     ref_block_num: blockInfo.data.ref_block_num,
+            //     "ref_block_prefix": blockInfo.data.ref_block_prefix,
+            //     "expiration": blockInfo.data.expiration,
+            //     "scope": ["usermng"],
+            //     "read_scope": [],
+            //     "messages": [
+            //         {
+            //             "code": "usermng",
+            //             "type": "userlogin",
+            //             // "authorization": [{
+            //             //     "account": username,
+            //             //     "permission": "active"
+            //             // }],
+            //             authorization:[],
+            //             "data": data.data.bin
+            //         }
+            //     ],
+            //     "signatures": []
 
-            let params = {
-                ref_block_num: blockInfo.data.ref_block_num,
-                "ref_block_prefix": blockInfo.data.ref_block_prefix,
-                "expiration": blockInfo.data.expiration,
-                "scope": ["usermng"],
-                "read_scope": [],
-                "messages": [
-                    {
-                        "code": "usermng",
-                        "type": "userlogin",
-                        // "authorization": [{
-                        //     "account": username,
-                        //     "permission": "active"
-                        // }],
-                        authorization:[],
-                        "data": data.data.bin
-                    }
-                ],
-                "signatures": []
+            // }
+        //     BTFetch(url,'POST',params)
+        //     .then(response=>{
+        //         if(response && response.code=='0'){
+        //             message.success(window.localeInfo["Header.LoginSucceed"]);
+        //             let accountInfo = {
+        //                 username:decryptoData.account_name,
+        //                 token:response.token
+        //             }
+        //             this.props.setAccountInfo(accountInfo)
 
-            }
-            BTFetch(url,'POST',params)
-            .then(response=>{
-                if(response && response.code=='0'){
-                    message.success(window.localeInfo["Header.LoginSucceed"]);
-                    let accountInfo = {
-                        username:decryptoData.account_name,
-                        token:response.token
-                    }
-                    this.props.setAccountInfo(accountInfo)
+        //             hashHistory.replace('/dashboard')
 
-                    hashHistory.replace('/dashboard')
+        //             // window.location.reload()
+        //         }else{
+        //             message.error(window.localeInfo["Header.LoginFailure"]);
+        //         }
+        //     }).catch(error=>{
+        //         message.error(window.localeInfo["Header.LoginFailure"]);
+        //     })
+        // }catch(error){
+        //     message.error(window.localeInfo["Header.TheWrongPassword"]);
+        // }
 
-                    // window.location.reload()
-                }else{
-                    message.error(window.localeInfo["Header.LoginFailure"]);
-                }
-            }).catch(error=>{
-                message.error(window.localeInfo["Header.LoginFailure"]);
-            })
-        }catch(error){
-            message.error(window.localeInfo["Header.TheWrongPassword"]);
+        let signature = this.getSignature(username)
+        let params = {
+            ...signature,
+            username
         }
+        
+        let url = '/user/login'
+        BTFetch(url,'POST',params)
+        .then(response=>{
+            console.log({response})
+        }).catch(error=>{
+            console.log({error})
+        })
+    }
+
+    getSignature(username){
+        let privateKeyStr = 'e474e51e8ba5c98135d09c61d6398600206c96e3bf601c9239fe4736d68180f2'
+        let privateKey = Buffer.from(privateKeyStr,'hex') 
+        let random = window.uuid
+        let msg = {username,random}
+        let query_pb = require('../lib/proto/query_pb')
+        let loginProto = queryProtoEncode(query_pb,msg)
+        let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
+        let signature = BTCryptTool.sign(hash,privateKey).toString('hex')
+        return {signature,random}
     }
 
     // 获取区块信息

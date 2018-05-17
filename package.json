@@ -1,7 +1,7 @@
 {
   "name": "wallet",
-  "version": "3.0.0-alpha.0",
-  "publishDate": "2018-5-7",
+  "version": "2.3.0",
+  "publishDate": "2018-5-11",
   "private": true,
   "main": "main.js",
   "homepage": ".",

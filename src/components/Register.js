@@ -18,6 +18,7 @@ const msgpack = require('../lib/msgpack/msgpack')
 const HeaderMessages = messages.Header;
 const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
+const Keystore = BTCryptTool.keystore
 
 class BTRegistSuccess extends PureComponent{
     downloadKeystore(){
@@ -55,8 +56,8 @@ class Regist extends PureComponent{
         super(props);
         this.state = {
             user_type: 0,
-            img_data:'', // 验证码图片
-            id_key: '', // 验证码 id
+            verify_data:'', // 验证码图片
+            verify_id: '', // 验证码 id
             isRegistered: false,
             // 下面两个是 BTRegistSuccess 需要的参数
             username: '',
@@ -85,8 +86,6 @@ class Regist extends PureComponent{
     }
 
     async onHandleSubmit(e) {
-        console.log("registbutton")
-
         e.preventDefault()
         message.destroy();
         const { getFieldsValue } = this.props.form;
@@ -109,82 +108,20 @@ class Regist extends PureComponent{
         let contactsPhone = fieldValues.contactsPhone;
         let companyName = fieldValues.companyName;
 
-        // // !(new RegExp(/^{8,}$/, "g").test(password))
-        // if(username==undefined){message.error(window.localeInfo["Header.PleaseEnterTheUserName"]); return}
-        // if(password==undefined){message.error(window.localeInfo["Header.PleaseEnterThePassword"]); return}
-        // else if(password.length < 8){
-        //     message.error(window.localeInfo["Header.ThePasswordShouldContainAtLeast8BitCharacters"]);
-        //     return;
-        // }
-        // if(password != surePassword){
-        //     message.error(window.localeInfo["Header.IncorrectPasswordEnteredTwice"]);
-        //     return;
-        // }
+        // !(new RegExp(/^{8,}$/, "g").test(password))
+        if(username==undefined){message.error(window.localeInfo["Header.PleaseEnterTheUserName"]); return}
+        if(password==undefined){message.error(window.localeInfo["Header.PleaseEnterThePassword"]); return}
+        else if(password.length < 8){
+            message.error(window.localeInfo["Header.ThePasswordShouldContainAtLeast8BitCharacters"]);
+            return;
+        }
+        if(password != surePassword){
+            message.error(window.localeInfo["Header.IncorrectPasswordEnteredTwice"]);
+            return;
+        }
 
-        // // 判断验证码
-        // if(verificationCode==undefined){message.error(window.localeInfo["Header.PleaseEnterTheVerificationCode"]); return}
-
-        // // 生成两对公私钥
-        // let owner_keys = await BTCryptTool.createPubPrivateKeys();
-        // let active_keys = await BTCryptTool.createPubPrivateKeys();
-
-        // // 两对公钥
-        // let owner_pub_key = owner_keys.publicKey;
-        // let active_pub_key = active_keys.publicKey;
-
-        // let owner_pub_key_str = owner_pub_key.toString()
-        // let active_pub_key_str = active_pub_key.toString()
-
-        // let owner_pub_key_param = owner_pub_key_str.slice(3,owner_pub_key_str.length)
-        // let active_pub_key_param = active_pub_key_str.slice(3,active_pub_key_str.length)
-
-        // // 两对私钥
-        // let owner_private_key = owner_keys.privateKey;
-        // let active_private_key = active_keys.privateKey;
-
-        // // 两对sign时用的私钥
-        // let owner_private_wif = owner_keys.privateWif;
-        // let active_private_wif = active_keys.privateWif;
-
-        // // 生成encypted_info  owner_pub_key
-        // let info = {email}
-        // let encypted_info = BTCryptTool.aesEncrypto(JSON.stringify(info),password);
-        // let decrypted = BTCryptTool.aesDecrypto(encypted_info,password)
-
-        // // 创建签名  username +owner_pub_key +active_pub_key
-        // let signKey = username + owner_pub_key + active_pub_key;
-        // let signature_account = BTCryptTool.sign(signKey,owner_private_wif);
-
-        // // 创建signature_user  username +owner_pub_key +active_pub_key +info +signature_account
-        // let signature_user_key = username + owner_pub_key + active_pub_key + signature_account;
-        // let signature_user = BTCryptTool.sign(signature_user_key,owner_private_wif);
-
-        // // 发送注册请求
-        // let params = {};
-        // params = {
-        //     username:username,
-        //     user_info:{
-        //         encypted_info:encypted_info.toString(),
-        //         user_type: this.state.user_type, // 0:个人  1:公司
-        //         company_name:companyName
-        //         // role_type, // 0:数据提供  1:数据招募 2:数据审核
-        //     },
-        //     owner_pub_key:owner_pub_key_param,
-        //     active_pub_key:active_pub_key_param,
-        //     signature_account:signature_account,
-        //     signature_user:signature_user,
-        //     id_key: this.state.id_key,
-        //     verify_value: verificationCode
-        // }
-        // // 将两对私钥加密以后存储到本地
-        // let privateKeys = {
-        //     account_name:username,
-        //     code:'0',
-        //     owner_private_key:owner_private_key.toString(),
-        //     owner_private_wif,
-        //     active_private_key:active_private_key.toString(),
-        //     active_private_wif
-        // }
+        // 判断验证码
+        if(verificationCode==undefined){message.error(window.localeInfo["Header.PleaseEnterTheVerificationCode"]); return}
 
         // // 对两对私钥进行加密后存储成keystore文件
         // let reqUrl = '/user/register'
@@ -214,17 +151,12 @@ class Regist extends PureComponent{
         //     message.error(window.localeInfo["Header.FailedRegister"],error);
         // })
 
-         let result = await this.registClick(username)
-
-        
-    }
-
-     async registClick(accountName){
-        // let paramPackStr = msgpack.encode(didParam).toString('hex')
         let keys = BTCryptTool.createPubPrivateKeys()
-        let blockHeader = await BTFetch('/v3/user/GetBlockHeader','GET')
+        let privateKey = keys.privateKey
+        let blockHeader = await BTFetch('/user/GetBlockHeader','GET')
+
         if(!(blockHeader && blockHeader.code==1)){
-            message.error('注册失败')
+            message.error(window.localeInfo["Header.FailedRegister"]);
             return
         }
 
@@ -234,10 +166,7 @@ class Regist extends PureComponent{
         let lifetime = data.head_block_time
 
         // did
-        let didParam = this.getDid(accountName,keys)
-        console.log({
-            didParam
-        })
+        let didParam = this.getDid(username,keys)
         let arrSize = msgpack.PackArraySize(2)
         let arrid = msgpack.PackStr16(didParam.Didid)
         let arrStr = msgpack.PackStr16(JSON.stringify(didParam.Didinfo))
@@ -263,27 +192,42 @@ class Regist extends PureComponent{
 
         let registParams = {
             account:{
-                Name:accountName,
+                Name:username,
                 Pubkey:keys.publicKey.toString('hex')
             },
             user:newuser,
-            verify_id:"123456789",
-            verify_value:"abc123"
+            verify_id:this.state.verify_id,
+            verify_value:verificationCode
         }
 
-        console.log({registParams})
-        let registUrl = '/v3/user/register'
+        console.log({
+            registParams
+        })
+
+        let registUrl = '/user/register'
         BTFetch(registUrl,'POST',registParams)
         .then(response=>{
             console.log({response})
-            if(response && response.code == 1){
-                message.success('注册成功')
+            if(response){
+                if(response.code == 1){
+                    message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
+                    let keystoreObj = BTIpcRenderer.createKeystore({account:username,password,privateKey})
+                    // 创建本地用户目录
+                    BTIpcRenderer.mkdir(username)
+                    // 存储keystore文件到本地
+                    let isSaveSuccess = BTIpcRenderer.saveKeyStore({username:username,account_name:username},keystoreObj)
+                    isSaveSuccess ? message.success('keystore saved success') : message.error('keystore saved faild')
+                    this.clearFields()
+                }else if(response.code == 1001){
+                    message.warning('verify code is wrong');
+                }else{
+                    message.error(window.localeInfo["Header.FailedRegister"]);
+                }
             }else{
-                message.error('注册失败')
+                message.error(window.localeInfo["Header.FailedRegister"]);
             }
         }).catch(error=>{
-            console.log({error})
-            message.error("注册失败")
+            message.error(window.localeInfo["Header.FailedRegister"]);
         })
     }
 
@@ -295,43 +239,42 @@ class Regist extends PureComponent{
         let didParam = {
             "Didid": didid, // account公钥截取前32位
             "Didinfo": {
-                "@context": "https://bottos.org/did/v1",
-                "nameBase58": accountName,  // 当前用户名
-                "version": "0.1",  
-                "botid": didid,  // didid
-                "account": [{
-                    "nameBase58": accountName,
-                    "role": "owner",
-                    "expires": new Date().getTime()+30*24*60*60,
-                    "publicKey": publicKeyStr
-                }],
-                "control": [{
-                    "type": "OrControl",
-                    "controller": [{
-                        "botid": didid,
-                        "type": "EcdsaVerificationKey2018",
-                        "owner": didid,  // 当前用户自己
-                        "publicKey": publicKeyStr
-                    }]
-                }],
-                "service": {
+                // "@context": "https://bottos.org/did/v1",
+                // "nameBase58": accountName,  // 当前用户名
+                // "version": "0.1",  
+                // "botid": didid,  // didid
+                // "account": [{
+                //     "nameBase58": accountName,
+                //     "role": "owner",
+                //     "expires": new Date().getTime()+30*24*60*60,
+                //     "publicKey": publicKeyStr
+                // }],
+                // "control": [{
+                //     "type": "OrControl",
+                //     "controller": [{
+                //         "botid": didid,
+                //         "type": "EcdsaVerificationKey2018",
+                //         "owner": didid,  // 当前用户自己
+                //         "publicKey": publicKeyStr
+                //     }]
+                // }],
+                // "service": {
         
-                },
-                "created": new Date().getTime(),
-                "updated": new Date().getTime()
+                // },
+                // "created": new Date().getTime(),
+                // "updated": new Date().getTime()
             }
         }
 
         let hash = BTCryptTool.sha256(JSON.stringify(didParam))
 
         let signature = BTCryptTool.sign(hash,privateKey)
-        didParam.signature = {
-            "type": "EcdsaVerificationKey2018",
-            "created": new Date().getTime(),
-            "creator": didid,  // 谁签名写谁的
-            "signatureValue": signature
+        didParam.Didinfo.signature = {
+            // "type": "EcdsaVerificationKey2018",
+            // "created": new Date().getTime(),
+            // "creator": didid,  // 谁签名写谁的
+            // "signatureValue": signature.toString('hex')
         }
-
         return didParam
     }
 
@@ -345,18 +288,13 @@ class Regist extends PureComponent{
         return sign
     }
 
-    // 将两对私钥加密后存储到本地
-    // exportKeystore(privateKeys, password) {
-    //     let privateKeyStr = JSON.stringify(privateKeys)
-    //     let cryptStr = BTCryptTool.aesEncrypto(privateKeyStr,password)
-    //     this.registSuccess({
-    //         cryptStr,
-    //         isRegist:true
-    //     })
-    // }
+    createKeystore(username,password,privateKey){
+        let params = {account:username,password,privateKey}
+
+        Keystore.create(params)
+    }
 
     handleRadioChange = (e) => {
-        console.log(e.target.value);
         this.clearFields()
         this.setState({
             user_type: e.target.value,
@@ -364,28 +302,24 @@ class Regist extends PureComponent{
     }
 
     // TODO: 等后端部署了验证码功能，就可以用了
-    // requestVerificationCode = () => {
-    //
-    //   BTFetch('/user/GetVerificationCode', 'get').then(res => {
-    //     if (res.code == 1 && res.msg == 'OK') {
-    //       this.setState({
-    //         img_data: res.data.img_data,
-    //         id_key: res.data.id_key,
-    //       })
-    //       // console.log('register res', res);
-    //     } else {
-    //       console.error('请求验证码出错', res);
-    //     }
-    //   })
-    //
-    // }
+    requestVerificationCode = () => {
+    
+      BTFetch('/user/getVerify', 'get').then(res => {
+        if(res && res.code==1){
+            this.setState({
+                verify_data:res.data.verify_data,
+                verify_id:res.data.verify_id
+            })
+        }
+      })
+    
+    }
 
-    // componentDidMount() {
-    //   this.requestVerificationCode()
-    // }
+    componentDidMount() {
+      this.requestVerificationCode()
+    }
 
     render() {
-
       if (this.state.isRegistered) {
         const {cryptStr, username} = this.state
         return <BTRegistSuccess cryptStr={cryptStr} username={username} />
@@ -447,7 +381,7 @@ class Regist extends PureComponent{
                 }
 
                 {/* 这部分是验证码功能，先暂时隐藏起来 */}
-                {/* <FormItem {...formItemLayout}>
+                <FormItem {...formItemLayout}>
                   <Row gutter={8}>
                     <Col span={16}>
                       {
@@ -457,18 +391,18 @@ class Regist extends PureComponent{
                       }
                     </Col>
                     <Col span={8}>
-                      {this.state.img_data
+                      {this.state.verify_data
                         ?
                         <img height='28px'
                           style={{marginBottom: 6, cursor: 'pointer'}}
                           onClick={this.requestVerificationCode}
-                          src={this.state.img_data} />
+                          src={this.state.verify_data} />
                         :
                         <Icon type='spin' />
                       }
                     </Col>
                   </Row>
-                </FormItem> */}
+                </FormItem>
 
                 <div style={{textAlign: 'center'}}>
                     <ConfirmButton htmlType="submit">

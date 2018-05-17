@@ -3,6 +3,14 @@ const fs = require('fs')
 const appPath = app.getPath("userData");
 const {ipcEventName} = require('../utils/EventName')
 const path = require("path")
+const BTCrypto = require('bottos-js-crypto')
+
+
+// create keystore
+ipcMain.on(ipcEventName.create_keystore,(event,accountInfo)=>{
+     let keystoreObj = BTCrypto.keystore.create(accountInfo)
+     event.returnValue = keystoreObj
+})
 
 //  获取keystore文件
 ipcMain.on(ipcEventName.get_key_store,(event,accountInfo)=>{
@@ -82,11 +90,9 @@ ipcMain.on(ipcEventName.save_key_store,(event,accountInfo,params)=>{
     let keyStoreStr = JSON.stringify(params)
     try{
         fs.writeFileSync(keyStorePath,keyStoreStr)
-        dialog.showMessageBox({message:"keystore导入成功"})
+        event.returnValue = true
     }catch(error){
-        dialog.showMessageBox({
-            message:"keystore导入失败"
-        })
+        event.returnValue = false
     }
 })
 
@@ -96,12 +102,8 @@ ipcMain.on(ipcEventName.export_key_store,(event,accountName,params)=>{
     },(filePath)=>{
         try{
             fs.writeFileSync(filePath,JSON.stringify(params))
-            dialog.showMessageBox({message:"keystore导出成功"})
         }catch(error){
-            dialog.showMessageBox({
-                message:"keystore导出失败",
-                error:JSON.stringify(error)
-            })
+            event.returnValue = false
         }
     })
 })
