@@ -3,7 +3,9 @@ const electron = window.electron;
 const ipcRenderer = electron.ipcRenderer;
 const {ipcEventName} = window.eventName;
 
-
+const createKeystore = (accountInfo)=>{
+    return ipcRenderer.sendSync(ipcEventName.create_keystore,accountInfo)
+}
 /**
  * 通过keystore的文件名来
  * @param {*} fileName 要获取的keystore的文件名，不需要加.bto
@@ -22,7 +24,7 @@ const isExists = (path)=>{
 }
 
 const saveKeyStore = (accountInfo,params)=>{
-    ipcRenderer.send(ipcEventName.save_key_store,accountInfo,params)
+     return ipcRenderer.sendSync(ipcEventName.save_key_store,accountInfo,params)
 }
 
 const importFile = ()=>{
@@ -42,6 +44,7 @@ const getKeyStoreList = ()=>{
 
 
 export default {
+    createKeystore,
     getKeyStore,
     saveKeyStore,
     importFile,

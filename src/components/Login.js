@@ -2,6 +2,7 @@ import React,{PureComponent} from 'react'
 import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 
+import BTCryptTool from 'bottos-js-crypto'
 import { Icon, Input, Button, message, Row, Col } from 'antd'
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import BTFetch from '../utils/BTFetch';
@@ -15,6 +16,7 @@ import ConfirmButton from './ConfirmButton'
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
 
+import {queryProtoEncode} from '../lib/proto/index'
 const LoginMessages = messages.Login;
 const HeaderMessages = messages.Header;
 

@@ -2,7 +2,7 @@ import React, { Component, PureComponent } from 'react'
 
 import { Form, Icon, Input, Button, message, Row, Col } from 'antd'
 import BTFetch from '../utils/BTFetch'
-import BTCryptTool from '@bottos-project/bottos-crypto-js'
+import BTCryptTool from 'bottos-js-crypto'
 import './styles.less'
 import BTIpcRenderer from '../tools/BTIpcRenderer'
 import {exportFile} from '../utils/BTUtil'
@@ -10,12 +10,13 @@ import {FormattedMessage} from 'react-intl'
 import {isUserName} from '../tools/BTCheck'
 
 import ConfirmButton from './ConfirmButton'
-
 import messages from '../locales/messages'
+const msgpack = require('../lib/msgpack/msgpack')
+
 const HeaderMessages = messages.Header;
 const LoginMessages = messages.Login;
 const FormItem = Form.Item;
-
+const Keystore = BTCryptTool.keystore
 
 function BTRegistSuccess(props) {
   function downloadKeystore() {
@@ -46,12 +47,13 @@ const formItemLayout = {
     },
 };
 
-class Regist extends PureComponent {
+class Regist extends PureComponent{
     constructor(props){
         super(props);
         this.state = {
-            img_data:'', // 验证码图片
-            id_key: '', // 验证码 id
+            user_type: 0,
+            verify_data:'', // 验证码图片
+            verify_id: '', // 验证码 id
             isRegistered: false,
             // 下面两个是 BTRegistSuccess 需要的参数
             username: '',
@@ -115,138 +117,211 @@ class Regist extends PureComponent {
         }
 
         // 判断验证码
-        // if(verificationCode==undefined){message.error(window.localeInfo["Header.PleaseEnterTheVerificationCode"]); return}
+        if(verificationCode==undefined){message.error(window.localeInfo["Header.PleaseEnterTheVerificationCode"]); return}
 
-        // 生成两对公私钥
-        let owner_keys = await BTCryptTool.createPubPrivateKeys();
-        let active_keys = await BTCryptTool.createPubPrivateKeys();
+        // // 对两对私钥进行加密后存储成keystore文件
+        // let reqUrl = '/user/register'
+        // BTFetch(reqUrl,'POST',params)
+        // .then(response => {
+        //     if (response && response.code == '0') {
+        //         message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
+        //         let privateKeyStr = JSON.stringify(privateKeys)
+        //         let cryptStr = BTCryptTool.aesEncrypto(privateKeyStr,password)
+        //         // 创建本地用户目录
+        //         BTIpcRenderer.mkdir(username)
+        //         // 存储keystore文件到本地
+        //         BTIpcRenderer.saveKeyStore({username:username,account_name:username},cryptStr)
 
-        // 两对公钥
-        let owner_pub_key = owner_keys.publicKey;
-        let active_pub_key = active_keys.publicKey;
+        //         this.registSuccess({ cryptStr, username })
+        //         this.clearFields()
+        //     } else if (response && response.code=='1103') {
+        //         message.warning(window.localeInfo["Header.AccountHasAlreadyExisted"]);
+        //     } else if (response && response.code=='-8') {
+        //         // message.warning(window.localeInfo["Header.AccountHasAlreadyExisted"]);
+        //         message.warning('验证码错误');
+        //     } else {
+        //         message.error(window.localeInfo["Header.FailedRegister"]);
+        //     }
+        // })
+        // .catch(error => {
+        //     message.error(window.localeInfo["Header.FailedRegister"],error);
+        // })
 
-        let owner_pub_key_str = owner_pub_key.toString()
-        let active_pub_key_str = active_pub_key.toString()
+        let keys = BTCryptTool.createPubPrivateKeys()
+        let privateKey = keys.privateKey
+        let blockHeader = await BTFetch('/user/GetBlockHeader','GET')
 
-        let owner_pub_key_param = owner_pub_key_str.slice(3,owner_pub_key_str.length)
-        let active_pub_key_param = active_pub_key_str.slice(3,active_pub_key_str.length)
+        if(!(blockHeader && blockHeader.code==1)){
+            message.error(window.localeInfo["Header.FailedRegister"]);
+            return
+        }
 
-        // 两对私钥
-        let owner_private_key = owner_keys.privateKey;
-        let active_private_key = active_keys.privateKey;
+        let data = blockHeader.data
+        let cursor_label = data.cursor_label
+        let cursor_num = data.head_block_num
+        let lifetime = data.head_block_time
 
-        // 两对sign时用的私钥
-        let owner_private_wif = owner_keys.privateWif;
-        let active_private_wif = active_keys.privateWif;
+        // did
+        let didParam = this.getDid(username,keys)
+        let arrSize = msgpack.PackArraySize(2)
+        let arrid = msgpack.PackStr16(didParam.Didid)
+        let arrStr = msgpack.PackStr16(JSON.stringify(didParam.Didinfo))
+        let len = arrSize.byteLength + arrid.byteLength + arrStr.byteLength
+        let buf = new Uint8Array(len)
+        buf = [...arrSize,...arrid,...arrStr]
 
-        // 生成encypted_info  owner_pub_key
-        let info = {email}
-        let encypted_info = BTCryptTool.aesEncrypto(JSON.stringify(info),password);
-        let decrypted = BTCryptTool.aesDecrypto(encypted_info,password)
+        let newuser = {
+            version:1,
+            cursor_num:cursor_num,
+            cursor_label:cursor_label,
+            lifetime:lifetime,
+            sender:"bottos",
+            contract:"usermng",
+            method:"reguser",
+            param: buf,
+            sig_alg:1
+        }
 
-        // 创建签名  username +owner_pub_key +active_pub_key
-        let signKey = username + owner_pub_key + active_pub_key;
-        let signature_account = BTCryptTool.sign(signKey,owner_private_wif);
+        let signObj = this.getSign(keys,newuser)
+        newuser.param = BTCryptTool.buf2hex(buf)
+        newuser.signature = signObj.toString('hex')
 
-        // 创建signature_user  username +owner_pub_key +active_pub_key +info +signature_account
-        let signature_user_key = username + owner_pub_key + active_pub_key + signature_account;
-        let signature_user = BTCryptTool.sign(signature_user_key,owner_private_wif);
-
-        // 发送注册请求
-        let params = {};
-        params = {
-            username:username,
-            user_info:{
-                encypted_info:encypted_info.toString(),
-                // role_type, // 0:数据提供  1:数据招募 2:数据审核
+        let registParams = {
+            account:{
+                Name:username,
+                Pubkey:keys.publicKey.toString('hex')
             },
-            owner_pub_key:owner_pub_key_param,
-            active_pub_key:active_pub_key_param,
-            signature_account:signature_account,
-            signature_user:signature_user,
-            id_key: this.state.id_key,
-            verify_value: verificationCode
-        }
-        // 将两对私钥加密以后存储到本地
-        let privateKeys = {
-            account_name:username,
-            code:'0',
-            owner_private_key:owner_private_key.toString(),
-            owner_private_wif,
-            active_private_key:active_private_key.toString(),
-            active_private_wif
+            user:newuser,
+            verify_id:this.state.verify_id,
+            verify_value:verificationCode
         }
 
-        // 对两对私钥进行加密后存储成keystore文件
-        let reqUrl = '/user/register'
-        BTFetch(reqUrl,'POST',params)
-        .then(response => {
-            if (response && response.code == '0') {
-                message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
-                let privateKeyStr = JSON.stringify(privateKeys)
-                let cryptStr = BTCryptTool.aesEncrypto(privateKeyStr,password)
-                // 创建本地用户目录
-                BTIpcRenderer.mkdir(username)
-                // 存储keystore文件到本地
-                BTIpcRenderer.saveKeyStore({username:username,account_name:username},cryptStr)
+        console.log({
+            registParams
+        })
 
-                this.registSuccess({ cryptStr, username })
-                this.clearFields()
-            } else if (response && response.code=='1103') {
-                message.warning(window.localeInfo["Header.AccountHasAlreadyExisted"]);
-            } else if (response && response.code=='-8') {
-                // message.warning(window.localeInfo["Header.AccountHasAlreadyExisted"]);
-                message.warning('验证码错误');
-            } else {
+        let registUrl = '/user/register'
+        BTFetch(registUrl,'POST',registParams)
+        .then(response=>{
+            console.log({response})
+            if(response){
+                if(response.code == 1){
+                    message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
+                    let keystoreObj = BTIpcRenderer.createKeystore({account:username,password,privateKey})
+                    // 创建本地用户目录
+                    BTIpcRenderer.mkdir(username)
+                    // 存储keystore文件到本地
+                    let isSaveSuccess = BTIpcRenderer.saveKeyStore({username:username,account_name:username},keystoreObj)
+                    isSaveSuccess ? message.success('keystore saved success') : message.error('keystore saved faild')
+                    this.clearFields()
+                }else if(response.code == 1001){
+                    message.warning('verify code is wrong');
+                }else{
+                    message.error(window.localeInfo["Header.FailedRegister"]);
+                }
+            }else{
                 message.error(window.localeInfo["Header.FailedRegister"]);
             }
+        }).catch(error=>{
+            message.error(window.localeInfo["Header.FailedRegister"]);
         })
-        .catch(error => {
-            message.error(window.localeInfo["Header.FailedRegister"],error);
+    }
+
+    getDid(accountName,keys){
+        let publicKey = keys.publicKey
+        let privateKey = keys.privateKey
+        let publicKeyStr = publicKey.toString('hex')
+        let didid = "did:bot:"+publicKeyStr.slice(0,32)
+        let didParam = {
+            "Didid": didid, // account公钥截取前32位
+            "Didinfo": {
+                // "@context": "https://bottos.org/did/v1",
+                // "nameBase58": accountName,  // 当前用户名
+                // "version": "0.1",
+                // "botid": didid,  // didid
+                // "account": [{
+                //     "nameBase58": accountName,
+                //     "role": "owner",
+                //     "expires": new Date().getTime()+30*24*60*60,
+                //     "publicKey": publicKeyStr
+                // }],
+                // "control": [{
+                //     "type": "OrControl",
+                //     "controller": [{
+                //         "botid": didid,
+                //         "type": "EcdsaVerificationKey2018",
+                //         "owner": didid,  // 当前用户自己
+                //         "publicKey": publicKeyStr
+                //     }]
+                // }],
+                // "service": {
+
+                // },
+                // "created": new Date().getTime(),
+                // "updated": new Date().getTime()
+            }
+        }
+
+        let hash = BTCryptTool.sha256(JSON.stringify(didParam))
+
+        let signature = BTCryptTool.sign(hash,privateKey)
+        didParam.Didinfo.signature = {
+            // "type": "EcdsaVerificationKey2018",
+            // "created": new Date().getTime(),
+            // "creator": didid,  // 谁签名写谁的
+            // "signatureValue": signature.toString('hex')
+        }
+        return didParam
+    }
+
+    getSign(keys,msg){
+        let signObj = Object.assign({},msg)
+        let priKey = keys.privateKey
+        const regist_pb = require('../lib/proto/regist_pb')
+        let encodeBuf = BTCryptTool.protobufEncode(regist_pb,msg)
+        let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(encodeBuf))
+        let sign = BTCryptTool.sign(hash,priKey)
+        return sign
+    }
+
+    createKeystore(username,password,privateKey){
+        let params = {account:username,password,privateKey}
+
+        Keystore.create(params)
+    }
+
+    handleRadioChange = (e) => {
+        this.clearFields()
+        this.setState({
+            user_type: e.target.value,
         })
+    }
+
+    // TODO: 等后端部署了验证码功能，就可以用了
+    requestVerificationCode = () => {
+
+      BTFetch('/user/getVerify', 'get').then(res => {
+        if(res && res.code==1){
+            this.setState({
+                verify_data:res.data.verify_data,
+                verify_id:res.data.verify_id
+            })
+        }
+      })
 
     }
 
-    // 将两对私钥加密后存储到本地
-    // exportKeystore(privateKeys, password) {
-    //     let privateKeyStr = JSON.stringify(privateKeys)
-    //     let cryptStr = BTCryptTool.aesEncrypto(privateKeyStr,password)
-    //     this.registSuccess({
-    //         cryptStr,
-    //         isRegist:true
-    //     })
-    // }
-
-
-    // TODO: 等后端部署了验证码功能，就可以用了
-    // requestVerificationCode = () => {
-    //
-    //   BTFetch('/user/GetVerificationCode', 'get').then(res => {
-    //     if (res.code == 1 && res.msg == 'OK') {
-    //       this.setState({
-    //         img_data: res.data.img_data,
-    //         id_key: res.data.id_key,
-    //       })
-    //       // console.log('register res', res);
-    //     } else {
-    //       console.error('请求验证码出错', res);
-    //     }
-    //   })
-    //
-    // }
-    //
-    // componentDidMount() {
-    //   this.requestVerificationCode()
-    // }
+    componentDidMount() {
+      this.requestVerificationCode()
+    }
 
     render() {
-
       if (this.state.isRegistered) {
         const {cryptStr, username} = this.state
         return <BTRegistSuccess cryptStr={cryptStr} username={username} />
       }
 
-      const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+        const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
 
       return (
 
@@ -276,29 +351,29 @@ class Regist extends PureComponent {
                   }
               </FormItem>
 
-              {/* 这部分是验证码功能，先暂时隐藏起来 */}
-              {/* <FormItem {...formItemLayout}>
-                <Row gutter={8}>
-                  <Col span={16}>
-                    {
-                      getFieldDecorator('verificationCode', {}) (
-                        <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} id="error1"/>
-                      )
-                    }
-                  </Col>
-                  <Col span={8}>
-                    {this.state.img_data
-                      ?
-                      <img height='28px'
-                        style={{marginBottom: 6, cursor: 'pointer'}}
-                        onClick={this.requestVerificationCode}
-                        src={this.state.img_data} />
-                      :
-                      <Icon type='spin' />
-                    }
-                  </Col>
-                </Row>
-              </FormItem> */}
+                {/* 这部分是验证码功能，先暂时隐藏起来 */}
+                <FormItem {...formItemLayout}>
+                  <Row gutter={8}>
+                    <Col span={16}>
+                      {
+                        getFieldDecorator('verificationCode', {}) (
+                          <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} id="error1"/>
+                        )
+                      }
+                    </Col>
+                    <Col span={8}>
+                      {this.state.verify_data
+                        ?
+                        <img height='28px'
+                          style={{marginBottom: 6, cursor: 'pointer'}}
+                          onClick={this.requestVerificationCode}
+                          src={this.state.verify_data} />
+                        :
+                        <Icon type='spin' />
+                      }
+                    </Col>
+                  </Row>
+                </FormItem>
 
             </Form>
 
