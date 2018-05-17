@@ -8,9 +8,9 @@ exports.registProtoEncode = (protojs,msg)=>{
     ProtoMsg.setSender(msg.sender)
     ProtoMsg.setContract(msg.contract)
     ProtoMsg.setMethod(msg.method)
-    ProtoMsg.setParam(msg.param)
+    ProtoMsg.setParam(Uint8Array.from(msg.param))
     ProtoMsg.setSigAlg(msg.sig_alg)
-    ProtoMsg.setSignature(msg.signature)
+    // ProtoMsg.setSignature(msg.signature)
 
     return ProtoMsg.serializeBinary();
 }

@@ -277,8 +277,8 @@ class Regist extends PureComponent{
     getSign(keys,msg){
         let signObj = Object.assign({},msg)
         let priKey = keys.privateKey
-        const regist_pb = require('../lib/proto/regist_pb')
-        let encodeBuf = BTCryptTool.protobufEncode(regist_pb,msg)
+        const message_pb = require('../lib/proto/message_pb')
+        let encodeBuf = BTCryptTool.protobufEncode(message_pb,msg)
         let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(encodeBuf))
         let sign = BTCryptTool.sign(hash,priKey)
         return sign

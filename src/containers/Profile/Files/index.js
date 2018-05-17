@@ -9,6 +9,7 @@ import messages from '../../../locales/messages'
 import {getAccount} from "../../../tools/localStore";
 import uuid from 'node-uuid'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
+import Base from 'webuploader/base'
 import uploader from './uploader'
 
 import ProgressList from './ProgressList'
@@ -55,7 +56,9 @@ class BTMyAssetSet extends Component{
                        {item.length < 30? item:item.substring(0,30)+'...'}
                     </span>
                 }},
-            {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size', key: 'fileSize'},
+            {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size', key: 'fileSize',
+              render: size => Base.formatSize( size )
+            },
             /*{title: <FormattedMessage {...PersonalAssetMessages.AssetSampleName}/>, dataIndex: 'sampleName', key: 'sampleName'},
             {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleSize}/>, dataIndex: 'sampleSize', key: 'sampleSize'},*/
             {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date',
