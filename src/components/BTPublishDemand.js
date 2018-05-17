@@ -9,6 +9,7 @@ import messages from '../locales/messages'
 import {getAccount} from '../tools/localStore'
 import uuid from 'node-uuid'
 import ConfirmButton from './ConfirmButton'
+import { toFixedWithoutZero } from '@/utils/number'
 
 const Option = Select.Option;
 
@@ -104,13 +105,14 @@ export default class BTPublishDemand extends PureComponent{
     handleNumberChange = (e) => {
         message.destroy();
         var number = e.target.value
-        // console.log('number', number);
         if (isNaN(number)) {
           return;
         }
         if (number >= 1e7) {
           number = 1e7 - 1
         }
+        number = toFixedWithoutZero(number, 6)
+        console.log('number', number);
 
         this.setState({number})
     };
