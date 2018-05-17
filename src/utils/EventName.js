@@ -6,7 +6,8 @@ const ipcEventName = {
     import_file_reply:'import-file-reply',
     key_store_list:'key-store-list',
     export_key_store:'export_key_store',
-    mkdir:'mkdir'
+    mkdir:'mkdir',
+    create_keystore:"create_keystore"
 }
 
 module.exports = {
