@@ -1,4 +1,4 @@
-exports.registProtoEncode = (protojs,msg)=>{
+exports.messageProtoEncode = (protojs,msg)=>{
     const ProtoMsg = new protojs.Message()
 
     ProtoMsg.setVersion(msg.version)
@@ -10,7 +10,6 @@ exports.registProtoEncode = (protojs,msg)=>{
     ProtoMsg.setMethod(msg.method)
     ProtoMsg.setParam(Uint8Array.from(msg.param))
     ProtoMsg.setSigAlg(msg.sig_alg)
-    // ProtoMsg.setSignature(msg.signature)
 
     return ProtoMsg.serializeBinary();
 }

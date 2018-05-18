@@ -11,6 +11,7 @@ import {isUserName} from '../tools/BTCheck'
 
 import ConfirmButton from './ConfirmButton'
 import messages from '../locales/messages'
+import {messageProtoEncode} from '../lib/proto/index'
 const msgpack = require('../lib/msgpack/msgpack')
 
 const HeaderMessages = messages.Header;
@@ -79,6 +80,7 @@ class Regist extends PureComponent{
             password:'',
             newpassword:'',
             email:'',
+            verificationCode:''
         })
     }
 
@@ -118,35 +120,6 @@ class Regist extends PureComponent{
 
         // 判断验证码
         if(verificationCode==undefined){message.error(window.localeInfo["Header.PleaseEnterTheVerificationCode"]); return}
-
-        // // 对两对私钥进行加密后存储成keystore文件
-        // let reqUrl = '/user/register'
-        // BTFetch(reqUrl,'POST',params)
-        // .then(response => {
-        //     if (response && response.code == '0') {
-        //         message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
-        //         let privateKeyStr = JSON.stringify(privateKeys)
-        //         let cryptStr = BTCryptTool.aesEncrypto(privateKeyStr,password)
-        //         // 创建本地用户目录
-        //         BTIpcRenderer.mkdir(username)
-        //         // 存储keystore文件到本地
-        //         BTIpcRenderer.saveKeyStore({username:username,account_name:username},cryptStr)
-
-        //         this.registSuccess({ cryptStr, username })
-        //         this.clearFields()
-        //     } else if (response && response.code=='1103') {
-        //         message.warning(window.localeInfo["Header.AccountHasAlreadyExisted"]);
-        //     } else if (response && response.code=='-8') {
-        //         // message.warning(window.localeInfo["Header.AccountHasAlreadyExisted"]);
-        //         message.warning('验证码错误');
-        //     } else {
-        //         message.error(window.localeInfo["Header.FailedRegister"]);
-        //     }
-        // })
-        // .catch(error => {
-        //     message.error(window.localeInfo["Header.FailedRegister"],error);
-        // })
-
         let keys = BTCryptTool.createPubPrivateKeys()
         let privateKey = keys.privateKey
         let blockHeader = await BTFetch('/user/GetBlockHeader','GET')
@@ -196,14 +169,9 @@ class Regist extends PureComponent{
             verify_value:verificationCode
         }
 
-        console.log({
-            registParams
-        })
-
         let registUrl = '/user/register'
         BTFetch(registUrl,'POST',registParams)
         .then(response=>{
-            console.log({response})
             if(response){
                 if(response.code == 1){
                     message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
@@ -235,30 +203,30 @@ class Regist extends PureComponent{
         let didParam = {
             "Didid": didid, // account公钥截取前32位
             "Didinfo": {
-                // "@context": "https://bottos.org/did/v1",
-                // "nameBase58": accountName,  // 当前用户名
-                // "version": "0.1",
-                // "botid": didid,  // didid
-                // "account": [{
-                //     "nameBase58": accountName,
-                //     "role": "owner",
-                //     "expires": new Date().getTime()+30*24*60*60,
-                //     "publicKey": publicKeyStr
-                // }],
-                // "control": [{
-                //     "type": "OrControl",
-                //     "controller": [{
-                //         "botid": didid,
-                //         "type": "EcdsaVerificationKey2018",
-                //         "owner": didid,  // 当前用户自己
-                //         "publicKey": publicKeyStr
-                //     }]
-                // }],
-                // "service": {
+                "@context": "https://bottos.org/did/v1",
+                "nameBase58": accountName,  // 当前用户名
+                "version": "0.1",
+                "botid": didid,  // didid
+                "account": [{
+                    "nameBase58": accountName,
+                    "role": "owner",
+                    "expires": new Date().getTime()+30*24*60*60,
+                    "publicKey": publicKeyStr
+                }],
+                "control": [{
+                    "type": "OrControl",
+                    "controller": [{
+                        "botid": didid,
+                        "type": "EcdsaVerificationKey2018",
+                        "owner": didid,  // 当前用户自己
+                        "publicKey": publicKeyStr
+                    }]
+                }],
+                "service": {
 
-                // },
-                // "created": new Date().getTime(),
-                // "updated": new Date().getTime()
+                },
+                "created": new Date().getTime(),
+                "updated": new Date().getTime()
             }
         }
 
@@ -266,10 +234,10 @@ class Regist extends PureComponent{
 
         let signature = BTCryptTool.sign(hash,privateKey)
         didParam.Didinfo.signature = {
-            // "type": "EcdsaVerificationKey2018",
-            // "created": new Date().getTime(),
-            // "creator": didid,  // 谁签名写谁的
-            // "signatureValue": signature.toString('hex')
+            "type": "EcdsaVerificationKey2018",
+            "created": new Date().getTime(),
+            "creator": didid,  // 谁签名写谁的
+            "signatureValue": signature.toString('hex')
         }
         return didParam
     }
@@ -278,7 +246,7 @@ class Regist extends PureComponent{
         let signObj = Object.assign({},msg)
         let priKey = keys.privateKey
         const message_pb = require('../lib/proto/message_pb')
-        let encodeBuf = BTCryptTool.protobufEncode(message_pb,msg)
+        let encodeBuf = messageProtoEncode(message_pb,msg)
         let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(encodeBuf))
         let sign = BTCryptTool.sign(hash,priKey)
         return sign
@@ -352,7 +320,7 @@ class Regist extends PureComponent{
               </FormItem>
 
                 {/* 这部分是验证码功能，先暂时隐藏起来 */}
-                <FormItem {...formItemLayout}>
+                <FormItem {...formItemLayout} label={<FormattedMessage {...LoginMessages.VerifyCode} />}>
                   <Row gutter={8}>
                     <Col span={16}>
                       {
