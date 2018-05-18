@@ -46,7 +46,6 @@ ipcMain.on(ipcEventName.import_file,(event,options)=>{
             }else{
                 fs.readFile(filePath, 'utf8', (error,result) => {
                   if (error) {
-                    console.error(error);
                     event.returnValue = {
                       error: '文件读取错误'
                     }
@@ -60,7 +59,6 @@ ipcMain.on(ipcEventName.import_file,(event,options)=>{
 
                 })
             }
-
         }else{
             event.returnValue = {
                 error:'read file failure'
