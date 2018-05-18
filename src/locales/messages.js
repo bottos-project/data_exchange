@@ -223,6 +223,10 @@ module.exports = {
         ImportTheKeyStore:{
             id:'Login.ImportTheKeyStore',
             defaultMessage:'导入Keystore文件'
+        },
+        VerifyCode:{
+            id:"Login.VerifyCode",
+            defaultMessage:'验证码'
         }
     },
     Demand:{

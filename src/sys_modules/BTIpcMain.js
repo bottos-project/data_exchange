@@ -4,6 +4,7 @@ const appPath = app.getPath("userData");
 const {ipcEventName} = require('../utils/EventName')
 const path = require("path")
 const BTCrypto = require('bottos-js-crypto')
+const Keystore = BTCrypto.keystore
 
 
 // create keystore
@@ -24,7 +25,7 @@ ipcMain.on(ipcEventName.get_key_store,(event,accountInfo)=>{
             }
         }else{
             let keyStoreObj = JSON.parse(result)
-            event.returnValue = {error,result}
+            event.returnValue = {error,keyStoreObj}
         }
     })
 })
@@ -44,7 +45,6 @@ ipcMain.on(ipcEventName.import_file,(event,options)=>{
                 }
             }else{
                 fs.readFile(filePath, 'utf8', (error,result) => {
-
                   if (error) {
                     console.error(error);
                     event.returnValue = {
@@ -130,5 +130,19 @@ ipcMain.on(ipcEventName.key_store_list,(event,username)=>{
         event.returnValue = result
     }catch(error){
         event.returnValue = []
+    }
+})
+
+ipcMain.on(ipcEventName.decryptKeystore,(event,params)=>{
+    try{
+        let privateKey = Keystore.recover(params.password,params.keyStoreObj).toString('hex')
+        event.returnValue = {
+            error:null,
+            privateKey
+        }
+    }catch(error){
+        event.returnValue = {
+            error
+        }
     }
 })

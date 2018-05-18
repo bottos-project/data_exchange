@@ -67,6 +67,7 @@ module.exports = {
     "Login.Password":"Password",
     "Login.ConfirmPassword":"Confirm Password",
     "Login.ImportTheKeyStore":"Import The KeyStore",
+    "Login.VerifyCode":"VerifyCode",
 
     //dashboard
     "Dashboard.Dashboard":"Dashboard",

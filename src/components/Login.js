@@ -4,18 +4,14 @@ import { hashHistory } from 'react-router'
 
 import BTCryptTool from 'bottos-js-crypto'
 import { Icon, Input, Button, message, Row, Col } from 'antd'
-import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import BTFetch from '../utils/BTFetch';
 import { getAccount } from '../tools/localStore'
 import { setAccountInfo } from '../redux/actions/HeaderAction'
 import BTIPcRenderer from '../tools/BTIpcRenderer'
 import {importFile} from '../utils/BTUtil'
-
 import ConfirmButton from './ConfirmButton'
-
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
-
 import {queryProtoEncode} from '../lib/proto/index'
 const LoginMessages = messages.Login;
 const HeaderMessages = messages.Header;
@@ -30,11 +26,30 @@ class Login extends PureComponent{
             username: '',
             password: '',
             keyStore: null,
-
+            verify_data:'',
+            verify_id:'',
+            verify_code:''
         }
 
         this.onHandleUnlock = this.onHandleUnlock.bind(this)
     }
+
+    componentDidMount(){
+        this.requestVerificationCode()
+    }
+
+    requestVerificationCode = () => {
+
+        BTFetch('/user/getVerify', 'get').then(res => {
+          if(res && res.code==1){
+              this.setState({
+                  verify_data:res.data.verify_data,
+                  verify_id:res.data.verify_id
+              })
+          }
+        })
+  
+      }
 
     async onHandleUnlock(){
         message.destroy()
@@ -48,7 +63,9 @@ class Login extends PureComponent{
             return
         }
 
+
         let username = this.state.username;
+        let password = this.state.password;
         let blockInfo = await this.getBlockInfo();
 
         if(!(blockInfo&&blockInfo.code=="0")) {
@@ -62,83 +79,53 @@ class Login extends PureComponent{
             return
         }
 
-        let keyStoreResult = BTIPcRenderer.getKeyStore({
-            username:username,
-            account_name:username
-        });
-
         let keyStoreObj = this.state.keyStore
-
-        if (keyStoreObj == '' && keyStoreResult.error) {
-            message.error(window.localeInfo["Header.PleaseImportTheKeystoreFirst"]);
+        let result = BTIPcRenderer.decryptKeystore({password,keyStoreObj})
+        if(result.error){
+            message.error(window.localeInfo["Header.TheWrongPassword"]);
             return;
-        } else {
-          // WARNING: 这里的逻辑是，如果本地 userData 文件夹内的 keystore 文件存在
-          // 那么就读这个文件，手动导入的文件无关
-          // 如果这个文件被篡改的话，那么这个用户就无法登陆了
-            if (!keyStoreResult.error) {
-                let keyStoreStr = keyStoreResult.result;
-                keyStoreObj = JSON.parse(keyStoreStr)
-            }
         }
 
-        // 用密码解密keyStore
-        try{
-            let decryptoStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
-            let decryptoData = JSON.parse(decryptoStr);
-            if(decryptoData.code!='0'){
-                message.error(window.localeInfo["Header.TheWrongPassword"]);
-                return;
-            }
-            // 如果是导入的keystore，保存到本地
-            if(this.state.keyStore){this.saveKeyStore(keyStoreObj)}
-            this.setState({keyStore:''})
+        let privateKey = result.privateKey;
 
-            let url = '/user/login'
+        let signature = this.getSignature(username,privateKey)
+        let params = {
+            ...signature,
+            username,
+            verify_id:this.state.verify_id,
+            verify_value:this.state.verify_code
+        }
 
-            let params = {
-                ref_block_num: blockInfo.data.ref_block_num,
-                "ref_block_prefix": blockInfo.data.ref_block_prefix,
-                "expiration": blockInfo.data.expiration,
-                "scope": ["usermng"],
-                "read_scope": [],
-                "messages": [
-                    {
-                        "code": "usermng",
-                        "type": "userlogin",
-                        // "authorization": [{
-                        //     "account": username,
-                        //     "permission": "active"
-                        // }],
-                        authorization:[],
-                        "data": data.data.bin
-                    }
-                ],
-                "signatures": []
-
-            }
-            BTFetch(url,'POST',params)
+        let url = '/user/login'
+        BTFetch(url,'POST',params)
             .then(response=>{
-                if(response && response.code=='0'){
-                    message.success(window.localeInfo["Header.LoginSucceed"]);
-                    let accountInfo = {
-                        username:decryptoData.account_name,
-                        token:response.token
+                if(response){
+                    if(response && response.code==1){
+                        message.success(window.localeInfo["Header.LoginSucceed"])
+                        let accountInfo = {username}
+                        this.props.setAccountInfo(accountInfo)
+                        hashHistory.push('/profile/asset')
+                    }else if(response.code==1001){
+                        message.warning('verify code is wrong');
+                    }else{
+                        message.error(window.localeInfo["Header.LoginFailure"]);
                     }
-                    this.props.setAccountInfo(accountInfo)
-
-                    hashHistory.push('/profile/asset')
-
-                    // window.location.reload()
-                }else{
-                    message.error(window.localeInfo["Header.LoginFailure"]);
                 }
             }).catch(error=>{
                 message.error(window.localeInfo["Header.LoginFailure"]);
             })
-        }catch(error){
-            message.error(window.localeInfo["Header.TheWrongPassword"]);
-        }
+    }
+
+
+    getSignature(username,privateKeyStr){
+        let privateKey = Buffer.from(privateKeyStr,'hex') 
+        let random = window.uuid
+        let msg = {username,random}
+        let query_pb = require('../lib/proto/query_pb')
+        let loginProto = queryProtoEncode(query_pb,msg)
+        let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
+        let signature = BTCryptTool.sign(hash,privateKey).toString('hex')
+       return {signature,random}
     }
 
     // 获取区块信息
@@ -164,7 +151,6 @@ class Login extends PureComponent{
     importKeyStore = () => {
       let keyStoreInfo = BTIPcRenderer.importFile()
       if(!keyStoreInfo.error){
-        console.log('keyStoreInfo', keyStoreInfo);
         let keyStoreObj = JSON.parse(keyStoreInfo.result)
         this.setState({
           keyStore: keyStoreObj,
@@ -245,6 +231,26 @@ class Login extends PureComponent{
               <Input type="password" placeholder={window.localeInfo["Header.PleaseEnterThePassword"]} className="marginRight" value={this.state.password} onChange={(e)=>{this.setState({password:e.target.value})}}/>
             </Col>
           </Row>
+
+          <Row style={rowStyle}>
+                <Col span={5} style={{ textAlign: 'right' }}>
+                    <span className="label"><FormattedMessage {...LoginMessages.VerifyCode} /></span>
+                </Col>
+                <Col span={7}>
+                    <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} className="marginRight" onChange={(e)=>{this.setState({verify_code:e.target.value})}}/>
+                </Col>
+                <Col span={8}>
+                    {this.state.verify_data
+                    ?
+                    <img height='28px'
+                        style={{marginBottom: 6, cursor: 'pointer'}}
+                        onClick={this.requestVerificationCode}
+                        src={this.state.verify_data} />
+                    :
+                    <Icon type='spin' style={{backgroundColor:'red'}}/>
+                    }
+                </Col>
+           </Row>
 
           <div className='flex center marginTop'>
             <ConfirmButton onClick={this.onHandleUnlock}><FormattedMessage {...HeaderMessages.Login} /></ConfirmButton>
