@@ -15,8 +15,10 @@ import messages from '../locales/messages'
 import {queryProtoEncode} from '../lib/proto/index'
 const LoginMessages = messages.Login;
 const HeaderMessages = messages.Header;
-
 const { TextArea } = Input;
+const electron = window.electron
+const clipboard = electron.clipboard
+
 
 class Login extends PureComponent{
     constructor(props){
@@ -53,33 +55,31 @@ class Login extends PureComponent{
 
     async onHandleUnlock(){
         message.destroy()
-        if(this.state.username==''){
-            message.error(window.localeInfo["Header.PleaseEnterTheUserName"]);
-            return
-        }
+        // if(this.state.username==''){
+        //     message.error(window.localeInfo["Header.PleaseEnterTheUserName"]);
+        //     return
+        // }
 
         if(this.state.password == ''){
             message.error(window.localeInfo["Header.PleaseEnterThePassword"]);
             return
         }
-
-
-        let username = this.state.username;
+        let keyStoreObj = JSON.parse(this.state.keyStore)
+        let username = keyStoreObj.account;
         let password = this.state.password;
-        let blockInfo = await this.getBlockInfo();
+        // let blockInfo = await this.getBlockInfo();
 
-        if(!(blockInfo&&blockInfo.code=="0")) {
-            message.error(window.localeInfo["Header.LoginFailure"]);
-            return
-        }
+        // if(!(blockInfo&&blockInfo.code=="0")) {
+        //     message.error(window.localeInfo["Header.LoginFailure"]);
+        //     return
+        // }
 
-        let data = await this.getDataInfo(username)
-        if(!(data && data.code=="0")){
-            message.error(window.localeInfo["Header.LoginFailure"]);
-            return
-        }
+        // let data = await this.getDataInfo(username)
+        // if(!(data && data.code=="0")){
+        //     message.error(window.localeInfo["Header.LoginFailure"]);
+        //     return
+        // }
 
-        let keyStoreObj = this.state.keyStore
         let result = BTIPcRenderer.decryptKeystore({password,keyStoreObj})
         if(result.error){
             message.error(window.localeInfo["Header.TheWrongPassword"]);
@@ -99,10 +99,11 @@ class Login extends PureComponent{
         let url = '/user/login'
         BTFetch(url,'POST',params)
             .then(response=>{
+                console.log({response})
                 if(response){
                     if(response && response.code==1){
                         message.success(window.localeInfo["Header.LoginSucceed"])
-                        let accountInfo = {username}
+                        let accountInfo = {username,privateKey}
                         this.props.setAccountInfo(accountInfo)
                         hashHistory.push('/profile/asset')
                     }else if(response.code==1001){
@@ -118,6 +119,7 @@ class Login extends PureComponent{
 
 
     getSignature(username,privateKeyStr){
+        console.log({username,privateKeyStr})
         let privateKey = Buffer.from(privateKeyStr,'hex') 
         let random = window.uuid
         let msg = {username,random}
@@ -151,7 +153,7 @@ class Login extends PureComponent{
     importKeyStore = () => {
       let keyStoreInfo = BTIPcRenderer.importFile()
       if(!keyStoreInfo.error){
-        let keyStoreObj = JSON.parse(keyStoreInfo.result)
+        let keyStoreObj = keyStoreInfo.result
         this.setState({
           keyStore: keyStoreObj,
           username: keyStoreInfo.username
@@ -160,6 +162,14 @@ class Login extends PureComponent{
       }else{
         message.error(window.localeInfo["Header.ImportKeyStoreFaild"])
       }
+    }
+
+    parseKeystore = ()=>{
+        let keyStore = clipboard.readText()
+        console.log({keyStore})
+        this.setState({
+            keyStore:keyStore
+        })
     }
 
     // keyStore文件保存
@@ -202,6 +212,8 @@ class Login extends PureComponent{
                 disabled={!!this.state.username}
                 placeholder={window.localeInfo["Header.PleaseEnterTheUserName"]}
                 rows={6}
+                value={this.state.keyStore}
+                onChange={(e)=>this.setState({keyStore:e.target.value})}
               />
             </Col>
           </Row>
@@ -214,7 +226,7 @@ class Login extends PureComponent{
             {/* <Col span={5} style={{height: '100%'}}></Col> */}
             <Col span={18} offset={5}>
               <Row type='flex' justify='space-around'>
-                <Button type='primary'>粘贴 Keystore 文本</Button>
+                <Button type='primary' onClick={this.parseKeystore}>粘贴 Keystore 文本</Button>
 
                 <Button type='primary' onClick={this.importKeyStore}>
                   <FormattedMessage {...LoginMessages.ImportTheKeyStore}/>
