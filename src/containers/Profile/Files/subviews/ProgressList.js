@@ -6,7 +6,7 @@ import { Icon, Popconfirm } from 'antd'
 import { FormattedMessage } from 'react-intl'
 import messages from '@/locales/messages'
 const PersonalAssetMessages = messages.PersonalAsset
-import uploader from './uploader'
+import uploader from '../uploader'
 
 function BeforeIcon({percent, status}) {
   if (percent == 100 || status == 'done') {

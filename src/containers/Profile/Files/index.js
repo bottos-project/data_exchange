@@ -12,7 +12,7 @@ import { getDateAndTime } from '@/utils/dateTimeFormat'
 import Base from 'webuploader/base'
 import uploader from './uploader'
 
-import ProgressList from './ProgressList'
+import ProgressList from './subviews/ProgressList'
 import './style.less'
 
 const PersonalAssetMessages = messages.PersonalAsset;
