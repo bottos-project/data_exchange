@@ -1,4 +1,5 @@
 import React,{PureComponent} from 'react'
+import { connect } from 'react-redux'
 import {getAccount} from "../tools/localStore";
 // import BTUploadAsset from './BTUploadAsset'
 // import messages from '../locales/messages'
@@ -13,28 +14,20 @@ import messages from '../locales/messages'
 import moment from "moment"
 import uuid from 'node-uuid'
 import ConfirmButton from './ConfirmButton'
+import BTTypeSelect from './BTTypeSelect'
 
 const PersonalAssetMessages = messages.PersonalAsset;
 const HeaderMessages = messages.Header;
 
-const RangePicker = DatePicker.RangePicker;
 const { TextArea } = Input;
-const RadioGroup = Radio.Group;
 
-const Option = Select.Option;
-
-
-const children = [];
-for (let i = 10; i < 36; i++) {
-    children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-}
 String.prototype.trim=function() {
     return this.replace(/(^\s*)/g,'');
 };
 String.prototype.trims=function() {
     return this.replace(/(\s*$)/g,'');
 };
-export default class BTPublishAssetModal extends PureComponent{
+class BTPublishAssetModal extends PureComponent{
     constructor(props){
         super(props)
 
@@ -54,21 +47,16 @@ export default class BTPublishAssetModal extends PureComponent{
             sample_hash:'',
             storage_hash:'',
             newdata:[],
-            date11: null,
-            cascader:'',
-            timeValue: null,
+            date11: '',
+            timeValue: '',
         }
 
         this.onTimeChange = this.onTimeChange.bind(this)
     }
 
-    onChangeDataAssetType(dates){
-      console.log('dates', dates);
-        const datas=dates[0]+dates[1]+dates[2]+dates[3];
-        this.setState({
-            dataAssetType:datas,
-            cascader:dates,
-        });
+    onChangeDataAssetType = (value) => {
+      console.log('value', value);
+      this.setState({ dataAssetType: value });
     }
 
     commitAsset(type) {
@@ -81,7 +69,7 @@ export default class BTPublishAssetModal extends PureComponent{
       });
 
       let param={
-          userName:getAccount().username,
+          userName: this.props.account_info.username,
           random:Math.ceil(Math.random()*100),
           signature:'0xxxx'
       };
@@ -106,8 +94,8 @@ export default class BTPublishAssetModal extends PureComponent{
 
     }
 
-    onTimeChange(time) {
-      this.setState({ timeValue: time });
+    onTimeChange(time, timeValue) {
+      this.setState({ timeValue });
     }
 
     title(e){
@@ -181,11 +169,11 @@ export default class BTPublishAssetModal extends PureComponent{
             return;
         }
         console.log(this.state)
-        if (this.state.date11 == null) {
-          message.warning('输入截止时间');
+        if (this.state.date11 == '') {
+          message.warning('请输入截止时间');
           return;
         }
-        let expire_time_string = this.state.date11.toDate().toLocaleDateString() + ' ' + (this.state.timeValue ? this.state.timeValue : '')
+        let expire_time_string = this.state.date11 + ' ' + (this.state.timeValue ? this.state.timeValue : '')
         let expire_time = new Date(expire_time_string).getTime() / 1000
         let _blockInfo = (await getBlockInfo());
         if(_blockInfo.code!=0){
@@ -199,7 +187,7 @@ export default class BTPublishAssetModal extends PureComponent{
             "args": {
                 "asset_id": uuid.v1(),
                 "basic_info": {
-                    "user_name":getAccount().username||'',
+                    "user_name": this.props.account_info.username||'',
                     "session_id": getAccount().token||'',
                     "asset_name": this.state.title.trims(),
                     "asset_type": this.state.dataAssetType,
@@ -249,7 +237,6 @@ export default class BTPublishAssetModal extends PureComponent{
                 message.success(window.localeInfo["PersonalAsset.SuccessfulToRegisterTheAsset"])
                 this.setState({
                     date11:'',
-                    cascader:'',
                     value:1,
                     title:'',
                     number:'',
@@ -281,7 +268,7 @@ export default class BTPublishAssetModal extends PureComponent{
 
     dataPicker = (date, dateString) => {
       // console.log('date, dateString', date, dateString);
-      this.setState({ date11: date })
+      this.setState({ date11: dateString })
     }
 
     render() {
@@ -368,10 +355,10 @@ export default class BTPublishAssetModal extends PureComponent{
                     placeholder={window.localeInfo["PersonalAsset.SelectDate"]}
                     onChange={this.dataPicker}
                     disabledDate={(current) => current < moment().endOf('day')}
-                    value={this.state.date11}
+                    value={moment(this.state.date11, 'HH:mm:ss')}
                 />
                 {this.state.date11 &&
-                <TimePicker value={this.state.timeValue} onChange={this.onTimeChange} />}
+                <TimePicker value={moment(this.state.timeValue, 'HH:mm:ss')} onChange={this.onTimeChange} />}
               </Col>
             </Row>
 
@@ -381,11 +368,11 @@ export default class BTPublishAssetModal extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.AssetType}/>
               </Col>
               <Col span={12}>
-                <Cascader value={this.state.cascader}
+                <BTTypeSelect onChange={this.onChangeDataAssetType} />
+                {/* <Cascader value={this.state.cascader}
                   options={options}
-                  onChange={(datas)=>this.onChangeDataAssetType(datas)}
                   placeholder={window.localeInfo["PersonalAsset.PleaseSelect"]}
-                />
+                /> */}
               </Col>
             </Row>
 
@@ -421,3 +408,11 @@ export default class BTPublishAssetModal extends PureComponent{
       )
     }
 }
+
+
+function mapStateToProps(state) {
+  const account_info = state.headerState.account_info
+  return { account_info }
+}
+
+export default connect(mapStateToProps)(BTPublishAssetModal)

@@ -15,23 +15,21 @@ class BTOtherBlocks extends PureComponent{
         this.state={
             block_view:[],
             data:[],
-            rowCount:'',
+            row_count:'',
             newblock:'',
         }
         this.onChange=this.onChange.bind(this)
     }
     columns (data){
         return [
-            { title: <FormattedMessage {...BlockBrowsingMessages.BlockNumber}/>, dataIndex: 'block_num', key: 'title'/*,render:(data)=>{
-                return <span>{data.substring(0,16)+'...'}</span>
-                }*/ },
-            { title: <FormattedMessage {...BlockBrowsingMessages.Date}/>, dataIndex: 'timestamp', key: 'date',
+            { title: <FormattedMessage {...BlockBrowsingMessages.BlockNumber}/>, dataIndex: 'block_number'},
+            { title: <FormattedMessage {...BlockBrowsingMessages.Date}/>, dataIndex: 'timestamp',
               render: (date) => <span>{getDateAndTime(date)}</span>
             },
-            { title: <FormattedMessage {...BlockBrowsingMessages.Transaction}/>, dataIndex: 'transaction_merkle_root', key: 'looker',
-              render: (data) => <span title={data}>{data.substring(0, 12)+'...'}</span>
+            { title: <FormattedMessage {...BlockBrowsingMessages.Transaction}/>, dataIndex: 'tx_num',
+              render: (data) => <span>{data}</span>
             },
-            { title: <FormattedMessage {...BlockBrowsingMessages.Producer}/>,dataIndex: 'producer',key: 'x'},
+            { title: <FormattedMessage {...BlockBrowsingMessages.Producer}/>,dataIndex: 'delegate'},
         ];
     }
     componentDidMount() {
@@ -41,19 +39,19 @@ class BTOtherBlocks extends PureComponent{
         })
     }
 
-    getPagination(page,pageSize){
+    getPagination(page,page_size){
         let param={
-            pageSize:pageSize,
+            page_size,
             pageNum:page
         };
         return BTFetch('/dashboard/GetBlockList', 'POST', param).then(res => {
             if (res && res.code == 1) {
-                if (res.data.rowCount > 0) {
+                if (res.data.row_count > 0) {
                     let data = res.data.row;
 
                     this.setState({
                         data,
-                        rowCount: res.data.rowCount
+                        row_count: res.data.row_count
                     });
 
                     return data[0]
@@ -67,7 +65,7 @@ class BTOtherBlocks extends PureComponent{
 
     pagination(){
       let pagination={
-        total:this.state.rowCount,
+        total:this.state.row_count,
         defaultCurrent:1,
         pageSize:10,
         showQuickJumper:true,
@@ -76,8 +74,8 @@ class BTOtherBlocks extends PureComponent{
       return pagination
     }
 
-    onChange(page, pageSize) {
-      this.getPagination(page, pageSize);
+    onChange(page, page_sdize) {
+      this.getPagination(page, page_sdize);
 
     }
 
@@ -91,7 +89,7 @@ class BTOtherBlocks extends PureComponent{
             pagination={this.pagination()}
             columns={columns}
             dataSource={this.state.data}
-            rowKey='block_id'
+            rowKey='block_hash'
           />
           {/*</div>*/}
         </div>

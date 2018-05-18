@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react'
 import moment from "moment"
-import { Input, DatePicker, message, Button, Row, Col, Select } from 'antd'
+import { Input, DatePicker, message, Button, Row, Col } from 'antd'
 import BTAssetList from './BTAssetList'
 import {getBlockInfo, getDataInfo} from "../utils/BTCommonApi";
 import BTFetch from "../utils/BTFetch";
@@ -9,14 +9,12 @@ import messages from '../locales/messages'
 import {getAccount} from '../tools/localStore'
 import uuid from 'node-uuid'
 import ConfirmButton from './ConfirmButton'
+import BTTypeSelect from './BTTypeSelect'
 import { toFixedWithoutZero } from '@/utils/number'
-
-const Option = Select.Option;
 
 const PersonalDemandMessages = messages.PersonalDemand;
 const PersonalAssetMessages = messages.PersonalAsset;
 
-const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const { TextArea } = Input;
 
 String.prototype.trim=function() {
@@ -116,6 +114,7 @@ export default class BTPublishDemand extends PureComponent{
 
         this.setState({number})
     };
+
     //datePicker
     onChangeDate(date,dateString) {
         this.setState({
@@ -124,10 +123,7 @@ export default class BTPublishDemand extends PureComponent{
             date11:date,
         });
     }
-    disabledDate(current) {
-        // Can not select days before today and today
-        return (current < moment().endOf('day'));
-    }
+
     onOpenChangeDate(data){
         console.log(data)
     }
@@ -285,12 +281,7 @@ export default class BTPublishDemand extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.AssetType} />
               </Col>
               <Col span={12}>
-                <Select defaultValue="Voice" style={{ width: 120 }}>
-                  <Option value="voice">Voice</Option>
-                  <Option value="video">Video</Option>
-                  <Option value="picture">Picture</Option>
-                  <Option value="text">Text</Option>
-                </Select>
+                <BTTypeSelect />
               </Col>
             </Row>
 
@@ -303,7 +294,7 @@ export default class BTPublishDemand extends PureComponent{
                   placeholder={window.localeInfo["PersonalDemand.SelectDate"]}
                   onChange={(date,dateString)=>this.onChangeDate(date,dateString)}
                   onOpenChange={(date)=>this.onOpenChangeDate(date)}
-                  disabledDate = {(current)=>this.disabledDate(current)}
+                  disabledDate={(current) => current < moment().endOf('day')}
                   value={this.state.date11}
                   // showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
                 />

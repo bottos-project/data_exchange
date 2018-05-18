@@ -9,9 +9,6 @@ import CustomTabBar from '@/components/CustomTabBar'
 
 const keyMap = ['All', 'Text', 'Picture', 'Voice', 'Video']
 
-function onChange(pageNumber){
-    console.log(pageNumber)
-}
 export default class BTDemand extends PureComponent{
     constructor(props){
         super(props);
@@ -19,7 +16,7 @@ export default class BTDemand extends PureComponent{
         this.state = {
             dataSource:[],
             pageNum:'',
-            rowCount: 0,
+            row_count: 0,
             activeKey: '0',
         }
         this.onChange = this.onChange.bind(this)
@@ -28,25 +25,25 @@ export default class BTDemand extends PureComponent{
     componentDidMount(){
         this.getPagination(1, 16)
     }
-    onChange(page,pageSize){
-        this.getPagination(page,pageSize)
+    onChange(page,page_size){
+        this.getPagination(page,page_size)
     }
-    getPagination(page,pageSize){
+    getPagination(page,page_size){
         let reqUrl = '/requirement/query'
         let param={
-            "pageSize":pageSize,
-            "pageNum":page,
+            page_size,
+            "page_num":page,
         }
         BTFetch(reqUrl,'POST',param).then(response=>{
             if(response && response.code == 0){
-              const {rowCount, row} = response.data
-                if(rowCount == 0 || !Array.isArray(row)){
+              const {row_count, row} = response.data
+                if(row_count == 0 || !Array.isArray(row)){
                     // message.warning(window.localeInfo["Demand.ThereIsNoMarketDemandForTheTimeBeing"]);
                     return;
                 }
                 this.setState({
                     dataSource: row,
-                    rowCount,
+                    row_count,
                 })
             }
         })
@@ -73,14 +70,17 @@ export default class BTDemand extends PureComponent{
               </List.Item>
             )}
           />
-          <Pagination
-            hideOnSinglePage
-            showQuickJumper
-            defaultCurrent={1}
-            pageSize={16}
-            total={this.state.rowCount}
-            onChange={this.onChange}
-          />
+          {
+            this.state.row_count &&
+            <Pagination
+              hideOnSinglePage
+              showQuickJumper
+              defaultCurrent={1}
+              pageSize={16}
+              total={this.state.row_count}
+              onChange={this.onChange}
+            />
+          }
         </div>
       )
     }

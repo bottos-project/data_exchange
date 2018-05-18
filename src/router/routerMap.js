@@ -13,7 +13,6 @@ import BTBlockList from '../containers/Other'
 import BTOtherBlocks from '../containers/Other/subviews/BTOtherBlocks'
 import BTOtherExchange from '../containers/Other/subviews/BTOtherExchange'
 import BTSignIn from '../containers/SignIn'
-import BTSignUp from '../containers/SignUp'
 
 /***************个人中心部分*************** */
 import BTHome from '../containers'
@@ -58,7 +57,6 @@ class RouterMap extends PureComponent {
           </Route>
 
           <Route path="signIn" name='signIn' breadcrumbName='signIn' component={BTSignIn} />
-          <Route path="signUp" name='signUp' breadcrumbName='signUp' component={BTSignUp} />
 
           <Route path="publishDemand" name='PublishDemand' breadcrumbName='PublishDemand' component={BTPublishDemand} />
           <Route path="publishAsset" name='PublishAsset' breadcrumbName='PublishAsset' component={BTPublishAssetModal} />

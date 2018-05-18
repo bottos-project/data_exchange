@@ -213,6 +213,7 @@ async function handleFileQueued(file) {
     console.error('fileCheck catch err', err);
     message.error('upload fail')
     uploader.removeFile(file)
+    store.dispatch( deleteFile(file.id) )
   })
 
 }
