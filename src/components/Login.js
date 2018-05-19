@@ -119,7 +119,6 @@ class Login extends PureComponent{
 
 
     getSignature(username,privateKeyStr){
-        console.log({username,privateKeyStr})
         let privateKey = Buffer.from(privateKeyStr,'hex') 
         let random = window.uuid
         let msg = {username,random}
