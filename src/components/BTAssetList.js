@@ -21,7 +21,8 @@ export default class BTAssetList extends PureComponent{
             username:'',
         }
     }
-   async handleOk(){
+
+    async handleOk(){
         this.setState({
             visible:false,
             username:''
@@ -81,9 +82,12 @@ export default class BTAssetList extends PureComponent{
     }
 
     onChange(e){
+      // console.log('radio checked', e.target.value);
+      let index = e.target.value
+      let fileInfo = this.props.newdata[index]
         this.setState({
-            value:e.target.value.split(',')[0],
-            file_hash:e.target.value.split(',')[1],
+            value: fileInfo.file_name,
+            file_hash: fileInfo.file_hash,
         });
     }
 
@@ -128,15 +132,17 @@ export default class BTAssetList extends PureComponent{
                 message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
             })*/
     }
-    file(){
-        this.setState({
-            visible:false,
-        });
-    }
-    render(){
-        // this.setState({data:this.props.examplefile});
+
+    render() {
         const data=this.props.newdata||[];
-        // console.log(this.props.newdata);
+        // console.log(newdata);
+
+        const list = data.map((value, index) => (
+          <Row key={index} span={8}>
+            <Radio value={index}>{value.file_name}</Radio>
+          </Row>
+        ))
+
         return(
             <Modal visible={this.state.visible}
                 onOk={()=>this.handleOk()}
@@ -144,16 +150,7 @@ export default class BTAssetList extends PureComponent{
             >
                 <div style={{height:300,overflow:"auto",margin:20}}>
                     <RadioGroup style={{ width: '100%' }}  onChange={(e)=>this.onChange(e)} defaultValue=''>
-                        <Col>
-                            {
-                                data.map((value,index)=>{
-                                        return (
-                                            <Row key={index} span={8}><Radio value={value.file_name+','+value.file_hash}>{value.file_name}</Radio></Row>
-                                        )
-                                    })
-                            }
-                            {/*<Row span={8}><Radio value="B">人物表情图片.zip</Radio></Row>*/}
-                        </Col>
+                        <Col>{list}</Col>
                     </RadioGroup>
                     {/*<Button  onClick={()=>this.file()}><Link to='/profile/asset'>上传资源文件</Link></Button>*/}
                 </div>

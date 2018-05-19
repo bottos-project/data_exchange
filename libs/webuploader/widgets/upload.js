@@ -101,7 +101,7 @@ define([
 
     // 负责将文件切片。
     function CuteFile( file, chunkSize ) {
-      console.log('file', file);
+      // console.log('file', file);
         var pending = [],
             blob = file.source,
             total = blob.size,
@@ -532,7 +532,7 @@ define([
                         return null;
                     }
 
-                    console.log('file', file);
+                    // console.log('file', file);
                     act = CuteFile( file, opts.chunked ? file.chunkSize : 0 );
                     me.stack.push(act);
                     return act.shift();

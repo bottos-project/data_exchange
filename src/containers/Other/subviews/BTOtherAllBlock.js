@@ -81,7 +81,7 @@ class BTOtherAllBlock extends PureComponent{
 
 function mapStateToProps(state) {
   const { latestBlock, nodeInfos } = state.blockState
-  const lastBlockNum = latestBlock ? latestBlock.block_num : 0
+  const lastBlockNum = latestBlock ? latestBlock.block_number : 0
   const totalNodeNum = nodeInfos.length
   return { lastBlockNum, totalNodeNum }
 }

@@ -1,17 +1,40 @@
 import WebUploader from 'webuploader'
 import { message } from 'antd'
+import throttle from 'lodash.throttle'
 import store from '@/redux/store'
-import { addFile } from '@/redux/actions/uploaderAction'
-var hash256 = require('crypto').createHash('sha256');
+import { addFile, deleteFile, updateFile, updateUploadProgress } from '@/redux/actions/uploaderAction'
+import { get_ms_short } from '@/utils/dateTimeFormat'
+import { fetchWithBlockHeader } from '@/utils/BTCommonApi'
+import { PackArraySize, PackStr16 } from '@/lib/msgpack/msgpack'
 
+const btcrypto = require('bottos-js-crypto')
+const message_pb = require('@/lib/proto/message_pb');
+const { registProtoEncode } = require('@/lib/proto/index');
 
-// 文件上传
+let keys = btcrypto.createPubPrivateKeys()
+let prikey = keys.privateKey
+// import BTFetch from '@/utils/BTFetch'
+
+// 文件上传流程
 // 1. 取得文件，对文件进行切片
 // 2. 对切片进行 hash 计算，返回切片的 hash 值
+// 3. 将 hashlist 上传，取得 guid
+// 4. 通过 guid 取得上传地址列表
+// 5. 并发上传
+// 6. 进度查询及缓存，显示进度条
+// 7. 上传成功向后端注册文件
 
 const GigaByte = Math.pow(2, 30)
 const MegaByte = 1 << 20
 
+function int10ToStr16(i10) {
+  var s16 = i10.toString(16)
+  // console.log('s16', s16);
+  if (s16.length == 1) {
+    s16 = '0' + s16
+  }
+  return s16
+}
 
 function calculateSlicedFileSize(size) {
   if (size > GigaByte) {
@@ -19,28 +42,9 @@ function calculateSlicedFileSize(size) {
   } else if (size > 500 * MegaByte) {
     return 150 * MegaByte;
   }
-  return 50 * MegaByte;
+  return 10 * MegaByte;
   return 100 * MegaByte;
 }
-
-console.log('hash256', hash256);
-/** @arg {string|Buffer} data
-    @arg {string} [encoding = null] - 'hex', 'binary' or 'base64'
-    @return {string|Buffer} - Buffer when encoding is null, or string
-*/
-function sha256(data, encoding = 'hex') {
-    return hash256.update(data).digest(encoding);
-}
-
-// ["68819422197e5f1ddcc24903a84594677c687e701c623cd282cd59d8e5e4df2b",
-// "e8772f5436992211aa7ddd4e64434592a8d6a974252a072e14920c2534dc745c",
-// "da5698be17b9b46962335799779fbeca8ce5d491c0d26243bafef9ea1837a9d8"]
-
-// ["530c4ee98b854926aae6ec9a0a7302d0fd23e2994a5b7fbb6deeea0d1e05243e",
-// "517eea9005cb95696e8e3d6da3bdfa11e505bec6a03e2d17c5c7fa5fd2d1abb0",
-// "b267799acdcdfd128d459248b4d32bd33fe931ba4ede20d7674520eebc38a21c"]
-
-// "68819422197e5f1ddcc24903a84594677c687e701c623cd282cd59d8e5e4df2be8772f5436992211aa7ddd4e64434592a8d6a974252a072e14920c2534dc745cda5698be17b9b46962335799779fbeca8ce5d491c0d26243bafef9ea1837a9d8"
 
 // 负责将文件切片。
 // 直接从 webuploader 里面拿的
@@ -71,26 +75,9 @@ function CuteFile( file, chunkSize ) {
 
         getSliceHash: function () {
           let _blob = blob.getSource()
-
-          let promiseArr = file.blocks.map((block, index) => {
-            return new Promise(function(resolve, reject) {
-              let chunkData = _blob.slice(block.start, block.end)
-              // console.log('chunkData', chunkData);
-              var oFReader = new FileReader()
-              oFReader.onload = function (oFREvent) {
-                console.log('oFREvent', oFREvent);
-                // console.log("FileReader", oFREvent.target.result);
-                let hashString = sha256( oFREvent.target.result )
-                resolve(hashString)
-              }
-              oFReader.onerror = function (error) {
-                console.log('error', error);
-                reject(error)
-              }
-              // console.log('oFReader', oFReader);
-              oFReader.readAsArrayBuffer(chunkData)
-
-            });
+          const filePath = _blob.path
+          let promiseArr = file.blocks.map((block) => {
+            return global.sha256Chunk(filePath, block.start, block.end - 1, block.chunk)
           })
 
           return Promise.all(promiseArr);
@@ -120,7 +107,7 @@ function CuteFile( file, chunkSize ) {
 
 var uploader = WebUploader.create({
     // 文件接收服务端。
-    server: 'http://localhost:3000/server/fileupload',
+    server: 'http://139.219.195.195:9000/',
     // auto: true,
     sendAsBinary: true,
     method: 'PUT',
@@ -133,9 +120,9 @@ var uploader = WebUploader.create({
 
 function getUploadURL(file) {
 
-  var sliceInfo = file.hashList.map((s_file_hash, index) => ({
-    sguid: file.guid + index,
-    s_file_hash
+  var sliceInfo = file.hashList.map((obj) => ({
+    sguid: file.guid + obj.chunk,
+    s_file_hash: obj.hash
   }))
 
   console.log('sliceInfo', sliceInfo);
@@ -155,55 +142,79 @@ function getUploadURL(file) {
     console.log('res', res);
     if (res.result == 200) {
       file.url = res.url
-      uploader.options.server = res.url[0].surl
+      uploader.options.server = file.url[0].surl
       // 5. 成功取得 url，触发上传
       return uploader.upload()
 
+    } else {
+      message.error(res.status)
     }
+  }).catch(err => {
+    console.error(err);
   })
 
 }
 
-function handleFileQueued(file) {
-  // console.log('file', file);
-
+async function handleFileQueued(file) {
+  console.log('WUFile', file);
+  // console.log('WUFile', file);
   // 1. 计算文件的 chunkSize
   const chunkSize = calculateSlicedFileSize(file.size)
   // uploader.options.chunkSize = chunkSize
   file.chunkSize = chunkSize
-
+  file.status = 'uploading'
   store.dispatch( addFile(file) )
   var api = CuteFile( file, chunkSize )
 
-  // console.log('getSliceHash', api.getSliceHash());
   // 2. 计算切片的 hash
-  api.getSliceHash().then(data => {
-    console.log('data', data);
-    file.hashList = data
-    // 3. 将 hashList 发到后端校验
-    return fetch('http://139.219.195.195:8080/v2/data/fileCheck', {
-      method: 'post',
-      body: JSON.stringify({hash: data}),
-      headers: new Headers({
-        'Content-Type': 'application/json'
-      })
+  // const hashList = await api.getSliceHash()
+  // console.log('hashList', hashList.map(item => item.hash));
+  // setInterval(async () => {
+    var t1 = get_ms_short()
+    const hashList = await api.getSliceHash()
+    console.log('hashList', hashList.map(item => item.hash));
+    console.log('hash 计算耗时', get_ms_short() - t1 + 'ms');
+  // }, 5000);
+  // return
+  console.log('文件大小', file.size);
+  // console.log('hashList', hashList);
+  file.hashList = hashList
+  // 3. 将 hashList 发到后端校验
+  fetch('http://139.219.195.195:8080/v2/data/fileCheck', {
+    method: 'post',
+    body: JSON.stringify({hash: hashList}),
+    headers: new Headers({
+      'Content-Type': 'application/json'
     })
   }).then(res => res.json()).then(res => {
     console.log('res', res);
-    if (res.is_exist == 1) {
-      console.log('文件已存在');
-      message.info('this file is existed')
-    } else if (res.is_exist == 0) {
+    if (res.is_exist == 0) {
       // 4. 校验通过，取得 guid 为 merkle_root_hash
       // 向后端取上传地址
       file.guid = res.merkle_root_hash
-      // blob.guid = res.merkle_root_hash
+      // file.uid = res.merkle_root_hash
+      store.dispatch( updateFile(file) )
       getUploadURL(file)
     } else {
-      console.error(res);
+      // 校验不通过，或者失败
+      if (res.is_exist == 1) {
+        // console.log('文件已存在', res);
+        message.info('this file is existed')
+        store.dispatch( deleteFile(file.id) )
+      } else {
+        message.error(res.status || 'this file is existed')
+        file.status = 'error'
+        store.dispatch( updateFile(file) )
+      }
+      uploader.removeFile(file)
     }
 
-  }).catch(err => console.error(err))
+  }).catch(err => {
+    console.error('fileCheck catch err', err);
+    message.error('upload fail')
+    uploader.removeFile(file)
+    store.dispatch( deleteFile(file.id) )
+  })
 
 }
 
@@ -224,8 +235,24 @@ uploader.on( 'uploadBeforeSend', (obj, data, headers) => {
 })
 
 
-uploader.on( 'uploadSuccess', file => {
-  console.log('file', file);
+// ************ 上传进度监听 *************
+function progressChange(file, percentage) {
+  console.log('file.name, percentage', file.name, percentage);
+  // 因为这个 percentage 值为 1 的时候比 uploadSuccess 触发要晚
+  // 所以做这个判断
+  if (percentage < 1) {
+    store.dispatch( updateUploadProgress(file.guid, percentage * 75) )
+  }
+
+}
+
+var percent_throttled = throttle(progressChange, 200)
+
+uploader.on( 'uploadProgress', percent_throttled)
+
+// ************ 存储进度查询 *************
+
+function querySecondProgress(file) {
   let guid = file.guid
   // console.log('guid', guid);
   let chunks = file.url.length
@@ -237,18 +264,87 @@ uploader.on( 'uploadSuccess', file => {
   }
   console.log('slice', slice);
 
+  const username = store.getState().headerState.account_info.username
+
   fetch('http://139.219.195.195:8080/v2/data/getUploadProgress', {
     method: 'POST',
-    body: JSON.stringify({ username: store.getState().headerState.account_info.username, slice }),
+    body: JSON.stringify({ username, slice }),
     headers: new Headers({
       'Content-Type': 'application/json'
     })
   }).then(res => res.json()).then(res => {
     console.log('res', res);
-    // setTimeout(getDownloadFileIP.bind(null, guid), 1000);
+    if (res.result != 200) {
+      setTimeout(querySecondProgress.bind(null, file), 3000);
+    } else if ( res.result == 200 && chunks == res.storageDone ) {
+      // 说明存储的等于 上传完成的
+      console.log('上传真的完成');
+      store.dispatch( updateUploadProgress(guid, 100) )
+
+      let originParam = {
+        "fileHash":"",
+        "info": {
+          "userName": username || 'file',
+          "sessionId": "btd121",
+          "fileSize": file.size || 100,
+          "fileName": file.name || 'name',
+          "filePolicy": "policytest",
+          "authPath": "sigtest",
+          "fileNumber": 200,
+          "signature": "sigtest"
+        }
+      }
+
+      let b1 = PackArraySize(2)
+      let b2 = PackStr16(originParam.fileHash)
+      let b3 = PackStr16(JSON.stringify(originParam.info))
+
+      let param = [...b1,...b2,...b3]
+      console.log('param', param);
+
+      let fetchParam = {
+        "version": 1,
+        "sender": "bottos",
+        "contract": "datafilemng",
+        "method": "datafilereg",
+        "param": param,
+        "sig_alg": 1,
+      }
+
+      // "signature": ""
+      let encodeBuf = registProtoEncode(message_pb, fetchParam)
+      let hashData = btcrypto.sha256(btcrypto.buf2hex(encodeBuf))
+      let sign = btcrypto.sign(hashData, prikey)
+      fetchParam.signature = sign
+      fetchParam.param = param.map(s1 => int10ToStr16(s1)).join('')
+
+      console.log('fetchParam', fetchParam);
+
+      // 成功之后的文件注册
+      fetchWithBlockHeader('http://192.168.8.224:8080/v2/asset/registerFile', 'post', fetchParam, {full_path:true})
+      .then(res => console.log('res', res))
+
+    } else {
+      console.log('上传没有真的完成');
+      let restPercent = res.storageDone / chunks * 25
+      store.dispatch( updateUploadProgress(guid, 75 + restPercent) )
+
+      setTimeout(querySecondProgress.bind(null, file), 3000);
+      // setTimeout(getDownloadFileIP.bind(null, guid), 1000);
+    }
+
+  }).catch(err => {
+    console.log('进度查询失败，请稍后再试！');
   })
 
-});
+}
+
+uploader.on( 'uploadSuccess', querySecondProgress);
+
+// uploader.on( 'beforeFileQueued', (file) => {
+//   console.log('beforeFileQueued file', file);
+//   // return false
+// })
 
 
 function getDownloadFileIP(guid) {

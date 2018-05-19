@@ -1,8 +1,9 @@
 import React,{PureComponent} from 'react'
+import { connect } from 'react-redux'
 import {getAccount} from "../tools/localStore";
 // import BTUploadAsset from './BTUploadAsset'
 // import messages from '../locales/messages'
-import {Icon, Modal, Radio, Select, message, Button, Input, DatePicker, Cascader, Col, Row } from 'antd';
+import {Icon, Modal, Radio, Select, message, Button, Input, DatePicker, TimePicker, Cascader, Col, Row } from 'antd';
 import BTAssetList from './BTAssetList'
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import {getBlockInfo,getDataInfo} from '../utils/BTCommonApi'
@@ -13,28 +14,20 @@ import messages from '../locales/messages'
 import moment from "moment"
 import uuid from 'node-uuid'
 import ConfirmButton from './ConfirmButton'
+import BTTypeSelect from './BTTypeSelect'
 
 const PersonalAssetMessages = messages.PersonalAsset;
 const HeaderMessages = messages.Header;
 
-const RangePicker = DatePicker.RangePicker;
 const { TextArea } = Input;
-const RadioGroup = Radio.Group;
 
-const Option = Select.Option;
-
-
-const children = [];
-for (let i = 10; i < 36; i++) {
-    children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-}
 String.prototype.trim=function() {
     return this.replace(/(^\s*)/g,'');
 };
 String.prototype.trims=function() {
     return this.replace(/(\s*$)/g,'');
 };
-export default class BTPublishAssetModal extends PureComponent{
+class BTPublishAssetModal extends PureComponent{
     constructor(props){
         super(props)
 
@@ -51,29 +44,22 @@ export default class BTPublishAssetModal extends PureComponent{
             getFileName:'',
             getExampleUrl:'',
             getRealUrl:'',
-            expire_time:'',
             sample_hash:'',
             storage_hash:'',
             newdata:[],
-            date11: null,
-            cascader:'',
+            date11: '',
+            timeValue: '',
         }
-    }
-    disabledDate(current) {
-        // Can not select days before today and today
-        return current < moment().endOf('day');
+
+        this.onTimeChange = this.onTimeChange.bind(this)
     }
 
-    onChangeDataAssetType(dates){
-      console.log('dates', dates);
-        const datas=dates[0]+dates[1]+dates[2]+dates[3];
-        this.setState({
-            dataAssetType:datas,
-            cascader:dates,
-        });
+    onChangeDataAssetType = (value) => {
+      console.log('value', value);
+      this.setState({ dataAssetType: value });
     }
 
-    commitAsset(type){
+    commitAsset(type) {
 
       message.destroy()
 
@@ -83,7 +69,7 @@ export default class BTPublishAssetModal extends PureComponent{
       });
 
       let param={
-          userName:getAccount().username,
+          userName: this.props.account_info.username,
           random:Math.ceil(Math.random()*100),
           signature:'0xxxx'
       };
@@ -108,37 +94,8 @@ export default class BTPublishAssetModal extends PureComponent{
 
     }
 
-    async beFetch() {
-        let param={
-            userName:getAccount().username,
-            random:Math.ceil(Math.random()*100),
-            signature:'0xxxx'
-        };
-      await BTFetch('/asset/queryUploadedData','post',param)
-            .then(res=>{
-                if(res.code==0){
-                    if(res.data.rowCount==0){
-                        message.warning(window.localeInfo["Header.ThereIsNoFileResourceSetForTheTimeBeing"]);
-                        return;
-                    }
-                    // return res.data.row;
-                    this.setState({
-                        newupdata:res.data.row,
-                    })
-                }else{
-                    message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
-                    return;
-                }
-            })
-            .catch(error=>{
-                message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
-            })
-    }
-
-    onChange(e){
-        this.setState({
-            value:e.target.value
-        })
+    onTimeChange(time, timeValue) {
+      this.setState({ timeValue });
     }
 
     title(e){
@@ -158,25 +115,7 @@ export default class BTPublishAssetModal extends PureComponent{
 
         this.setState({number})
 
-        /*if (!('value' in this.props)) {
-            this.setState({ number });
-        }
-        this.triggerChange({ number });*/
-    };
-
-    triggerChange = (changedValue) => {
-        // Should provide an event to pass value to Form.
-        const onChange = this.props.onChange;
-        if (onChange) {
-            onChange(Object.assign({}, this.state, changedValue));
-        }
-    };
-
-    /*price(e){
-        this.setState({
-            price:e.target.value,
-        })
-    }*/
+    }
 
     description(e){
         this.setState({
@@ -185,21 +124,15 @@ export default class BTPublishAssetModal extends PureComponent{
     }
 
     tag1(e){
-        this.setState({
-            tag1:e.target.value,
-        })
+        this.setState({ tag1:e.target.value })
     }
 
     tag2(e){
-        this.setState({
-            tag2:e.target.value,
-        })
+        this.setState({ tag2:e.target.value })
     }
 
     tag3(e){
-        this.setState({
-            tag3:e.target.value,
-        })
+        this.setState({ tag3:e.target.value })
     }
 
     getFileName(fileInfo){
@@ -236,6 +169,12 @@ export default class BTPublishAssetModal extends PureComponent{
             return;
         }
         console.log(this.state)
+        if (this.state.date11 == '') {
+          message.warning('请输入截止时间');
+          return;
+        }
+        let expire_time_string = this.state.date11 + ' ' + (this.state.timeValue ? this.state.timeValue : '')
+        let expire_time = new Date(expire_time_string).getTime() / 1000
         let _blockInfo = (await getBlockInfo());
         if(_blockInfo.code!=0){
             message.error(window.localeInfo["PersonalAsset.FailedToGetTheBlockMessages"])
@@ -248,7 +187,7 @@ export default class BTPublishAssetModal extends PureComponent{
             "args": {
                 "asset_id": uuid.v1(),
                 "basic_info": {
-                    "user_name":getAccount().username||'',
+                    "user_name": this.props.account_info.username||'',
                     "session_id": getAccount().token||'',
                     "asset_name": this.state.title.trims(),
                     "asset_type": this.state.dataAssetType,
@@ -259,7 +198,7 @@ export default class BTPublishAssetModal extends PureComponent{
                     "sample_hash": this.state.sample_hash,
                     "storage_path": this.state.getRealUrl,
                     "storage_hash": this.state.storage_hash,
-                    "expire_time": this.state.expire_time,
+                    "expire_time": expire_time,
                     "price": this.state.number*Math.pow(10,10),
                     "description": this.state.description.trims(),
                     "upload_date": 1,
@@ -298,7 +237,6 @@ export default class BTPublishAssetModal extends PureComponent{
                 message.success(window.localeInfo["PersonalAsset.SuccessfulToRegisterTheAsset"])
                 this.setState({
                     date11:'',
-                    cascader:'',
                     value:1,
                     title:'',
                     number:'',
@@ -311,7 +249,6 @@ export default class BTPublishAssetModal extends PureComponent{
                     getFileName:'',
                     getExampleUrl:'',
                     getRealUrl:'',
-                    expire_time:'',
                     sample_hash:'',
                     storage_hash:'',
 
@@ -328,12 +265,12 @@ export default class BTPublishAssetModal extends PureComponent{
         })
 
     }
-    dataPicker(date,dateString){
-        this.setState({
-            expire_time:Number(new Date(dateString))/1000,
-            date11:date,
-        })
+
+    dataPicker = (date, dateString) => {
+      // console.log('date, dateString', date, dateString);
+      this.setState({ date11: dateString })
     }
+
     render() {
       return (
         <div className='route-children-container route-children-bg'>
@@ -399,7 +336,7 @@ export default class BTPublishAssetModal extends PureComponent{
                 <Input placeholder={window.localeInfo["PersonalAsset.Price"]}
                        type='number'
                        value={this.state.number}
-                       onChange={this.handleNumberChange}/* onChange={(e)=>this.price(e)} */
+                       onChange={this.handleNumberChange}
                 />
               </Col>
               <Col span={4}>
@@ -416,10 +353,12 @@ export default class BTPublishAssetModal extends PureComponent{
               <Col span={12}>
                 <DatePicker
                     placeholder={window.localeInfo["PersonalAsset.SelectDate"]}
-                    onChange={(date,dateString)=>this.dataPicker(date,dateString)}
-                    disabledDate = {(current)=>this.disabledDate(current)}
-                    value={this.state.date11}
+                    onChange={this.dataPicker}
+                    disabledDate={(current) => current < moment().endOf('day')}
+                    value={moment(this.state.date11, 'HH:mm:ss')}
                 />
+                {this.state.date11 &&
+                <TimePicker value={moment(this.state.timeValue, 'HH:mm:ss')} onChange={this.onTimeChange} />}
               </Col>
             </Row>
 
@@ -429,11 +368,11 @@ export default class BTPublishAssetModal extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.AssetType}/>
               </Col>
               <Col span={12}>
-                <Cascader value={this.state.cascader}
+                <BTTypeSelect onChange={this.onChangeDataAssetType} />
+                {/* <Cascader value={this.state.cascader}
                   options={options}
-                  onChange={(datas)=>this.onChangeDataAssetType(datas)}
                   placeholder={window.localeInfo["PersonalAsset.PleaseSelect"]}
-                />
+                /> */}
               </Col>
             </Row>
 
@@ -469,3 +408,11 @@ export default class BTPublishAssetModal extends PureComponent{
       )
     }
 }
+
+
+function mapStateToProps(state) {
+  const account_info = state.headerState.account_info
+  return { account_info }
+}
+
+export default connect(mapStateToProps)(BTPublishAssetModal)

@@ -9,7 +9,11 @@ import messages from '../../../locales/messages'
 import {getAccount} from "../../../tools/localStore";
 import uuid from 'node-uuid'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
+import Base from 'webuploader/base'
 import uploader from './uploader'
+
+import ProgressList from './subviews/ProgressList'
+import './style.less'
 
 const PersonalAssetMessages = messages.PersonalAsset;
 
@@ -52,7 +56,9 @@ class BTMyAssetSet extends Component{
                        {item.length < 30? item:item.substring(0,30)+'...'}
                     </span>
                 }},
-            {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size', key: 'fileSize'},
+            {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size', key: 'fileSize',
+              render: size => Base.formatSize( size )
+            },
             /*{title: <FormattedMessage {...PersonalAssetMessages.AssetSampleName}/>, dataIndex: 'sampleName', key: 'sampleName'},
             {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleSize}/>, dataIndex: 'sampleSize', key: 'sampleSize'},*/
             {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date',
@@ -98,7 +104,7 @@ class BTMyAssetSet extends Component{
         return message.info(window.localeInfo["Header.PleaseLogInFirst"]);;
       }
         //生成文件存储路径url
-        console.log('file', file)
+        console.log('origin file', file)
         let param={
             "userName": getAccount().username,
             "fileName": file.name,
@@ -111,8 +117,6 @@ class BTMyAssetSet extends Component{
 
         // 这部分是大文件上传的逻辑，先注释掉
         // 这里是 guid 的生成
-        // file.guid = new Date().getTime() + account_info.username
-        file.guid = '1526371921332aaaa'
 
         // if (file.size > 200 * MegaByte) {
          // 文件大小大于 200M
@@ -330,9 +334,9 @@ class BTMyAssetSet extends Component{
         return(
             <div className="set">
                 <Dragger
+                  showUploadList={false}
                   beforeUpload={beforeUpload}
                   customRequest={this.customRequest}
-                  fileList={this.state.fileList}
                   >
                     <p className="ant-upload-drag-icon">
                         <Icon type="inbox" />
@@ -341,6 +345,7 @@ class BTMyAssetSet extends Component{
                         <FormattedMessage {...PersonalAssetMessages.ClickOrDragFileToThisAreaToUpload}/>
                     </p>
                 </Dragger>
+                <ProgressList />
                 <Table
                     className="shadow radius table"
                     columns={columns}

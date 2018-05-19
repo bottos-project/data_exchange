@@ -48,9 +48,12 @@ export default class BTHaveBought extends PureComponent{
               render: item => getDateAndTime(item)
             },
             { title: <FormattedMessage {...PersonalAssetMessages.AssetOperation} />, dataIndex: 'storage_path', key: 'x',
-              render: (item) => <a onClick={()=>this.download(item)}>
-                  <Icon type="download" style={{color:"black",fontWeight:900}} />
-              </a>
+              render: (item, record) => {
+                // console.log('record', record);
+                return <a href={item} download={record.asset_name}>
+                    <Icon type="download" style={{color:"black",fontWeight:900}} />
+                </a>
+              }
             },
             /*{ title: 'From', dataIndex: '', key: 'y', render:() =>
                     <div>
@@ -59,14 +62,7 @@ export default class BTHaveBought extends PureComponent{
             }*/
         ];
     }
-    download(item){
-        let a = document.createElement('a');
-        let url = item;
-        let filename = 'bottos';
-        a.href = url;
-        a.download=filename;
-        a.click();
-    }
+
     componentDidMount(){
         let param={
             userName:getAccount().username,
