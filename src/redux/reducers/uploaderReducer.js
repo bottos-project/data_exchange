@@ -10,7 +10,8 @@ function updateFileListWithFile(fileList, file) {
   if (fileList.length == 1) {
     return [file]
   }
-  const index = fileList.indexOf(element => element.id == file.id)
+  const index = fileList.findIndex(element => element.id == file.id)
+  // console.log('fileList, file', fileList, file);
   if (index == -1)
     return fileList;
   else {

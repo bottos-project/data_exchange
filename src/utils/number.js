@@ -16,3 +16,12 @@ export function toFixedWithoutZero(n, x) {
     return parseFloat(nArr.join('.'))
   }
 }
+
+export function int10ToStr16(i10) {
+  var s16 = i10.toString(16)
+  // console.log('s16', s16);
+  if (s16.length == 1) {
+    s16 = '0' + s16
+  }
+  return s16
+}

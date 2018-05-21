@@ -6,7 +6,8 @@ export const UPDATE_FILELIST = 'UPDATE_FILELIST'
 
 function fileKeysFilter(file) {
   const { id, name, status, guid, remaning, size, blocks } = file
-  return { id, name, status, guid, remaning, size, blocks }
+  const path = file.getSource().getSource().path
+  return { id, name, status, guid, remaning, size, blocks, path }
 }
 
 export function addFile(file) {
@@ -24,6 +25,7 @@ export function deleteFile(fid) {
 };
 
 export function updateFile(file) {
+  // console.log('updateFile', file);
   return {
     type: UPDATE_FILE,
     file: fileKeysFilter(file)

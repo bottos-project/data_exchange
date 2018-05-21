@@ -1,19 +1,25 @@
 import WebUploader from 'webuploader'
 import { message } from 'antd'
 import throttle from 'lodash.throttle'
+import debounce from 'lodash.debounce'
 import store from '@/redux/store'
+import {getAccount} from "@/tools/localStore";
+
 import { addFile, deleteFile, updateFile, updateUploadProgress } from '@/redux/actions/uploaderAction'
 import { get_ms_short } from '@/utils/dateTimeFormat'
-import { fetchWithBlockHeader } from '@/utils/BTCommonApi'
+import { BTFetch } from '@/utils/BTFetch'
+import { getBlockInfo } from "@/utils/BTCommonApi";
+
 import { PackArraySize, PackStr16 } from '@/lib/msgpack/msgpack'
 
 const btcrypto = require('bottos-js-crypto')
 const message_pb = require('@/lib/proto/message_pb');
-const { registProtoEncode } = require('@/lib/proto/index');
+const { messageProtoEncode } = require('@/lib/proto/index');
 
-let keys = btcrypto.createPubPrivateKeys()
-let prikey = keys.privateKey
 // import BTFetch from '@/utils/BTFetch'
+
+const file_test_url = 'http://139.219.195.195:8080/v2'
+// const file_test_url = 'http://192.168.9.120:8080/v2'
 
 // 文件上传流程
 // 1. 取得文件，对文件进行切片
@@ -42,13 +48,14 @@ function calculateSlicedFileSize(size) {
   } else if (size > 500 * MegaByte) {
     return 150 * MegaByte;
   }
-  return 10 * MegaByte;
+  return 50 * MegaByte;
   return 100 * MegaByte;
 }
 
 // 负责将文件切片。
 // 直接从 webuploader 里面拿的
-function CuteFile( file, chunkSize ) {
+function CuteFile( file ) {
+  const chunkSize = file.chunkSize
   // console.log('file', file);
     var pending = [],
         blob = file.source,
@@ -107,7 +114,7 @@ function CuteFile( file, chunkSize ) {
 
 var uploader = WebUploader.create({
     // 文件接收服务端。
-    server: 'http://139.219.195.195:9000/',
+    server: 'http://localhost:9000/',
     // auto: true,
     sendAsBinary: true,
     method: 'PUT',
@@ -116,6 +123,18 @@ var uploader = WebUploader.create({
     // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
     resize: false
 })
+
+// 在文件入队之前触发
+// 文件切片信息在此获取
+async function beforeFileQueued(file) {
+  console.log('beforeFileQueued file', file);
+  // 1. 计算文件的 chunkSize
+  const chunkSize = calculateSlicedFileSize(file.size)
+  file.status = 'uploading'
+  file.chunkSize = chunkSize
+  store.dispatch( addFile(file) )
+}
+uploader.on( 'beforeFileQueued', beforeFileQueued)
 
 
 function getUploadURL(file) {
@@ -132,7 +151,7 @@ function getUploadURL(file) {
     slice: sliceInfo,
   }
 
-  return fetch('http://139.219.195.195:8080/v2/data/getFileUploadURL', {
+  return fetch(file_test_url + '/data/getFileUploadURL', {
     method: 'post',
     body: JSON.stringify(param),
     headers: new Headers({
@@ -156,17 +175,9 @@ function getUploadURL(file) {
 }
 
 async function handleFileQueued(file) {
-  console.log('WUFile', file);
-  // console.log('WUFile', file);
-  // 1. 计算文件的 chunkSize
-  const chunkSize = calculateSlicedFileSize(file.size)
-  // uploader.options.chunkSize = chunkSize
-  file.chunkSize = chunkSize
-  file.status = 'uploading'
-  store.dispatch( addFile(file) )
-  var api = CuteFile( file, chunkSize )
-
   // 2. 计算切片的 hash
+  var api = CuteFile( file )
+
   // const hashList = await api.getSliceHash()
   // console.log('hashList', hashList.map(item => item.hash));
   // setInterval(async () => {
@@ -176,11 +187,12 @@ async function handleFileQueued(file) {
     console.log('hash 计算耗时', get_ms_short() - t1 + 'ms');
   // }, 5000);
   // return
+  file.hashList = hashList
+
   console.log('文件大小', file.size);
   // console.log('hashList', hashList);
-  file.hashList = hashList
   // 3. 将 hashList 发到后端校验
-  fetch('http://139.219.195.195:8080/v2/data/fileCheck', {
+  fetch(file_test_url + '/data/fileCheck', {
     method: 'post',
     body: JSON.stringify({hash: hashList}),
     headers: new Headers({
@@ -240,13 +252,17 @@ function progressChange(file, percentage) {
   console.log('file.name, percentage', file.name, percentage);
   // 因为这个 percentage 值为 1 的时候比 uploadSuccess 触发要晚
   // 所以做这个判断
+  // if (percentage < 0.8) {
+  //   // throttle(querySecondProgress.bind(null, file), 2000)
+  //   querySecondProgress(file)
+  // }
   if (percentage < 1) {
     store.dispatch( updateUploadProgress(file.guid, percentage * 75) )
   }
 
 }
 
-var percent_throttled = throttle(progressChange, 200)
+var percent_throttled = throttle(progressChange, 1000)
 
 uploader.on( 'uploadProgress', percent_throttled)
 
@@ -266,17 +282,20 @@ function querySecondProgress(file) {
 
   const username = store.getState().headerState.account_info.username
 
-  fetch('http://139.219.195.195:8080/v2/data/getUploadProgress', {
+  let body = JSON.stringify({ username, slice })
+  console.log('body', body);
+
+  fetch(file_test_url + '/data/getUploadProgress', {
     method: 'POST',
-    body: JSON.stringify({ username, slice }),
+    body,
     headers: new Headers({
       'Content-Type': 'application/json'
     })
-  }).then(res => res.json()).then(res => {
+  }).then(res => res.json()).then(async (res) => {
     console.log('res', res);
     if (res.result != 200) {
       setTimeout(querySecondProgress.bind(null, file), 3000);
-    } else if ( res.result == 200 && chunks == res.storageDone ) {
+    } else if ( res.result == 200 && chunks == res.storage_done ) {
       // 说明存储的等于 上传完成的
       console.log('上传真的完成');
       store.dispatch( updateUploadProgress(guid, 100) )
@@ -302,31 +321,43 @@ function querySecondProgress(file) {
       let param = [...b1,...b2,...b3]
       console.log('param', param);
 
+      const storeAddr = res.storage_ip.map(({sguid, snode_ip}) => ({ sguid: sguid.slice(guid.length), snode_ip }) )
+
+      let blockInfo = await getBlockInfo()
+
+      console.log('blockInfo', blockInfo);
+
+      let privateKey = Buffer.from(getAccount().privateKey, 'hex')
+
       let fetchParam = {
         "version": 1,
-        "sender": "bottos",
+        ...blockInfo,
+        "sender": getAccount().username,
         "contract": "datafilemng",
         "method": "datafilereg",
         "param": param,
         "sig_alg": 1,
+        storeAddr: JSON.stringify(storeAddr)
       }
 
       // "signature": ""
-      let encodeBuf = registProtoEncode(message_pb, fetchParam)
+      let encodeBuf = messageProtoEncode(message_pb, fetchParam)
       let hashData = btcrypto.sha256(btcrypto.buf2hex(encodeBuf))
-      let sign = btcrypto.sign(hashData, prikey)
-      fetchParam.signature = sign
-      fetchParam.param = param.map(s1 => int10ToStr16(s1)).join('')
+      let sign = btcrypto.sign(hashData, privateKey)
+      fetchParam.signature = sign.toString('hex')
+      // fetchParam.param = param.map(s1 => int10ToStr16(s1)).join('')
+      fetchParam.param = btcrypto.buf2hex(param)
 
       console.log('fetchParam', fetchParam);
 
       // 成功之后的文件注册
-      fetchWithBlockHeader('http://192.168.8.224:8080/v2/asset/registerFile', 'post', fetchParam, {full_path:true})
+
+      BTFetch('http://192.168.8.224:8080/v2/asset/registerFile', 'post', fetchParam, {full_path:true})
       .then(res => console.log('res', res))
 
     } else {
       console.log('上传没有真的完成');
-      let restPercent = res.storageDone / chunks * 25
+      let restPercent = res.storage_done / chunks * 25
       store.dispatch( updateUploadProgress(guid, 75 + restPercent) )
 
       setTimeout(querySecondProgress.bind(null, file), 3000);
@@ -334,21 +365,19 @@ function querySecondProgress(file) {
     }
 
   }).catch(err => {
-    console.log('进度查询失败，请稍后再试！');
+    console.error('进度查询失败，请稍后再试！', err);
   })
 
 }
 
 uploader.on( 'uploadSuccess', querySecondProgress);
 
-// uploader.on( 'beforeFileQueued', (file) => {
-//   console.log('beforeFileQueued file', file);
-//   // return false
-// })
-
 
 function getDownloadFileIP(guid) {
-  fetch('http://139.219.195.195:8080/v2/data/getStorageIP', {
+  if (process.env.NODE_ENV == 'development') {
+    var file_test_url = 'http://192.168.9.120:8080/v2'
+  }
+  fetch(file_test_url + '/data/getStorageIP', {
     method: 'POST',
     body: JSON.stringify({ guid }),
     headers: new Headers({
@@ -356,28 +385,29 @@ function getDownloadFileIP(guid) {
     })
   }).then(res => {
     console.log('res', res);
+    let ip = res.ip.map(({sguid, snode_ip}) => {
+      // let _snode_ip = 私钥解密后的 snode_ip
+      return {
+        sguid: guid + sguid,
+        snode_ip: _snode_ip
+      }
+    })
+    // ip 字段中，sguid 其实是 chunk
+    // snode_ip 是加密后的，要通过私钥解密
     // getFileDownloadURL({
-    //   "username": "1526371403563aaaa",
-    //   "guid": "AtomSetup-x64.exe",
-    //   "ip": [
-    //     {
-    //       "sguid": "1526371403563aaaa0",
-    //       "snode_ip": "139.219.195.195"
-    //     },
-    //     {
-    //       "sguid": "1526371403563aaaa1",
-    //       "snode_ip": "139.219.195.195"
-    //     }
-    //   ]
+    //   "username": getAccount().username,
+    //   guid,
+    //   ip
     // })
   })
 
 }
 
+// getDownloadFileIP("e2f61c3f71d1defd3fa999dfa36953755c690689799962b48bebd836974e8cf9")
 
 function getFileDownloadURL(param) {
 
-  fetch('http://139.219.195.195:8080/v2/data/getFileDownloadURL', {
+  fetch(file_test_url + '/data/getFileDownloadURL', {
     method: 'POST',
     body: JSON.stringify(param),
     headers: new Headers({

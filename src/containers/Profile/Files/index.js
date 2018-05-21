@@ -103,75 +103,33 @@ class BTMyAssetSet extends Component{
       if (account_info == null) {
         return message.info(window.localeInfo["Header.PleaseLogInFirst"]);;
       }
-        //生成文件存储路径url
-        console.log('origin file', file)
-        let param={
-            "userName": getAccount().username,
-            "fileName": file.name,
-            "fileSize": file.size,
-            "filePolicy": "public",
-            "fileNumber": "1",
-            "fileHash":BTCryptTool.sha256(JSON.stringify(file)),
-            "signatures": "0xxxx"
-        };
+      //生成文件存储路径url
+      // console.log('origin file', file)
 
-        // 这部分是大文件上传的逻辑，先注释掉
-        // 这里是 guid 的生成
+      if ( this.props.fileList.findIndex(item => item.path == file.path) != -1 ) {
+        return message.info('重复上传');
+      }
 
-        // if (file.size > 200 * MegaByte) {
+      // if (file.size > 200 * MegaByte) {
          // 文件大小大于 200M
          // 需要分片上传
          console.log('uploader', uploader);
          uploader.addFile(file)
 
          // return false
-       // }
-
-
-        // param = {
-        //     "guid": new Date().getTime() + getAccount().username,
-        //     "file_name": file.name,
-        //     "chunks"
-        // }
-        //
-        // fetch('http://139.217.206.43:8080/v2/data/getFileUploadURL', {
-        //   method: 'post',
-        //   body: JSON.stringify(param)
-        // }).then(res => {
-        //   return res.json()
-        // }).then(res => {
-        //   console.log('res', res);
-        //   if (res.result == 200 && res.message == 'OK') {
-        //     // up_ajax.call(this, res.cache_url);
-        //     fetch(res.cache_url, {
-        //         method: 'PUT',
-        //         body: file
-        //     }).then(res => {
-        //       console.log('res', res);
-        //
-        //       fetch('http://139.217.206.43:8080/v2/data/getUploadProgress', {
-        //           method: 'POST',
-        //           body: JSON.stringify({
-        //             guid: param.guid,
-        //             slice:
-        //               "userName": getAccount().username,
-        //               "fileName": file.name
-        //           })
-        //       }).then(res => {
-        //         console.log('res', res);
-        //
-        //
-        //
-        //       })
-        //
-        //
-        //     })
-        //
-        //   }
-        // })
+      // }
 
         return
 
+        let param={
+          "userName": getAccount().username,
+          "fileName": file.name,
+          "fileSize": file.size,
+          "filePolicy": "public",
+          "fileNumber": "1",
+          "fileHash":BTCryptTool.sha256(JSON.stringify(file)),
+          "signatures": "0xxxx"
+        };
 
         BTFetch('/asset/getFileUploadURL','post',param,{service:'service'})
         .then(res => {
