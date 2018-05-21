@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import { Tabs } from 'antd';
 import moment from 'moment';
 import './styles.less';
-import BTList from '../../../components/BTList'
 import BTAssetDetail from './subviews/BTAssetDetail'
 import BTMyAssetSet from "./subviews/BTMyAssetSet"
 import {FormattedMessage} from 'react-intl'

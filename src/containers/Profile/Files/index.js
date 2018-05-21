@@ -39,7 +39,11 @@ class BTMyAssetSet extends Component{
     constructor(props){
         super(props);
         this.state = {
-            data:[],
+            data:[{
+              file_name: 'adf',
+              file_size: 345345,
+              create_time: 150134234,
+            }],
             hash:'',
             username:'',
             token:'',

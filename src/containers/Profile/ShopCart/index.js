@@ -1,5 +1,4 @@
 import React, {PureComponent} from 'react'
-import BTList from '../../../components/BTList'
 import BTShopListCell from './subviews/BTShopListCell'
 import {Popconfirm,Checkbox,Row,Col,Button,Table,message } from 'antd';
 import BTFetch from '../../../utils/BTFetch'

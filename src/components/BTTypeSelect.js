@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { Select } from 'antd'
 const Option = Select.Option;
 
@@ -25,7 +26,7 @@ class BTTypeSelect extends PureComponent {
 
   render() {
     return (
-      <Select defaultValue="11" style={{ width: 120 }} onChange={this.handleChange}>
+      <Select defaultValue={this.props.defaultValue} style={{ width: 120 }} onChange={this.handleChange}>
         <Option value="11">Voice</Option>
         <Option value="12">Video</Option>
         <Option value="13">Picture</Option>
@@ -35,5 +36,9 @@ class BTTypeSelect extends PureComponent {
   }
 
 }
+
+BTTypeSelect.propTypes = {
+  defaultValue: PropTypes.string
+};
 
 export default BTTypeSelect;
