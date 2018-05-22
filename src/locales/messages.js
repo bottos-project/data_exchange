@@ -106,7 +106,10 @@ module.exports = {
             id:"Message.MyMessages",
             defaultMessage:"消息"
         },
-
+        PreSale:{
+            id:'Menu.PreSale',
+            defaultMessage:'推销'
+        },
         Setting:{
             id:'Header.Setting',
             defaultMessage:'设置'

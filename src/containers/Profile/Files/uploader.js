@@ -10,15 +10,14 @@ import { get_ms_short } from '@/utils/dateTimeFormat'
 import { BTFetch } from '@/utils/BTFetch'
 import { getBlockInfo } from "@/utils/BTCommonApi";
 
-import { PackArraySize, PackStr16 } from '@/lib/msgpack/msgpack'
+import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/msgpack'
 
 const btcrypto = require('bottos-js-crypto')
 const message_pb = require('@/lib/proto/message_pb');
 const { messageProtoEncode } = require('@/lib/proto/index');
 
 // import BTFetch from '@/utils/BTFetch'
-
-const file_test_url = 'http://139.219.195.195:8080/v2'
+export const file_test_url = 'http://139.219.195.195:8080/v2'
 // const file_test_url = 'http://192.168.9.120:8080/v2'
 
 // 文件上传流程
@@ -300,28 +299,39 @@ function querySecondProgress(file) {
       console.log('上传真的完成');
       store.dispatch( updateUploadProgress(guid, 100) )
 
+      // 成功之后的文件注册
+      const storeAddr = res.storage_ip.map(({sguid, snode_ip}) => ({ sguid: sguid.slice(guid.length), snode_ip }) )
       let originParam = {
-        "fileHash":"",
+        "fileHash": guid,
         "info": {
           "userName": username || 'file',
-          "sessionId": "btd121",
           "fileSize": file.size || 100,
           "fileName": file.name || 'name',
           "filePolicy": "policytest",
-          "authPath": "sigtest",
-          "fileNumber": 200,
-          "signature": "sigtest"
+          "fileNumber": 1,
+          "simOrass": 0,
+      		"opType": 1,
+          "storeAddr": JSON.stringify(storeAddr)
         }
       }
 
       let b1 = PackArraySize(2)
       let b2 = PackStr16(originParam.fileHash)
-      let b3 = PackStr16(JSON.stringify(originParam.info))
 
-      let param = [...b1,...b2,...b3]
+      let b3 = PackArraySize(8)
+
+      let b4 = PackStr16(originParam.info.userName)
+      let b5 = PackUint64(originParam.info.fileSize)
+      let b6 = PackStr16(originParam.info.fileName)
+      let b7 = PackStr16(originParam.info.filePolicy)
+
+      let b8 = PackUint64(originParam.info.fileNumber)
+      let b9 = PackUint32(originParam.info.simOrass)
+      let b10 = PackUint32(originParam.info.opType)
+      let b11 = PackStr16(originParam.info.storeAddr)
+
+      let param = [...b1,...b2,...b3,...b4,...b5,...b6,...b7,...b8,...b9,...b10,...b11]
       console.log('param', param);
-
-      const storeAddr = res.storage_ip.map(({sguid, snode_ip}) => ({ sguid: sguid.slice(guid.length), snode_ip }) )
 
       let blockInfo = await getBlockInfo()
 
@@ -337,7 +347,6 @@ function querySecondProgress(file) {
         "method": "datafilereg",
         "param": param,
         "sig_alg": 1,
-        storeAddr: JSON.stringify(storeAddr)
       }
 
       // "signature": ""
@@ -350,9 +359,7 @@ function querySecondProgress(file) {
 
       console.log('fetchParam', fetchParam);
 
-      // 成功之后的文件注册
-
-      BTFetch('http://192.168.8.224:8080/v2/asset/registerFile', 'post', fetchParam, {full_path:true})
+      BTFetch('/asset/registerFile', 'post', fetchParam)
       .then(res => console.log('res', res))
 
     } else {
@@ -371,58 +378,5 @@ function querySecondProgress(file) {
 }
 
 uploader.on( 'uploadSuccess', querySecondProgress);
-
-
-function getDownloadFileIP(guid) {
-  if (process.env.NODE_ENV == 'development') {
-    var file_test_url = 'http://192.168.9.120:8080/v2'
-  }
-  fetch(file_test_url + '/data/getStorageIP', {
-    method: 'POST',
-    body: JSON.stringify({ guid }),
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    })
-  }).then(res => {
-    console.log('res', res);
-    let ip = res.ip.map(({sguid, snode_ip}) => {
-      // let _snode_ip = 私钥解密后的 snode_ip
-      return {
-        sguid: guid + sguid,
-        snode_ip: _snode_ip
-      }
-    })
-    // ip 字段中，sguid 其实是 chunk
-    // snode_ip 是加密后的，要通过私钥解密
-    // getFileDownloadURL({
-    //   "username": getAccount().username,
-    //   guid,
-    //   ip
-    // })
-  })
-
-}
-
-// getDownloadFileIP("e2f61c3f71d1defd3fa999dfa36953755c690689799962b48bebd836974e8cf9")
-
-function getFileDownloadURL(param) {
-
-  fetch(file_test_url + '/data/getFileDownloadURL', {
-    method: 'POST',
-    body: JSON.stringify(param),
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    })
-  }).then(res => res.json()).then(res => {
-    console.log('getFileDownLoadURL res', res);
-    res.url
-    let a = document.createElement('a');
-    a.href = res.url
-    a.download = param.guid
-    a.click();
-  })
-
-}
-
 
 export default uploader

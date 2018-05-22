@@ -19,7 +19,8 @@ const FormItem = Form.Item;
 const TextArea = Input.TextArea
 const Keystore = BTCryptTool.keystore
 
-function BTRegistSuccess({username, cryptStr}) {
+function BTRegistSuccess({username, keystoreObj}) {
+  let cryptStr = JSON.stringify(keystoreObj)
   function copyToClipboard() {
     const clipboard = window.electron.clipboard
     // console.log(clipboard.readText())
@@ -28,7 +29,7 @@ function BTRegistSuccess({username, cryptStr}) {
   }
 
   function downloadKeystore() {
-    BTIpcRenderer.exportKeyStore(username, cryptStr);
+    BTIpcRenderer.exportKeyStore(username, keystoreObj);
   }
 
   return (
@@ -304,8 +305,8 @@ class Regist extends PureComponent{
 
     render() {
       if (this.state.isRegistered) {
-        const {cryptStr, username} = this.state
-        return <BTRegistSuccess cryptStr={cryptStr} username={username} />
+        const {keystoreObj, username} = this.state
+        return <BTRegistSuccess keystoreObj={keystoreObj} username={username} />
       }
 
         const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;

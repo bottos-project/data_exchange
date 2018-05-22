@@ -121,6 +121,8 @@ export default class BTDashboard extends PureComponent {
            this.setState({
                NewAsset,
            })
+       } else {
+         console.log('暂无数据', res.code);
        }
     });
     this.setState({
@@ -153,7 +155,7 @@ export default class BTDashboard extends PureComponent {
 
   componentDidMount() {
       BTFetch('/dashboard/GetAllTypeTotal', 'post').then(res => {
-        if (res.code != 0) return;
+        if (res.code != 1) return;
 
         let data = res.data;
         if (data.length == 0) return;
@@ -168,8 +170,9 @@ export default class BTDashboard extends PureComponent {
               obj[item.type] = item.total
             }
           }
-          this.setState(obj);
         }
+        console.log('obj', obj);
+        this.setState(obj);
       });
       //注册人数
       this.getAccount()

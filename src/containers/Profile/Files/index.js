@@ -10,7 +10,7 @@ import {getAccount} from "../../../tools/localStore";
 import uuid from 'node-uuid'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import Base from 'webuploader/base'
-import uploader from './uploader'
+import uploader, { file_test_url } from './uploader'
 
 import ProgressList from './subviews/ProgressList'
 import './style.less'
@@ -32,6 +32,49 @@ function beforeUpload(file) {
     message.error(window.localeInfo["PersonalAsset.UploadFileSize"])
     return false;
   }
+}
+
+
+function getDownloadFileIP(guid) {
+  fetch(file_test_url + '/data/getStorageIP', {
+    method: 'POST',
+    body: JSON.stringify({ guid }),
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
+  }).then(res => {
+    console.log('res', res);
+    // let _snode_ip = 私钥解密后的 snode_ip
+    // ip 字段中，sguid 其实是 chunk
+    // snode_ip 是加密后的，要通过私钥解密
+    let ip = res.ip.map(({sguid, snode_ip}) => ({
+        sguid: guid + sguid,
+        snode_ip
+      })
+    )
+    return { guid, ip }
+  })
+}
+
+// getDownloadFileIP("e2f61c3f71d1defd3fa999dfa36953755c690689799962b48bebd836974e8cf9")
+
+function getFileDownloadURL(param) {
+
+  fetch(file_test_url + '/data/getFileDownloadURL', {
+    method: 'POST',
+    body: JSON.stringify(param),
+    headers: new Headers({
+      'Content-Type': 'application/json'
+    })
+  }).then(res => res.json()).then(res => {
+    console.log('getFileDownLoadURL res', res);
+    res.url
+    let a = document.createElement('a');
+    a.href = res.url
+    a.download = param.fileName
+    a.click();
+  })
+
 }
 
 
@@ -79,20 +122,30 @@ class BTMyAssetSet extends Component{
         ];
     }
 
-    download1(dataIndex){
+    async download1(fileName) {
+
+      let param = await getDownloadFileIP(guid)
+
+      param.username = getAccount().username
+      param.fileName = fileName
+
+      getFileDownloadURL(param)
+
+      return
+
+
         BTFetch('/asset/getDownLoadURL','post',{
             'userName':getAccount().username,
-            'fileName':dataIndex
+            fileName
         }).then(res=>{
-            console.log(this)
+            return console.log(this)
             if(res.code==1){
                 this.setState({href:res.data});
                 console.log(res.data);
                 let a = document.createElement('a');
                 let url = res.data;
-                let filename = dataIndex;
                 a.href = url;
-                a.download=filename;
+                a.download = fileName;
                 a.click();
             }else{
                 message.error(window.localeInfo["PersonalAsset.FailedToDownloadTheFile"])
