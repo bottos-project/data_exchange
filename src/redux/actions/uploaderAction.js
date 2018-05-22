@@ -17,7 +17,13 @@ export function addFile(file) {
   };
 };
 
-export function deleteFile(fid) {
+export function deleteFile(f) {
+  var fid = ''
+  if (typeof f == 'string') {
+    fid = f
+  } else if (typeof f == 'object') {
+    fid = f.id
+  }
   return {
     type: DELETE_FILE,
     fid

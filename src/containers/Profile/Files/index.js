@@ -188,7 +188,7 @@ class BTMyAssetSet extends Component{
         }).then(res => {
             if (res.code == 1 && res.data.rowCount > 0) {
               // message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
-                this.setState({ data: res.data.row })
+              this.setState({ data: res.data.row })
             }
         }).catch(error => console.error(error))
 

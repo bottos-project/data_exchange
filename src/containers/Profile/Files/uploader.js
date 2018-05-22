@@ -7,7 +7,7 @@ import {getAccount} from "@/tools/localStore";
 
 import { addFile, deleteFile, updateFile, updateUploadProgress } from '@/redux/actions/uploaderAction'
 import { get_ms_short } from '@/utils/dateTimeFormat'
-import { BTFetch } from '@/utils/BTFetch'
+import BTFetch from '@/utils/BTFetch'
 import { getBlockInfo } from "@/utils/BTCommonApi";
 
 import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/msgpack'
@@ -16,7 +16,6 @@ const btcrypto = require('bottos-js-crypto')
 const message_pb = require('@/lib/proto/message_pb');
 const { messageProtoEncode } = require('@/lib/proto/index');
 
-// import BTFetch from '@/utils/BTFetch'
 export const file_test_url = 'http://139.219.195.195:8080/v2'
 // const file_test_url = 'http://192.168.9.120:8080/v2'
 
@@ -380,5 +379,81 @@ function querySecondProgress(file) {
 }
 
 uploader.on( 'uploadSuccess', querySecondProgress);
+
+(async function() {
+  'use strict';
+  let guid = "dadsfg357456j467j67kj578k89k78k7"
+  let ip = [
+    {
+      sguid: 0,
+      snode_ip: '192.168.9.120'
+    },
+    {
+      sguid: 1,
+      snode_ip: '192.168.9.120'
+    },
+  ]
+  let originParam = {
+    "fileHash": guid,
+    "info": {
+      "userName": getAccount().username,
+      "fileSize": 100,
+      "fileName": 'name',
+      "filePolicy": "policytest",
+      "fileNumber": 1,
+      "simOrass": 0,
+      "opType": 1,
+      "storeAddr": JSON.stringify(ip)
+    }
+  }
+
+  let b1 = PackArraySize(2)
+  let b2 = PackStr16(originParam.fileHash)
+
+  let b3 = PackArraySize(8)
+
+  let b4 = PackStr16(originParam.info.userName)
+  let b5 = PackUint64(originParam.info.fileSize)
+  let b6 = PackStr16(originParam.info.fileName)
+  let b7 = PackStr16(originParam.info.filePolicy)
+
+  let b8 = PackUint64(originParam.info.fileNumber)
+  let b9 = PackUint32(originParam.info.simOrass)
+  let b10 = PackUint32(originParam.info.opType)
+  let b11 = PackStr16(originParam.info.storeAddr)
+
+  let param = [...b1,...b2,...b3,...b4,...b5,...b6,...b7,...b8,...b9,...b10,...b11]
+  console.log('param', param);
+
+  let blockInfo = await getBlockInfo()
+
+  console.log('blockInfo', blockInfo);
+
+  let privateKey = Buffer.from(getAccount().privateKey, 'hex')
+
+  let fetchParam = {
+    "version": 1,
+    ...blockInfo,
+    "sender": getAccount().username,
+    "contract": "datafilemng",
+    "method": "datafilereg",
+    "param": param,
+    "sig_alg": 1,
+  }
+
+  // "signature": ""
+  let encodeBuf = messageProtoEncode(message_pb, fetchParam)
+  let hashData = btcrypto.sha256(btcrypto.buf2hex(encodeBuf))
+  let sign = btcrypto.sign(hashData, privateKey)
+  fetchParam.signature = sign.toString('hex')
+  // fetchParam.param = param.map(s1 => int10ToStr16(s1)).join('')
+  fetchParam.param = btcrypto.buf2hex(param)
+
+  console.log('fetchParam', fetchParam);
+
+  BTFetch('/asset/registerFile', 'post', fetchParam)
+  .then(res => console.log('res', res))
+
+})
 
 export default uploader

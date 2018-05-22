@@ -101,8 +101,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    deleteFile(file) {
-      dispatch( deleteFile(file.id) )
+    deleteFile(f) {
+      dispatch( deleteFile(f) )
     }
   }
 }

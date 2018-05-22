@@ -1,5 +1,5 @@
 import BTFetch from "../../../utils/BTFetch";
-import {getBlockInfo, getDataInfo} from "../../../utils/BTCommonApi";
+import {getBlockInfo, getDataInfo, getSignaturedParam } from "../../../utils/BTCommonApi";
 import React,{PureComponent} from 'react'
 import { Carousel, Button, Tag, Input, message } from 'antd';
 import {FormattedMessage} from 'react-intl'
@@ -31,27 +31,27 @@ export default class BTDemanDetail extends PureComponent{
     this.assetListModal.setState({
         visible:true
     })
-    let param={
-        userName:getAccount().username||'',
-        random:Math.ceil(Math.random()*100),
-        signature:'0xxxx'
+    let param = {
+      ...getSignaturedParam(getAccount()),
+      "pageSize": 10,
+      "pageNum": 1,
     };
-    BTFetch('/asset/query','post',param)
-      .then(res=>{
-          if(res.code==0){
-              if(res.data.rowCount==0){
+    BTFetch('/asset/queryMyAsset', 'post', param)
+      .then(res => {
+          if (res.code == 1) {
+              if (res.data.row_count == 0) {
                   message.warning(window.localeInfo["Demand.ThereIsNoDataForTheTimeBeing"])
                   return;
               };
               this.setState({
                   exampledata:res.data.row,
               })
-          }else{
+          } else {
               message.warning(window.localeInfo["Demand.FailedToGetTheFileResourceSet"])
               return;
           }
       })
-      .catch(error=>{
+      .catch(error => {
           message.warning(window.localeInfo["Demand.FailedToGetTheFileResourceSet"])
       })
   }
