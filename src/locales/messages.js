@@ -141,7 +141,7 @@ module.exports = {
         },
         YourAccountHasBeenRegisteredSuccessfully:{
             id:'Header.YourAccountHasBeenRegisteredSuccessfully',
-            defaultMessage:'您的账号已经注册成功，请备份keystore文件'
+            defaultMessage:'请备份keystore文件'
         },
         BackupYourKeystore:{
             id:'Header.BackupYourKeystore',
