@@ -35,6 +35,7 @@ class UploadingFile extends PureComponent {
 
   handleClose(event) {
     const { deleteFile, id, status } = this.props
+    console.log('status', status);
     if (status == 'done' || status == 'error') {
       deleteFile(id)
       event.stopPropagation()

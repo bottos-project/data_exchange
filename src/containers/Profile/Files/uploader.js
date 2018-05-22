@@ -165,10 +165,12 @@ function getUploadURL(file) {
       return uploader.upload()
 
     } else {
+      file.status = 'error'
+      store.dispatch( updateFile(file) )
       message.error(res.status)
     }
   }).catch(err => {
-    console.error(err);
+    console.error('getFileUploadURL error', err);
   })
 
 }
@@ -261,7 +263,7 @@ function progressChange(file, percentage) {
 
 }
 
-var percent_throttled = throttle(progressChange, 1000)
+var percent_throttled = throttle(progressChange, 500)
 
 uploader.on( 'uploadProgress', percent_throttled)
 

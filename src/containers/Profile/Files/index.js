@@ -163,7 +163,8 @@ class BTMyAssetSet extends Component{
       //生成文件存储路径url
       // console.log('origin file', file)
 
-      if ( this.props.fileList.findIndex(item => item.path == file.path) != -1 ) {
+      let hadFile = this.props.fileList.find(item => item.path == file.path)
+      if (hadFile && hadFile.status != 'error') {
         return message.info('重复上传');
       }
 
