@@ -4,6 +4,7 @@ module.exports = {
         version:'v2'
     },
     mock:{
+        // base_url:"http://192.168.9.242:8080/v3"
         base_url:"http://192.168.9.223:8080/v3"
     }
 }

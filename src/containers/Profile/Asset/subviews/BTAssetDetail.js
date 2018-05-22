@@ -6,6 +6,8 @@ import {getBlockInfo, getDataInfo} from "../../../../utils/BTCommonApi";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import {getAccount} from "../../../../tools/localStore";
+import {queryProtoEncode} from '../../../../lib/proto/index'
+import * as BTCryptTool from 'bottos-js-crypto'
 
 const PersonalAssetMessages = messages.PersonalAsset;
 const { Option, OptGroup } = Select;
@@ -182,8 +184,6 @@ export default class BTAssetDetail extends PureComponent{
             message.error(window.localeInfo["PersonalAsset.FailedPromote"])
             return ;
         }
-        console.log(key.asset_id);
-
         let param={
             ref_block_num: blockInfo.data.ref_block_num,
             ref_block_prefix: blockInfo.data.ref_block_prefix,
@@ -227,34 +227,53 @@ export default class BTAssetDetail extends PureComponent{
 
 
     componentDidMount() {
-      if (!getAccount()) {
-        location.hash = '#/dashboard'
-        return
-      }
-
-        let param={
-            "userName":getAccount().username,
-            "random": Math.ceil(Math.random()*100),
-            "signatures": "0xxxx"
-        }
-
-        BTFetch("/asset/query",'post',param)
-        .then(res=>{
-           if(res.code==0){
-               if(res.data.rowCount==0){
-                   // message.warning('暂无数据');
-                   //message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
-                   return;
-               }
-               // console.log(res.data)
-               this.setState({
-                  data: res.data.row
-               })
-           }
-        }).catch(error=>{
-            message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
-        })
+        this.searchPublishAsset()
     }
+
+    searchPublishAsset(){
+        let localStorage = window.localStorage
+        let account_info = JSON.parse(localStorage.account_info)
+        let sign = this.getSignature(account_info.username,account_info.privateKey)
+        let params = {
+            "pageSize": 10,
+            "pageNum": 1,
+            "assetType": 1,
+            "username": account_info.username,
+            ...sign
+        }
+        let url = '/asset/queryMyAsset'
+        BTFetch(url,'POST',params)
+            .then(response=>{
+                if(response&& response.code==1){
+                    let data = response.data
+                    if(Array.isArray(data.row)){
+                        this.setState({data:response.data.row})
+                    }else{
+                        message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+                    }
+                }else{
+                    message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+                }
+            }).catch(error=>{
+                message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+            })
+
+    }
+
+    getSignature(username,privateKeyStr){
+        let privateKey = Buffer.from(privateKeyStr,'hex') 
+        let random = window.uuid
+        let msg = {username,random}
+        let query_pb = require('../../../../lib/proto/query_pb')
+        let loginProto = queryProtoEncode(query_pb,msg)
+        let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
+        let signature = BTCryptTool.sign(hash,privateKey).toString('hex')
+       return {signature,random}
+    }
+
+
+
+
     render() {
         const { data } = this.state;
         const columns = this.columns(data);

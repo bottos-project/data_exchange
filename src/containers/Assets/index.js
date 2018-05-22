@@ -23,22 +23,24 @@ export default class BTAssets extends Component {
     }
 
     componentDidMount() {
-        this.getPagination(1, 16)
+        this.getPagination(1, 10)
     }
 
-    onChange(page,pageSize) {
+    onChange(page,pageSize,assetType=this.state.activeKey) {
         // this.setState({dataSource:[]});
-        this.getPagination(page,pageSize)
+        this.getPagination(page,pageSize,assetType)
     }
 
-    getPagination(page,pageSize) {
-        let reqUrl = '/asset/query';
+    getPagination(page,pageSize,assetType=0) {
+        let reqUrl = '/asset/queryAllAsset';
         let param = {
             "pageSize": pageSize,
             "pageNum": page,
+            assetType:assetType
         };
+
         BTFetch(reqUrl,'POST',param).then(response=>{
-            if (response && response.code == 0) {
+            if (response && response.code == 1) {
               const {rowCount, row} = response.data
                 if (rowCount == 0 || !Array.isArray(row)) {
                     return ;
@@ -51,15 +53,14 @@ export default class BTAssets extends Component {
                 message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
             }
         }).catch(error => {
-            console.log(error)
             message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
 
         });
     }
 
     handleChange = (activeKey) => {
-      // console.log('activeKey', activeKey);
       this.setState({ activeKey });
+      this.getPagination(1,10,activeKey)
     }
 
     render() {

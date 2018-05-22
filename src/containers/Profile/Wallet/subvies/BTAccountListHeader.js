@@ -16,21 +16,23 @@ export default class BTAccountListHeader extends PureComponent{
         super(props)
         this.state = {
             visible:false,
-            password:''
+            password:'',
+            keyStoreObj:'',
+            account_name:''
         }
     }
 
     importAccount = () => {
-        this.setState({
-            visible:true,
-            keyStoreStr:''
-        })
+        this.setState({visible:true})
     }
 
     importKeyStore(){
-        let keyStoreStr = BTIpcRenderer.importFile()
+        let keyObj = BTIpcRenderer.importFile()
+        console.log({keyObj})
         this.setState({
-            keyStoreStr
+            visible:true,
+            keyStoreObj:JSON.parse(keyObj.result),
+            account_name:keyObj.account_name
         })
     }
 
@@ -45,19 +47,17 @@ export default class BTAccountListHeader extends PureComponent{
             message.error('请先登录')
             return
         }
-        try {
-            let keyStoreCryptStr = BTCryptTool.aesDecrypto(this.state.keyStoreStr,this.state.password)
-            let keyStore = JSON.parse(keyStoreCryptStr);
-            let accountInfo = {
-                username:account.username,
-                account_name:keyStore.account_name
-            }
-            BTIpcRenderer.saveKeyStore(accountInfo,this.state.keyStoreStr);
-            this.setState({password:'',visible:false})
-            window.location.reload()
-        } catch(error) {
-            message.error('密码错误')
+
+        let localStorage = window.localStorage
+        let username = localStorage.username
+        let password = this.state.password
+        let privateKey = BTIpcRenderer.decryptKeystore({password,keyStoreObj:this.state.keyStoreObj})
+        if(privateKey.error){
+            message.error(window.localeInfo["Header.ThePasswordAndTheKeystoreDoNotMatch"])
+            return
         }
+        BTIPcRenderer.saveKeyStore({username:username,account_name:this.state.account_name},this.state.keyStoreObj)
+        this.setState({visible:false})
     }
 
     onHandleCancel(){

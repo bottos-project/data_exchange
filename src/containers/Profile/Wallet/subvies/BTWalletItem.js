@@ -24,16 +24,16 @@ export default class BTWalletItem extends PureComponent{
     }
 
     exportAccount(accountName){
-        let exportFileName = accountName
+        let localStorage = window.localStorage
         let account_info = JSON.parse(localStorage.account_info)
-        let accountInfo = {
-            username:account_info.username,
-            account_name:accountName
+        let username = account_info.username
+        let account_name = accountName
+        let result = BTIpcRenderer.getKeyStore({username,account_name})
+        if(result.error){
+            message.error("导出失败");
+            return
         }
-        let keyStore = BTIpcRenderer.getKeyStore(accountInfo);
-        if(!keyStore.error){
-            BTIpcRenderer.exportKeyStore(accountName,JSON.parse(keyStore.result))
-        }
+        BTIpcRenderer.exportKeyStore(accountName,result.keyStoreObj)
     }
 
     onHandleOk(){

@@ -24,6 +24,7 @@ ipcMain.on(ipcEventName.get_key_store,(event,accountInfo)=>{
                 error
             }
         }else{
+            console.log({result})
             let keyStoreObj = JSON.parse(result)
             event.returnValue = {error,keyStoreObj}
         }

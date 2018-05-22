@@ -171,17 +171,15 @@ class BTPublishAssetModal extends PureComponent{
         "asset_id": "filehashtest2",
         "basic_info": {
           "username": "btd121",
-          "assetType": "sessidtestwc2",
           "assetName": "assetnametest",
+          "assetType": "sessidtestwc2",
           "featureTag": "feature_tag1",
-          "samplePath":"samplsdsfePath",
           "sampleHash": "samplehasttest",
-          "storagePath":"storagePath",
           "storageHash": "sthashtest",
           "expireTime": 345,
+          "opType":1,
           "price": 1,
           "description": "description",
-          "uploadDate":1323,
           "signature":"signature"
         }
       }

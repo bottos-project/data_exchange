@@ -13,20 +13,21 @@ export const registAssetPack = (did)=>{
     let arrAssetName = BTPack.PackStr16(basic_info.assetName)
     let arrAssetType = BTPack.PackStr16(basic_info.assetType)
     let arrFeatureTag = BTPack.PackStr16(basic_info.featureTag)
-    let arrSamplePath = BTPack.PackStr16(basic_info.samplePath)
+    // let arrSamplePath = BTPack.PackStr16(basic_info.samplePath)
     let arrSampleHash = BTPack.PackStr16(basic_info.sampleHash)
-    let arrStoragePath = BTPack.PackStr16(basic_info.storagePath)
+    // let arrStoragePath = BTPack.PackStr16(basic_info.storagePath)
     let arrStorageHash = BTPack.PackStr16(basic_info.storageHash)
     let arrExpireTime = BTPack.PackUint32(basic_info.expireTime)
+    let arrOpType = BTPack.PackUint32(basic_info.opType)
     let arrPrice = BTPack.PackUint64(basic_info.price)
     let arrDescription = BTPack.PackStr16(basic_info.description)
-    let arrUploadDate = BTPack.PackUint32(basic_info.uploadDate)
+    // let arrUploadDate = BTPack.PackUint32(basic_info.uploadDate)
     let arrSignature = BTPack.PackStr16(basic_info.signature)
 
     let arrBuf = new ArrayBuffer()
     arrBuf = [...arr1Size,...arrAssetId,...arr2Size,...arrUsername,...arrAssetName,...arrAssetType,
-        ...arrFeatureTag,...arrSamplePath,...arrSampleHash,
-        ...arrStoragePath,...arrStorageHash,...arrExpireTime,...arrPrice,...arrDescription,...arrUploadDate,...arrSignature]
+        ...arrFeatureTag,...arrSampleHash,
+        ...arrStorageHash,...arrExpireTime,...arrOpType,...arrPrice,...arrDescription,...arrSignature]
 
     return arrBuf
 }
