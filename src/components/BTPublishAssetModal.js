@@ -5,7 +5,7 @@ import {getAccount} from "../tools/localStore";
 // import messages from '../locales/messages'
 import {Icon, Modal, Radio, Select, message, Button, Input, DatePicker, TimePicker, Cascader, Col, Row } from 'antd';
 import BTAssetList from './BTAssetList'
-import BTCryptTool from '@bottos-project/bottos-crypto-js'
+import BTCryptTool from 'bottos-js-crypto'
 import {getBlockInfo,getDataInfo} from '../utils/BTCommonApi'
 import BTFetch from "../utils/BTFetch";
 import {options} from '../utils/option'
@@ -15,6 +15,8 @@ import moment from "moment"
 import uuid from 'node-uuid'
 import ConfirmButton from './ConfirmButton'
 import BTTypeSelect from './BTTypeSelect'
+import * as BTSign from '../lib/sign/BTSign'
+import {registAssetPack} from '../lib/msgpack/BTPackManager'
 
 const PersonalAssetMessages = messages.PersonalAsset;
 const HeaderMessages = messages.Header;
@@ -60,7 +62,6 @@ class BTPublishAssetModal extends PureComponent{
     }
 
     commitAsset(type) {
-
       message.destroy()
 
       this.assetListModal.setState({
@@ -152,6 +153,59 @@ class BTPublishAssetModal extends PureComponent{
     }
 
     async updata(){
+      let blockInfo = await getBlockInfo()
+      let account_info = this.props.account_info
+      let privateKeyStr = account_info.privateKey
+      let privateKey = Buffer.from(privateKeyStr,'hex')
+
+      let message = {
+        "version": 1,
+        ...blockInfo,
+        "sender": "assetmng",
+        "contract": "assetmng",
+        "method": "datafilereg",
+        "sig_alg": 1
+      }
+
+      let did = {
+        "asset_id": "filehashtest2",
+        "basic_info": {
+          "username": "btd121",
+          "assetType": "sessidtestwc2",
+          "assetName": "assetnametest",
+          "featureTag": "feature_tag1",
+          "samplePath":"samplsdsfePath",
+          "sampleHash": "samplehasttest",
+          "storagePath":"storagePath",
+          "storageHash": "sthashtest",
+          "expireTime": 345,
+          "price": 1,
+          "description": "description",
+          "uploadDate":1323,
+          "signature":"signature"
+        }
+      }
+      let arrBuf = registAssetPack(did)
+      let params = Object.assign({},message)
+      params.param = arrBuf
+
+      let sign = BTSign.messageSign(params,privateKey)
+      params.signature = sign.toString('hex')
+      params.param = BTCryptTool.buf2hex(arrBuf)
+     
+      let url = '/asset/registerAsset'
+
+      console.log({params})
+
+      BTFetch(url,'POST',params)
+      .then(response=>{
+        console.log({response})
+      }).catch(error=>{
+        console.log('error')
+      })
+    }
+
+    async updata1(){
         message.destroy();
         for(const key in this.state){
             if(this.state[key]==''){

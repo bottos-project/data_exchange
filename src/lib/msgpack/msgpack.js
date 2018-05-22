@@ -49,7 +49,7 @@ const PackUint32 = (value)=>{
 
 // TODO:暂时方案
 const PackUint64 = (value)=>{
-  const buf = new ArrayBuffer(9)
+  const buf = new Uint8Array(9)
   buf[0]=UINT64
   buf[1]=0
   buf[2]=0
