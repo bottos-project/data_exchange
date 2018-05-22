@@ -40,6 +40,7 @@ export default class BTAssets extends Component {
         };
 
         BTFetch(reqUrl,'POST',param).then(response=>{
+            console.log({response})
             if (response && response.code == 1) {
               const {row_count, row} = response.data
                 if (row_count == 0 || !Array.isArray(row)) {

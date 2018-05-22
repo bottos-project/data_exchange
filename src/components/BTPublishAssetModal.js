@@ -153,6 +153,21 @@ class BTPublishAssetModal extends PureComponent{
     }
 
     async updata(){
+      if(this.state.number<=0||this.state.number>=10000000000){
+        message.warning(window.localeInfo["PersonalAsset.InputPrice"]);
+        return;
+      }
+      let reg=/^\d+(?:\.\d{1,10})?$/
+      if(!reg.test(this.state.number)){
+          message.warning('输入正确的价格');
+          return;
+      }
+
+      if (this.state.date11 == '') {
+        message.warning('请输入截止时间');
+        return;
+      }
+
       let blockInfo = await getBlockInfo()
       let account_info = this.props.account_info
       let privateKeyStr = account_info.privateKey
@@ -161,28 +176,34 @@ class BTPublishAssetModal extends PureComponent{
       let message = {
         "version": 1,
         ...blockInfo,
-        "sender": "assetmng",
+        "sender": account_info.username,
         "contract": "assetmng",
         "method": "datafilereg",
         "sig_alg": 1
       }
 
+      let featureTag = this.state.tag1 + '-' + this.state.tag2 + '-' +this.state.tag3
+      let expire_time_string = this.state.date11 + ' ' + (this.state.timeValue ? this.state.timeValue : '')
+      let expire_time = new Date(expire_time_string).getTime() / 1000
+      console.log({expire_time:Number.parseInt(this.state.number)})
+
       let did = {
-        "asset_id": "filehashtest2",
+        "asset_id": window.uuid,
         "basic_info": {
-          "username": "btd121",
-          "assetName": "assetnametest",
-          "assetType": "sessidtestwc2",
-          "featureTag": "feature_tag1",
-          "sampleHash": "samplehasttest",
-          "storageHash": "sthashtest",
-          "expireTime": 345,
-          "opType":1,
-          "price": 1,
-          "description": "description",
-          "signature":"signature"
+          "username": account_info.username,
+          "assetName": this.state.title,
+          "assetType": this.state.dataAssetType,
+          "featureTag": featureTag,
+          "sampleHash": this.state.sample_hash,
+          "storageHash": this.state.storage_hash,
+          "expireTime": expire_time,
+          "opType":Number.parseInt(this.state.dataAssetType),
+          "price": Number.parseInt(this.state.number),
+          "description": this.state.description
         }
       }
+
+      console.log({did})
       let arrBuf = registAssetPack(did)
       let params = Object.assign({},message)
       params.param = arrBuf
@@ -193,13 +214,16 @@ class BTPublishAssetModal extends PureComponent{
      
       let url = '/asset/registerAsset'
 
-      console.log({params})
-
       BTFetch(url,'POST',params)
       .then(response=>{
         console.log({response})
+        if(response && response.code==1){
+          message.success('success')
+        }else{
+          message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
+        }
       }).catch(error=>{
-        console.log('error')
+        message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
       })
     }
 
@@ -220,7 +244,7 @@ class BTPublishAssetModal extends PureComponent{
             message.warning('输入正确的价格');
             return;
         }
-        console.log(this.state)
+
         if (this.state.date11 == '') {
           message.warning('请输入截止时间');
           return;
@@ -407,10 +431,10 @@ class BTPublishAssetModal extends PureComponent{
                     placeholder={window.localeInfo["PersonalAsset.SelectDate"]}
                     onChange={this.dataPicker}
                     disabledDate={(current) => current < moment().endOf('day')}
-                    value={moment(this.state.date11, 'HH:mm:ss')}
+                    // value={moment(this.state.date11, 'HH:mm:ss')}
                 />
                 {this.state.date11 &&
-                <TimePicker value={moment(this.state.timeValue, 'HH:mm:ss')} onChange={this.onTimeChange} />}
+                <TimePicker onChange={this.onTimeChange} />}
               </Col>
             </Row>
 

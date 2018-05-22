@@ -22,12 +22,12 @@ export const registAssetPack = (did)=>{
     let arrPrice = BTPack.PackUint64(basic_info.price)
     let arrDescription = BTPack.PackStr16(basic_info.description)
     // let arrUploadDate = BTPack.PackUint32(basic_info.uploadDate)
-    let arrSignature = BTPack.PackStr16(basic_info.signature)
+    // let arrSignature = BTPack.PackStr16(basic_info.signature)
 
     let arrBuf = new ArrayBuffer()
     arrBuf = [...arr1Size,...arrAssetId,...arr2Size,...arrUsername,...arrAssetName,...arrAssetType,
         ...arrFeatureTag,...arrSampleHash,
-        ...arrStorageHash,...arrExpireTime,...arrOpType,...arrPrice,...arrDescription,...arrSignature]
+        ...arrStorageHash,...arrExpireTime,...arrOpType,...arrPrice,...arrDescription]
 
     return arrBuf
 }

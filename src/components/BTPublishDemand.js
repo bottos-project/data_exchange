@@ -38,6 +38,7 @@ const initialState = {
     date11: null,
     newdata: [],
     getFileNameTemp:'',
+    opType:0
 
 }
 
@@ -143,6 +144,9 @@ class BTPublishDemand extends PureComponent{
       let privateKeyStr = account_info.privateKey
       let privateKey = Buffer.from(privateKeyStr,'hex')
 
+
+      let expire_time = this.state.date + ''
+
       let params = {
         "version": 1,
         ...blockInfo,
@@ -153,18 +157,18 @@ class BTPublishDemand extends PureComponent{
       }
 
       let did = {
-        "dataReqId": "1",
+        "dataReqId": window.uuid,
         "basic_info": {
           "username": account_info.username,
           "reqName": this.state.title || '',
-          "reqType": 1,
-          "featureTag": "1",
-          "sampleHash": "1",
-          "expireTime": 1455379533,
-          "opType": 2,
-          "price": 1000,
+          "reqType": this.state.ddatePicker || 1,
+          "featureTag": 1,
+          "sampleHash": this.state.getFileNameTemp || '',
+          "expireTime": Number.parseInt(expire_time),
+          "opType": this.state.opType,
+          "price": this.state.number,
           "favoriFlag": 1,
-          "description": "1"
+          "description": this.state.textArea
         }
       }
 
@@ -174,14 +178,16 @@ class BTPublishDemand extends PureComponent{
       params.signature = sign.toString('hex')
       params.param = BTCrypto.buf2hex(packBuf)
 
-      console.log({params})
-
       let url = '/requirement/Publish'
       BTFetch(url,'POST',params)
       .then(response=>{
-        console.log({response})
+        if(response && response.code==1){
+          message.warning(window.localeInfo["PersonalDemand.SuccessfulToPublishTheDemand"]);
+        }else{
+          message.warning(window.localeInfo["PersonalDemand.FailedToPublishTheDemand"]);
+        }
       }).catch(error=>{
-        console.log({error})
+        message.warning(window.localeInfo["PersonalDemand.FailedToPublishTheDemand"]);
       })
     }
 
@@ -335,7 +341,7 @@ class BTPublishDemand extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.AssetType} />
               </Col>
               <Col span={12}>
-                <BTTypeSelect />
+                <BTTypeSelect onChange={(value)=>this.setState({opType:value})}/>
               </Col>
             </Row>
 
