@@ -1,4 +1,5 @@
 import React, {PureComponent} from 'react'
+import { connect } from 'react-redux'
 import moment from "moment"
 import { Input, DatePicker, message, Button, Row, Col } from 'antd'
 import BTAssetList from './BTAssetList'
@@ -11,6 +12,9 @@ import uuid from 'node-uuid'
 import ConfirmButton from './ConfirmButton'
 import BTTypeSelect from './BTTypeSelect'
 import { toFixedWithoutZero } from '@/utils/number'
+import {registDemandPack} from '../lib/msgpack/BTPackManager'
+import {messageSign} from '../lib/sign/BTSign'
+import BTCrypto from 'bottos-js-crypto'
 
 const PersonalDemandMessages = messages.PersonalDemand;
 const PersonalAssetMessages = messages.PersonalAsset;
@@ -37,7 +41,7 @@ const initialState = {
 
 }
 
-export default class BTPublishDemand extends PureComponent{
+class BTPublishDemand extends PureComponent{
     constructor(props) {
         super(props)
         this.state = initialState
@@ -133,8 +137,58 @@ export default class BTPublishDemand extends PureComponent{
         })
     }
 
-    //点击后数据收集、fetch
     async updata(){
+      let blockInfo = await getBlockInfo()
+      let account_info = this.props.account_info
+      let privateKeyStr = account_info.privateKey
+      let privateKey = Buffer.from(privateKeyStr,'hex')
+
+      let params = {
+        "version": 1,
+        ...blockInfo,
+        "sender": account_info.username,
+        "contract": "datareqmng",
+        "method": "datareqreg",
+        "sig_alg": 1
+      }
+
+      let did = {
+        "dataReqId": "1",
+        "basic_info": {
+          "username": account_info.username,
+          "reqName": this.state.title || '',
+          "reqType": 1,
+          "featureTag": "1",
+          "sampleHash": "1",
+          "expireTime": 1455379533,
+          "opType": 2,
+          "price": 1000,
+          "favoriFlag": 1,
+          "description": "1"
+        }
+      }
+
+      let packBuf = registDemandPack(did)
+      params.param = packBuf
+      let sign = messageSign(params,privateKey)
+      params.signature = sign.toString('hex')
+      params.param = BTCrypto.buf2hex(packBuf)
+
+      console.log({params})
+
+      let url = '/requirement/Publish'
+      BTFetch(url,'POST',params)
+      .then(response=>{
+        console.log({response})
+      }).catch(error=>{
+        console.log({error})
+      })
+    }
+
+
+
+    //点击后数据收集、fetch
+    async updata1(){
         message.destroy();
         if(!this.state.title || !this.state.date || !this.state.textArea){
             message.warning(window.localeInfo["PersonalDemand.PleaseImproveTheDemand"])
@@ -319,3 +373,11 @@ export default class BTPublishDemand extends PureComponent{
         )
     }
 }
+
+
+function mapStateToProps(state) {
+  const account_info = state.headerState.account_info
+  return { account_info }
+}
+
+export default connect(mapStateToProps)(BTPublishDemand)

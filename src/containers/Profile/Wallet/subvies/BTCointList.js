@@ -14,12 +14,31 @@ export default class BTAccountList extends PureComponent{
         }
     }
     componentDidMount(){
-        this.getAccountList(this.props.selectWallet)
+        // this.getAccountList(this.props.selectWallet)
+        this.getUserBalance()
     }
 
     componentWillReceiveProps(nextProps){
         let selectWallet = nextProps.selectWallet;
         this.getAccountList(selectWallet)
+    }
+
+    getUserBalance(){
+        console.log("getUserBalance")
+        let balanceList = [{
+			"name": "bto",
+			"balance": 1000 * Math.pow(10,10),
+			"cny": 100,
+			"usd": 16
+		},
+		{
+			"name": "sto",
+			"balance": 90000 * Math.pow(10,10),
+			"cny": 100,
+			"usd": 16
+        }]
+        
+        this.setState({accoutList:balanceList})
     }
 
     getAccountList(selectWallet){

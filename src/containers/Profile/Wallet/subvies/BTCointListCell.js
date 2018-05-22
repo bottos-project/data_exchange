@@ -31,12 +31,12 @@ export default class BTCointListCell extends PureComponent{
             <div className="container route-children-bg accountItem">
               <div className="flex accountLeft">
                   <div>
-                      <span className="font25 colorTitle">{props.coinName}</span>
+                      <span className="font25 colorTitle">{props.name}</span>
                       <span>
                           <FormattedMessage {...WalletMessages.AvailableCash}/>
                       </span>
                   </div>
-                  <div className="font25 colorRed">{props.coinNum/Math.pow(10,10)}</div>
+                  <div className="font25 colorRed">{props.balance/Math.pow(10,10)}</div>
               </div>
               <div>
                   <Button type="primary" onClick={()=>this.transaction()}>
@@ -50,7 +50,7 @@ export default class BTCointListCell extends PureComponent{
                   </Button> */}
               </div>
             </div>
-            <BTTransitionHeight show={this.state.visible} height={170}>
+            <BTTransitionHeight show={this.state.visible} height={220} style={{marginBottom:20}}>
               <TransactionForm {...this.props} closeModal={()=>this.onHandleCancel()}/>
             </BTTransitionHeight>
         </div>

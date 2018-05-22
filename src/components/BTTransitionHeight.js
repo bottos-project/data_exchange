@@ -18,7 +18,7 @@ const timeout={
 class BTTransitionHeight extends Component {
 
   render() {
-    const { show, height, children, ..._props } = this.props
+    const { show, height, children, style, ..._props } = this.props
 
     const transitionStyles = {
       entering: null,
@@ -38,7 +38,8 @@ class BTTransitionHeight extends Component {
           {state => (
             <div style={{
               ...defaultStyle,
-              ...transitionStyles[state]
+              ...transitionStyles[state],
+              ...style
             }} {..._props}>
               {children}
             </div>
