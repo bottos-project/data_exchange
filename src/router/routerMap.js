@@ -18,6 +18,7 @@ import BTSignIn from '../containers/SignIn'
 import BTHome from '../containers'
 import BTCollect from '../containers/Profile/Collect'
 import BTCheck from '../containers/Profile/Check'
+import BTPreSale from '../containers/Profile/PreSale'
 import BTProfileAsset from '../containers/Profile/Asset'
 import BTProfileNeed from '../containers/Profile/Need'
 import BTMyAssetSet from '../containers/Profile/Files'
@@ -73,6 +74,7 @@ class RouterMap extends PureComponent {
               </Route>
             </Route>
             <Route path="check" name='Check' breadcrumbName='Check' component={BTCheck} />
+            <Route path="presale" name='PreSale' breadcrumbName='PreSale' component={BTPreSale} />
             <Route path="collect" name='Collect' breadcrumbName='Collect' component={BTCollect} />
             {/* <Route path="shopcart" breadcrumbName='Shopcart' component={BTShopCart} /> */}
             {/* <Route path="setting" breadcrumbName='Setting' component={BTSetting} /> */}

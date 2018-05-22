@@ -106,7 +106,10 @@ module.exports = {
             id:"Message.MyMessages",
             defaultMessage:"消息"
         },
-
+        PreSale:{
+            id:'Menu.PreSale',
+            defaultMessage:'推销'
+        },
         Setting:{
             id:'Header.Setting',
             defaultMessage:'设置'
@@ -141,7 +144,7 @@ module.exports = {
         },
         YourAccountHasBeenRegisteredSuccessfully:{
             id:'Header.YourAccountHasBeenRegisteredSuccessfully',
-            defaultMessage:'您的账号已经注册成功，请备份keystore文件'
+            defaultMessage:'请备份keystore文件'
         },
         BackupYourKeystore:{
             id:'Header.BackupYourKeystore',

@@ -8,6 +8,7 @@ module.exports = {
     "Menu.Blocks":"Blocks",
     "Menu.Profile":'Profile',
     "Menu.Check":"Check",
+    "Menu.PreSale":"Presale",
     "Menu.Wallet":"Wallet",
     "Menu.DemandDetails":"Demand Details",
     "Menu.AssetDetails":"Asset Details",

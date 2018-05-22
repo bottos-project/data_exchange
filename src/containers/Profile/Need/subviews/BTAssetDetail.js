@@ -1,6 +1,9 @@
 import React,{PureComponent} from 'react'
 import {Popconfirm,Table,message} from 'antd';
 import BTFetch from "../../../../utils/BTFetch";
+import BTCryptTool from 'bottos-js-crypto'
+const { queryProtoEncode } = require('@/lib/proto/index');
+
 import {FormattedMessage} from 'react-intl'
 import {getAccount} from "../../../../tools/localStore";
 import messages from '../../../../locales/messages'
@@ -73,34 +76,40 @@ export default class BTAssetDetail extends PureComponent{
         })
     }
     componentDidMount() {
-        /*if(getAccount()){
-            this.setState({
-                username:getAccount().username,
-                token:getAccount().token,
-            })
-        }*/
-        let param={
-            "pageSize":20,
-            "pageNum":1,
-            "username":getAccount().username
-            // "featureTag":12345
-        };
-        BTFetch("/requirement/query",'post',param)
-            .then(res=>{
-                console.log(res.data);
-                if(res&&res.code==0){
-                    if(res.data.rowCount==0){
-                        // message.warning(window.localeInfo["PersonalDemand.ThereIsNoDataForTheTimeBeing"])
-                        return;
-                    }
-                    this.setState({
-                        data:res.data.row,
-                    });
-                }else{
-                    message.warning(window.localeInfo["PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing"])
+
+        function getSignaturedParam({username, privateKey}) {
+          if (typeof username != 'string' || typeof privateKey != 'string') {
+            console.error('type error');
+          }
+          let random = Math.random().toString(16).slice(2)
+          let msg = {username,random}
+          let query_pb = require('@/lib/proto/query_pb')
+          let loginProto = queryProtoEncode(query_pb, msg)
+          let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
+          let signature = BTCryptTool.sign(hash, Buffer.from(privateKey, 'hex')).toString('hex')
+          return {username,signature,random}
+        }
+
+        BTFetch("/requirement/QueryByUsername", 'post', {
+          ...getSignaturedParam(getAccount()),
+          page_size: 20,
+          page_num: 1
+        }).then(res=>{
+            console.log(res.data);
+            if(res&&res.code==0){
+                if(res.data.rowCount==0){
+                    // message.warning(window.localeInfo["PersonalDemand.ThereIsNoDataForTheTimeBeing"])
+                    return;
                 }
+                this.setState({
+                    data:res.data.row,
+                });
+            }else{
+              console.log('res.details', JSON.parse(res.details));
+                message.warning(window.localeInfo["PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing"])
+            }
         }).catch(error=>{
-                    message.error(window.localeInfo["PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing"])
+                message.error(window.localeInfo["PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing"])
         })
     }
 

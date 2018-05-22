@@ -38,3 +38,19 @@ export const getBlockInfo = async()=>{
     params.lifetime = data.head_block_time
     return params
 }
+
+
+export function getSignaturedParam({username, privateKey}) {
+  if (typeof username != 'string' || typeof privateKey != 'string') {
+    console.error('type error');
+  }
+  let random = Math.random().toString(16).slice(2)
+  let msg = {username,random}
+  const query_pb = require('@/lib/proto/query_pb')
+  const { queryProtoEncode } = require('@/lib/proto/index');
+  let loginProto = queryProtoEncode(query_pb, msg)
+  const BTCryptTool = require('bottos-js-crypto')
+  let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
+  let signature = BTCryptTool.sign(hash, Buffer.from(privateKey, 'hex')).toString('hex')
+  return {username,signature,random}
+}

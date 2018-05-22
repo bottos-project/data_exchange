@@ -14,7 +14,13 @@ export default class BTDemand extends PureComponent{
         super(props);
 
         this.state = {
-            dataSource:[],
+            dataSource:[{
+              username: 'aaaa',
+              requirement_id: '1',
+              requirement_name: 'adf',
+              expire_time: 1526874874,
+              price: 120000000000,
+            }],
             pageNum:'',
             row_count: 0,
             activeKey: '0',
@@ -64,14 +70,14 @@ export default class BTDemand extends PureComponent{
           <List
             grid={{ gutter: 16, column: 4 }}
             dataSource={this.state.dataSource||[]}
-            renderItem={(item)=>(
+            renderItem={(item)=> (
               <List.Item>
                 <BTRequireCell linkto='/demand/detail' {...item}/>
               </List.Item>
             )}
           />
           {
-            this.state.row_count &&
+            this.state.row_count > 0 ?
             <Pagination
               hideOnSinglePage
               showQuickJumper
@@ -79,7 +85,8 @@ export default class BTDemand extends PureComponent{
               pageSize={16}
               total={this.state.row_count}
               onChange={this.onChange}
-            />
+            /> :
+            null
           }
         </div>
       )

@@ -2,6 +2,9 @@ import React,{PureComponent} from 'react'
 import BTListCell from './BTListCell'
 import {Icon,Checkbox,Row,Col,message,Table,Button,Popconfirm} from 'antd'
 import BTFetch from '../utils/BTFetch'
+import BTCryptTool from 'bottos-js-crypto'
+const { queryProtoEncode } = require('@/lib/proto/index');
+
 import {getBlockInfo,getDataInfo} from '../utils/BTCommonApi'
 import {hashHistory} from 'react-router'
 import {FormattedMessage} from 'react-intl'
@@ -82,9 +85,11 @@ export default class BTList extends PureComponent{
 
             })
     }
+
     onChange(checkedValues) {
         console.log('checked = ', checkedValues);
     }
+
     async onDelete(data){
         // const data = [...this.state.data];
         console.log(data)
@@ -146,17 +151,24 @@ export default class BTList extends PureComponent{
         });
 
     }
+
     componentDidMount(){
         if(!getAccount()){
            message.warning('查询失败');
            return;
         }
-        let param={
-            "userName": getAccount().username,
-            "random": Math.ceil(Math.random()*100),
-            "signatures": "0xxxx"
+
+        function getSignature({username,privateKey}){
+            let random = Math.random().toString(16).slice(2)
+            let msg = {username,random}
+            let query_pb = require('../lib/proto/query_pb')
+            let loginProto = queryProtoEncode(query_pb,msg)
+            let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
+            let signature = BTCryptTool.sign(hash, Buffer.from(privateKey,'hex')).toString('hex')
+           return {username,signature,random}
         }
-        BTFetch('/user/QueryFavorite','post',param).then(res=>{
+
+        BTFetch('/user/GetFavorite', 'post', getSignature(getAccount())).then(res => {
             if(res.code==1){
                 let data=res.data;
                 this.setState({
@@ -170,6 +182,7 @@ export default class BTList extends PureComponent{
             console.error(error)
         })
     }
+
     render(){
         const { data } = this.state;
         const columns = this.columns(data);

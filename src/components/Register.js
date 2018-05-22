@@ -8,7 +8,6 @@ import BTIpcRenderer from '../tools/BTIpcRenderer'
 import {exportFile} from '../utils/BTUtil'
 import {FormattedMessage} from 'react-intl'
 import {isUserName} from '../tools/BTCheck'
-
 import ConfirmButton from './ConfirmButton'
 import messages from '../locales/messages'
 import {messageProtoEncode} from '../lib/proto/index'
@@ -17,21 +16,40 @@ const msgpack = require('../lib/msgpack/msgpack')
 const HeaderMessages = messages.Header;
 const LoginMessages = messages.Login;
 const FormItem = Form.Item;
+const TextArea = Input.TextArea
 const Keystore = BTCryptTool.keystore
 
-function BTRegistSuccess(props) {
+function BTRegistSuccess({username, keystoreObj}) {
+  let cryptStr = JSON.stringify(keystoreObj)
+  function copyToClipboard() {
+    const clipboard = window.electron.clipboard
+    // console.log(clipboard.readText())
+    clipboard.writeText(cryptStr)
+    // console.log(clipboard.readText())
+  }
+
   function downloadKeystore() {
-    BTIpcRenderer.exportKeyStore(props.username, props.cryptStr);
+    BTIpcRenderer.exportKeyStore(username, keystoreObj);
   }
 
   return (
-    <div style={{textAlign: 'center'}}>
-      <p style={{margin: '20px auto', fontSize: 16}}>
+    <div className='register' style={{textAlign: 'center'}}>
+      <p className='route-children-container-title' style={{margin: '20px auto'}}>
         <FormattedMessage {...HeaderMessages.YourAccountHasBeenRegisteredSuccessfully}/>
       </p>
-      <Button type="primary" onClick={downloadKeystore}>
-        <FormattedMessage {...HeaderMessages.BackupYourKeystore}/>
-      </Button>
+
+      <div style={{margin: '0 5%'}}>
+        <TextArea rows={8} readOnly defaultValue={cryptStr} />
+      </div>
+
+      <Row type='flex' justify='space-around' style={{marginTop: 20}}>
+        <Button type='primary' onClick={copyToClipboard}>复制 Keystore 文本</Button>
+
+        <Button type='primary' onClick={downloadKeystore}>
+          <FormattedMessage {...HeaderMessages.BackupYourKeystore}/>
+        </Button>
+      </Row>
+
     </div>
   )
 }
@@ -57,17 +75,17 @@ class Regist extends PureComponent{
             verify_id: '', // 验证码 id
             isRegistered: false,
             // 下面两个是 BTRegistSuccess 需要的参数
-            username: '',
-            cryptStr: ''
+            username: 'adfasdf',
+            keystoreObj: {adfsadgsdfgsdfgfa:"dggyikhnvghmnfgs"}
         }
 
         this.onHandleSubmit = this.onHandleSubmit.bind(this)
     }
 
-    registSuccess({cryptStr, username}) {
+    registSuccess({keystoreObj, username}) {
         this.setState({
             isRegistered: true,
-            cryptStr,
+            keystoreObj,
             username
         })
     }
@@ -181,10 +199,12 @@ class Regist extends PureComponent{
                     // 存储keystore文件到本地
                     let isSaveSuccess = BTIpcRenderer.saveKeyStore({username:username,account_name:username},keystoreObj)
                     isSaveSuccess ? message.success('keystore saved success') : message.error('keystore saved faild')
+                    this.registSuccess({username, keystoreObj})
                     this.clearFields()
                 }else if(response.code == 1001){
                     message.warning('verify code is wrong');
                 }else{
+                  console.log(JSON.parse(res.details));
                     message.error(window.localeInfo["Header.FailedRegister"]);
                 }
             }else{
@@ -285,8 +305,8 @@ class Regist extends PureComponent{
 
     render() {
       if (this.state.isRegistered) {
-        const {cryptStr, username} = this.state
-        return <BTRegistSuccess cryptStr={cryptStr} username={username} />
+        const {keystoreObj, username} = this.state
+        return <BTRegistSuccess keystoreObj={keystoreObj} username={username} />
       }
 
         const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;

@@ -25,6 +25,7 @@ function BTPersonalMenu({routeName}) {
     'file': 'File',
     'wallet': 'Wallet',
     'check': 'MyMessages',
+    'presale': 'PreSale',
     'collect': 'Collect',
   }
   var list = []

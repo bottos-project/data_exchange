@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import { Tabs } from 'antd';
 const TabPane = Tabs.TabPane;
 import './styles.less';
-import BTList from '../../../components/BTList'
 
 import BTAssetDetail from './subviews/BTAssetDetail'
 import BTUploadAsset from './subviews/BTUploadAsset'
