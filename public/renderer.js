@@ -1,12 +1,12 @@
 const node_uuid = require('node-uuid')
 const eventName = require('../src/utils/EventName')
+const {message} = require('antd')
 
 global.electron = require('electron')
 global.uuid = node_uuid.v1().replace(/-/g,'');
 global.eventName = eventName;
-
+global.message = message.config({top: 100,duration: 2,maxCount: 1,})
 var createHash = require('crypto').createHash
-
 const fs = require('fs');
 
 global.sha256Chunk = (filePath, start, end, chunk) => {
