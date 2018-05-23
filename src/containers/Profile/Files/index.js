@@ -41,17 +41,21 @@ function getDownloadFileIP(guid) {
     headers: new Headers({
       'Content-Type': 'application/json'
     })
-  }).then(res => {
-    console.log('res', res);
+  }).then(res => res.json()).then(res => {
+    console.log('getStorageIP res', res);
     // let _snode_ip = 私钥解密后的 snode_ip
     // ip 字段中，sguid 其实是 chunk
     // snode_ip 是加密后的，要通过私钥解密
-    let ip = res.ip.map(({sguid, snode_ip}) => ({
+    if (res.result == 200 || res.message == 'OK') {
+      let addr = JSON.parse(res.storage_addr)
+      console.log('addr', addr);
+      let ip = addr.map(({sguid, snode_ip}) => ({
         sguid: guid + sguid,
         snode_ip
-      })
-    )
-    return { guid, ip }
+      }))
+      console.log('ip', ip);
+      return { guid, ip }
+    }
   })
 }
 
@@ -67,10 +71,12 @@ function getFileDownloadURL(param) {
     })
   }).then(res => res.json()).then(res => {
     console.log('getFileDownLoadURL res', res);
-    let a = document.createElement('a');
-    a.href = res.url
-    a.download = param.fileName
-    a.click();
+    if (res.message == 'OK' || res.result == '200') {
+      let a = document.createElement('a');
+      a.href = res.url
+      a.download = param.fileName
+      a.click();
+    }
   })
 
 }
@@ -129,7 +135,11 @@ class BTMyAssetSet extends Component{
 
       let param = await getDownloadFileIP(guid)
 
-      console.log('getAccount()', getAccount());
+      if (!param) {
+        return message.error('get download file fail')
+      }
+
+      // console.log('getAccount()', getAccount());
       param.username = getAccount().username
       param.fileName = fileName
 

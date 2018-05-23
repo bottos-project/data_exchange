@@ -20,8 +20,8 @@ export default class BTOtherExchange extends PureComponent{
             { title: <FormattedMessage {...BlockBrowsingMessages.TransactionID}/>, dataIndex: 'transaction_id', key: 'title' ,
               render: (data) => <span title={data}>{data.substring(0, 18)+'...'}</span>
             },
-            { title: <FormattedMessage {...BlockBrowsingMessages.Date}/>, dataIndex: 'date', key: 'time',
-              render: (date) => <span>{getDateAndTime(date)}</span>
+            { title: <FormattedMessage {...BlockBrowsingMessages.Date}/>, dataIndex: 'timestamp',
+              render: getDateAndTime
             },
             { title: <FormattedMessage {...BlockBrowsingMessages.From}/>, dataIndex: 'from', key: 'from'},
             { title: <FormattedMessage {...BlockBrowsingMessages.To}/>, dataIndex: 'to', key: 'to'},
