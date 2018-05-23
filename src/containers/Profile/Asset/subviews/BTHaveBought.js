@@ -69,7 +69,7 @@ export default class BTHaveBought extends PureComponent{
             random:Math.ceil(Math.random()*100),
             signatures:'0XXXX'
         }
-        BTFetch('/asset/GetUserPurchaseAssetList','post',param).then(res=>{
+        BTFetch('/asset/getPurchaseAssetList','post',param).then(res=>{
             if(res.code==0){
                 if(res.data.rowCount==0){
                     //message.warning(window.localeInfo["PersonalAsset.ThereIsNoHaveBoughtAssetForTheTimeBeing"])

@@ -68,7 +68,6 @@ function getFileDownloadURL(param) {
     })
   }).then(res => res.json()).then(res => {
     console.log('getFileDownLoadURL res', res);
-    res.url
     let a = document.createElement('a');
     a.href = res.url
     a.download = param.fileName
@@ -113,8 +112,8 @@ class BTMyAssetSet extends Component{
             },
             {
                 title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_name', key: 'x',
-                render: (item) => (
-                    <a onClick={()=>this.download1(item)}>
+                render: (text, record) => (
+                    <a onClick={()=>this.download1(record)}>
                         <Icon type="download"/>
                     </a>
                 )
@@ -122,37 +121,21 @@ class BTMyAssetSet extends Component{
         ];
     }
 
-    async download1(fileName) {
+    async download1(record) {
+
+      console.log('record', record);
+
+      const guid = record.file_hash
+      const fileName = record.file_name
 
       let param = await getDownloadFileIP(guid)
 
       param.username = getAccount().username
+      console.log('getAccount()', getAccount());
       param.fileName = fileName
 
       getFileDownloadURL(param)
 
-      return
-
-
-        BTFetch('/asset/getDownLoadURL','post',{
-            'userName':getAccount().username,
-            fileName
-        }).then(res=>{
-            return console.log(this)
-            if(res.code==1){
-                this.setState({href:res.data});
-                console.log(res.data);
-                let a = document.createElement('a');
-                let url = res.data;
-                a.href = url;
-                a.download = fileName;
-                a.click();
-            }else{
-                message.error(window.localeInfo["PersonalAsset.FailedToDownloadTheFile"])
-            }
-        }).catch(error=>{
-            message.error(window.localeInfo["PersonalAsset.FailedToDownloadTheFile"])
-        })
     }
 
     customRequest = ({ file, onSuccess }) => {
@@ -163,7 +146,8 @@ class BTMyAssetSet extends Component{
       //生成文件存储路径url
       // console.log('origin file', file)
 
-      if ( this.props.fileList.findIndex(item => item.path == file.path) != -1 ) {
+      let hadFile = this.props.fileList.find(item => item.path == file.path)
+      if (hadFile && hadFile.status != 'error') {
         return message.info('重复上传');
       }
 
@@ -187,7 +171,7 @@ class BTMyAssetSet extends Component{
         }).then(res => {
             if (res.code == 1 && res.data.rowCount > 0) {
               // message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
-                this.setState({ data: res.data.row })
+              this.setState({ data: res.data.row })
             }
         }).catch(error => console.error(error))
 

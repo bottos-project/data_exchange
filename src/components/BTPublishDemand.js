@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import moment from "moment"
 import { Input, DatePicker, message, Button, Row, Col } from 'antd'
 import BTAssetList from './BTAssetList'
-import {getBlockInfo, getDataInfo} from "../utils/BTCommonApi";
+import {getBlockInfo, getDataInfo, getSignaturedParam } from "../utils/BTCommonApi";
 import BTFetch from "../utils/BTFetch";
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
@@ -31,15 +31,12 @@ String.prototype.trims=function() {
 const initialState = {
     title:"",
     textArea:"",
-    number: '',
+    number: 0,
     date:"",
-    dateString:"",
-    ddatePicker:'',
-    date11: null,
+    dateString: moment().add(7, 'days').toString(),
     newdata: [],
     getFileNameTemp:'',
-    opType:0
-
+    reqType: '00'
 }
 
 class BTPublishDemand extends PureComponent{
@@ -57,28 +54,19 @@ class BTPublishDemand extends PureComponent{
           type:type,
       });
 
-      let param={
-          userName:getAccount().username,
-          random:Math.ceil(Math.random()*100),
-          signature:'0xxxx'
-      };
-
-      BTFetch('/asset/queryUploadedData','post',param).then(res=>{
-        if (res.code == 0) {
-          if (res.data.rowCount == 0) {
-            message.warning(window.localeInfo["Header.ThereIsNoFileResourceSetForTheTimeBeing"]);
-            return;
-          }
-          // return res.data.row;
-          this.setState({
-            newdata:res.data.row
-          })
+      BTFetch('/asset/queryUploadedData', 'post', {
+        ...getSignaturedParam(getAccount()),
+        pageSize: 10,
+        pageNum: 1,
+      }).then(res => {
+        if (res.code == 1 && res.data.rowCount > 0) {
+          this.setState({ newdata: res.data.row })
         } else {
-          message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
-          return;
+          message.warning(window.localeInfo["Header.ThereIsNoFileResourceSetForTheTimeBeing"]);
         }
-      }).catch(error=>{
+      }).catch(error => {
         message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
+        console.error(error)
       })
 
     }
@@ -100,11 +88,11 @@ class BTPublishDemand extends PureComponent{
     }
 
     onChangeTitle(e){
-
         this.setState({
             title:e.target.value.trim()
         })
     }
+
     handleNumberChange = (e) => {
         message.destroy();
         var number = e.target.value
@@ -121,17 +109,10 @@ class BTPublishDemand extends PureComponent{
     };
 
     //datePicker
-    onChangeDate(date,dateString) {
-        this.setState({
-            date:date,
-            dateString:dateString,
-            date11:date,
-        });
+    onChangeDate = (date, dateString) => {
+        this.setState({ date, dateString });
     }
 
-    onOpenChangeDate(data){
-        console.log(data)
-    }
     onChangeTextArea(e){
         this.setState({
             textArea:e.target.value.trim()
@@ -139,13 +120,21 @@ class BTPublishDemand extends PureComponent{
     }
 
     async updata(){
+
+      if (!this.state.title) {
+          message.warning(window.localeInfo["PersonalDemand.PleaseImproveTheDemand"])
+          return;
+      }
+
+      if (this.state.number <=0 || this.state.number >= 10000000000){
+          message.warning(window.localeInfo["PersonalDemand.PleaseInputPrice"])
+          return;
+      }
+
       let blockInfo = await getBlockInfo()
       let account_info = this.props.account_info
       let privateKeyStr = account_info.privateKey
       let privateKey = Buffer.from(privateKeyStr,'hex')
-
-
-      let expire_time = this.state.date + ''
 
       let params = {
         "version": 1,
@@ -159,24 +148,26 @@ class BTPublishDemand extends PureComponent{
       let did = {
         "dataReqId": window.uuid,
         "basic_info": {
-          "username": account_info.username,
-          "reqName": this.state.title || '',
-          "reqType": this.state.ddatePicker || 1,
-          "featureTag": 1,
-          "sampleHash": this.state.getFileNameTemp || '',
-          "expireTime": Number.parseInt(expire_time),
-          "opType": this.state.opType,
-          "price": this.state.number,
-          "favoriFlag": 1,
-          "description": this.state.textArea
+          "Username": account_info.username,
+          "RequirementName": this.state.title || 'requirement',
+          "RequirementType": Number.parseInt(this.state.reqType),
+          "FeatureTag": 1,
+          "SampleHash": this.state.getFileNameTemp || '',
+          "ExpireTime": new Date(this.state.dateString).getTime() / 1000,
+          "Price": this.state.number,
+          "Description": this.state.textArea,
+          "FavoriFlag": 1,
+          "OpType": 1
         }
       }
+      // console.log('did', did);
 
       let packBuf = registDemandPack(did)
       params.param = packBuf
       let sign = messageSign(params,privateKey)
       params.signature = sign.toString('hex')
       params.param = BTCrypto.buf2hex(packBuf)
+      // console.log('params.param', params.param);
 
       let url = '/requirement/Publish'
       BTFetch(url,'POST',params)
@@ -261,7 +252,6 @@ class BTPublishDemand extends PureComponent{
                         textArea:"",
                         number:'',
                         date:"",
-                        date11:'',
                         dateString:'',
                         DatePicker:'',
                     });
@@ -341,7 +331,7 @@ class BTPublishDemand extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.AssetType} />
               </Col>
               <Col span={12}>
-                <BTTypeSelect onChange={(value)=>this.setState({opType:value})}/>
+                <BTTypeSelect onChange={(value)=>this.setState({reqType:value})}/>
               </Col>
             </Row>
 
@@ -351,11 +341,10 @@ class BTPublishDemand extends PureComponent{
               </Col>
               <Col span={8}>
                 <DatePicker
+                  defaultValue={moment().add(7, 'days')}
                   placeholder={window.localeInfo["PersonalDemand.SelectDate"]}
-                  onChange={(date,dateString)=>this.onChangeDate(date,dateString)}
-                  onOpenChange={(date)=>this.onOpenChangeDate(date)}
+                  onChange={this.onChangeDate}
                   disabledDate={(current) => current < moment().endOf('day')}
-                  value={this.state.date11}
                   // showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
                 />
               </Col>

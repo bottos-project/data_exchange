@@ -147,16 +147,16 @@ export default class BTAssetDetail extends PureComponent{
         if(this.props == nextProps){
             return;
         }
-        let data=this.props.location.query;
-        let asset_type=data.asset_type.substring(0,2);
-        switch (asset_type){
-            case '11':this.setState({getAssetType:'Automatic Transmission'});break;
-            case '12':this.setState({getAssetType:'Medical'});break;
-            case '13':this.setState({getAssetType:'Finance'});break;
-            case '14':this.setState({getAssetType:'Retail'});break;
-            case '15':this.setState({getAssetType:'Security'});break;
-        }
-        console.log(asset_type)
+        // let data=this.props.location.query;
+        // let asset_type=data.asset_type.substring(0,2);
+        // switch (asset_type){
+        //     case '11':this.setState({getAssetType:'Automatic Transmission'});break;
+        //     case '12':this.setState({getAssetType:'Medical'});break;
+        //     case '13':this.setState({getAssetType:'Finance'});break;
+        //     case '14':this.setState({getAssetType:'Retail'});break;
+        //     case '15':this.setState({getAssetType:'Security'});break;
+        // }
+        // console.log(asset_type)
     }
 
     render() {

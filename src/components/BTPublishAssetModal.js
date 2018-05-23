@@ -6,7 +6,7 @@ import {getAccount} from "../tools/localStore";
 import {Icon, Modal, Radio, Select, message, Button, Input, DatePicker, TimePicker, Cascader, Col, Row } from 'antd';
 import BTAssetList from './BTAssetList'
 import BTCryptTool from 'bottos-js-crypto'
-import {getBlockInfo,getDataInfo} from '../utils/BTCommonApi'
+import {getBlockInfo,getDataInfo, getSignaturedParam} from '../utils/BTCommonApi'
 import BTFetch from "../utils/BTFetch";
 import {options} from '../utils/option'
 import {FormattedMessage} from 'react-intl'
@@ -41,7 +41,7 @@ class BTPublishAssetModal extends PureComponent{
             tag1:'',
             tag2:'',
             tag3:'',
-            dataAssetType:'',
+            dataAssetType: '0',
             getFileNameTemp:'',
             getFileName:'',
             getExampleUrl:'',
@@ -69,28 +69,20 @@ class BTPublishAssetModal extends PureComponent{
           type:type,
       });
 
-      let param={
-          userName: this.props.account_info.username,
-          random:Math.ceil(Math.random()*100),
-          signature:'0xxxx'
-      };
-
-      BTFetch('/asset/queryUploadedData','post',param).then(res=>{
-        if (res.code == 0) {
-          if (res.data.rowCount == 0) {
-            message.warning(window.localeInfo["Header.ThereIsNoFileResourceSetForTheTimeBeing"]);
-            return;
-          }
-          // return res.data.row;
-          this.setState({
-            newdata:res.data.row
-          })
+      BTFetch('/asset/queryUploadedData', 'post', {
+        ...getSignaturedParam(getAccount()),
+        pageSize: 10,
+        pageNum: 1,
+      }).then(res => {
+        if (res.code == 1 && res.data.rowCount > 0) {
+          // message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+          this.setState({ newdata: res.data.row })
         } else {
-          message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
-          return;
+          message.warning(window.localeInfo["Header.ThereIsNoFileResourceSetForTheTimeBeing"]);
         }
-      }).catch(error=>{
+      }).catch(error => {
         message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
+        console.error(error)
       })
 
     }
@@ -197,13 +189,13 @@ class BTPublishAssetModal extends PureComponent{
           "sampleHash": this.state.sample_hash,
           "storageHash": this.state.storage_hash,
           "expireTime": expire_time,
-          "opType":Number.parseInt(this.state.dataAssetType),
+          "opType": 1,
           "price": Number.parseInt(this.state.number),
           "description": this.state.description
         }
       }
 
-      console.log({did})
+      console.log('did', did)
       let arrBuf = registAssetPack(did)
       let params = Object.assign({},message)
       params.param = arrBuf
@@ -211,7 +203,7 @@ class BTPublishAssetModal extends PureComponent{
       let sign = BTSign.messageSign(params,privateKey)
       params.signature = sign.toString('hex')
       params.param = BTCryptTool.buf2hex(arrBuf)
-     
+
       let url = '/asset/registerAsset'
 
       BTFetch(url,'POST',params)

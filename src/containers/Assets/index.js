@@ -13,9 +13,9 @@ export default class BTAssets extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataSource: [],
-            rowCount: 0,
-            pageNum: '',
+            dataSource: [{"asset_id": "filehashtest","asset_name": "assetnametest","description": "destest","expire_time": 345,"feature_tag":12345,"op_type":1,"price":888,"sample_hash":"hasttest","sample_path":"pathtest","storage_hash":"sthashtest","storage_path":"stpathtest","upload_date": 999}],
+            row_count: 0,
+            page_num: '',
             activeKey: '0',
         };
 
@@ -42,13 +42,13 @@ export default class BTAssets extends Component {
         BTFetch(reqUrl,'POST',param).then(response=>{
             console.log({response})
             if (response && response.code == 1) {
-              const {rowCount, row} = response.data
-                if (rowCount == 0 || !Array.isArray(row)) {
+              const {row_count, row} = response.data
+                if (row_count == 0 || !Array.isArray(row)) {
                     return ;
                 }
                 this.setState({
                     dataSource: row,
-                    rowCount,
+                    row_count,
                 });
             } else {
                 message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
@@ -85,7 +85,7 @@ export default class BTAssets extends Component {
           <Pagination
             hideOnSinglePage
             showQuickJumper
-            total={this.state.rowCount}
+            total={this.state.row_count}
             defaultCurrent={1}
             pageSize={16}
             onChange={this.onChange}

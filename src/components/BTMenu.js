@@ -4,14 +4,20 @@ import { Menu, message } from 'antd';
 import { Link, withRouter } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import messages from '../locales/messages'
+import SVGDashboard from './SVG/SVGDashboard'
 
 const MenuMessages = messages.Menu;
 
 const HeaderMessages = messages.Header;
 
+const toMapSvg = {
+  '/dashboard': SVGDashboard
+}
+
 function NavLink({to, intlMessage}) {
   return <Link to={to} activeClassName='menu-link-active'>
     <div className='menu-link'>
+      {/* <SVGDashboard /> */}
       <FormattedMessage {...intlMessage} />
     </div>
   </Link>
