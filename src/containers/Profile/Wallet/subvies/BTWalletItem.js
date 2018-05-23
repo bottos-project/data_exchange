@@ -93,7 +93,7 @@ export default class BTWalletItem extends PureComponent{
             <div className="flex accountLeft">
                 <div>
                     <Link to={{
-                        pathname:'/profile/wallet/walletlist',
+                        pathname:'/profile/wallet',
                         query:{selectWallet:this.props.accountName}
                     }}><span className="font25 colorTitle">{this.props.accountName}</span></Link>
 

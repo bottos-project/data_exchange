@@ -39,16 +39,16 @@ export const registDemandPack = (did)=>{
     let basic_info = did.basic_info
     let len = Object.keys(basic_info).length
     let arr2Size = BTPack.PackArraySize(len)
-    let arrUsername = BTPack.PackStr16(basic_info.username)
-    let arrReqName = BTPack.PackStr16(basic_info.reqName)
-    let arrReqType = BTPack.PackUint64(basic_info.reqType)
-    let arrFeatureTag = BTPack.PackUint64(basic_info.featureTag)
-    let arrSampleHash = BTPack.PackStr16(basic_info.sampleHash)
-    let arrExpireTime = BTPack.PackUint64(basic_info.expireTime)
-    let arrOpType = BTPack.PackUint32(basic_info.opType)
-    let arrPrice = BTPack.PackUint64(basic_info.price)
-    let arrFavoriFlag = BTPack.PackUint32(basic_info.favoriFlag)
-    let arrDescription = BTPack.PackStr16(basic_info.description)
+    let arrUsername = BTPack.PackStr16(basic_info.Username)
+    let arrReqName = BTPack.PackStr16(basic_info.RequirementName)
+    let arrReqType = BTPack.PackUint64(basic_info.RequirementType)
+    let arrFeatureTag = BTPack.PackUint64(basic_info.FeatureTag)
+    let arrSampleHash = BTPack.PackStr16(basic_info.SampleHash)
+    let arrExpireTime = BTPack.PackUint64(basic_info.ExpireTime)
+    let arrOpType = BTPack.PackUint32(basic_info.OpType)
+    let arrPrice = BTPack.PackUint64(basic_info.Price)
+    let arrFavoriFlag = BTPack.PackUint32(basic_info.FavoriFlag)
+    let arrDescription = BTPack.PackStr16(basic_info.Description)
 
     let arrBuf = new ArrayBuffer()
     arrBuf = [...arr1Size,...arrDataReqId,...arr2Size,...arrUsername,...arrReqName,...arrReqType,...arrFeatureTag,...arrSampleHash,...arrExpireTime,

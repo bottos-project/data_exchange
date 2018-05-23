@@ -41,7 +41,7 @@ class BTPublishAssetModal extends PureComponent{
             tag1:'',
             tag2:'',
             tag3:'',
-            dataAssetType:'',
+            dataAssetType: '0',
             getFileNameTemp:'',
             getFileName:'',
             getExampleUrl:'',
@@ -189,13 +189,13 @@ class BTPublishAssetModal extends PureComponent{
           "sampleHash": this.state.sample_hash,
           "storageHash": this.state.storage_hash,
           "expireTime": expire_time,
-          "opType":Number.parseInt(this.state.dataAssetType),
+          "opType": 1,
           "price": Number.parseInt(this.state.number),
           "description": this.state.description
         }
       }
 
-      console.log({did})
+      console.log('did', did)
       let arrBuf = registAssetPack(did)
       let params = Object.assign({},message)
       params.param = arrBuf

@@ -4,9 +4,13 @@ import BTFetch from "@/utils/BTFetch";
 import { getAccount } from "@/tools/localStore";
 import { getSignaturedParam } from '@/utils/BTCommonApi'
 import { FormattedMessage } from 'react-intl'
+import messages from '@/locales/messages'
+import { getDateAndTime } from '@/utils/dateTimeFormat'
+
+const CheckMessages = messages.Check;
 
 function queryPresaleByPageNum(n) {
-  return BTFetch("/user/queryMyPreSale", "post", {
+  return BTFetch("/asset/queryMyPreSale", "post", {
     ...getSignaturedParam(getAccount()),
     "pageSize": 16,
     "pageNum": n,
@@ -22,25 +26,24 @@ class PreSale extends Component {
   }
 
   columns() {
-      // return  [
-      //     { title: <FormattedMessage {...CheckMessages.AssetID}/>, dataIndex: 'asset_name', key: 'asset_id',render:(item)=>{
-      //             return <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
-      //         }},
-      //     { title: <FormattedMessage {...CheckMessages.Consumer}/>, dataIndex: 'consumer', key:'consumer' },
-      //     { title: <FormattedMessage {...CheckMessages.DataPresaleId}/>, dataIndex: 'data_req_name', key:'data_req_name',
-      //         render:(item)=>{
-      //             return <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
-      //         }},
-      //     { title: <FormattedMessage {...CheckMessages.DataTime}/>, dataIndex: 'createTime', key:'data_req_id',
-      //       render: item => getDateAndTime(item)
-      //     },
-      //     // { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username', key:'user_name' },
-      //     { title: <FormattedMessage {...CheckMessages.View}/>,dataIndex:'asset_id',key:'x',render:(item)=>
-      //             <Button onClick={()=>this.lookfor(item)}>
-      //                 <FormattedMessage {...CheckMessages.View}/>
-      //             </Button>
-      //     }
-      // ];
+      return  [
+          { title: <FormattedMessage {...CheckMessages.AssetID}/>, dataIndex: 'asset_name',
+            render:(item)=> <span>{item}</span>
+          },
+          { title: <FormattedMessage {...CheckMessages.Consumer}/>, dataIndex: 'consumer', key:'consumer' },
+          { title: <FormattedMessage {...CheckMessages.DataPresaleId}/>, dataIndex: 'data_req_name',
+            render:(item)=> <span>{item}</span>
+          },
+          { title: <FormattedMessage {...CheckMessages.DataTime} />, dataIndex: 'time',
+            render: getDateAndTime
+          },
+          // { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username', key:'user_name' },
+          { title: <FormattedMessage {...CheckMessages.View}/>,dataIndex:'asset_id',key:'x',
+            render: (item) => <Button>
+              <FormattedMessage {...CheckMessages.View} />
+            </Button>
+          }
+      ];
   }
 
   componentDidMount() {
@@ -73,6 +76,7 @@ class PreSale extends Component {
             className="shadow radius table"
             columns={columns}
             dataSource={this.state.data}
+            rowKey='asset_id'
         />
 
       </div>

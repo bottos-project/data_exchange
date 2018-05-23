@@ -125,7 +125,7 @@ export default class BTMessageTable extends PureComponent{
             ...sign
         }
 
-        let url = '/user/queryMyNotice'
+        let url = '/asset/queryMyNotice'
         BTFetch(url,'POST',params)
             .then(response=>{
                 // console.log({response})
@@ -143,7 +143,7 @@ export default class BTMessageTable extends PureComponent{
     }
 
     getSignature(username,privateKeyStr){
-        let privateKey = Buffer.from(privateKeyStr,'hex') 
+        let privateKey = Buffer.from(privateKeyStr,'hex')
         let random = window.uuid
         let msg = {username,random}
         let query_pb = require('../../../../lib/proto/query_pb')

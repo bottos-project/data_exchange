@@ -10,11 +10,11 @@ module.exports = {
         },
         Demand:{
             id:'Menu.Demand',
-            defaultMessage:'需求'
+            defaultMessage:'市场需求'
         },
         Asset:{
             id:'Menu.Asset',
-            defaultMessage:'资产'
+            defaultMessage:'市场资产'
         },
         History:{
             id:'Menu.History',
