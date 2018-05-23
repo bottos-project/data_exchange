@@ -6,7 +6,7 @@
   "main": "main.js",
   "homepage": ".",
   "DEV": true,
-  "MOCK": true,
+  "MOCK": false,
   "description": "Bottos Wallet",
   "author": {
     "name": "bottos"

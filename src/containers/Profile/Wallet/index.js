@@ -28,8 +28,6 @@ class BTWallet extends PureComponent {
         }
     }
     handleChange = (key) => {
-      // console.log('key', key);
-      // console.log('this.state.accountList[key]', this.state.accountList[key]);
       this.setState({
         activeKey: key,
         selectWallet: this.state.accountList[key]
@@ -38,7 +36,6 @@ class BTWallet extends PureComponent {
 
     componentDidMount(){
         let props = this.props;
-        // console.log('props', props);
         if(props.location) {
             this.setLoginState(props.location.query.selectWallet)
         }else{
@@ -50,7 +47,12 @@ class BTWallet extends PureComponent {
       const { account_info, isLogin } = this.props
       if (isLogin) {
         let walletList = BTIpcRenderer.getKeyStoreList()
-        let accountList = walletList.map(item => item.endsWith('.keystore') ? item.slice(0,-9) : item)
+        let accountList = []
+        walletList.map(item=>{
+          if(item.slice(item.length-9,item.length)=='.keystore'){
+            accountList.push(item.slice(0,-9))
+          }
+        })
         let selectWallet = username ? username : account_info.username
         this.setState({
             selectWallet,
@@ -65,6 +67,12 @@ class BTWallet extends PureComponent {
         this.setState({
             selectWallet:item.slice(0,-9)
         })
+    }
+
+    componentWillReceiveProps(nextProps){
+      let selectWallet = nextProps.location.query.selectWallet
+      let index = this.state.accountList.indexOf(selectWallet)
+      this.setState({activeKey:index})
     }
 
     render() {

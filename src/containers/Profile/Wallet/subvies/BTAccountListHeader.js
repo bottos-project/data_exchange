@@ -28,11 +28,11 @@ export default class BTAccountListHeader extends PureComponent{
 
     importKeyStore(){
         let keyObj = BTIpcRenderer.importFile()
-        console.log({keyObj})
+        let keyStoreObj = JSON.parse(keyObj.result)
         this.setState({
             visible:true,
-            keyStoreObj:JSON.parse(keyObj.result),
-            account_name:keyObj.account_name
+            keyStoreObj:keyStoreObj,
+            account_name:keyStoreObj.account
         })
     }
 
@@ -49,15 +49,18 @@ export default class BTAccountListHeader extends PureComponent{
         }
 
         let localStorage = window.localStorage
-        let username = localStorage.username
+        let account_info = JSON.parse(localStorage.account_info)
+        let username = account_info.username
         let password = this.state.password
         let privateKey = BTIpcRenderer.decryptKeystore({password,keyStoreObj:this.state.keyStoreObj})
         if(privateKey.error){
             message.error(window.localeInfo["Header.ThePasswordAndTheKeystoreDoNotMatch"])
             return
         }
-        BTIPcRenderer.saveKeyStore({username:username,account_name:this.state.account_name},this.state.keyStoreObj)
+        let isSave = BTIpcRenderer.saveKeyStore({username:username,account_name:this.state.account_name},this.state.keyStoreObj)
+        isSave ? message.success('success') : message.error("failed")
         this.setState({visible:false})
+        // window.location.reload()
     }
 
     onHandleCancel(){

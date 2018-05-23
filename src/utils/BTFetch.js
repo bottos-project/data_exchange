@@ -4,11 +4,13 @@ import {message} from 'antd'
 import emitter from './eventEmitter'
 const pkg = require('../../package.json')
 
+
 export default (url,method,params,options={
     full_path:false,
     service:'service',
     token:false
 })=>{
+    message.destroy()
     let blockchain = config.blockchain;
     let service = config.service;
     let mock = config.mock;

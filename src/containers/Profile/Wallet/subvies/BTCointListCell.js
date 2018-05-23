@@ -31,7 +31,7 @@ export default class BTCointListCell extends PureComponent{
             <div className="container route-children-bg accountItem">
               <div className="flex accountLeft">
                   <div>
-                      <span className="font25 colorTitle">{props.name}</span>
+                      <span className="font25 colorTitle">{"BTO"}</span>
                       <span>
                           <FormattedMessage {...WalletMessages.AvailableCash}/>
                       </span>

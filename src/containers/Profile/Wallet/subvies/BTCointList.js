@@ -25,20 +25,40 @@ export default class BTAccountList extends PureComponent{
 
     getUserBalance(){
         console.log("getUserBalance")
-        let balanceList = [{
-			"name": "bto",
-			"balance": 1000 * Math.pow(10,10),
-			"cny": 100,
-			"usd": 16
-		},
-		{
-			"name": "sto",
-			"balance": 90000 * Math.pow(10,10),
-			"cny": 100,
-			"usd": 16
-        }]
-        
-        this.setState({accoutList:balanceList})
+        // let balanceList = [{
+		// 	"name": "bto",
+		// 	"balance": 1000 * Math.pow(10,10),
+		// 	"cny": 100,
+		// 	"usd": 16
+		// },
+		// {
+		// 	"name": "sto",
+		// 	"balansd": 16
+        // }]ce": 90000 * Math.pow(10,10),
+		// 	"cny": 100,
+		// 	"u
+        let url = '/user/GetAccountInfo'
+        let localStorage = window.localStorage
+        let account_info = JSON.parse(localStorage.account_info)
+        let username = account_info.username
+        let accountName = this.props.selectWallet || username
+
+        let params = {
+            account_name:accountName
+        }
+        BTFetch(url,'POST',params)
+            .then(response=>{
+                let balanceList = []
+                if(response && response.code==1){
+                    let data = response.data
+                    balanceList.push(data)
+                    this.setState({accoutList:balanceList})
+                }else{
+                    messages.error('failed')
+                }
+            }).catch(error=>{   
+                messages.error('failed')
+            })
     }
 
     getAccountList(selectWallet){

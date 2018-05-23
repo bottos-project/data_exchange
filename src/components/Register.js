@@ -103,6 +103,7 @@ class Regist extends PureComponent{
     }
 
     async onHandleSubmit(e) {
+        console.log("onHandleSubmit")
         e.preventDefault()
         message.destroy();
         const { getFieldsValue } = this.props.form;
