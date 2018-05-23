@@ -106,7 +106,7 @@ class Assetlist extends Component {
 
     render() {
         let data = this.props.list;
-        const asset_type = data.asset_type
+        const asset_type = data.asset_type || 2
         if (asset_type.length == 8) {
           var type = asset_type[5]
         }

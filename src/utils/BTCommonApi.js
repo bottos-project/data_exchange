@@ -39,18 +39,29 @@ export const getBlockInfo = async()=>{
     return params
 }
 
+const { queryProtoEncode, messageProtoEncode } = require('@/lib/proto/index');
+const query_pb = require('@/lib/proto/query_pb')
+const message_pb = require('@/lib/proto/message_pb')
+const BTCryptTool = require('bottos-js-crypto')
 
 export function getSignaturedParam({username, privateKey}) {
   if (typeof username != 'string' || typeof privateKey != 'string') {
     console.error('type error');
   }
-  let random = Math.random().toString(16).slice(2)
+  let random = window.uuid
   let msg = {username,random}
-  const query_pb = require('@/lib/proto/query_pb')
-  const { queryProtoEncode } = require('@/lib/proto/index');
   let loginProto = queryProtoEncode(query_pb, msg)
-  const BTCryptTool = require('bottos-js-crypto')
   let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
   let signature = BTCryptTool.sign(hash, Buffer.from(privateKey, 'hex')).toString('hex')
   return {username,signature,random}
+}
+
+export function getSignaturedFetchParam({fetchParam, privateKey}) {
+  let encodeBuf = messageProtoEncode(message_pb, fetchParam)
+  let hashData = BTCryptTool.sha256(BTCryptTool.buf2hex(encodeBuf))
+  let sign = BTCryptTool.sign(hashData, privateKey)
+  fetchParam.signature = sign.toString('hex')
+  // fetchParam.param = param.map(s1 => int10ToStr16(s1)).join('')
+  fetchParam.param = BTCryptTool.buf2hex(fetchParam.param)
+  return fetchParam
 }

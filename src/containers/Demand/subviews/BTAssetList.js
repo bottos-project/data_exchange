@@ -16,15 +16,8 @@ export default class BTAssetList extends PureComponent{
         this.setState({
             visible:false
         });
-        let getvalue=this.state.value.split(',')
-        let callBackData = {};
-            callBackData = {
-                type:'asset_id',
-                value:getvalue[0],
-                name:getvalue[1]
-            }
 
-        this.props.handleFile(callBackData);
+        this.props.handleFile(this.state.value);
     }
     handleCancel(){
         this.setState({
@@ -37,7 +30,8 @@ export default class BTAssetList extends PureComponent{
 
     render(){
         // console.log(this.props);
-        let exampledata=this.props.exampledata||[];
+        let exampledata=this.props.exampledata;
+        console.log('exampledata', exampledata);
         return(
             <Modal visible={this.state.visible}
                    onOk={()=>this.handleOk()}
@@ -47,9 +41,10 @@ export default class BTAssetList extends PureComponent{
                     <RadioGroup style={{ width: '100%' }}  onChange={(e)=>this.onChange(e)} defaultValue=''>
                         <Col>
                             {
-                                exampledata.map((value,index)=>{
+                                exampledata.map((value, index)=>{
+                                  console.log('value', value);
                                     return (
-                                        <Row key={index} span={8}><Radio value={value.asset_id+','+value.asset_name}>{value.asset_name}</Radio></Row>
+                                        <Row key={value.asset_id} span={8}><Radio value={value.asset_id}>{value.asset_name}</Radio></Row>
                                     )
                                 })
                             }

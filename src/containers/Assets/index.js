@@ -13,7 +13,7 @@ export default class BTAssets extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataSource: [],
+            dataSource: [{"asset_id": "filehashtest","asset_name": "assetnametest","description": "destest","expire_time": 345,"feature_tag":12345,"op_type":1,"price":888,"sample_hash":"hasttest","sample_path":"pathtest","storage_hash":"sthashtest","storage_path":"stpathtest","upload_date": 999}],
             row_count: 0,
             page_num: '',
             activeKey: '0',

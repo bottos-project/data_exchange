@@ -16,7 +16,7 @@ const btcrypto = require('bottos-js-crypto')
 const message_pb = require('@/lib/proto/message_pb');
 const { messageProtoEncode } = require('@/lib/proto/index');
 
-export const file_test_url = 'http://139.219.195.195:8080/v2'
+export const file_test_url = 'http://139.219.139.198:8080/v3'
 // const file_test_url = 'http://192.168.9.120:8080/v2'
 
 // 文件上传流程
@@ -382,7 +382,7 @@ uploader.on( 'uploadSuccess', querySecondProgress);
 
 (async function() {
   'use strict';
-  let guid = "dadsfg357456j467j67kj578k89k78k7"
+  let guid = "dadsfg357j4679k78k7"
   let ip = [
     {
       sguid: 0,
@@ -401,11 +401,14 @@ uploader.on( 'uploadSuccess', querySecondProgress);
       "fileName": 'name',
       "filePolicy": "policytest",
       "fileNumber": 1,
-      "simOrass": 0,
+      "simorass": 0,
       "opType": 1,
       "storeAddr": JSON.stringify(ip)
+      // "storeAddr": ip
     }
   }
+
+  console.log('originParam', originParam);
 
   let b1 = PackArraySize(2)
   let b2 = PackStr16(originParam.fileHash)
@@ -418,7 +421,7 @@ uploader.on( 'uploadSuccess', querySecondProgress);
   let b7 = PackStr16(originParam.info.filePolicy)
 
   let b8 = PackUint64(originParam.info.fileNumber)
-  let b9 = PackUint32(originParam.info.simOrass)
+  let b9 = PackUint32(originParam.info.simorass)
   let b10 = PackUint32(originParam.info.opType)
   let b11 = PackStr16(originParam.info.storeAddr)
 

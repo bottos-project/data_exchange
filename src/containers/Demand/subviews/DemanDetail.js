@@ -1,5 +1,5 @@
 import BTFetch from "../../../utils/BTFetch";
-import {getBlockInfo, getDataInfo, getSignaturedParam } from "../../../utils/BTCommonApi";
+import { getBlockInfo, getSignaturedParam, getSignaturedFetchParam } from "../../../utils/BTCommonApi";
 import React,{PureComponent} from 'react'
 import { Carousel, Button, Tag, Input, message } from 'antd';
 import {FormattedMessage} from 'react-intl'
@@ -9,6 +9,7 @@ import './styles.less'
 import {getAccount} from "../../../tools/localStore";
 import uuid from 'node-uuid'
 import CloseBack from '@/components/CloseBack'
+import { PackArraySize, PackStr16, PackUint32 } from '@/lib/msgpack/msgpack'
 
 const DemandMessages = messages.Demand;
 const { TextArea } = Input;
@@ -18,8 +19,8 @@ export default class BTDemanDetail extends PureComponent{
   constructor(props){
       super(props)
       this.state={
-          exampledata:[],
-          username:''
+        exampledata: [{"asset_id": "filehashtest","asset_name": "assetnametest","description": "destest","expire_time": 345,"feature_tag":12345,"op_type":1,"price":888,"sample_hash":"hasttest","sample_path":"pathtest","storage_hash":"sthashtest","storage_path":"stpathtest","upload_date": 999}],
+        username:''
       }
   }
   commitAsset(){
@@ -56,56 +57,66 @@ export default class BTDemanDetail extends PureComponent{
       })
   }
 
-  async handleFile(fileInfo) {
+  async handleFile(asset_id) {
     message.destroy();
-    let asset=fileInfo.value;
-    if(!fileInfo.value){
+
+    if (!asset_id) {
         message.error(window.localeInfo["Demand.ThereIsNoAssetForTheTimeBeing"])
         return ;
     };
 
-    let param={
-        "code":"datadealmng",
-        "action":"datapresale",
-        "args":{
-            "data_presale_id":uuid.v1(),
-            "basic_info":{
-                "user_name":this.props.location.query.username,
-                "session_id":'',
-                "asset_id":fileInfo.value,
-                "asset_name":fileInfo.name,
-                "data_req_id":this.props.location.query.requirement_id,
-                "data_req_name":this.props.location.query.requirement_name,
-                "consumer":getAccount().username,
-                "random_num":Math.ceil(Math.random()*100),
-                "signature":"sigtest"
-            }
-        }
-    };
+    // TODO: 改到这里了，明天继续改。。。。
+    let username = getAccount().username
 
-    let block=await getBlockInfo();
-    let getDate=await getDataInfo(param);
-    if(block.code!=0||getDate.code!=0){
-        message.error(window.localeInfo["Demand.FailedToGetTheBlockMessages"])
-        return;
+    let fileInfo = this.state.exampledata.find(ele => ele.asset_id == asset_id)
+
+    let requirementInfo = this.props.location.query
+
+    let originParam = {
+      "dataPresaleId": window.uuid,
+      "info": {
+        "userName": username,
+        "assetId": asset_id,
+        "dataReqId": requirementInfo.requirement_id,
+        "consumer": requirementInfo.username,
+        "opType": 1,
+      }
     }
 
-    let data={
-        "ref_block_num": block.data.ref_block_num,
-        "ref_block_prefix": block.data.ref_block_prefix,
-        "expiration": block.data.expiration,
-        "scope": ["datadealmng"],
-        "read_scope": [],
-        "messages": [{
-            "code": "datadealmng",
-            "type": "datapresale",
-            "authorization": [],
-            "data": getDate.data.bin
-        }],
-        "signatures": []
-    };
-    BTFetch('/user/AddNotice','post',data).then(res=>{
-        if(res.code==1&&res.data!='null'){
+    let b1 = PackArraySize(2)
+    let b2 = PackStr16(originParam.dataPresaleId)
+
+    let b3 = PackArraySize(5)
+
+    let b4 = PackStr16(originParam.info.userName)
+    let b5 = PackStr16(originParam.info.assetId)
+    let b6 = PackStr16(originParam.info.dataReqId)
+    let b7 = PackStr16(originParam.info.consumer)
+    let b8 = PackUint32(originParam.info.opType)
+
+    let param = [...b1,...b2,...b3,...b4,...b5,...b6,...b7,...b8]
+    console.log('param', param);
+
+    let blockInfo = await getBlockInfo()
+
+    console.log('blockInfo', blockInfo);
+
+    let privateKey = Buffer.from(getAccount().privateKey, 'hex')
+
+    let fetchParam = {
+        "version": 1,
+        ...blockInfo,
+        "sender": username,
+        "contract": "datadealmng",
+        "method": "presale",
+        "param": param,
+        "sig_alg": 1
+    }
+
+    fetchParam = getSignaturedFetchParam({fetchParam, privateKey})
+
+    BTFetch('/asset/preSaleNotice', 'post', fetchParam).then(res => {
+        if (res.code==1 && res.data != 'null') {
             message.success(window.localeInfo["Demand.SuccessfulPromote"])
         }else{
             message.error(window.localeInfo["Demand.FailedPromote"])
