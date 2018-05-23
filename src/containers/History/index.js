@@ -19,34 +19,34 @@ export default class BTDashboard extends PureComponent{
   }
   columns(data){
       return [
-          { title: <FormattedMessage {...HistoryMessages.TransactionID}/>, dataIndex: 'transaction_id',key:'transaction_id',render:(item)=>{
-                  return <span>{item.substring(0,15)+'...'}</span>
-              }},
-          { title: <FormattedMessage {...HistoryMessages.Price}/>, dataIndex: 'price', key: 'price',
+          { title: <FormattedMessage {...HistoryMessages.TransactionID}/>, dataIndex: 'transaction_id',
+            render: (item) => {
+                return <span style={{maxWidth:124}} className='one_txt_cut'>{item.slice(0, 15)+'...'}</span>
+          }},
+          { title: <FormattedMessage {...HistoryMessages.Price}/>, dataIndex: 'price',
             render: (price) => <div className=''>
                         <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
                         <span>{price/Math.pow(10,10)}</span>
                     </div>,
             align: 'left'
           },
-          { title: <FormattedMessage {...HistoryMessages.From}/>, dataIndex: 'from',key:'from'},
-          { title: <FormattedMessage {...HistoryMessages.To}/>, dataIndex: 'to',key:'to'},
-          /*{ title: 'FileName', dataIndex: 'fileName', key: 'fileName' },
-          { title: 'FileSize', dataIndex: 'fileSize', key: 'fileSize' },*/
-          { title: <FormattedMessage {...HistoryMessages.Date}/>, dataIndex: 'date',key:'date',render:(data)=>{
-                  return <span>{ getDateAndTime(data) }</span>
-              }},
-          { title: <FormattedMessage {...HistoryMessages.Block}/>, dataIndex: 'block_id',key:'block_id'},
-
-
+          { title: <FormattedMessage {...HistoryMessages.From}/>, dataIndex: 'from'},
+          { title: <FormattedMessage {...HistoryMessages.To}/>, dataIndex: 'to'},
+          { title: <FormattedMessage {...HistoryMessages.Date}/>, dataIndex: 'timestamp',
+            render: getDateAndTime
+          },
+          { title: <FormattedMessage {...HistoryMessages.Block}/>, dataIndex: 'block_number'},
       ];
   }
+
   componentDidMount(){
       this.getPagination(1,10);
   }
+
   onChange(page, pageSize) {
       this.getPagination(page, pageSize);
   }
+
   pagination(){
       let pagination={
           total:this.state.rowCount,
@@ -57,23 +57,23 @@ export default class BTDashboard extends PureComponent{
       }
       return pagination
   }
+
   getPagination(page,pageSize){
       let param={
           pageSize:pageSize,
           pageNum:page
       };
-      BTFetch('/dashboard/GetRecentTxList','POST',param).then(res => {
-          if (res&&res.code == 1) {
-              if(res.data.rowCount>0){
-                  let data=res.data.row;
-                  this.setState({
-                      data,
-                      rowCount:res.data.rowCount
-                  });
-              }
+      BTFetch('/dashboard/GetTxList','POST',param).then(res => {
+          if (res.data.row_count > 0 && res.code == 1) {
+              let data=res.data.row;
+              this.setState({
+                  data,
+                  rowCount:res.data.rowCount
+              })
           }
       });
   }
+
   render(){
       const { data } = this.state;
       const columns = this.columns(data);

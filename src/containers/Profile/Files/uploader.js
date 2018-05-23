@@ -199,7 +199,7 @@ async function handleFileQueued(file) {
       'Content-Type': 'application/json'
     })
   }).then(res => res.json()).then(res => {
-    console.log('res', res);
+    // console.log('res', res);
     if (res.is_exist == 0) {
       // 4. 校验通过，取得 guid 为 merkle_root_hash
       // 向后端取上传地址
@@ -249,7 +249,7 @@ uploader.on( 'uploadBeforeSend', (obj, data, headers) => {
 
 // ************ 上传进度监听 *************
 function progressChange(file, percentage) {
-  console.log('file.name, percentage', file.name, percentage);
+  // console.log('file.name, percentage', file.name, percentage);
   // 因为这个 percentage 值为 1 的时候比 uploadSuccess 触发要晚
   // 所以做这个判断
   // if (percentage < 0.8) {
@@ -262,7 +262,7 @@ function progressChange(file, percentage) {
 
 }
 
-var percent_throttled = throttle(progressChange, 500)
+var percent_throttled = throttle(progressChange, 200)
 
 uploader.on( 'uploadProgress', percent_throttled)
 
@@ -283,7 +283,7 @@ function querySecondProgress(file) {
   const username = store.getState().headerState.account_info.username
 
   let body = JSON.stringify({ username, slice })
-  console.log('body', body);
+  // console.log('body', body);
 
   fetch(file_test_url + '/data/getUploadProgress', {
     method: 'POST',
@@ -335,9 +335,7 @@ function querySecondProgress(file) {
       console.log('param', param);
 
       let blockInfo = await getBlockInfo()
-
-      console.log('blockInfo', blockInfo);
-
+      // console.log('blockInfo', blockInfo);
       let privateKey = Buffer.from(getAccount().privateKey, 'hex')
 
       let fetchParam = {
@@ -361,7 +359,9 @@ function querySecondProgress(file) {
       console.log('fetchParam', fetchParam);
 
       BTFetch('/asset/registerFile', 'post', fetchParam)
-      .then(res => console.log('res', res))
+      .then(res => {
+        console.log('res.details', JSON.parse(res.details))
+      })
 
     } else {
       console.log('上传没有真的完成');

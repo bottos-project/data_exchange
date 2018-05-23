@@ -52,7 +52,7 @@ export default class BTOtherExchange extends PureComponent{
             pageSize: pageSize,
             pageNum: page
         };
-        BTFetch('/dashboard/GetRecentTxList','POST',param).then(res=>{
+        BTFetch('/dashboard/GetTxList','POST',param).then(res=>{
           if (res.code == 1) {
             let data=res.data.row;
             this.setState({

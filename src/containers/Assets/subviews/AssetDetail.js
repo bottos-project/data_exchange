@@ -1,13 +1,15 @@
 import React,{PureComponent} from 'react'
 import { Carousel, Button, Tag, Modal, Input, message} from 'antd';
 import BTFetch from '../../../utils/BTFetch'
-import {getBlockInfo,getDataInfo} from '../../../utils/BTCommonApi'
+import { getBlockInfo, getSignaturedParam, getSignaturedFetchParam } from '../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from '../../../tools/localStore'
 import uuid from 'node-uuid'
 
 import CloseBack from '@/components/CloseBack'
+
+import { PackArraySize, PackStr16 } from '@/lib/msgpack/msgpack'
 
 const AssetMessages = messages.Asset;
 // 此处样式在Demand/subviews/styles.less中控制
@@ -37,69 +39,55 @@ export default class BTAssetDetail extends PureComponent{
         });
     }
     async buySureAsset() {
-        //获取区块信息
-        let _block=(await getBlockInfo());
-        if(_block.code != 0){
-            message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
-            return;
-        }
-        let block=_block.data;
-        //获取data信息
-        let data={
-            "code":"datadealmng",
-            "action":"datapurchase",
-            "args":{
-                "data_deal_id":uuid.v1(),
-                "basic_info":{
-                    "user_name":getAccount().username,
-                    "session_id":getAccount().token,
-                    "asset_id":this.state.data.asset_id,
-                    "random_num":Math.ceil(Math.random()*100),
-                    "signature":"0xxxxxxxx"
-                }
-            }
-        };
-        let _getDataBin=(await getDataInfo(data));
-        if(_getDataBin.code!=0){
-            message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
-            return;
-        }
-        //数组排序
-        let array=[
-            "assetmng",
-            getAccount().username,
-            this.state.data.username,
-            "datadealmng",
-            "datafilemng"
-        ].sort();
-        let param={
-            "ref_block_num": block.ref_block_num,
-            "ref_block_prefix": block.ref_block_prefix,
-            "expiration": block.expiration,
-            "scope": array,
-            "read_scope": [],
-            "messages": [{
-                "code": "datadealmng",
-                "type": "datapurchase",
-                "authorization": [],
-                "data": _getDataBin.data.bin
-            }],
-            "signatures": []
-        };
-        BTFetch('/exchange/consumerBuy','post',param)
-            .then(res=>{
-                console.log(res);
-                if(res.code == 1){
-                    message.success(window.localeInfo["Asset.SuccessfulPurchase"])
-                }else if(res.code == 4001){
-                    message.warning(window.localeInfo["Asset.InsufficientBalance"])
-                }else{
-                    message.error(window.localeInfo["Asset.FailedPurchase"])
-                }
-            }).catch(error=>{
 
-        })
+      let originParam = {
+      	"data_deal_id": window.uuid,
+      	"basic_info": {
+      		"username": getAccount().username,
+      		"assetId": this.state.data.asset_id
+      	}
+      }
+
+      let b1 = PackArraySize(2)
+      let b2 = PackStr16(originParam.data_deal_id)
+
+      let b3 = PackArraySize(2)
+
+      let b4 = PackStr16(originParam.basic_info.username)
+      let b5 = PackStr16(originParam.basic_info.assetId)
+
+      let param = [...b1,...b2,...b3,...b4,...b5]
+
+      //获取区块信息
+      let blockInfo = await getBlockInfo()
+
+      let fetchParam = {
+        "version": 1,
+        ...blockInfo,
+        "sender": getAccount().username,
+        "contract": "datadealmng",
+        "method": "datapurchase",
+        "param": param,
+        "sig_alg": 1
+      }
+
+      let privateKey = Buffer.from(getAccount().privateKey, 'hex')
+
+      BTFetch('/exchange/buyAsset', 'post', getSignaturedFetchParam({fetchParam, privateKey}))
+      .then(res=>{
+          console.log(res);
+          if(res.code == 1){
+              message.success(window.localeInfo["Asset.SuccessfulPurchase"])
+          }else if(res.code == 4001){
+              message.warning(window.localeInfo["Asset.InsufficientBalance"])
+          }else{
+              message.error(window.localeInfo["Asset.FailedPurchase"])
+          }
+      }).catch(error=>{
+
+      })
     }
+
     async handleOk(){
         this.setState({
             visible: false,
@@ -114,22 +102,21 @@ export default class BTAssetDetail extends PureComponent{
             return;
         }
         //查询是否已购买资产
-        let buysure = {
-            "username":getAccount().username,
-            "random":Math.ceil(Math.random()*100),
-            "signatures":'0XXXX',
-            "asset_id":this.state.data.asset_id,
-        };
-        await BTFetch('/asset/GetUserPurchaseAssetList','post',buysure).then(res=>{
-            if (res && res.code == 0) {
-              // console.log('res.data', res.data);
-                if (res.data.rowCount >= 1) {
-                    message.warning(window.localeInfo["Asset.CannotPurchaseAgain"]);
-                    return;
-                } else {
-                   this.buySureAsset()
-                }
-            }
+        // "asset_id":this.state.data.asset_id,
+
+        await BTFetch('/user/QueryMyBuy','post', {
+          ...getSignaturedParam(getAccount()),
+          "page_size": 50,
+        	"page_num": 1
+        }).then(res => {
+          // console.log('res.data', res.data);
+          // if (res.code == 1 && res.data.rowCount >= 1) {
+          //     message.warning(window.localeInfo["Asset.CannotPurchaseAgain"]);
+          //     return;
+          // } else {
+             this.buySureAsset()
+          // }
+
         }).catch(error => {
         });
 

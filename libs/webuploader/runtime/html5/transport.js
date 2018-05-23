@@ -34,9 +34,9 @@ define([
                 server += opts.attachInfoToQuery !== false ? ((/\?/.test( server ) ? '&' : '?') +
                         $.param( owner._formData )) : '';
 
-                console.log('server', server);
+                // console.log('server', server);
                 binary = blob.getSource();
-                console.log('binary', binary);
+                // console.log('binary', binary);
             } else {
                 formData = new FormData();
                 $.each( owner._formData, function( k, v ) {

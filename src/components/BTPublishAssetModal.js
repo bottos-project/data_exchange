@@ -165,19 +165,20 @@ class BTPublishAssetModal extends PureComponent{
       let privateKeyStr = account_info.privateKey
       let privateKey = Buffer.from(privateKeyStr,'hex')
 
+      console.log('blockInfo', blockInfo);
+
       let message = {
         "version": 1,
         ...blockInfo,
         "sender": account_info.username,
         "contract": "assetmng",
-        "method": "datafilereg",
+        "method": "assetreg",
         "sig_alg": 1
       }
 
       let featureTag = this.state.tag1 + '-' + this.state.tag2 + '-' +this.state.tag3
       let expire_time_string = this.state.date11 + ' ' + (this.state.timeValue ? this.state.timeValue : '')
       let expire_time = new Date(expire_time_string).getTime() / 1000
-      console.log({expire_time:Number.parseInt(this.state.number)})
 
       let did = {
         "asset_id": window.uuid,
@@ -190,12 +191,12 @@ class BTPublishAssetModal extends PureComponent{
           "storageHash": this.state.storage_hash,
           "expireTime": expire_time,
           "opType": 1,
-          "price": Number.parseInt(this.state.number),
+          "price": Number.parseInt(this.state.number) * Math.pow(10, 10),
           "description": this.state.description
         }
       }
 
-      console.log('did', did)
+      // console.log('did', did)
       let arrBuf = registAssetPack(did)
       let params = Object.assign({},message)
       params.param = arrBuf

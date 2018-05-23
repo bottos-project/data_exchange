@@ -10,21 +10,6 @@ export const getDataInfo = async(params)=>{
     return await BTFetch(reqUrl,'POST',params)
 }
 
-export const fetchWithBlockHeader = async(url,method,params,options)=>{
-    let blockHeader = await BTFetch('/user/GetBlockHeader','GET')
-    if(!(blockHeader && blockHeader.code==1)){
-        message.error('block header get faild');
-        return
-    }
-
-    let data = blockHeader.data
-    params.cursor_label = data.cursor_label
-    params.cursor_num = data.head_block_num
-    params.lifetime = data.head_block_time
-
-    return await BTFetch(url,method,params,options)
-}
-
 export const getBlockInfo = async()=>{
     let blockHeader = await BTFetch('/user/GetBlockHeader','GET')
     if(!(blockHeader && blockHeader.code==1)){
@@ -35,7 +20,7 @@ export const getBlockInfo = async()=>{
     let data = blockHeader.data
     params.cursor_label = data.cursor_label
     params.cursor_num = data.head_block_num
-    params.lifetime = data.head_block_time
+    params.lifetime = data.head_block_time + 300
     return params
 }
 

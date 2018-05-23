@@ -6,7 +6,7 @@ import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import {getBlockInfo, getDataInfo, getSignaturedParam} from '../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
-import {getAccount} from "../../../tools/localStore";
+import {getAccount} from "@/tools/localStore";
 import uuid from 'node-uuid'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import Base from 'webuploader/base'
@@ -18,7 +18,6 @@ import './style.less'
 const PersonalAssetMessages = messages.PersonalAsset;
 
 const Dragger = Upload.Dragger;
-const callback_data = ''
 
 const GigaByte = Math.pow(2, 30)
 const MegaByte = 1 << 20
@@ -36,7 +35,7 @@ function beforeUpload(file) {
 
 
 function getDownloadFileIP(guid) {
-  fetch(file_test_url + '/data/getStorageIP', {
+  return fetch(file_test_url + '/data/getStorageIP', {
     method: 'POST',
     body: JSON.stringify({ guid }),
     headers: new Headers({
@@ -130,8 +129,8 @@ class BTMyAssetSet extends Component{
 
       let param = await getDownloadFileIP(guid)
 
-      param.username = getAccount().username
       console.log('getAccount()', getAccount());
+      param.username = getAccount().username
       param.fileName = fileName
 
       getFileDownloadURL(param)
