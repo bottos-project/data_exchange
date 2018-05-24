@@ -1,11 +1,10 @@
 const node_uuid = require('node-uuid')
 const eventName = require('../src/utils/EventName')
-const {message} = require('antd')
-message.config({top: 100,duration: 2,maxCount: 1,})
 global.electron = require('electron')
-global.uuid = node_uuid.v1().replace(/-/g,'');
+
+global.uuid = ()=>node_uuid.v1().replace(/-/g,'')
+
 global.eventName = eventName;
-global.message = message
 var createHash = require('crypto').createHash
 const fs = require('fs');
 

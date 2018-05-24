@@ -53,8 +53,7 @@ export const registDemandPack = (did)=>{
     let arrFavoriFlag = BTPack.PackUint32(basic_info.FavoriFlag)
     let arrDescription = BTPack.PackStr16(basic_info.Description)
 
-    let arrBuf = new ArrayBuffer()
-    arrBuf = [...arr1Size,...arrDataReqId,...arr2Size,...arrUsername,...arrReqName,...arrReqType,...arrFeatureTag,...arrSampleHash,...arrExpireTime,
+    let arrBuf = [...arr1Size,...arrDataReqId,...arr2Size,...arrUsername,...arrReqName,...arrReqType,...arrFeatureTag,...arrSampleHash,...arrExpireTime,
     ...arrOpType,...arrPrice,...arrFavoriFlag,...arrDescription]
 
     return arrBuf

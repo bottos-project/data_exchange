@@ -12,7 +12,8 @@ import { getBlockInfo, getSignaturedFetchParam } from "@/utils/BTCommonApi";
 import { file_server } from '@/utils/BTDownloadFile'
 import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/msgpack'
 
-
+// const fs = __non_webpack_require__('fs');
+// console.log('fs', fs);
 // 文件上传流程
 // 1. 取得文件，对文件进行切片
 // 2. 对切片进行 hash 计算，返回切片的 hash 值
@@ -25,14 +26,7 @@ import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/
 const GigaByte = Math.pow(2, 30)
 const MegaByte = 1 << 20
 
-function int10ToStr16(i10) {
-  var s16 = i10.toString(16)
-  // console.log('s16', s16);
-  if (s16.length == 1) {
-    s16 = '0' + s16
-  }
-  return s16
-}
+const uploadSuccessPercent = 95
 
 function calculateSlicedFileSize(size) {
   if (size > GigaByte) {
@@ -251,7 +245,7 @@ function progressChange(file, percentage) {
   //   querySecondProgress(file)
   // }
   if (percentage < 1) {
-    store.dispatch( updateUploadProgress(file.guid, percentage * 85) )
+    store.dispatch( updateUploadProgress(file.guid, percentage * uploadSuccessPercent) )
   }
 
 }
@@ -357,8 +351,8 @@ function querySecondProgress(file) {
 
     } else {
       console.log('上传没有真的完成');
-      let restPercent = res.storage_done / chunks * 15
-      store.dispatch( updateUploadProgress(guid, 85 + restPercent) )
+      let restPercent = res.storage_done / chunks * (100 - uploadSuccessPercent)
+      store.dispatch( updateUploadProgress(guid, uploadSuccessPercent + restPercent) )
 
       setTimeout(querySecondProgress.bind(null, file), 3000);
       // setTimeout(getDownloadFileIP.bind(null, guid), 1000);

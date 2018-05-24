@@ -251,7 +251,7 @@ export default class BTAssetDetail extends PureComponent{
 
     getSignature(username,privateKeyStr){
         let privateKey = Buffer.from(privateKeyStr,'hex')
-        let random = window.uuid
+        let random = window.uuid()
         let msg = {username,random}
         let query_pb = require('../../../../lib/proto/query_pb')
         let loginProto = queryProtoEncode(query_pb,msg)

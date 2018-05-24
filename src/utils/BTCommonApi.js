@@ -33,7 +33,7 @@ export function getSignaturedParam({username, privateKey}) {
   if (typeof username != 'string' || typeof privateKey != 'string') {
     console.error('type error');
   }
-  let random = window.uuid
+  let random = window.uuid()
   let msg = {username,random}
   let loginProto = queryProtoEncode(query_pb, msg)
   let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))

@@ -1,7 +1,7 @@
 {
   "name": "wallet",
-  "version": "3.0.0alpha.3",
-  "publishDate": "2018-5-23",
+  "version": "3.0.0alpha.4",
+  "publishDate": "2018-5-24",
   "private": true,
   "main": "main.js",
   "homepage": ".",
@@ -42,7 +42,6 @@
   },
   "dependencies": {
     "@bottos-project/bottos-crypto-js": "^1.0.5",
-    "antd": "^3.2.2",
     "asar": "^0.14.3",
     "bottos-js-crypto": "^1.0.12",
     "buffer": "^5.1.0",
@@ -73,6 +72,7 @@
     "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
+    "antd": "^3.2.2",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.4",
     "babel-plugin-import": "^1.6.5",

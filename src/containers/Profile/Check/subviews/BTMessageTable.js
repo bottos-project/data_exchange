@@ -91,7 +91,7 @@ export default class BTMessageTable extends PureComponent{
         //     random: Math.ceil(Math.random()*100),
         //     signatures: "0xxxx"
         // };
-        // console.log(window.uuid);
+        // console.log(window.uuid());
         // BTFetch("/user/QueryNotice","post",param,{service:'service'})
         //     .then(res=>{
         //         if(res.code==0){
@@ -144,7 +144,7 @@ export default class BTMessageTable extends PureComponent{
 
     getSignature(username,privateKeyStr){
         let privateKey = Buffer.from(privateKeyStr,'hex')
-        let random = window.uuid
+        let random = window.uuid()
         let msg = {username,random}
         let query_pb = require('../../../../lib/proto/query_pb')
         let loginProto = queryProtoEncode(query_pb,msg)

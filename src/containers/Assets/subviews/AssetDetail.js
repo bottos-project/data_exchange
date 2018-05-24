@@ -5,7 +5,6 @@ import { getBlockInfo, getSignaturedParam, getSignaturedFetchParam } from '../..
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from '../../../tools/localStore'
-import uuid from 'node-uuid'
 
 import CloseBack from '@/components/CloseBack'
 
@@ -41,7 +40,7 @@ export default class BTAssetDetail extends PureComponent{
     async buySureAsset() {
 
       let originParam = {
-      	"data_deal_id": window.uuid,
+      	"data_deal_id": window.uuid(),
       	"basic_info": {
       		"username": getAccount().username,
       		"assetId": this.state.data.asset_id

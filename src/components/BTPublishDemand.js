@@ -8,7 +8,6 @@ import BTFetch from "../utils/BTFetch";
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
 import {getAccount} from '../tools/localStore'
-import uuid from 'node-uuid'
 import ConfirmButton from './ConfirmButton'
 import BTTypeSelect from './BTTypeSelect'
 import { toFixedWithoutZero } from '@/utils/number'
@@ -146,7 +145,7 @@ class BTPublishDemand extends PureComponent{
       }
 
       let did = {
-        "dataReqId": window.uuid,
+        "dataReqId": window.uuid(),
         "basic_info": {
           "Username": account_info.username,
           "RequirementName": this.state.title || 'requirement',

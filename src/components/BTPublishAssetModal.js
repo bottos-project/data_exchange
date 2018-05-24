@@ -12,7 +12,6 @@ import {options} from '../utils/option'
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
 import moment from "moment"
-import uuid from 'node-uuid'
 import ConfirmButton from './ConfirmButton'
 import BTTypeSelect from './BTTypeSelect'
 import * as BTSign from '../lib/sign/BTSign'
@@ -181,7 +180,7 @@ class BTPublishAssetModal extends PureComponent{
       let expire_time = new Date(expire_time_string).getTime() / 1000
 
       let did = {
-        "asset_id": window.uuid,
+        "asset_id": window.uuid(),
         "basic_info": {
           "username": account_info.username,
           "assetName": this.state.title,

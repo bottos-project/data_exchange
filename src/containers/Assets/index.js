@@ -33,8 +33,8 @@ export default class BTAssets extends Component {
     getPagination(page,pageSize,assetType=0) {
         let reqUrl = '/asset/queryAllAsset';
         let param = {
-            "pageSize": pageSize,
-            "pageNum": page,
+            "page_size": pageSize,
+            "page_num": page,
             assetType:assetType
         };
 

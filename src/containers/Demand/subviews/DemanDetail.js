@@ -7,7 +7,6 @@ import messages from '../../../locales/messages'
 import BTAssetList from './BTAssetList'
 import './styles.less'
 import {getAccount} from "../../../tools/localStore";
-import uuid from 'node-uuid'
 import CloseBack from '@/components/CloseBack'
 import { PackArraySize, PackStr16, PackUint32 } from '@/lib/msgpack/msgpack'
 
@@ -73,7 +72,7 @@ export default class BTDemanDetail extends PureComponent{
     let requirementInfo = this.props.location.query
 
     let originParam = {
-      "dataPresaleId": window.uuid,
+      "dataPresaleId": window.uuid(),
       "info": {
         "userName": username,
         "assetId": asset_id,

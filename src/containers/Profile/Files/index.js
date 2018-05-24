@@ -7,7 +7,6 @@ import {getBlockInfo, getDataInfo, getSignaturedParam} from '../../../utils/BTCo
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from "@/tools/localStore";
-import uuid from 'node-uuid'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import Base from 'webuploader/base'
 import uploader from './uploader'

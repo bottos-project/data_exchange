@@ -10,7 +10,6 @@ import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from "../../../tools/localStore";
 import collectionState, { getTimeSecond } from "@/tools/sessionStorage";
-import uuid from 'node-uuid'
 const AssetMessages = messages.Asset;
 
 
