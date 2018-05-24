@@ -154,7 +154,7 @@ class BTPublishDemand extends PureComponent{
           "FeatureTag": 1,
           "SampleHash": this.state.getFileNameTemp || '',
           "ExpireTime": new Date(this.state.dateString).getTime() / 1000,
-          "Price": this.state.number,
+          "Price": this.state.number * Math.pow(10, 10),
           "Description": this.state.textArea,
           "FavoriFlag": 1,
           "OpType": 1
@@ -171,99 +171,17 @@ class BTPublishDemand extends PureComponent{
 
       let url = '/requirement/Publish'
       BTFetch(url,'POST',params)
-      .then(response=>{
-        if(response && response.code==1){
-          message.warning(window.localeInfo["PersonalDemand.SuccessfulToPublishTheDemand"]);
-        }else{
+      .then(response => {
+        if (response && response.code == 1) {
+          message.success(window.localeInfo["PersonalDemand.SuccessfulToPublishTheDemand"]);
+        } else {
           message.warning(window.localeInfo["PersonalDemand.FailedToPublishTheDemand"]);
         }
-      }).catch(error=>{
+      }).catch(error => {
         message.warning(window.localeInfo["PersonalDemand.FailedToPublishTheDemand"]);
       })
     }
 
-
-
-    //点击后数据收集、fetch
-    async updata1(){
-        message.destroy();
-        if(!this.state.title || !this.state.date || !this.state.textArea){
-            message.warning(window.localeInfo["PersonalDemand.PleaseImproveTheDemand"])
-            return;
-        }
-        if(this.state.number<=0||this.state.number>=10000000000){
-            message.warning(window.localeInfo["PersonalDemand.PleaseInputPrice"])
-            return;
-        }
-        let reg=/^\d+(?:\.\d{1,10})?$/
-        if(!reg.test(this.state.number)){
-            message.warning('输入正确的价格');
-            return;
-        }
-        //链的data
-        let blockData = {
-            code: "datareqmng",
-            action: "datareqreg",
-            args: {
-                data_req_id: uuid.v1(),
-                basic_info: {
-                    user_name: getAccount().username,
-                    session_id: getAccount().token,
-                    requirement_name: this.state.title.trims(),
-                    feature_tag: 111,
-                    sample_path: "pathtest",
-                    sample_hash: "hashtest",
-                    expire_time: (new Date(this.state.dateString).getTime())/1000,//截止时间时间戳
-                    price: this.state.number*Math.pow(10,10),
-                    description: this.state.textArea.trims(),
-                    publish_date: '1',//当前时间戳
-                    signature: "sigtest"
-                }
-            }
-        }
-        console.log(blockData)
-        let blockInfo = await getBlockInfo();
-        let blockDataBin = await getDataInfo(blockData);
-        if(blockInfo.code!=0 || blockDataBin.code!=0){
-            window.message.error(window.localeInfo["PersonalDemand.FailedToGetTheBlockMessages"])
-            return ;
-        }
-        let param={
-            ref_block_num: blockInfo.data.ref_block_num,
-            ref_block_prefix: blockInfo.data.ref_block_prefix,
-            expiration: blockInfo.data.expiration,
-            scope: ["datareqmng"],
-            read_scope: [],
-            messages: [{
-                code: "datareqmng",
-                type: "datareqreg",
-                authorization: [],
-                data: blockDataBin.data.bin
-            }],
-            signatures: []
-        };
-
-
-        BTFetch("/requirement/Publish",'post',param)
-            .then(res=>{
-                if(res.code==0) {
-                    this.setState({
-                        title:"",
-                        textArea:"",
-                        number:'',
-                        date:"",
-                        dateString:'',
-                        DatePicker:'',
-                    });
-                    window.message.success(window.localeInfo["PersonalDemand.SuccessfulToPublishTheDemand"])
-                }else{
-                    window.message.error(window.localeInfo["PersonalDemand.FailedToPublishTheDemand"])
-                }
-            }).catch(error=>{
-            console.log(2)
-            window.message.error(window.localeInfo["PersonalDemand.FailedToPublishTheDemand"])
-        })
-    }
 
     render() {
         return (

@@ -1,6 +1,6 @@
 import React,{PureComponent} from 'react'
 import BTListCell from './BTListCell'
-import {Icon,Checkbox,Row,Col,message,Table,Button,Popconfirm} from 'antd'
+import {Icon,Checkbox,Row,Col,Table,Button,Popconfirm} from 'antd'
 import BTFetch from '../utils/BTFetch'
 import BTCryptTool from 'bottos-js-crypto'
 const { queryProtoEncode } = require('@/lib/proto/index');
@@ -67,7 +67,7 @@ export default class BTList extends PureComponent{
         };
         BTFetch('/asset/QueryByID','post',param)
             .then(res=>{
-                if(res.code==0){
+                if(res.code == 1){
                     console.log(res.data.row)
                     if(res.data.row.length==1){
                         hashHistory.push({

@@ -1,6 +1,6 @@
 import React, { Component, PureComponent } from 'react'
 
-import { Form, Icon, Input, Button, message, Row, Col } from 'antd'
+import { Form, Icon, Input, Button, Row, Col } from 'antd'
 import BTFetch from '../utils/BTFetch'
 import BTCryptTool from 'bottos-js-crypto'
 import './styles.less'
@@ -44,7 +44,9 @@ function BTRegistSuccess({username, keystoreObj}) {
       </div>
 
       <Row type='flex' justify='space-around' style={{marginTop: 20}}>
-        <Button type='primary' onClick={copyToClipboard}>复制 Keystore 文本</Button>
+        <Button type='primary' onClick={copyToClipboard}>
+          <FormattedMessage {...HeaderMessages.CopyYourKetstore}/>
+        </Button>
 
         <Button type='primary' onClick={downloadKeystore}>
           <FormattedMessage {...HeaderMessages.BackupYourKeystore}/>
@@ -76,8 +78,8 @@ class Regist extends PureComponent{
             verify_id: '', // 验证码 id
             isRegistered: false,
             // 下面两个是 BTRegistSuccess 需要的参数
-            username: 'adfasdf',
-            keystoreObj: {adfsadgsdfgsdfgfa:"dggyikhnvghmnfgs"}
+            username: '',
+            keystoreObj: {}
         }
 
         this.onHandleSubmit = this.onHandleSubmit.bind(this)
@@ -144,11 +146,14 @@ class Regist extends PureComponent{
         let privateKey = keys.privateKey
         let blockHeader = await getBlockInfo()
 
-        if(!(blockHeader && blockHeader.code==1)){
-            message.error(window.localeInfo["Header.FailedRegister"]);
-            return
-        }
+        // console.log('注册', blockHeader);
 
+        // if(!(blockHeader && blockHeader.code==1)){
+        //     message.error(window.localeInfo["Header.FailedRegister"]);
+        //     return
+        // }
+
+        // console.log('注册');
         // did
         let didParam = this.getDid(username,keys)
         let arrSize = msgpack.PackArraySize(2)

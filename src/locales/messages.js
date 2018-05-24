@@ -44,6 +44,10 @@ module.exports = {
             id:'Menu.AssetDetails',
             defaultMessage:'资产详情'
         },
+        Back:{
+            id:'Menu.Back',
+            defaultMessage:'返回上一级'
+        },
         ProfileAsset:{
             id:'Menu.ProfileAsset',
             defaultMessage:'个人资产'
@@ -52,8 +56,8 @@ module.exports = {
             id:'Menu.Collect',
             defaultMessage:'收藏'
         },
-        Check:{
-            id:'Menu.Check',
+        MyMessages:{
+            id:'Menu.MyMessages',
             defaultMessage:'消息'
         },
         LoginOrRegister:{
@@ -103,7 +107,7 @@ module.exports = {
             defaultMessage:'收藏'
         },
         MyMessages:{
-            id:"Message.MyMessages",
+            id:"Header.MyMessages",
             defaultMessage:"消息"
         },
         PreSale:{
@@ -145,6 +149,10 @@ module.exports = {
         YourAccountHasBeenRegisteredSuccessfully:{
             id:'Header.YourAccountHasBeenRegisteredSuccessfully',
             defaultMessage:'请备份keystore文件'
+        },
+        CopyYourKetstore:{
+            id:'Header.CopyYourKetstore',
+            defaultMessage:'复制 Keystore 文本'
         },
         BackupYourKeystore:{
             id:'Header.BackupYourKeystore',
@@ -456,6 +464,12 @@ module.exports = {
         MyMessages:{
             id:"Message.MyMessages",
             defaultMessage:"我的消息"
+        },
+    },
+    File:{
+        UploadSuccess:{
+            id:"File.UploadSuccess",
+            defaultMessage:"上传成功"
         },
     },
     PersonalAsset:{

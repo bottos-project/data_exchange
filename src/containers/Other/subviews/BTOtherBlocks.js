@@ -42,7 +42,7 @@ class BTOtherBlocks extends PureComponent{
     getPagination(page,page_size){
         let param={
             page_size,
-            pageNum:page
+            page_num:page
         };
         return BTFetch('/dashboard/GetBlockList', 'POST', param).then(res => {
             if (res && res.code == 1) {

@@ -10,7 +10,8 @@ import {getAccount} from "@/tools/localStore";
 import uuid from 'node-uuid'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import Base from 'webuploader/base'
-import uploader, { file_test_url } from './uploader'
+import uploader from './uploader'
+import { file_server } from '@/utils/BTDownloadFile'
 
 import ProgressList from './subviews/ProgressList'
 import './style.less'
@@ -35,7 +36,7 @@ function beforeUpload(file) {
 
 
 function getDownloadFileIP(guid) {
-  return fetch(file_test_url + '/data/getStorageIP', {
+  return fetch(file_server + '/data/getStorageIP', {
     method: 'POST',
     body: JSON.stringify({ guid }),
     headers: new Headers({
@@ -61,9 +62,9 @@ function getDownloadFileIP(guid) {
 
 // getDownloadFileIP("e2f61c3f71d1defd3fa999dfa36953755c690689799962b48bebd836974e8cf9")
 
-function getFileDownloadURL(param) {
+function getFileDownloadURL(param, name) {
 
-  fetch(file_test_url + '/data/getFileDownloadURL', {
+  fetch(file_server + '/data/getFileDownloadURL', {
     method: 'POST',
     body: JSON.stringify(param),
     headers: new Headers({
@@ -74,7 +75,7 @@ function getFileDownloadURL(param) {
     if (res.message == 'OK' || res.result == '200') {
       let a = document.createElement('a');
       a.href = res.url
-      a.download = param.fileName
+      a.download = name
       a.click();
     }
   })
@@ -86,11 +87,7 @@ class BTMyAssetSet extends Component{
     constructor(props){
         super(props);
         this.state = {
-            data:[{
-              file_name: 'adf',
-              file_size: 345345,
-              create_time: 150134234,
-            }],
+            data:[],
             hash:'',
             username:'',
             token:'',
@@ -101,22 +98,17 @@ class BTMyAssetSet extends Component{
     columns(data) {
         // console.log(data);
         return [
-            {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name', key: 'fileName',
-                render:(item)=>{
-                    return <span>
-                       {item.length < 30? item:item.substring(0,30)+'...'}
-                    </span>
-                }},
-            {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size', key: 'fileSize',
+            {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name',
+              render: (item) => <div>{item}</div>
+            },
+            {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size',
               render: size => Base.formatSize( size )
             },
-            /*{title: <FormattedMessage {...PersonalAssetMessages.AssetSampleName}/>, dataIndex: 'sampleName', key: 'sampleName'},
-            {title: <FormattedMessage {...PersonalAssetMessages.AssetSampleSize}/>, dataIndex: 'sampleSize', key: 'sampleSize'},*/
-            {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date',
-              render: item => getDateAndTime(item)
+            {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time',
+              render: getDateAndTime
             },
             {
-                title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_name', key: 'x',
+                title: <FormattedMessage {...PersonalAssetMessages.Download}/>, key: 'download',
                 render: (text, record) => (
                     <a onClick={()=>this.download1(record)}>
                         <Icon type="download"/>
@@ -131,7 +123,6 @@ class BTMyAssetSet extends Component{
       console.log('record', record);
 
       const guid = record.file_hash
-      const fileName = record.file_name
 
       let param = await getDownloadFileIP(guid)
 
@@ -139,11 +130,9 @@ class BTMyAssetSet extends Component{
         return window.message.error('get download file fail')
       }
 
-      // console.log('getAccount()', getAccount());
       param.username = getAccount().username
-      param.fileName = fileName
 
-      getFileDownloadURL(param)
+      getFileDownloadURL(param, record.file_name)
 
     }
 

@@ -14,13 +14,7 @@ export default class BTDemand extends PureComponent{
         super(props);
 
         this.state = {
-            dataSource:[{
-              username: 'aaaa',
-              requirement_id: '1',
-              requirement_name: 'adf',
-              expire_time: 1526874874,
-              price: 120000000000,
-            }],
+            dataSource:[],
             pageNum:'',
             row_count: 0,
             activeKey: '0',
@@ -41,12 +35,14 @@ export default class BTDemand extends PureComponent{
             "page_num":page,
         }
         BTFetch(reqUrl,'POST',param).then(response=>{
-            if(response && response.code == 0){
+            if(response && response.code == 1){
               const {row_count, row} = response.data
+              console.log('response.data', response.data);
                 if(row_count == 0 || !Array.isArray(row)){
                     // message.warning(window.localeInfo["Demand.ThereIsNoMarketDemandForTheTimeBeing"]);
                     return;
                 }
+                console.log('response.data', response.data);
                 this.setState({
                     dataSource: row,
                     row_count,

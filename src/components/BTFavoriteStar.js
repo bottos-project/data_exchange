@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getBlockInfo } from "@/utils/BTCommonApi";
 import BTFetch from "@/utils/BTFetch";
-import { Spin, Icon, message } from 'antd'
+import { Spin, Icon } from 'antd'
 // 这个是缓存收藏信息的
 import {getAccount} from "@/tools/localStore";
 import collectionState, { getTimeSecond } from "@/tools/sessionStorage";

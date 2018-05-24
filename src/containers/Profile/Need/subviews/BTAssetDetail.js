@@ -2,6 +2,7 @@ import React,{PureComponent} from 'react'
 import {Popconfirm,Table,message} from 'antd';
 import BTFetch from "../../../../utils/BTFetch";
 import BTCryptTool from 'bottos-js-crypto'
+import { getDateAndTime } from '@/utils/dateTimeFormat'
 const { queryProtoEncode } = require('@/lib/proto/index');
 
 import {FormattedMessage} from 'react-intl'
@@ -26,24 +27,27 @@ export default class BTAssetDetail extends PureComponent{
         })
 
         return [
-            { title: <FormattedMessage {...PersonalDemandMessages.RequirementName}/>, dataIndex: 'requirement_name', key: 'title',render:(title)=>{
+            { title: <FormattedMessage {...PersonalDemandMessages.RequirementName}/>, dataIndex: 'requirement_name',
+              render:(title)=>{
                 return <span>{title.length<25?title:title.substring(0,25)+'...'}</span>
-                } },
+            }},
             // { title: <FormattedMessage {...PersonalDemandMessages.FeatureTag}/>, dataIndex: 'feature_tag', key: 'type' },
-            { title: <FormattedMessage {...PersonalDemandMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price' ,render:(price)=>{
+            { title: <FormattedMessage {...PersonalDemandMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price' ,
+              render:(price)=>{
                 return <span>{price/Math.pow(10,10)}</span>
-                }},
-
-            { title: <FormattedMessage {...PersonalDemandMessages.DemandDescription}/>, dataIndex: 'description', key: 'description' ,render:(title)=>{
+            }},
+            { title: <FormattedMessage {...PersonalDemandMessages.DemandDescription}/>, dataIndex: 'description',
+              render:(title)=>{
                 return <span>{title.length<25?title:title.substring(0,25)+'...'}</span>
-                }},
-            { title: <FormattedMessage {...PersonalDemandMessages.PublishDate}/>, dataIndex:'publish_date', key: 'publishDate',render:(time)=>{
-                return <span>{(new Date(time*1000)).toLocaleDateString()}</span>
-                }},
-            { title: <FormattedMessage {...PersonalDemandMessages.Deadline}/>, dataIndex: 'expire_time', key: 'expire_time' ,render:(time)=>{
-                    return <span>{(new Date(time*1000)).toLocaleDateString()}</span>
-                }},
-            /*{ title: <FormattedMessage {...PersonalDemandMessages.SampleDownload}/>, dataIndex: 'sample_path', key: 'sample' ,render:(sample_path)=>{
+            }},
+            { title: <FormattedMessage {...PersonalDemandMessages.PublishDate}/>, dataIndex:'publish_date',
+              render: getDateAndTime
+            },
+            { title: <FormattedMessage {...PersonalDemandMessages.Deadline}/>, dataIndex: 'expire_time',
+              render: getDateAndTime
+            },
+            /*{ title: <FormattedMessage {...PersonalDemandMessages.SampleDownload}/>, dataIndex: 'sample_path',
+            render:(sample_path)=>{
                     return(
                         <a href={sample_path}>Download</a>
                     )
@@ -94,20 +98,15 @@ export default class BTAssetDetail extends PureComponent{
           ...getSignaturedParam(getAccount()),
           page_size: 20,
           page_num: 1
-        }).then(res=>{
-            console.log(res.data);
-            if(res&&res.code==0){
-                if(res.data.rowCount==0){
-                    // message.warning(window.localeInfo["PersonalDemand.ThereIsNoDataForTheTimeBeing"])
-                    return;
-                }
-                this.setState({
-                    data:res.data.row,
-                });
-            }else{
-              console.log('res.details', JSON.parse(res.details));
-                message.warning(window.localeInfo["PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing"])
+        }).then(res => {
+          if (res.code == 1) {
+            if (res.data.row_count > 0) {
+              this.setState({ data: res.data.row })
             }
+          }else{
+            console.log('res.details', JSON.parse(res.details));
+            message.warning(window.localeInfo["PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing"])
+          }
         }).catch(error=>{
                 window.message.error(window.localeInfo["PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing"])
         })
@@ -118,7 +117,6 @@ export default class BTAssetDetail extends PureComponent{
         const { data } = this.state;
         const columns = this.columns(data);
         return(
-
             <div>
                 <Table className="shadow radius table" dataSource={this.state.data} columns={columns} />
             </div>

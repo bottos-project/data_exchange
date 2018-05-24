@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import { Table, Icon,message} from 'antd';
+import { Table, Icon } from 'antd';
 import "./styles.less"
 import BTFetch from '../../../../utils/BTFetch'
 import {FormattedMessage} from 'react-intl'
@@ -19,8 +19,7 @@ export default class BTHaveBought extends PureComponent{
             username:'',
         }
     }
-    columns(data){
-        console.log(data);
+    columns() {
         return [
             { title: <FormattedMessage {...PersonalAssetMessages.AssetName}/>, dataIndex: 'asset_name',
               render: (item) => <span>{item}</span>
@@ -76,10 +75,14 @@ export default class BTHaveBought extends PureComponent{
             }
             this.setState({ data: res.data.row })
           } else {
-            window.message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+            message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+            if (res.details) {
+              let details = JSON.parse(res.details)
+              console.error('details', details);
+            }
           }
         }).catch(error=>{
-          window.message.error(window.localeInfo["PersonalAsset.FailedToGetTheHaveBoughtAsset"])
+          message.error(window.localeInfo["PersonalAsset.FailedToGetTheHaveBoughtAsset"])
         })
 
     }

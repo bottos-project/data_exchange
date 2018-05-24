@@ -8,6 +8,8 @@ import messages from '../../../../locales/messages'
 import {getAccount} from "../../../../tools/localStore";
 import {queryProtoEncode} from '../../../../lib/proto/index'
 import * as BTCryptTool from 'bottos-js-crypto'
+import { getDateAndTime } from '@/utils/dateTimeFormat'
+import { downloadFile } from '@/utils/BTDownloadFile'
 
 const PersonalAssetMessages = messages.PersonalAsset;
 const { Option, OptGroup } = Select;
@@ -49,26 +51,23 @@ export default class BTAssetDetail extends PureComponent{
             {
               title: <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>,
               dataIndex: 'price',
-              key: 'price',
               render: (price) => <div>
-                  {/*<img src="http://upload.ouliu.net/i/2018012217455364b5l.png" style={{width:20,height:20,margin:5}} alt=""/>*/}
                   <span>{price/Math.pow(10,10)}</span>
               </div>
             },
             {
               title: <FormattedMessage {...PersonalAssetMessages.ExpireTime}/>,
               dataIndex: 'expire_time',
-              key: 'date',
-              render: (text, record) => this.renderColumns(new Date(text*1000).toLocaleDateString(), record, 'date'),
+              // render: (text, record) => this.renderColumns(new Date(text*1000).toLocaleDateString(), record, 'date'),
+              render: getDateAndTime
             },
             {
               title: <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>,
               dataIndex: 'description',
-              key: 'description',
               render: (item) => <span>{item.length < 30 ? item : item.substring(0,30) + '...'}</span>
             },
-            { title: <FormattedMessage {...PersonalAssetMessages.AssetOperation} />, dataIndex: 'sample_path',
-              render: (item) => <a onClick={()=>this.download(item)}>
+            { title: <FormattedMessage {...PersonalAssetMessages.AssetOperation} />, dataIndex: 'storage_hash',
+              render: (text, record) => <a onClick={()=> downloadFile(text, record.asset_name, getAccount().username)}>
                   <Icon type="download" style={{color:"black",fontWeight:900}} />
               </a>
             },
@@ -86,7 +85,8 @@ export default class BTAssetDetail extends PureComponent{
                                           <a onClick={() => this.save(record)}>
                                                <FormattedMessage {...PersonalAssetMessages.Save}/>
                                           </a>
-                                          <Popconfirm title= {<FormattedMessage {...PersonalAssetMessages.SureToCancel}/>} onConfirm={() => this.cancel(record.asset_id)}>
+                                          <Popconfirm title= {<FormattedMessage {...PersonalAssetMessages.SureToCancel}/>}
+                                          onConfirm={() => this.cancel(record.asset_id)}>
                                              <a>
                                                  <FormattedMessage {...PersonalAssetMessages.Cancel}/>
                                              </a>
@@ -103,25 +103,16 @@ export default class BTAssetDetail extends PureComponent{
           ];
     }
 
-    download(item){
-        let a = document.createElement('a');
-        let url = item;
-        let filename = 'bottos';
-        a.href = url;
-        a.download=filename;
-        a.click();
-    }
+    // renderColumns(text, record, column) {
+    //     return (
+    //         <EditableCell
+    //             editable={record.editable}
+    //             value={text}
+    //             onChange={value => this.handleChange(value, record.key, column)}
+    //         />
+    //     );
+    // }
 
-    renderColumns(text, record, column) {
-        return (
-            <EditableCell
-                editable={record.editable}
-                value={text}
-                onChange={value => this.handleChange(value, record.key, column)}
-            />
-        );
-    }
-    
     handleChange(value, key, column) {
         const newData = [...this.state.data];
         const target = newData.filter(item => key === item.key)[0];
@@ -243,25 +234,23 @@ export default class BTAssetDetail extends PureComponent{
         }
         let url = '/asset/queryMyAsset'
         BTFetch(url,'POST',params)
-            .then(response=>{
-                if(response&& response.code==1){
-                    let data = response.data
-                    if(Array.isArray(data.row)){
-                        this.setState({data:response.data.row})
-                    }else{
-                        window.message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
-                    }
-                }else{
-                    window.message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
-                }
-            }).catch(error=>{
-                window.message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
-            })
+          .then(response => {
+            if (response && response.code == 1) {
+              let data = response.data
+              if (Array.isArray(data.row)) {
+                this.setState({data: data.row})
+              }
+            } else {
+              window.message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+            }
+          }).catch(error => {
+            window.message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+          })
 
     }
 
     getSignature(username,privateKeyStr){
-        let privateKey = Buffer.from(privateKeyStr,'hex') 
+        let privateKey = Buffer.from(privateKeyStr,'hex')
         let random = window.uuid
         let msg = {username,random}
         let query_pb = require('../../../../lib/proto/query_pb')

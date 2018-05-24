@@ -1,7 +1,7 @@
 import BTFetch from "../../../utils/BTFetch";
 import { getBlockInfo, getSignaturedParam, getSignaturedFetchParam } from "../../../utils/BTCommonApi";
 import React,{PureComponent} from 'react'
-import { Carousel, Button, Tag, Input, message } from 'antd';
+import { Carousel, Button, Tag, Input } from 'antd';
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import BTAssetList from './BTAssetList'

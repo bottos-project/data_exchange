@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Menu, message } from 'antd';
+import { Menu } from 'antd';
 import { Link, withRouter } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import messages from '../locales/messages'
@@ -44,7 +44,7 @@ function BTPersonalMenu({routeName}) {
     <div className='menu-container'>
       <Link to="/dashboard">
         <div className='menu-link'>
-          返回上一页
+          <FormattedMessage {...MenuMessages.Back} />
         </div>
       </Link>
       {list}
