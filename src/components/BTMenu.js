@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import { Menu, message } from 'antd';
+import { Menu } from 'antd';
 import { Link, withRouter } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import messages from '../locales/messages'

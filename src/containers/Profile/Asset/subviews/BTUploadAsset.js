@@ -31,7 +31,7 @@ const props = {
         if(file.status==='down'){
             message.Failed(window.localeInfo["PersonalAsset.FailedToUploadTheFile"]);
         }else if (file.status === 'error') {
-            message.error(window.localeInfo["PersonalAsset.FailedToUploadTheFile"])
+            window.message.error(window.localeInfo["PersonalAsset.FailedToUploadTheFile"])
         }
     },
 
@@ -158,7 +158,7 @@ export default class BTUploadAsset extends PureComponent{
         }
         let _blockInfo = (await getBlockInfo());
         if(_blockInfo.code!=0){
-            message.error(window.localeInfo["PersonalAsset.FailedToGetTheBlockMessages"])
+            window.message.error(window.localeInfo["PersonalAsset.FailedToGetTheBlockMessages"])
             return;
         }
         let blockInfo=_blockInfo.data;
@@ -192,7 +192,7 @@ export default class BTUploadAsset extends PureComponent{
         console.log(data);
         let getDataBin = (await getDataInfo(data));
         if(getDataBin.code!=0){
-            message.error(window.localeInfo["PersonalAsset.FailedToGetTheGetDataBin"])
+            window.message.error(window.localeInfo["PersonalAsset.FailedToGetTheGetDataBin"])
             return
         }
         console.log(
@@ -217,17 +217,17 @@ export default class BTUploadAsset extends PureComponent{
             service:'service'
         }).then(repsonse=>{
             if(repsonse.code==1){
-                message.success(window.localeInfo["PersonalAsset.SuccessfulToRegisterTheAsset"])
+                window.message.success(window.localeInfo["PersonalAsset.SuccessfulToRegisterTheAsset"])
 
             }else{
-                message.error(window.localeInfo["PersonalAsset.FailedToRegisterTheAsset"])
+                window.message.error(window.localeInfo["PersonalAsset.FailedToRegisterTheAsset"])
             }
             console.log(repsonse);
             this.setState({
                 data:repsonse.data
             })
         }).catch(error=>{
-            message.error(window.localeInfo["PersonalAsset.FailedToRegisterTheAsset"])
+            window.message.error(window.localeInfo["PersonalAsset.FailedToRegisterTheAsset"])
             console.log(error);
         })
 

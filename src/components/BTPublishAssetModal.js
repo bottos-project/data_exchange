@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import {getAccount} from "../tools/localStore";
 // import BTUploadAsset from './BTUploadAsset'
 // import messages from '../locales/messages'
-import {Icon, Modal, Radio, Select, message, Button, Input, DatePicker, TimePicker, Cascader, Col, Row } from 'antd';
+import {Icon, Modal, Radio, Select, Button, Input, DatePicker, TimePicker, Cascader, Col, Row } from 'antd';
 import BTAssetList from './BTAssetList'
 import BTCryptTool from 'bottos-js-crypto'
 import {getBlockInfo,getDataInfo, getSignaturedParam} from '../utils/BTCommonApi'

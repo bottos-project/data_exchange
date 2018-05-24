@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import { Carousel, Button, Tag, Modal, Input, message} from 'antd';
+import { Carousel, Button, Tag, Modal, Input } from 'antd';
 import BTFetch from '../../../utils/BTFetch'
 import { getBlockInfo, getSignaturedParam, getSignaturedFetchParam } from '../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
@@ -77,11 +77,11 @@ export default class BTAssetDetail extends PureComponent{
       .then(res=>{
           console.log(res);
           if(res.code == 1){
-              message.success(window.localeInfo["Asset.SuccessfulPurchase"])
+              window.message.success(window.localeInfo["Asset.SuccessfulPurchase"])
           }else if(res.code == 4001){
               message.warning(window.localeInfo["Asset.InsufficientBalance"])
           }else{
-              message.error(window.localeInfo["Asset.FailedPurchase"])
+              window.message.error(window.localeInfo["Asset.FailedPurchase"])
           }
       }).catch(error=>{
 

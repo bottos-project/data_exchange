@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 
 // import BTAssetCell from './subviews/AssetCell'
-import {Pagination,message,List} from 'antd'
+import {Pagination, List} from 'antd'
 import Assetlist from './subviews/Assetlist'
 import BTMyTag from '../../components/BTMyTag'
 import BTFetch from '../../utils/BTFetch'
@@ -51,10 +51,10 @@ export default class BTAssets extends Component {
                     row_count,
                 });
             } else {
-                message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
+                window.message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
             }
         }).catch(error => {
-            message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
+            window.message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
 
         });
     }

@@ -225,7 +225,7 @@ class BTPublishDemand extends PureComponent{
         let blockInfo = await getBlockInfo();
         let blockDataBin = await getDataInfo(blockData);
         if(blockInfo.code!=0 || blockDataBin.code!=0){
-            message.error(window.localeInfo["PersonalDemand.FailedToGetTheBlockMessages"])
+            window.message.error(window.localeInfo["PersonalDemand.FailedToGetTheBlockMessages"])
             return ;
         }
         let param={
@@ -255,13 +255,13 @@ class BTPublishDemand extends PureComponent{
                         dateString:'',
                         DatePicker:'',
                     });
-                    message.success(window.localeInfo["PersonalDemand.SuccessfulToPublishTheDemand"])
+                    window.message.success(window.localeInfo["PersonalDemand.SuccessfulToPublishTheDemand"])
                 }else{
-                    message.error(window.localeInfo["PersonalDemand.FailedToPublishTheDemand"])
+                    window.message.error(window.localeInfo["PersonalDemand.FailedToPublishTheDemand"])
                 }
             }).catch(error=>{
             console.log(2)
-            message.error(window.localeInfo["PersonalDemand.FailedToPublishTheDemand"])
+            window.message.error(window.localeInfo["PersonalDemand.FailedToPublishTheDemand"])
         })
     }
 

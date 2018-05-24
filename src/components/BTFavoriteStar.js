@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getBlockInfo } from "@/utils/BTCommonApi";
 import BTFetch from "@/utils/BTFetch";
-import { Spin, Icon, message } from 'antd'
+import { Spin, Icon } from 'antd'
 // 这个是缓存收藏信息的
 import {getAccount} from "@/tools/localStore";
 import collectionState, { getTimeSecond } from "@/tools/sessionStorage";
@@ -108,9 +108,9 @@ class BTFavoriteStar extends Component {
 
     BTFetch('/user/favorite', 'post', fetchParam).then(res => {
       if (res.code == 1) {
-        message.success(window.localeInfo["Asset.SuccessfulCollect"])
+        window.message.success(window.localeInfo["Asset.SuccessfulCollect"])
       } else {
-        message.error(window.localeInfo["Asset.FailedCollect"])
+        window.message.error(window.localeInfo["Asset.FailedCollect"])
       }
     })
 

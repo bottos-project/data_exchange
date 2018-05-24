@@ -4,7 +4,7 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import './styles.less'
 import * as headerActions from '../redux/actions/HeaderAction'
-import {Button,Modal,Menu, Dropdown, Icon,message} from 'antd'
+import {Button, Modal, Menu, Dropdown, Icon } from 'antd'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import BTFetch from '../utils/BTFetch'
 import {importFile,exportFile} from '../utils/BTUtil'

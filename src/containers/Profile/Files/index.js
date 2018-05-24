@@ -28,7 +28,7 @@ function beforeUpload(file) {
   // if (file.size > 200 * MegaByte) {
     // 文件大小大于 2G
     // 不支持上传
-    message.error(window.localeInfo["PersonalAsset.UploadFileSize"])
+    window.message.error(window.localeInfo["PersonalAsset.UploadFileSize"])
     return false;
   }
 }
@@ -136,7 +136,7 @@ class BTMyAssetSet extends Component{
       let param = await getDownloadFileIP(guid)
 
       if (!param) {
-        return message.error('get download file fail')
+        return window.message.error('get download file fail')
       }
 
       // console.log('getAccount()', getAccount());

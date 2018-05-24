@@ -38,13 +38,13 @@ export default class BTAccountListHeader extends PureComponent{
 
     onHandleOk(){
         if(this.state.password=='') {
-            message.error('请输入KeyStore文件的密码')
+            window.message.error('请输入KeyStore文件的密码')
             return
         }
 
         let account = localStore.getAccount()
         if(account==undefined) {
-            message.error('请先登录')
+            window.message.error('请先登录')
             return
         }
 
@@ -54,11 +54,11 @@ export default class BTAccountListHeader extends PureComponent{
         let password = this.state.password
         let privateKey = BTIpcRenderer.decryptKeystore({password,keyStoreObj:this.state.keyStoreObj})
         if(privateKey.error){
-            message.error(window.localeInfo["Header.ThePasswordAndTheKeystoreDoNotMatch"])
+            window.message.error(window.localeInfo["Header.ThePasswordAndTheKeystoreDoNotMatch"])
             return
         }
         let isSave = BTIpcRenderer.saveKeyStore({username:username,account_name:this.state.account_name},this.state.keyStoreObj)
-        isSave ? message.success('success') : message.error("failed")
+        isSave ? window.message.success('success') : message.error("failed")
         this.setState({visible:false})
         // window.location.reload()
     }

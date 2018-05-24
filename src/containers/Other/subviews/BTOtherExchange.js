@@ -61,7 +61,7 @@ export default class BTOtherExchange extends PureComponent{
             })
           }
         }).catch(error=>{
-          message.success(window.localeInfo["BlockBrowsing.SuccessfulPromote"])
+          window.message.success(window.localeInfo["BlockBrowsing.SuccessfulPromote"])
         })
     }
 

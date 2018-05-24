@@ -33,7 +33,7 @@ class Assetlist extends Component {
     //     //获取区块信息
     //     let _block=(await getBlockInfo());
     //     if(_block.code != 0){
-    //         message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
+    //         window.message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
     //         return;
     //     }
     //     let block=_block.data;
@@ -54,7 +54,7 @@ class Assetlist extends Component {
     //      };
     //     let _getDataBin=(await getDataInfo(data));
     //     if(_getDataBin.code != 0){
-    //         message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
+    //         window.message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
     //         return;
     //     }
     //     //数组排序
@@ -85,13 +85,13 @@ class Assetlist extends Component {
     //         .then(res=>{
     //         console.log(res);
     //         if(res.code == 1){
-    //             message.success(window.localeInfo["Asset.SuccessfulPurchase"])
+    //             window.message.success(window.localeInfo["Asset.SuccessfulPurchase"])
     //         }else if(res.code == 4001){
     //             message.warning(window.localeInfo["Asset.InsufficientBalance"])
     //         }else if(res.code == 4002){
     //             message.warning(window.localeInfo["Asset.UnexpectedError"])
     //         }else{
-    //             message.error(window.localeInfo["Asset.FailedPurchase"])
+    //             window.message.error(window.localeInfo["Asset.FailedPurchase"])
     //         }
     //     }).catch(error=>{
     //

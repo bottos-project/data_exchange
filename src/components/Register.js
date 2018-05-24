@@ -1,6 +1,6 @@
 import React, { Component, PureComponent } from 'react'
 
-import { Form, Icon, Input, Button, message, Row, Col } from 'antd'
+import { Form, Icon, Input, Button, Row, Col } from 'antd'
 import BTFetch from '../utils/BTFetch'
 import BTCryptTool from 'bottos-js-crypto'
 import './styles.less'

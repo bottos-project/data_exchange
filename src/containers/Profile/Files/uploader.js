@@ -166,7 +166,7 @@ function getUploadURL(file) {
     } else {
       file.status = 'error'
       store.dispatch( updateFile(file) )
-      message.error(res.status)
+      window.message.error(res.status)
     }
   }).catch(err => {
     console.error('getFileUploadURL error', err);
@@ -214,7 +214,7 @@ async function handleFileQueued(file) {
         message.info('this file is existed')
         store.dispatch( deleteFile(file.id) )
       } else {
-        message.error(res.status || 'this file is existed')
+        window.message.error(res.status || 'this file is existed')
         file.status = 'error'
         store.dispatch( updateFile(file) )
       }
@@ -223,7 +223,7 @@ async function handleFileQueued(file) {
 
   }).catch(err => {
     console.error('fileCheck catch err', err);
-    message.error('upload fail')
+    window.message.error('upload fail')
     uploader.removeFile(file)
     store.dispatch( deleteFile(file.id) )
   })

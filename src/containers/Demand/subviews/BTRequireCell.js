@@ -2,7 +2,7 @@ import React,{PureComponent} from 'react'
 import { hashHistory } from 'react-router'
 import querystring from 'querystring'
 
-import {message, Icon} from 'antd'
+import { Icon } from 'antd'
 import BTFetch from '../../../utils/BTFetch'
 import {getBlockInfo,getDataInfo} from '../../../utils/BTCommonApi'
 import './styles.less'
