@@ -154,7 +154,7 @@ class BTPublishDemand extends PureComponent{
           "FeatureTag": 1,
           "SampleHash": this.state.getFileNameTemp || '',
           "ExpireTime": new Date(this.state.dateString).getTime() / 1000,
-          "Price": this.state.number,
+          "Price": this.state.number * Math.pow(10, 10),
           "Description": this.state.textArea,
           "FavoriFlag": 1,
           "OpType": 1

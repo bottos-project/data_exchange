@@ -23,6 +23,7 @@ function createWindow () {
         plugins: true,
         nodeIntegration: false, // 不集成 Nodejs
         webSecurity: false,
+        nodeIntegrationInWorker: true,
         preload: path.join(__dirname, './public/renderer.js') // 但预加载的 js 文件内仍可以使用 Nodejs 的 API
     }
   })
@@ -34,7 +35,6 @@ function createWindow () {
     BrowserWindow.addDevToolsExtension(path.join(__dirname, './devtools/lmhkpmbekcpmknklioeibfkpmmfibljd/2.15.2_0'))  // Redux Developer Tools
     win.loadURL('http://localhost:3000/')
     // 打开开发者工具。
-    win.webContents.openDevTools()
 
   }else{
     win.loadURL(url.format({
@@ -44,6 +44,8 @@ function createWindow () {
     }))
   }
 
+  win.webContents.openDevTools()
+  
   win.once('ready-to-show', () => {
     win.show()
   })

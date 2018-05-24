@@ -14,13 +14,12 @@ export default class BTAccountList extends PureComponent{
         }
     }
     componentDidMount(){
-        // this.getAccountList(this.props.selectWallet)
         this.getUserBalance()
     }
 
     componentWillReceiveProps(nextProps){
         let selectWallet = nextProps.selectWallet;
-        this.getAccountList(selectWallet)
+        // this.getAccountList(selectWallet)
     }
 
     getUserBalance(){
@@ -56,32 +55,9 @@ export default class BTAccountList extends PureComponent{
                 }else{
                     messages.error('failed')
                 }
-            }).catch(error=>{   
+            }).catch(error=>{
                 messages.error('failed')
             })
-    }
-
-    getAccountList(selectWallet){
-        let reqUrl = '/user/getAccount'
-        let params = {
-            username:selectWallet
-        }
-
-        BTFetch(reqUrl,'POST',params).then(response=>{
-            if(response && response.code=="1"){
-                let data = response.data;
-                let accoutList = [
-                    {
-                        coinName:'BTO',
-                        coinNum:data
-                    }
-                ]
-
-                this.setState({
-                    accoutList
-                })
-            }
-        })
     }
 
     render(){

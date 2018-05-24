@@ -251,7 +251,7 @@ function progressChange(file, percentage) {
   //   querySecondProgress(file)
   // }
   if (percentage < 1) {
-    store.dispatch( updateUploadProgress(file.guid, percentage * 75) )
+    store.dispatch( updateUploadProgress(file.guid, percentage * 85) )
   }
 
 }
@@ -349,7 +349,7 @@ function querySecondProgress(file) {
       BTFetch('/asset/registerFile', 'post', fetchParam)
       .then(res => {
         if (res.code == 1) {
-          window.message.success( window.localeInfo['File.UploadSuccess'] )
+          window.message.success( window.localeInfo['PersonalAsset.SuccessfulToUploadTheFile'] )
         } else if (res.details) {
           console.log('res.details', JSON.parse(res.details))
         }
@@ -357,8 +357,8 @@ function querySecondProgress(file) {
 
     } else {
       console.log('上传没有真的完成');
-      let restPercent = res.storage_done / chunks * 25
-      store.dispatch( updateUploadProgress(guid, 75 + restPercent) )
+      let restPercent = res.storage_done / chunks * 15
+      store.dispatch( updateUploadProgress(guid, 85 + restPercent) )
 
       setTimeout(querySecondProgress.bind(null, file), 3000);
       // setTimeout(getDownloadFileIP.bind(null, guid), 1000);

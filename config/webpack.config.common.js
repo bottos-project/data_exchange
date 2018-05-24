@@ -12,7 +12,7 @@ module.exports = {
   context: __dirname,
 
   entry: {
-    wallet: paths.appIndexJs
+    wallet: paths.appIndexJs,
   },
 
   module: {

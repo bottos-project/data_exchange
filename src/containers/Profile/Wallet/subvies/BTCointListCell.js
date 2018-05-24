@@ -25,7 +25,7 @@ export default class BTCointListCell extends PureComponent{
 
     render(){
       let props = this.props;
-      console.log(this.props)
+      // console.log('props', this.props)
       return (
         <div className="container column">
             <div className="container route-children-bg accountItem">

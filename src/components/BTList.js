@@ -67,7 +67,7 @@ export default class BTList extends PureComponent{
         };
         BTFetch('/asset/QueryByID','post',param)
             .then(res=>{
-                if(res.code==0){
+                if(res.code == 1){
                     console.log(res.data.row)
                     if(res.data.row.length==1){
                         hashHistory.push({

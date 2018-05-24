@@ -27,7 +27,7 @@ class BTOther extends PureComponent{
 
     componentDidMount(){
         BTFetch('/dashboard/GetNodeInfos','GET').then(res => {
-            if (res && res.code == 0) {
+            if (res && res.code == 1) {
                 if (res.data == null) {
                     return ;
                 }

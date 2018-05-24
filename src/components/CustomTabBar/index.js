@@ -49,7 +49,7 @@ CustomTabBar.defaultProps = {
 
 CustomTabBar.propTypes = {
   keyMap: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
-  activeKey: PropTypes.string,
+  activeKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChange: PropTypes.func,
   style: PropTypes.object
 };
