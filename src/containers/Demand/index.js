@@ -14,13 +14,7 @@ export default class BTDemand extends PureComponent{
         super(props);
 
         this.state = {
-            dataSource:[{
-              username: 'aaaa',
-              requirement_id: '1',
-              requirement_name: 'adf',
-              expire_time: 1526874874,
-              price: 120000000000,
-            }],
+            dataSource:[],
             pageNum:'',
             row_count: 0,
             activeKey: '0',

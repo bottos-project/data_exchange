@@ -19,8 +19,7 @@ export default class BTHaveBought extends PureComponent{
             username:'',
         }
     }
-    columns(data){
-        console.log(data);
+    columns() {
         return [
             { title: <FormattedMessage {...PersonalAssetMessages.AssetName}/>, dataIndex: 'asset_name',
               render: (item) => <span>{item}</span>
@@ -77,6 +76,10 @@ export default class BTHaveBought extends PureComponent{
             this.setState({ data: res.data.row })
           } else {
             message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+            if (res.details) {
+              let details = JSON.parse(res.details)
+              console.error('details', details);
+            }
           }
         }).catch(error=>{
           message.error(window.localeInfo["PersonalAsset.FailedToGetTheHaveBoughtAsset"])

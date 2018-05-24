@@ -165,9 +165,9 @@ class BTPublishAssetModal extends PureComponent{
       let privateKeyStr = account_info.privateKey
       let privateKey = Buffer.from(privateKeyStr,'hex')
 
-      console.log('blockInfo', blockInfo);
+      // console.log('blockInfo', blockInfo);
 
-      let message = {
+      let _message = {
         "version": 1,
         ...blockInfo,
         "sender": account_info.username,
@@ -196,12 +196,12 @@ class BTPublishAssetModal extends PureComponent{
         }
       }
 
-      // console.log('did', did)
+      console.log('did basic_info', did.basic_info)
       let arrBuf = registAssetPack(did)
-      let params = Object.assign({},message)
+      let params = Object.assign({}, _message)
       params.param = arrBuf
 
-      let sign = BTSign.messageSign(params,privateKey)
+      let sign = BTSign.messageSign(params, privateKey)
       params.signature = sign.toString('hex')
       params.param = BTCryptTool.buf2hex(arrBuf)
 
@@ -211,128 +211,13 @@ class BTPublishAssetModal extends PureComponent{
       .then(response=>{
         console.log({response})
         if(response && response.code==1){
-          message.success('success')
+          window.message.success('success')
         }else{
-          message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
+          window.message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
         }
       }).catch(error=>{
-        message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
+        window.message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
       })
-    }
-
-    async updata1(){
-        message.destroy();
-        for(const key in this.state){
-            if(this.state[key]==''){
-                message.warning(window.localeInfo["PersonalAsset.PleaseImproveTheInformation"])
-                return;
-            }
-        }
-        if(this.state.number<=0||this.state.number>=10000000000){
-            message.warning(window.localeInfo["PersonalAsset.InputPrice"]);
-            return;
-        }
-        let reg=/^\d+(?:\.\d{1,10})?$/
-        if(!reg.test(this.state.number)){
-            message.warning('输入正确的价格');
-            return;
-        }
-
-        if (this.state.date11 == '') {
-          message.warning('请输入截止时间');
-          return;
-        }
-        let expire_time_string = this.state.date11 + ' ' + (this.state.timeValue ? this.state.timeValue : '')
-        let expire_time = new Date(expire_time_string).getTime() / 1000
-        let _blockInfo = (await getBlockInfo());
-        if(_blockInfo.code!=0){
-            message.error(window.localeInfo["PersonalAsset.FailedToGetTheBlockMessages"])
-            return;
-        }
-        let blockInfo=_blockInfo.data;
-        let data={
-            "code": "assetmng",
-            "action": "assetreg",
-            "args": {
-                "asset_id": uuid.v1(),
-                "basic_info": {
-                    "user_name": this.props.account_info.username||'',
-                    "session_id": getAccount().token||'',
-                    "asset_name": this.state.title.trims(),
-                    "asset_type": this.state.dataAssetType,
-                    "feature_tag1": this.state.tag1,
-                    "feature_tag2": this.state.tag2,
-                    "feature_tag3": this.state.tag3,
-                    "sample_path": this.state.getExampleUrl,
-                    "sample_hash": this.state.sample_hash,
-                    "storage_path": this.state.getRealUrl,
-                    "storage_hash": this.state.storage_hash,
-                    "expire_time": expire_time,
-                    "price": this.state.number*Math.pow(10,10),
-                    "description": this.state.description.trims(),
-                    "upload_date": 1,
-                    "signature": "0xxxx"
-                }
-            }
-        };
-        console.log(data);
-        let getDataBin = (await getDataInfo(data));
-        if(getDataBin.code!=0){
-            message.error(window.localeInfo["PersonalAsset.FailedToGetTheGetDataBin"])
-            return
-        }
-        console.log(
-            getDataBin
-        );
-        let block={
-            "ref_block_num":blockInfo.ref_block_num,
-            "ref_block_prefix":blockInfo.ref_block_prefix,
-            "expiration":blockInfo.expiration,
-            "scope":["assetmng"],
-            "read_scope":[],
-            "messages":[{
-                "code":"assetmng",
-                "type":"assetreg",
-                "authorization":[],
-                "data":getDataBin.data.bin
-            }],
-            "signatures":[]
-        };
-        console.log(block)
-        BTFetch('/asset/register','POST',block,{
-            service:'service'
-        }).then(repsonse=>{
-            if(repsonse.code==1){
-                message.success(window.localeInfo["PersonalAsset.SuccessfulToRegisterTheAsset"])
-                this.setState({
-                    date11:'',
-                    value:1,
-                    title:'',
-                    number:'',
-                    description:'',
-                    tag1:'',
-                    tag2:'',
-                    tag3:'',
-                    dataAssetType:'',
-                    getFileNameTemp:'',
-                    getFileName:'',
-                    getExampleUrl:'',
-                    getRealUrl:'',
-                    sample_hash:'',
-                    storage_hash:'',
-
-                })
-            }else{
-                message.error(window.localeInfo["PersonalAsset.FailedToRegisterTheAsset"])
-            }
-            this.setState({
-                data:repsonse.data
-            })
-        }).catch(error=>{
-            message.error(window.localeInfo["PersonalAsset.FailedToRegisterTheAsset"])
-            console.log(error);
-        })
-
     }
 
     dataPicker = (date, dateString) => {
