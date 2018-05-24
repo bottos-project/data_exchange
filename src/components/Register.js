@@ -1,6 +1,7 @@
 import React, { Component, PureComponent } from 'react'
-
-import { Form, Icon, Input, Button, Row, Col } from 'antd'
+import { connect } from 'react-redux'
+import { setSpin } from '@/redux/actions/HeaderAction'
+import { Form, Spin, Icon, Input, Button, Row, Col } from 'antd'
 import BTFetch from '../utils/BTFetch'
 import BTCryptTool from 'bottos-js-crypto'
 import './styles.less'
@@ -142,6 +143,9 @@ class Regist extends PureComponent{
 
         // 判断验证码
         if(verificationCode==undefined){message.error(window.localeInfo["Header.PleaseEnterTheVerificationCode"]); return}
+
+        this.props.setSpin(true)
+
         let keys = BTCryptTool.createPubPrivateKeys()
         let privateKey = keys.privateKey
         let blockHeader = await getBlockInfo()
@@ -189,29 +193,47 @@ class Regist extends PureComponent{
 
         let registUrl = '/user/register'
         BTFetch(registUrl,'POST',registParams)
-        .then(response=>{
-            if(response){
-                if(response.code == 1){
-                    message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
-                    let keystoreObj = BTIpcRenderer.createKeystore({account:username,password,privateKey})
-                    // 创建本地用户目录
-                    BTIpcRenderer.mkdir(username)
-                    // 存储keystore文件到本地
-                    let isSaveSuccess = BTIpcRenderer.saveKeyStore({username:username,account_name:username},keystoreObj)
-                    isSaveSuccess ? message.success('keystore saved success') : message.error('keystore saved faild')
-                    this.registSuccess({username, keystoreObj})
-                    this.clearFields()
-                }else if(response.code == 1001){
-                    message.warning('verify code is wrong');
-                }else{
-                  console.log(JSON.parse(res.details));
-                    message.error(window.localeInfo["Header.FailedRegister"]);
-                }
-            }else{
-                message.error(window.localeInfo["Header.FailedRegister"]);
-            }
-        }).catch(error=>{
+        .then(response => {
+          if (!response) {
             message.error(window.localeInfo["Header.FailedRegister"]);
+            this.props.setSpin(false)
+            return
+          }
+          if (response.code == 1) {
+              // let keystoreObj = BTIpcRenderer.createKeystore({account:username,password,privateKey})
+              var myWorker = new Worker('worker.js');
+              let postData = {
+                type: 'createKeystore',
+                data: {account:username,password,privateKey}
+              }
+              myWorker.postMessage(postData);
+
+              myWorker.onmessage = (e) => {
+                console.log('Message received from worker', e.data);
+                let keystoreObj = e.data
+                // 创建本地用户目录
+                BTIpcRenderer.mkdir(username)
+                // 存储keystore文件到本地
+                let isSaveSuccess = BTIpcRenderer.saveKeyStore({username:username,account_name:username},keystoreObj)
+                isSaveSuccess ? message.success('keystore saved success') : message.error('keystore saved faild')
+                this.registSuccess({username, keystoreObj})
+                this.clearFields()
+                this.props.setSpin(false)
+                message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
+              }
+
+          }else if(response.code == 1001){
+            this.props.setSpin(false)
+            message.warning('verify code is wrong');
+          }else{
+            this.props.setSpin(false)
+            console.log(JSON.parse(res.details));
+            message.error(window.localeInfo["Header.FailedRegister"]);
+          }
+
+        }).catch(error=>{
+          this.props.setSpin(false)
+          message.error(window.localeInfo["Header.FailedRegister"]);
         })
     }
 
@@ -377,5 +399,18 @@ class Regist extends PureComponent{
 
 const RegistForm = Form.create()(Regist);
 
+function mapStateToProps(state) {
+  return {
+    isloading: state.headerState.isloading
+  };
+}
 
-export default RegistForm
+function mapDispatchToProps(dispatch) {
+  return {
+    setSpin(isloading) {
+      dispatch(setSpin(isloading))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegistForm)

@@ -8,6 +8,7 @@ const initLocale = window.localStorage.getItem('locale') || navigator.language |
 const initialState = {
   locale: initLocale,
   account_info: getAccount(),
+  isloading: false,
 }
 
 // var account_info = {
@@ -20,6 +21,9 @@ const headerState = (state = initialState, action) => {
     switch(action.type){
       case actionTypes.SET_LOCALE:
         return {...state, locale: action.locale}
+
+      case actionTypes.SET_SPIN:
+        return {...state, isloading: action.isloading}
 
       case actionTypes.SET_ACCOUNT_INFO:
         if (typeof action.info != 'object') {

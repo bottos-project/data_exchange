@@ -14,3 +14,10 @@ export const setAccountInfo = (info) => {
     info
   }
 }
+
+export const setSpin = (isloading) => {
+  return {
+    type: actionTypes.SET_SPIN,
+    isloading
+  }
+}

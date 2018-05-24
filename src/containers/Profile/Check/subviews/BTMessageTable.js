@@ -36,25 +36,20 @@ export default class BTMessageTable extends PureComponent{
                 render:(item)=>{
                     return <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
                 }},
-            { title: <FormattedMessage {...CheckMessages.DataTime}/>, dataIndex: 'createTime', key:'data_req_id',
-              render: item => getDateAndTime(item)
+            { title: <FormattedMessage {...CheckMessages.DataTime}/>, dataIndex: 'time',
+              render: getDateAndTime
             },
             // { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username', key:'user_name' },
-            { title: <FormattedMessage {...CheckMessages.View}/>,dataIndex:'asset_id',key:'x',render:(item)=>
-                    <Button onClick={()=>this.lookfor(item)}>
-                        <FormattedMessage {...CheckMessages.View}/>
-                    </Button>
+            { title: <FormattedMessage {...CheckMessages.View}/>,dataIndex:'asset_id',
+              render:(item) =>
+              <Button onClick={()=>this.lookfor(item)}>
+                  <FormattedMessage {...CheckMessages.View}/>
+              </Button>
             }
         ];
     }
     lookfor(item){
-        let param={
-            "assetID":item,
-            "random": Math.ceil(Math.random()*100),
-            "signatures": "0xxxx"
-        };
-        console.log(param);
-        BTFetch('/asset/QueryByID','post',param)
+        BTFetch('/asset/QueryAssetByID','post', {"asset_id":item})
             .then(res=>{
                 if(res.code==0){
                     if(res.data.rowCount==0){

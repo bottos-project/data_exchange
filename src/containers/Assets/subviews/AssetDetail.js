@@ -5,10 +5,13 @@ import { getBlockInfo, getSignaturedParam, getSignaturedFetchParam } from '../..
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from '../../../tools/localStore'
+import { getDateAndTime } from '@/utils/dateTimeFormat'
 
 import CloseBack from '@/components/CloseBack'
 
 import { PackArraySize, PackStr16 } from '@/lib/msgpack/msgpack'
+
+import { keyMap } from '@/components/BTTypeSelect'
 
 const AssetMessages = messages.Asset;
 // 此处样式在Demand/subviews/styles.less中控制
@@ -65,7 +68,7 @@ export default class BTAssetDetail extends PureComponent{
         ...blockInfo,
         "sender": getAccount().username,
         "contract": "datadealmng",
-        "method": "datapurchase",
+        "method": "buydata",
         "param": param,
         "sig_alg": 1
       }
@@ -148,6 +151,8 @@ export default class BTAssetDetail extends PureComponent{
     render() {
         let data=this.props.location.query;
         let time=new Date((data.expire_time)*1000).toLocaleDateString();
+        let tagsArr = data.feature_tag.split('-')
+        let tags = tagsArr.map((tag, index) => <Tag key={index}>{tag}</Tag>)
         return (
           <div className='route-children-container route-children-bg'>
             <CloseBack />
@@ -172,7 +177,7 @@ export default class BTAssetDetail extends PureComponent{
                         <span>
                             <FormattedMessage {...AssetMessages.AssetType}/>
                         </span>
-                        {this.state.getAssetType}
+                        {keyMap[data.asset_type]}
                     </p>
                     <p>
                         <span>
@@ -182,20 +187,14 @@ export default class BTAssetDetail extends PureComponent{
                         <img src='./img/token.png' width='15' style={{marginLeft:6}} />
                     </p>
                     <p>
-                        <span>
-                            <FormattedMessage {...AssetMessages.ExpireTime}/>
-                        </span>
-                        {/*{data.expire_time}*/}{time}
-                        </p>
+                      <FormattedMessage {...AssetMessages.ExpireTime}/>
+                      {getDateAndTime(time)}
+                    </p>
                     {/*<Tag color="magenta">{data.feature_tag1}</Tag>*/}
                     <div className="tag">
-                         <span>
-                             <FormattedMessage {...AssetMessages.FeatureTag}/>
-                            {/*<FormattedMessage {...AssetMessages.ExpireTime}/>*/}
-                        </span>
-                        <Tag>{data.feature_tag1}</Tag>
-                        <Tag>{data.feature_tag2}</Tag>
-                        <Tag>{data.feature_tag3}</Tag>
+                        <FormattedMessage {...AssetMessages.FeatureTag}/>
+                        {/*<FormattedMessage {...AssetMessages.ExpireTime}/>*/}
+                        {tags}
                     </div>
 
                 </div>

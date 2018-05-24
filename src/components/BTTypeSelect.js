@@ -4,7 +4,7 @@ import { Select } from 'antd'
 const Option = Select.Option;
 
 // 对应关系
-const keyMap = {
+export const keyMap = {
   11: 'Voice',
   12: 'Video',
   13: 'Picture',

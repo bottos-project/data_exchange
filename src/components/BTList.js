@@ -60,12 +60,7 @@ export default class BTList extends PureComponent{
         this.setState({ selectedRowKeys });
     }
     lookfor(item){
-        let param={
-            "assetID":item,
-            "random": Math.ceil(Math.random()*100),
-            "signatures": "0xxxx"
-        };
-        BTFetch('/asset/QueryByID','post',param)
+        BTFetch('/asset/QueryAssetByID','post', {"asset_id":item})
             .then(res=>{
                 if(res.code == 1){
                     console.log(res.data.row)

@@ -6,7 +6,7 @@ import BTCryptTool from 'bottos-js-crypto'
 import { Icon, Input, Button, message, Row, Col } from 'antd'
 import BTFetch from '../utils/BTFetch';
 import { getAccount } from '../tools/localStore'
-import { setAccountInfo } from '../redux/actions/HeaderAction'
+import { setAccountInfo, setSpin } from '../redux/actions/HeaderAction'
 import BTIPcRenderer from '../tools/BTIpcRenderer'
 import {importFile} from '../utils/BTUtil'
 import ConfirmButton from './ConfirmButton'
@@ -50,7 +50,7 @@ class Login extends PureComponent{
               })
           }
         })
-  
+
       }
 
     async onHandleUnlock(){
@@ -80,46 +80,62 @@ class Login extends PureComponent{
         //     return
         // }
 
-        let result = BTIPcRenderer.decryptKeystore({password,keyStoreObj})
-        if(result.error){
+        this.props.setSpin(true)
+
+        var myWorker = new Worker('worker.js');
+        let postData = {
+          type: 'decryptKeystore',
+          data: {password,keyStoreObj}
+        }
+        myWorker.postMessage(postData);
+
+        myWorker.onmessage = (e) => {
+          // let result = BTIPcRenderer.decryptKeystore({password,keyStoreObj})
+          let result = e.data
+          console.log('result', result);
+          if(result.error){
             message.error(window.localeInfo["Header.TheWrongPassword"]);
             return;
-        }
+          }
 
-        let privateKey = result.privateKey;
+          let privateKey = result.privateKey;
 
-        let signature = this.getSignature(username,privateKey)
-        let params = {
+          let signature = this.getSignature(username,privateKey)
+          let params = {
             ...signature,
             username,
             verify_id:this.state.verify_id,
             verify_value:this.state.verify_code
-        }
+          }
 
-        let url = '/user/login'
-        BTFetch(url,'POST',params)
-            .then(response=>{
-                console.log({response})
-                if(response){
-                    if(response && response.code==1){
-                        window.message.success(window.localeInfo["Header.LoginSucceed"])
-                        let accountInfo = {username,privateKey}
-                        this.props.setAccountInfo(accountInfo)
-                        hashHistory.push('/profile/asset')
-                    }else if(response.code==1001){
-                        message.warning('verify code is wrong');
-                    }else{
-                        message.error(window.localeInfo["Header.LoginFailure"]);
-                    }
-                }
-            }).catch(error=>{
+          let url = '/user/login'
+          BTFetch(url,'POST',params)
+          .then(response=>{
+            // console.log({response})
+            if(response){
+              if(response && response.code==1){
+                window.message.success(window.localeInfo["Header.LoginSucceed"])
+                let accountInfo = {username,privateKey}
+                this.props.setAccountInfo(accountInfo)
+                hashHistory.push('/profile/asset')
+              }else if(response.code==1001){
+                message.warning('verify code is wrong');
+              }else{
                 message.error(window.localeInfo["Header.LoginFailure"]);
-            })
+              }
+            }
+            this.props.setSpin(false)
+          }).catch(error=>{
+            this.props.setSpin(false)
+            message.error(window.localeInfo["Header.LoginFailure"]);
+          })
+
+        }
     }
 
 
     getSignature(username,privateKeyStr){
-        let privateKey = Buffer.from(privateKeyStr,'hex') 
+        let privateKey = Buffer.from(privateKeyStr,'hex')
         let random = window.uuid()
         let msg = {username,random}
         let query_pb = require('../lib/proto/query_pb')
@@ -276,7 +292,11 @@ const mapDispatchToProps = (dispatch) => {
     return {
         setAccountInfo(info) {
             dispatch( setAccountInfo(info) )
+        },
+        setSpin(isloading) {
+          dispatch(setSpin(isloading))
         }
+
     }
 }
 

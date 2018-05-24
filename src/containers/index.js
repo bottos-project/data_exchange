@@ -1,11 +1,12 @@
 import React,{ PureComponent } from 'react'
 import { Link } from 'react-router'
+import { connect } from 'react-redux'
 
 import BTHeader from '../components/BTHeader'
 import BTMenu from '../components/BTMenu'
 // import BTPersonalMenu from '../components/BTPersonalMenu'
 import './styles.less'
-import { Breadcrumb } from 'antd';
+import { Breadcrumb, Spin } from 'antd';
 import { FormattedMessage } from 'react-intl'
 import messages from '../locales/messages'
 const MenuMessages = messages.Menu;
@@ -34,28 +35,50 @@ class App extends PureComponent {
 
     return (
       <div className="container">
-        <BTHeader />
-        {/* { isInProfile ? <BTPersonalMenu /> : <BTHeader /> } */}
-        <div className="container content">
-            <div className="menu" style={{position: 'relative'}}>
-              <BTMenu />
-            </div>
+        {this.props.isloading &&
+          <Spin
+            wrapperClassName='container'
+            style={{
+              width: '100%',
+              height: '100vh',
+              zIndex: 1000,
+              backgroundColor: '#e6f7ff',
+              opacity: 0.3,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              flex: 1,
+            }}
+            size='large'
+          />
+        }
 
-            <div className="container contentbody column">
-              <div className="everyTitle">
-                <h3>
-                  {title}
-                </h3>
-                  <Breadcrumb itemRender={itemRender} routes={routes} separator=">" />
-                  {/* <FormattedMessage {...DashboardMessages.WelcomeToMarketDashboard}/> */}
+          <BTHeader />
+          {/* { isInProfile ? <BTPersonalMenu /> : <BTHeader /> } */}
+          <div className="container content">
+              <div className="menu" style={{position: 'relative'}}>
+                <BTMenu />
               </div>
-              {this.props.children}
-            </div>
-        </div>
+
+              <div className="container contentbody column">
+                <div className="everyTitle">
+                  <h3>
+                    {title}
+                  </h3>
+                    <Breadcrumb itemRender={itemRender} routes={routes} separator=">" />
+                    {/* <FormattedMessage {...DashboardMessages.WelcomeToMarketDashboard}/> */}
+                </div>
+                {this.props.children}
+              </div>
+          </div>
       </div>
     )
   }
 }
 
-
-export default App
+function mapStateToProps(state) {
+  return {
+    isloading: state.headerState.isloading
+  };
+}
+export default connect(mapStateToProps)(App)

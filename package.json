@@ -11,6 +11,38 @@
   "author": {
     "name": "bottos"
   },
+  "scripts": {
+    "start": "webpack-dev-server --config ./config/webpack.config.dev.js --hot",
+    "build": "webpack --config ./config/webpack.config.prod.js && webpack --config ./config/webpack.config.worker.js",
+    "electron-start": "electron .",
+    "worker": "webpack --config ./config/webpack.config.worker.js --watch",
+    "mock": "node ./mock/server.js",
+    "pack-mac": "electron-builder --platform=darwin",
+    "pack-win": "electron-builder --platform=win",
+    "pack-linux": "electron-builder --platform=linux",
+    "pack-all": "electron-builder --platform=all",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "@bottos-project/bottos-crypto-js": "^1.0.5",
+    "asar": "^0.14.3",
+    "bottos-js-crypto": "^1.0.12",
+    "buffer": "^5.1.0",
+    "crypto-js": "^3.1.9-1",
+    "electron-log": "^2.2.14",
+    "event-emitter": "^0.3.5",
+    "google-protobuf": "^3.5.0",
+    "msgpack-lite": "^0.1.26",
+    "node-uuid": "^1.4.8",
+    "react": "^16.2.0",
+    "react-amap": "^1.2.0",
+    "react-dom": "^16.2.0",
+    "react-intl": "^2.4.0",
+    "react-redux": "^5.0.7",
+    "react-router": "^3.2.0",
+    "recharts": "^1.0.0-beta.10",
+    "redux": "^3.7.2"
+  },
   "build": {
     "appId": "bottos.com",
     "asar": true,
@@ -39,37 +71,6 @@
       "useTemplateApp": false
     },
     "extends": null
-  },
-  "dependencies": {
-    "@bottos-project/bottos-crypto-js": "^1.0.5",
-    "asar": "^0.14.3",
-    "bottos-js-crypto": "^1.0.12",
-    "buffer": "^5.1.0",
-    "crypto-js": "^3.1.9-1",
-    "electron-log": "^2.2.14",
-    "event-emitter": "^0.3.5",
-    "google-protobuf": "^3.5.0",
-    "msgpack-lite": "^0.1.26",
-    "node-uuid": "^1.4.8",
-    "react": "^16.2.0",
-    "react-amap": "^1.2.0",
-    "react-dom": "^16.2.0",
-    "react-intl": "^2.4.0",
-    "react-redux": "^5.0.7",
-    "react-router": "^3.2.0",
-    "recharts": "^1.0.0-beta.10",
-    "redux": "^3.7.2"
-  },
-  "scripts": {
-    "start": "webpack-dev-server --config ./config/webpack.config.dev.js --hot",
-    "build": "webpack --config ./config/webpack.config.prod.js",
-    "electron-start": "electron .",
-    "mock": "node ./mock/server.js",
-    "pack-mac": "electron-builder --platform=darwin",
-    "pack-win": "electron-builder --platform=win",
-    "pack-linux": "electron-builder --platform=linux",
-    "pack-all": "electron-builder --platform=all",
-    "postinstall": "electron-builder install-app-deps"
   },
   "devDependencies": {
     "antd": "^3.2.2",
