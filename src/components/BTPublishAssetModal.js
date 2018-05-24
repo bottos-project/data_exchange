@@ -211,7 +211,7 @@ class BTPublishAssetModal extends PureComponent{
       .then(response=>{
         console.log({response})
         if(response && response.code==1){
-          message.success('success')
+          window.message.success('success')
         }else{
           message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
         }
@@ -246,7 +246,7 @@ class BTPublishAssetModal extends PureComponent{
         let expire_time = new Date(expire_time_string).getTime() / 1000
         let _blockInfo = (await getBlockInfo());
         if(_blockInfo.code!=0){
-            message.error(window.localeInfo["PersonalAsset.FailedToGetTheBlockMessages"])
+            window.message.error(window.localeInfo["PersonalAsset.FailedToGetTheBlockMessages"])
             return;
         }
         let blockInfo=_blockInfo.data;
@@ -278,7 +278,7 @@ class BTPublishAssetModal extends PureComponent{
         console.log(data);
         let getDataBin = (await getDataInfo(data));
         if(getDataBin.code!=0){
-            message.error(window.localeInfo["PersonalAsset.FailedToGetTheGetDataBin"])
+            window.message.error(window.localeInfo["PersonalAsset.FailedToGetTheGetDataBin"])
             return
         }
         console.log(
@@ -303,7 +303,7 @@ class BTPublishAssetModal extends PureComponent{
             service:'service'
         }).then(repsonse=>{
             if(repsonse.code==1){
-                message.success(window.localeInfo["PersonalAsset.SuccessfulToRegisterTheAsset"])
+                window.message.success(window.localeInfo["PersonalAsset.SuccessfulToRegisterTheAsset"])
                 this.setState({
                     date11:'',
                     value:1,
@@ -323,13 +323,13 @@ class BTPublishAssetModal extends PureComponent{
 
                 })
             }else{
-                message.error(window.localeInfo["PersonalAsset.FailedToRegisterTheAsset"])
+                window.message.error(window.localeInfo["PersonalAsset.FailedToRegisterTheAsset"])
             }
             this.setState({
                 data:repsonse.data
             })
         }).catch(error=>{
-            message.error(window.localeInfo["PersonalAsset.FailedToRegisterTheAsset"])
+            window.message.error(window.localeInfo["PersonalAsset.FailedToRegisterTheAsset"])
             console.log(error);
         })
 

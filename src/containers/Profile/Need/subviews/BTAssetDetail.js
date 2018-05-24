@@ -109,7 +109,7 @@ export default class BTAssetDetail extends PureComponent{
                 message.warning(window.localeInfo["PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing"])
             }
         }).catch(error=>{
-                message.error(window.localeInfo["PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing"])
+                window.message.error(window.localeInfo["PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing"])
         })
     }
 

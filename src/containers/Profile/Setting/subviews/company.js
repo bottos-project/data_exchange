@@ -79,9 +79,9 @@ export default class BTCompany extends PureComponent{
         BTFetch("/user/UpdateUserInfo","post",param).then((responseData) => {
             // console.log(responseData)
             if(responseData.code==0){
-                message.success('修改信息成功')
+                window.message.success('修改信息成功')
             }else{
-                message.error('修改信息失败')
+                window.message.error('修改信息失败')
             }
         })
 

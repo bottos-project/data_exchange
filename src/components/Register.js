@@ -187,13 +187,13 @@ class Regist extends PureComponent{
         .then(response=>{
             if(response){
                 if(response.code == 1){
-                    message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
+                    window.message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
                     let keystoreObj = BTIpcRenderer.createKeystore({account:username,password,privateKey})
                     // 创建本地用户目录
                     BTIpcRenderer.mkdir(username)
                     // 存储keystore文件到本地
                     let isSaveSuccess = BTIpcRenderer.saveKeyStore({username:username,account_name:username},keystoreObj)
-                    isSaveSuccess ? message.success('keystore saved success') : message.error('keystore saved faild')
+                    isSaveSuccess ? window.message.success('keystore saved success') : message.error('keystore saved faild')
                     this.registSuccess({username, keystoreObj})
                     this.clearFields()
                 }else if(response.code == 1001){

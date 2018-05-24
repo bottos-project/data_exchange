@@ -70,11 +70,11 @@ export default class BTMessageTable extends PureComponent{
                     }
 
                 }else{
-                    message.error(window.localeInfo["Check.QueryFailure"])
+                    window.message.error(window.localeInfo["Check.QueryFailure"])
                 }
             })
             .catch(error=>{
-                message.error(window.localeInfo["Check.QueryFailure"])
+                window.message.error(window.localeInfo["Check.QueryFailure"])
 
             })
     }
@@ -134,11 +134,11 @@ export default class BTMessageTable extends PureComponent{
                     if(Array.isArray(data.row)){
                         this.setState({data:data.row})
                     }else{
-                        message.error(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])
+                        window.message.error(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])
                     }
                 }
             }).catch(error=>{
-                message.error(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])
+                window.message.error(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])
             })
     }
 

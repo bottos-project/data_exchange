@@ -52,7 +52,7 @@ export default (url,method,params,options={
         .then(response=>{
             if (response.code == 1999) {
                 // token过期
-                message.error('登录过期，请重新登录')
+                window.message.error('登录过期，请重新登录')
                 emitter.emit('token_expire');
                 location.hash = '#/dashboard'
                 return;

@@ -102,7 +102,7 @@ class Login extends PureComponent{
                 console.log({response})
                 if(response){
                     if(response && response.code==1){
-                        message.success(window.localeInfo["Header.LoginSucceed"])
+                        window.message.success(window.localeInfo["Header.LoginSucceed"])
                         let accountInfo = {username,privateKey}
                         this.props.setAccountInfo(accountInfo)
                         hashHistory.push('/profile/asset')
@@ -157,7 +157,7 @@ class Login extends PureComponent{
           keyStore: keyStoreObj,
           username: keyStoreInfo.username
         })
-        message.success(window.localeInfo["Header.ImportKeyStoreSuccess"])
+        window.message.success(window.localeInfo["Header.ImportKeyStoreSuccess"])
       }else{
         message.error(window.localeInfo["Header.ImportKeyStoreFaild"])
       }

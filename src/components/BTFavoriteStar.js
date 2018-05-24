@@ -108,9 +108,9 @@ class BTFavoriteStar extends Component {
 
     BTFetch('/user/favorite', 'post', fetchParam).then(res => {
       if (res.code == 1) {
-        message.success(window.localeInfo["Asset.SuccessfulCollect"])
+        window.message.success(window.localeInfo["Asset.SuccessfulCollect"])
       } else {
-        message.error(window.localeInfo["Asset.FailedCollect"])
+        window.message.error(window.localeInfo["Asset.FailedCollect"])
       }
     })
 

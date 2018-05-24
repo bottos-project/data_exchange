@@ -181,7 +181,7 @@ export default class BTAssetDetail extends PureComponent{
         let blockInfo = await getBlockInfo();
         let blockData = await getDataInfo(gblockData);
         if(blockData.code!=0 || blockInfo.code!=0){
-            message.error(window.localeInfo["PersonalAsset.FailedPromote"])
+            window.message.error(window.localeInfo["PersonalAsset.FailedPromote"])
             return ;
         }
         let param={
@@ -207,12 +207,12 @@ export default class BTAssetDetail extends PureComponent{
                         delete target.editable;
                         this.setState({ data: newData });
                         this.cacheData = newData.map(item => ({ ...item }));
-                    message.success(window.localeInfo["PersonalAsset.SuccessfulModify"])
+                    window.message.success(window.localeInfo["PersonalAsset.SuccessfulModify"])
                 }else{
-                    message.error(window.localeInfo["PersonalAsset.FailedModify"])
+                    window.message.error(window.localeInfo["PersonalAsset.FailedModify"])
                 }
             }).catch(error=>{
-                    message.error(window.localeInfo["PersonalAsset.FailedModify"])
+                    window.message.error(window.localeInfo["PersonalAsset.FailedModify"])
               })
     }
     cancel(key) {
@@ -249,13 +249,13 @@ export default class BTAssetDetail extends PureComponent{
                     if(Array.isArray(data.row)){
                         this.setState({data:response.data.row})
                     }else{
-                        message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+                        window.message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
                     }
                 }else{
-                    message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+                    window.message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
                 }
             }).catch(error=>{
-                message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+                window.message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
             })
 
     }

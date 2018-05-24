@@ -13,7 +13,7 @@ export const getDataInfo = async(params)=>{
 export const getBlockInfo = async()=>{
     let blockHeader = await BTFetch('/user/GetBlockHeader','GET')
     if(!(blockHeader && blockHeader.code==1)){
-        message.error('block header get faild');
+        window.message.error('block header get faild');
         return
     }
     let params = {}

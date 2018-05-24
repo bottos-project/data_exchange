@@ -30,16 +30,16 @@ export default class BTWalletItem extends PureComponent{
         let account_name = accountName
         let result = BTIpcRenderer.getKeyStore({username,account_name})
         if(result.error){
-            message.error("导出失败");
+            window.message.error("导出失败");
             return
         }
         BTIpcRenderer.exportKeyStore(accountName,result.keyStoreObj)
     }
 
     onHandleOk(){
-        if(this.state.password == '') {message.error('请输入原密码');return}
-        if(this.state.newPassword == '') {message.error('请输入新密码');return}
-        if(this.state.reNewPassword == '') {message.error('请输入确认密码');return}
+        if(this.state.password == '') {window.message.error('请输入原密码');return}
+        if(this.state.newPassword == '') {window.message.error('请输入新密码');return}
+        if(this.state.reNewPassword == '') {window.message.error('请输入确认密码');return}
         // 使用原密码解密账户
        try{
         let keyStoreFile = BTIpcRenderer.getKeyStore(this.props.accountName)
@@ -48,14 +48,14 @@ export default class BTWalletItem extends PureComponent{
         let keyStore = JSON.parse(keyStoreString)
 
         if(this.state.newPassword!=this.state.reNewPassword){
-            message.error('两次新密码输入不一致')
+            window.message.error('两次新密码输入不一致')
             return;
         }
         let privateKeyStr = JSON.stringify(keyStore)
         let cryptStr = BTCryptTool.aesEncrypto(privateKeyStr,this.state.newPassword)
         // 存储keystore文件到本地
         BTIpcRenderer.saveKeyStore(keyStore.account_name,cryptStr)
-        message.success('密码修改成功')
+        window.message.success('密码修改成功')
         this.setState({
             visible:false,
             password:'',
@@ -63,7 +63,7 @@ export default class BTWalletItem extends PureComponent{
             reNewPassword:''
         })
        }catch(error){
-           message.error('密码修改失败')
+           window.message.error('密码修改失败')
        }
     }
 

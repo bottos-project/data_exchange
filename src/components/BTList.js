@@ -77,11 +77,11 @@ export default class BTList extends PureComponent{
                     }
 
                 }else{
-                    message.error(window.localeInfo["Header.FailedQuery"]);
+                    window.message.error(window.localeInfo["Header.FailedQuery"]);
                 }
             })
             .catch(error=>{
-                message.error(window.localeInfo["Header.FailedQuery"]);
+                window.message.error(window.localeInfo["Header.FailedQuery"]);
 
             })
     }
@@ -95,7 +95,7 @@ export default class BTList extends PureComponent{
         console.log(data)
         let _block=await getBlockInfo();
         if(_block.code!=0){
-            message.error('获取区块信息失败');
+            window.message.error('获取区块信息失败');
             return;
         }
         let block=_block.data;
@@ -115,8 +115,8 @@ export default class BTList extends PureComponent{
 
         let _getDataBin=(await getDataInfo(param));
         if(_getDataBin.code!=0){
-            // message.error('获取区块数据失败');
-            message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
+            // window.message.error('获取区块数据失败');
+            window.message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
             return;
         }
         let favorite={
@@ -138,12 +138,12 @@ export default class BTList extends PureComponent{
         BTFetch('/user/FavoriteMng','post',favorite)
             .then(res=>{
                 if(res.code==1){
-                    // message.success('移除收藏成功')
-                    message.success(window.localeInfo["Asset.DeleteCollect"])
+                    // window.message.success('移除收藏成功')
+                    window.message.success(window.localeInfo["Asset.DeleteCollect"])
 
                 }else{
-                    // message.error('删除收藏失败')
-                    message.error(window.localeInfo["Asset.FailedCollect"])
+                    // window.message.error('删除收藏失败')
+                    window.message.error(window.localeInfo["Asset.FailedCollect"])
                 }
                 console.log(res)
             }).catch(error=>{

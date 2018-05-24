@@ -61,7 +61,7 @@ export default class BTDemanDetail extends PureComponent{
     message.destroy();
 
     if (!asset_id) {
-        message.error(window.localeInfo["Demand.ThereIsNoAssetForTheTimeBeing"])
+        window.message.error(window.localeInfo["Demand.ThereIsNoAssetForTheTimeBeing"])
         return ;
     };
 
@@ -117,9 +117,9 @@ export default class BTDemanDetail extends PureComponent{
 
     BTFetch('/asset/preSaleNotice', 'post', fetchParam).then(res => {
         if (res.code==1 && res.data != 'null') {
-            message.success(window.localeInfo["Demand.SuccessfulPromote"])
+            window.message.success(window.localeInfo["Demand.SuccessfulPromote"])
         }else{
-            message.error(window.localeInfo["Demand.FailedPromote"])
+            window.message.error(window.localeInfo["Demand.FailedPromote"])
         }
     })
   }

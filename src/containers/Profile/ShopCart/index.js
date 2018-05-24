@@ -98,7 +98,7 @@ export default class BTShopCart extends PureComponent{
         console.log(data)
         let _block=await getBlockInfo();
         if(_block.code!=0){
-            message.error('获取区块信息失败');
+            window.message.error('获取区块信息失败');
             return;
         }
         let block=_block.data;
@@ -118,7 +118,7 @@ export default class BTShopCart extends PureComponent{
 
         let _getDataBin=(await getDataInfo(data));
         if(_getDataBin.code!=0){
-            message.error('获取区块数据失败');
+            window.message.error('获取区块数据失败');
             return;
         }
         let favorite={
@@ -194,7 +194,7 @@ export default class BTShopCart extends PureComponent{
                         data:JSON.parse(data.data)
                     });
                 }else{
-                    message.error('获取数据失败')
+                    window.message.error('获取数据失败')
                 }
 
         }).catch(error=>{

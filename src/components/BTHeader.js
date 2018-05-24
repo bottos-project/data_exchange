@@ -38,7 +38,7 @@ class BTHeader extends PureComponent{
     logout = () => {
       BTFetch('/user/logout', 'POST')
       this.props.setAccountInfo(null)
-      message.success(window.localeInfo["Header.SuccessToLogOut"]);
+      window.message.success(window.localeInfo["Header.SuccessToLogOut"]);
     }
 
     menu() {

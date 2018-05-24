@@ -76,10 +76,10 @@ export default class BTHaveBought extends PureComponent{
             }
             this.setState({ data: res.data.row })
           } else {
-            message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
+            window.message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
           }
         }).catch(error=>{
-          message.error(window.localeInfo["PersonalAsset.FailedToGetTheHaveBoughtAsset"])
+          window.message.error(window.localeInfo["PersonalAsset.FailedToGetTheHaveBoughtAsset"])
         })
 
     }
