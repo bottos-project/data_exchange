@@ -44,7 +44,7 @@ function BTPersonalMenu({routeName}) {
     <div className='menu-container'>
       <Link to="/dashboard">
         <div className='menu-link'>
-          返回上一页
+          <FormattedMessage {...MenuMessages.Back} />
         </div>
       </Link>
       {list}

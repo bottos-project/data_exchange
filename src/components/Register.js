@@ -44,7 +44,9 @@ function BTRegistSuccess({username, keystoreObj}) {
       </div>
 
       <Row type='flex' justify='space-around' style={{marginTop: 20}}>
-        <Button type='primary' onClick={copyToClipboard}>复制 Keystore 文本</Button>
+        <Button type='primary' onClick={copyToClipboard}>
+          <FormattedMessage {...HeaderMessages.CopyYourKetstore}/>
+        </Button>
 
         <Button type='primary' onClick={downloadKeystore}>
           <FormattedMessage {...HeaderMessages.BackupYourKeystore}/>
@@ -144,11 +146,14 @@ class Regist extends PureComponent{
         let privateKey = keys.privateKey
         let blockHeader = await getBlockInfo()
 
-        if(!(blockHeader && blockHeader.code==1)){
-            message.error(window.localeInfo["Header.FailedRegister"]);
-            return
-        }
+        // console.log('注册', blockHeader);
 
+        // if(!(blockHeader && blockHeader.code==1)){
+        //     message.error(window.localeInfo["Header.FailedRegister"]);
+        //     return
+        // }
+
+        // console.log('注册');
         // did
         let didParam = this.getDid(username,keys)
         let arrSize = msgpack.PackArraySize(2)

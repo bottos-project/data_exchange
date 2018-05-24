@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import { Table, Icon,message} from 'antd';
+import { Table, Icon } from 'antd';
 import "./styles.less"
 import BTFetch from '../../../../utils/BTFetch'
 import {FormattedMessage} from 'react-intl'

@@ -156,7 +156,7 @@ class BTPublishAssetModal extends PureComponent{
       }
 
       if (this.state.date11 == '') {
-        message.warning('请输入截止时间');
+        message.warning(window.localeInfo["PersonalAsset.Deadline"]);
         return;
       }
 
