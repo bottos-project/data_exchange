@@ -139,7 +139,7 @@ class BTHeader extends PureComponent{
 
                   <Link to='/profile/check' onClick={this.checkAccount}>
                     <img src='./img/check.svg' />
-                    <FormattedMessage {...MenuMessages.MyMessages} />
+                    <FormattedMessage {...HeaderMessages.MyMessages} />
                   </Link>
 
                   {/* <div>

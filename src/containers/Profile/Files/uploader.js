@@ -360,7 +360,11 @@ function querySecondProgress(file) {
 
       BTFetch('/asset/registerFile', 'post', fetchParam)
       .then(res => {
-        console.log('res.details', JSON.parse(res.details))
+        if (res.code == 1) {
+          window.message.success( window.localeInfo['File.UploadSuccess'] )
+        } else if (res.details) {
+          console.log('res.details', JSON.parse(res.details))
+        }
       })
 
     } else {

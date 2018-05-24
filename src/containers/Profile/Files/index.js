@@ -61,7 +61,7 @@ function getDownloadFileIP(guid) {
 
 // getDownloadFileIP("e2f61c3f71d1defd3fa999dfa36953755c690689799962b48bebd836974e8cf9")
 
-function getFileDownloadURL(param) {
+function getFileDownloadURL(param, name) {
 
   fetch(file_test_url + '/data/getFileDownloadURL', {
     method: 'POST',
@@ -74,7 +74,7 @@ function getFileDownloadURL(param) {
     if (res.message == 'OK' || res.result == '200') {
       let a = document.createElement('a');
       a.href = res.url
-      a.download = param.fileName
+      a.download = name
       a.click();
     }
   })
@@ -131,7 +131,6 @@ class BTMyAssetSet extends Component{
       console.log('record', record);
 
       const guid = record.file_hash
-      const fileName = record.file_name
 
       let param = await getDownloadFileIP(guid)
 
@@ -141,9 +140,8 @@ class BTMyAssetSet extends Component{
 
       // console.log('getAccount()', getAccount());
       param.username = getAccount().username
-      param.fileName = fileName
 
-      getFileDownloadURL(param)
+      getFileDownloadURL(param, record.file_name)
 
     }
 

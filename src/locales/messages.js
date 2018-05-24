@@ -466,6 +466,12 @@ module.exports = {
             defaultMessage:"我的消息"
         },
     },
+    File:{
+        UploadSuccess:{
+            id:"File.UploadSuccess",
+            defaultMessage:"上传成功"
+        },
+    },
     PersonalAsset:{
         PersonalAsset:{
             id:"PersonalAsset.PersonalAsset",

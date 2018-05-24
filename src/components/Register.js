@@ -78,8 +78,8 @@ class Regist extends PureComponent{
             verify_id: '', // 验证码 id
             isRegistered: false,
             // 下面两个是 BTRegistSuccess 需要的参数
-            username: 'adfasdf',
-            keystoreObj: {adfsadgsdfgsdfgfa:"dggyikhnvghmnfgs"}
+            username: '',
+            keystoreObj: {}
         }
 
         this.onHandleSubmit = this.onHandleSubmit.bind(this)
