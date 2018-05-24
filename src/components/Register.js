@@ -11,6 +11,7 @@ import {isUserName} from '../tools/BTCheck'
 import ConfirmButton from './ConfirmButton'
 import messages from '../locales/messages'
 import {messageProtoEncode} from '../lib/proto/index'
+import {getBlockInfo} from '../utils/BTCommonApi'
 const msgpack = require('../lib/msgpack/msgpack')
 
 const HeaderMessages = messages.Header;
@@ -141,17 +142,12 @@ class Regist extends PureComponent{
         if(verificationCode==undefined){message.error(window.localeInfo["Header.PleaseEnterTheVerificationCode"]); return}
         let keys = BTCryptTool.createPubPrivateKeys()
         let privateKey = keys.privateKey
-        let blockHeader = await BTFetch('/user/GetBlockHeader','GET')
+        let blockHeader = await getBlockInfo()
 
         if(!(blockHeader && blockHeader.code==1)){
             message.error(window.localeInfo["Header.FailedRegister"]);
             return
         }
-
-        let data = blockHeader.data
-        let cursor_label = data.cursor_label
-        let cursor_num = data.head_block_num
-        let lifetime = data.head_block_time
 
         // did
         let didParam = this.getDid(username,keys)
@@ -164,9 +160,7 @@ class Regist extends PureComponent{
 
         let newuser = {
             version:1,
-            cursor_num:cursor_num,
-            cursor_label:cursor_label,
-            lifetime:lifetime,
+            ...blockHeader,
             sender:"bottos",
             contract:"usermng",
             method:"reguser",

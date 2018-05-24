@@ -1,5 +1,5 @@
 import React,{PureComponent} from 'react'
-import { Radio, Row, Col, Modal, Button, message } from 'antd';
+import { Radio, Row, Col, Modal, Button } from 'antd';
 import {getAccount} from "../tools/localStore";
 import {Link} from 'react-router'
 const RadioGroup = Radio.Group;

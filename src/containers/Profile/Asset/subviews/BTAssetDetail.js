@@ -271,9 +271,6 @@ export default class BTAssetDetail extends PureComponent{
        return {signature,random}
     }
 
-
-
-
     render() {
         const { data } = this.state;
         const columns = this.columns(data);
