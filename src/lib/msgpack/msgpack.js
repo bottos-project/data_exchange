@@ -62,7 +62,6 @@ const PackUint64 = (value)=>{
   return buf
 }
 
-
 const PackBin16 = (vlaue)=>{
   let byteLen = value.byteLength
   let len = byteLen + 3
@@ -77,6 +76,7 @@ const PackBin16 = (vlaue)=>{
 }
 
 const PackStr16 = (str)=>{
+  str = convertUnicode2Utf8(str)
   let len = str.length
   let byteLen = len + 3
   let bytes = new Uint8Array(byteLen)
@@ -84,7 +84,7 @@ const PackStr16 = (str)=>{
   bytes[1] = len >> 8
   bytes[2] = len
   for(let i = 0;i<len;i++){
-    bytes[i+3] = str[i].charCodeAt(0)
+    bytes[i+3] = str[i]
   }
   return bytes
 }
@@ -95,6 +95,39 @@ const PackArraySize = (length)=>{
   size[1] = length>>8
   size[2] = length
   return size
+}
+
+const convertUnicode2Utf8 = (str,isGetBytes=true)=>{
+  var back = [];
+  var byteSize = 0;
+  for (var i = 0; i < str.length; i++) {
+      var code = str.charCodeAt(i);
+      if (0x00 <= code && code <= 0x7f) {
+            byteSize += 1;
+            back.push(code);
+      } else if (0x80 <= code && code <= 0x7ff) {
+            byteSize += 2;
+            back.push((192 | (31 & (code >> 6))));
+            back.push((128 | (63 & code)))
+      } else if ((0x800 <= code && code <= 0xd7ff) 
+              || (0xe000 <= code && code <= 0xffff)) {
+            byteSize += 3;
+            back.push((224 | (15 & (code >> 12))));
+            back.push((128 | (63 & (code >> 6))));
+            back.push((128 | (63 & code)))
+      }
+    }
+    for (i = 0; i < back.length; i++) {
+        back[i] &= 0xff;
+    }
+    if (isGetBytes) {
+        return back
+    }
+    if (byteSize <= 0xff) {
+        return [0, byteSize].concat(back);
+    } else {
+        return [byteSize >> 8, byteSize & 0xff].concat(back);
+    }
 }
 
 module.exports = {
