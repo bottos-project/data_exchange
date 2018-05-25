@@ -1,7 +1,6 @@
 import config from './config.js'
 import { getAccount } from '../tools/localStore'
 import {message} from 'antd'
-import emitter from './eventEmitter'
 const pkg = require('../../package.json')
 
 
@@ -48,18 +47,8 @@ export default (url,method,params,options={
         requestParams.body = JSON.stringify(params);
     }
     return fetch(reqUrl, requestParams)
-        .then(response => response.json())
-        .then(response=>{
-            if (response.code == 1999) {
-                // token过期
-                window.message.error('登录过期，请重新登录')
-                emitter.emit('token_expire');
-                location.hash = '#/dashboard'
-                return;
-            }
-            return response
-        })
-        .catch(error=> error);
+    .then(response => response.json())
+    .catch(error=> console.error(error));
 }
 
 /**

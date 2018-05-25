@@ -343,4 +343,7 @@ module.exports = {
     "Check.ThereIsNoDataForTheTimeBeing":"No Data found for now",
     "Check.QueryFailure":"Query Failure",
     "Check.ThereIsNoPersonalMessageForTheTimeBeing":"There Is No Personal Message For The Time Being",
+
+    // presale
+    "Presale.Consumer":"Consumer"
 }

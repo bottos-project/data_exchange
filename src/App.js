@@ -9,16 +9,12 @@ import appLocale from './locales'
 // 通用样式
 import './static/css/common.less'
 import RouterMap from './router/routerMap'
-import emitter from './utils/eventEmitter'
 
 window.localeInfo = appLocale.messages;
 // 将config文件设置为全局window对象
 window.config = require('./utils/config')
 // console.log('store', store);
-emitter.on('token_expire', function () {
-  store.dispatch(setAccountInfo(null))
-  hashHistory.push('/loginOrRegister')
-})
+
 class App extends Component {
   render() {
     return (

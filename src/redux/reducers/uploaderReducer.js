@@ -1,5 +1,5 @@
 
-import { ADD_FILE, DELETE_FILE, UPDATE_FILE, UPDATE_UPLOAD_PROGRESS } from '../actions/uploaderAction'
+import { ADD_FILE, DELETE_FILE, UPDATE_FILE, UPDATE_FILELIST, UPDATE_UPLOAD_PROGRESS } from '../actions/uploaderAction'
 
 const initialState = {
   fileList: [],
@@ -27,6 +27,8 @@ const uploaderReducer = (state = initialState, action) => {
       return {...state, fileList: state.fileList.filter(file => file.id != action.fid)}
     case UPDATE_FILE:
       return {...state, fileList: updateFileListWithFile(state.fileList, action.file)}
+    case UPDATE_FILELIST:
+      return {...state, fileList: action.fileList}
     case UPDATE_UPLOAD_PROGRESS:
       return {...state, progressMap: {...state.progressMap, [action.guid]: action.percent}}
     default:

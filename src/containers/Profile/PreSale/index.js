@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { hashHistory } from 'react-router'
 import { Table, Icon, message, Button } from 'antd'
 import BTFetch from "@/utils/BTFetch";
 import { getAccount } from "@/tools/localStore";
@@ -6,8 +7,9 @@ import { getSignaturedParam } from '@/utils/BTCommonApi'
 import { FormattedMessage } from 'react-intl'
 import messages from '@/locales/messages'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
-
+import querystring from 'querystring'
 const CheckMessages = messages.Check;
+const PresaleMessages = messages.Presale;
 
 function queryPresaleByPageNum(n) {
   return BTFetch("/asset/queryMyPreSale", "post", {
@@ -23,27 +25,44 @@ class PreSale extends Component {
     this.state = {
       data: []
     };
+
+    this.checkTheAsset = this.checkTheAsset.bind(this)
   }
 
   columns() {
-      return  [
-          { title: <FormattedMessage {...CheckMessages.AssetID}/>, dataIndex: 'asset_name',
-            render:(item)=> <span>{item}</span>
-          },
-          { title: <FormattedMessage {...CheckMessages.Consumer}/>, dataIndex: 'consumer', key:'consumer' },
-          { title: <FormattedMessage {...CheckMessages.DataPresaleId}/>, dataIndex: 'data_req_name',
-            render:(item)=> <span>{item}</span>
-          },
-          { title: <FormattedMessage {...CheckMessages.DataTime} />, dataIndex: 'time',
-            render: getDateAndTime
-          },
-          // { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username', key:'user_name' },
-          { title: <FormattedMessage {...CheckMessages.View}/>,dataIndex:'asset_id',key:'x',
-            render: (item) => <Button>
-              <FormattedMessage {...CheckMessages.View} />
-            </Button>
-          }
-      ];
+    return [
+      {
+        title: <FormattedMessage {...CheckMessages.DataPresaleId}/>,
+        dataIndex: 'data_req_name',
+        render:(item)=> <span>{item}</span>
+      },
+      { title: <FormattedMessage {...PresaleMessages.Consumer}/>, dataIndex: 'consumer' },
+      { title: <FormattedMessage {...CheckMessages.AssetID}/>, dataIndex: 'asset_name',
+        render:(item)=> <span>{item}</span>
+      },
+      { title: <FormattedMessage {...CheckMessages.DataTime} />, dataIndex: 'time',
+        render: getDateAndTime
+      },
+      // { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username' },
+      { title: <FormattedMessage {...CheckMessages.View} />, dataIndex:'asset_id',
+        render: (asset_id) => <Button onClick={() => this.checkTheAsset(asset_id)}>
+          <FormattedMessage {...CheckMessages.View} />
+        </Button>
+      }
+    ]
+  }
+
+  checkTheAsset(asset_id) {
+    BTFetch("/asset/queryAssetByID", "post", {
+      ...getSignaturedParam(getAccount()),
+      asset_id
+    }).then(res => {
+      if (!res) return ;
+      if (res.code == 1 && res.data.row != null) {
+        let p = querystring.stringify(res.data.row[0])
+        hashHistory.push('/assets/detail?' + p)
+      }
+    })
   }
 
   componentDidMount() {

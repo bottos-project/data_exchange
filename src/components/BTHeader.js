@@ -4,6 +4,7 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import './styles.less'
 import * as headerActions from '../redux/actions/HeaderAction'
+import { updateFileList } from '../redux/actions/uploaderAction'
 import {Button, Modal, Menu, Dropdown, Icon } from 'antd'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import BTFetch from '../utils/BTFetch'
@@ -36,8 +37,8 @@ class BTHeader extends PureComponent{
     }
 
     logout = () => {
-      BTFetch('/user/logout', 'POST')
       this.props.setAccountInfo(null)
+      this.props.updateFileList([])
       message.success(window.localeInfo["Header.SuccessToLogOut"]);
     }
 

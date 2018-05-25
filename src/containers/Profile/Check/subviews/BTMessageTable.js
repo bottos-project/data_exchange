@@ -3,8 +3,9 @@ import { Table, Icon,message,Button } from 'antd'
 import BTFetch from "../../../../utils/BTFetch";
 import {hashHistory} from 'react-router'
 import {FormattedMessage} from 'react-intl'
+import { getSignaturedParam } from '@/utils/BTCommonApi'
 import messages from '../../../../locales/messages'
-import {getAccount} from "../../../../tools/localStore";
+import { getAccount } from "../../../../tools/localStore";
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import {queryProtoEncode} from '@/lib/proto/index'
 import * as BTCryptTool from 'bottos-js-crypto'
@@ -26,13 +27,15 @@ export default class BTMessageTable extends PureComponent{
             token:getAccount().token||''
         }
     }
+
     columns (data){
         return  [
-            { title: <FormattedMessage {...CheckMessages.AssetID}/>, dataIndex: 'asset_name', key: 'asset_id',render:(item)=>{
-                    return <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
-                }},
-            { title: <FormattedMessage {...CheckMessages.Consumer}/>, dataIndex: 'consumer', key:'consumer' },
-            { title: <FormattedMessage {...CheckMessages.DataPresaleId}/>, dataIndex: 'data_req_name', key:'data_req_name',
+            { title: <FormattedMessage {...CheckMessages.AssetID}/>, dataIndex: 'asset_name',
+              render:(item) => {
+                  return <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
+            }},
+            { title: <FormattedMessage {...CheckMessages.Consumer}/>, dataIndex: 'consumer' },
+            { title: <FormattedMessage {...CheckMessages.DataPresaleId}/>, dataIndex: 'data_req_name',
                 render:(item)=>{
                     return <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
                 }},
@@ -41,38 +44,32 @@ export default class BTMessageTable extends PureComponent{
             },
             // { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username', key:'user_name' },
             { title: <FormattedMessage {...CheckMessages.View}/>,dataIndex:'asset_id',
-              render:(item) =>
-              <Button onClick={()=>this.lookfor(item)}>
+              render:(asset_id) =>
+              <Button onClick={()=>this.lookfor(asset_id)}>
                   <FormattedMessage {...CheckMessages.View}/>
               </Button>
             }
         ];
     }
-    lookfor(item){
-        BTFetch('/asset/QueryAssetByID','post', {"asset_id":item})
-            .then(res=>{
-                if(res.code==0){
-                    if(res.data.rowCount==0){
-                        message.warning(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])
-                        return;
-                    }
-                    let data=res.data.row;
-                    if(data.length==1){
-                        hashHistory.push({
-                            pathname:'/assets/detail',
-                            query:data[0]
-                        })
-                    }
 
-                }else{
-                    window.message.error(window.localeInfo["Check.QueryFailure"])
-                }
-            })
-            .catch(error=>{
-                window.message.error(window.localeInfo["Check.QueryFailure"])
-
-            })
+    lookfor(asset_id) {
+      BTFetch("/asset/queryAssetByID", "post", {
+        ...getSignaturedParam(getAccount()),
+        asset_id
+      }).then(res => {
+        if (!res) return ;
+        if (res.code == 1 && res.data.row != null) {
+          let p = querystring.stringify(res.data.row[0])
+          hashHistory.push('/assets/detail?' + p)
+        } else {
+          window.message.error(window.localeInfo["Check.QueryFailure"])
+        }
+      })
+      .catch(error=>{
+          window.message.error(window.localeInfo["Check.QueryFailure"])
+      })
     }
+
     componentDidMount() {
         // console.log("BTMessageTable")
         // /*if(getAccount()){
@@ -122,30 +119,27 @@ export default class BTMessageTable extends PureComponent{
 
         let url = '/asset/queryMyNotice'
         BTFetch(url,'POST',params)
-            .then(response=>{
-                // console.log({response})
-                if(response && response.code==1){
-                    let data = response.data
-                    if(Array.isArray(data.row)){
-                        this.setState({data:data.row})
-                    }else{
-                        window.message.error(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])
-                    }
-                }
-            }).catch(error=>{
-                window.message.error(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])
-            })
+        .then(response => {
+          if (response && response.code==1) {
+            let data = response.data
+            if (Array.isArray(data.row)) {
+              this.setState({data:data.row})
+            }
+          }
+        }).catch(error => {
+            window.message.error(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])
+        })
     }
 
     getSignature(username,privateKeyStr){
-        let privateKey = Buffer.from(privateKeyStr,'hex')
-        let random = window.uuid()
-        let msg = {username,random}
-        let query_pb = require('../../../../lib/proto/query_pb')
-        let loginProto = queryProtoEncode(query_pb,msg)
-        let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
-        let signature = BTCryptTool.sign(hash,privateKey).toString('hex')
-       return {signature,random}
+      let privateKey = Buffer.from(privateKeyStr,'hex')
+      let random = window.uuid()
+      let msg = {username,random}
+      let query_pb = require('../../../../lib/proto/query_pb')
+      let loginProto = queryProtoEncode(query_pb,msg)
+      let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
+      let signature = BTCryptTool.sign(hash,privateKey).toString('hex')
+      return {signature,random}
     }
 
     render(){

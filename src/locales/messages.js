@@ -924,5 +924,11 @@ module.exports = {
             id:"Check.MyMessages",
             defaultMessage:"我的消息"
         }
+    },
+    Presale:{
+        Consumer:{
+            id:"Presale.Consumer",
+            defaultMessage:"需求者"
+        },
     }
 };

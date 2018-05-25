@@ -92,7 +92,7 @@ class Login extends PureComponent{
         myWorker.onmessage = (e) => {
           // let result = BTIPcRenderer.decryptKeystore({password,keyStoreObj})
           let result = e.data
-          console.log('result', result);
+          // console.log('result', result);
           if(result.error){
             message.error(window.localeInfo["Header.TheWrongPassword"]);
             return;
@@ -110,17 +110,23 @@ class Login extends PureComponent{
 
           let url = '/user/login'
           BTFetch(url,'POST',params)
-          .then(response=>{
+          .then(response => {
             // console.log({response})
-            if(response){
-              if(response && response.code==1){
+            if (response) {
+              if (response && response.code == 1) {
                 window.message.success(window.localeInfo["Header.LoginSucceed"])
                 let accountInfo = {username,privateKey}
                 this.props.setAccountInfo(accountInfo)
                 hashHistory.push('/profile/asset')
-              }else if(response.code==1001){
+              } else if (response.code==1001) {
                 message.warning('verify code is wrong');
-              }else{
+              } else if (response.code==1000 && typeof response.details == 'string') {
+                try {
+                  console.error(response.msg, JSON.parse(response.details));
+                } catch (e) {
+                  console.error(e);
+                }
+              } else {
                 message.error(window.localeInfo["Header.LoginFailure"]);
               }
             }
