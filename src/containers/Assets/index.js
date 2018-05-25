@@ -24,17 +24,17 @@ export default class BTAssets extends Component {
         this.getPagination(1, 10)
     }
 
-    onChange(page,pageSize,assetType=this.state.activeKey) {
+    onChange(page,pageSize,asset_type=this.state.activeKey) {
         // this.setState({dataSource:[]});
-        this.getPagination(page,pageSize,assetType)
+        this.getPagination(page,pageSize,asset_type)
     }
 
-    getPagination(page,pageSize,assetType=0) {
+    getPagination(page,pageSize, asset_type=0) {
         let reqUrl = '/asset/queryAllAsset';
         let param = {
             "page_size": pageSize,
             "page_num": page,
-            assetType:assetType
+            asset_type: Number.parseInt(asset_type)
         };
 
         BTFetch(reqUrl,'POST',param).then(response=>{

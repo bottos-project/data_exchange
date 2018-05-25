@@ -760,9 +760,17 @@ module.exports = {
             id:"Collect.GoodId",
             defaultMessage:"商品ID"
         },
+        GoodName:{
+            id:"Collect.GoodName",
+            defaultMessage:"商品名称"
+        },
         From:{
             id:"Collect.From",
             defaultMessage:"来源"
+        },
+        Time:{
+            id:"Collect.Time",
+            defaultMessage:"创建时间"
         },
         Delete:{
             id:"Collect.Delete",

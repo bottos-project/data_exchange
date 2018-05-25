@@ -50,3 +50,27 @@ export function getSignaturedFetchParam({fetchParam, privateKey}) {
   fetchParam.param = BTCryptTool.buf2hex(fetchParam.param)
   return fetchParam
 }
+
+// export function BTRowFetch(url, param) {
+//   BTFetch(reqUrl, 'POST', param)
+//   .then(res => {
+//     if (res) {
+//       if (res.code == 1) {
+//         let data = res.data
+//         if (data.row == null) {
+//           return {
+//
+//           }
+//         } else {
+//           return data.row;
+//         }
+//       } else {
+//         console.error('BTRowFetch error', res.details);
+//         throw new Error(res.code)
+//       }
+//
+//     } else {
+//       throw new Error('request fail')
+//     }
+//   })
+// };

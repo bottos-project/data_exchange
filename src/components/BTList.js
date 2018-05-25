@@ -31,30 +31,29 @@ export default class BTList extends PureComponent{
         }
     }
     columns (data){
-        console.log(data)
-          return [
-            { title: <FormattedMessage {...CollectMessages.GoodId}/>, dataIndex: 'goodsId', key: 'title' },
-            { title: <FormattedMessage {...CollectMessages.From}/>, dataIndex: 'username', key: 'from'},
-            { title: <FormattedMessage {...CollectMessages.Delete}/>, key:'x', render: (item) => {
-                    return (
-                        // this.state.dataSource.length > 1 ?
-                        //     (
-                        <Popconfirm title= {<FormattedMessage {...CollectMessages.SureToDelete}/>} onConfirm={() => this.onDelete(item)}>
-                            <a href="#">
-                                <FormattedMessage {...CollectMessages.Delete}/>
-                            </a>
-                        </Popconfirm>
-                        // ) : null
-                    );
-                },
-            },
-             { title: <FormattedMessage {...CollectMessages.ViewTheDetails}/>, dataIndex: 'goodsId', key: 'looker',render:(item)=>{
-                 return <Button onClick={()=>this.lookfor(item)}><FormattedMessage {...CollectMessages.View}/></Button>
-                 }},
-
-
-          ];
+      return [
+        { title: <FormattedMessage {...CollectMessages.GoodName}/>, dataIndex: 'goods_name' },
+        { title: <FormattedMessage {...CollectMessages.From}/>, dataIndex: 'username'},
+        { title: <FormattedMessage {...CollectMessages.Time}/>, dataIndex: 'time'},
+        { title: <FormattedMessage {...CollectMessages.Delete}/>, key:'x',
+          render: (item) => {
+            return (
+              <Popconfirm title= {<FormattedMessage {...CollectMessages.SureToDelete}/>} onConfirm={() => this.onDelete(item)}>
+                <a href="#">
+                  <FormattedMessage {...CollectMessages.Delete}/>
+                </a>
+              </Popconfirm>
+            );
+          },
+        },
+        {
+          title: <FormattedMessage {...CollectMessages.ViewTheDetails}/>, dataIndex: 'goods_id', key: 'looker',
+          render:(item) =>
+            <Button onClick={()=>this.lookfor(item)}><FormattedMessage {...CollectMessages.View}/></Button>
+        },
+      ];
     }
+
     onSelectChange(selectedRowKeys){
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
@@ -187,7 +186,7 @@ export default class BTList extends PureComponent{
                   className="table route-children-bg"
                   columns={columns}
                   dataSource={this.state.data}
-                  rowKey='goodsId'
+                  rowKey='goods_id'
                 />
             </div>
         );

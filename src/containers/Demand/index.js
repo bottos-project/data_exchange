@@ -28,12 +28,12 @@ export default class BTDemand extends PureComponent{
     onChange(page, page_size){
         this.getPagination(page, page_size, activeKey)
     }
-    getPagination(page, page_size, req_type){
+    getPagination(page, page_size, req_type = 0) {
         let reqUrl = '/requirement/query'
         let param={
             page_size,
             "page_num":page,
-            req_type
+            req_type: Number.parseInt(req_type)
         }
         BTFetch(reqUrl,'POST',param).then(response=>{
             if(response && response.code == 1){

@@ -9,7 +9,7 @@ import { addFile, deleteFile, updateFile, updateUploadProgress } from '@/redux/a
 import { get_ms_short } from '@/utils/dateTimeFormat'
 import BTFetch from '@/utils/BTFetch'
 import { getBlockInfo, getSignaturedFetchParam } from "@/utils/BTCommonApi";
-import { file_server } from '@/utils/BTDownloadFile'
+import { file_server, BTFileFetch } from '@/utils/BTDownloadFile'
 import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/msgpack'
 
 // const fs = __non_webpack_require__('fs');
@@ -137,13 +137,8 @@ function getUploadURL(file) {
     slice: sliceInfo,
   }
 
-  return fetch(file_server + '/data/getFileUploadURL', {
-    method: 'post',
-    body: JSON.stringify(param),
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    })
-  }).then(res => res.json()).then(res => {
+  return BTFileFetch('/data/getFileUploadURL', param)
+  .then(res => {
     console.log('res', res);
     if (res.result == 200) {
       file.url = res.url
@@ -180,13 +175,8 @@ async function handleFileQueued(file) {
   console.log('文件大小', file.size);
   // console.log('hashList', hashList);
   // 3. 将 hashList 发到后端校验
-  fetch(file_server + '/data/fileCheck', {
-    method: 'post',
-    body: JSON.stringify({hash: hashList}),
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    })
-  }).then(res => res.json()).then(res => {
+  BTFileFetch('/data/fileCheck', {hash: hashList})
+  .then(res => {
     // console.log('res', res);
     if (res.is_exist == 0) {
       // 4. 校验通过，取得 guid 为 merkle_root_hash

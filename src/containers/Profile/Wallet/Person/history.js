@@ -172,29 +172,6 @@ export default class History extends PureComponent{
 
                 <Pagination showQuickJumper defaultCurrent={2} total={20}  />
 
-                {/* <div className="content">
-                    <div className="exchange">
-                        <span className='number'>交易号&nbsp;:</span>
-                        <span>0x03f2b4d813cfa446450a3bb4f9a64558a0262d97</span>
-                        <span className='number'>块号&nbsp;:</span>
-                        <span>0x03f2b4d813cfa446450a3bb4f9a64558a0262d97</span>
-                    </div>
-                    <div className="exchange">
-                        <span className='number'>Form&nbsp;:</span>
-                        <span>0x03f2b4d813cfa446450a3bb4f9a64558a0262d97</span>
-                        <span className='number'>To&nbsp;:</span>
-                        <span>0x03f2b4d813cfa446450a3bb4f9a64558a0262d97</span>
-                    </div>
-                    <div className="exchange">
-                        <span className='number'>时间&nbsp;:</span>
-                        <span>2018-1-23 13:12:58</span>
-                        <span style={{paddingLeft:20}}>金额:&nbsp;&nbsp;</span>
-                        <span style={{color:'red',fontSize:14,paddingRight:10}}>20</span>
-                        <span>转入</span>
-                        <span className='number'>账户详细地址&nbsp;:</span>
-                    </div>
-                </div>*/}
-
             </div>
         )
     }

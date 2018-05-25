@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
 import moment from "moment"
-import { Input, DatePicker, message, Button, Row, Col } from 'antd'
+import { Input, DatePicker, Icon, Button, Row, Col } from 'antd'
 import BTAssetList from './BTAssetList'
 import {getBlockInfo, getDataInfo, getSignaturedParam } from "../utils/BTCommonApi";
 import BTFetch from "../utils/BTFetch";
@@ -226,6 +226,7 @@ class BTPublishDemand extends PureComponent{
                   examplefile={this.state.exampledata}
                   onClick={()=>this.commitAsset('assetTemp')}
                 >
+                  <Icon type="cloud-upload" />
                   <FormattedMessage {...PersonalAssetMessages.SetScreeningSample}/>
                 </Button>
                 <span className='filename'>{

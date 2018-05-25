@@ -20,6 +20,7 @@ ul,li{
 	overflow : hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
+  word-break: break-word;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }

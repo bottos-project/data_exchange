@@ -19,20 +19,20 @@ export default class BTDashboard extends PureComponent{
   }
   columns(data){
       return [
-          { title: <FormattedMessage {...HistoryMessages.TransactionID}/>, dataIndex: 'transaction_id',
+          { title: <FormattedMessage {...HistoryMessages.TransactionID} />, dataIndex: 'transaction_id',
             render: (item) => {
-                return <span style={{maxWidth:124}} className='one_txt_cut'>{item.slice(0, 15)+'...'}</span>
+              return <span style={{maxWidth:124}} className='one_txt_cut'>{item.slice(0, 15)+'...'}</span>
           }},
-          { title: <FormattedMessage {...HistoryMessages.Price}/>, dataIndex: 'price',
+          { title: <FormattedMessage {...HistoryMessages.Price} />, dataIndex: 'price',
             render: (price) => <div className=''>
                         <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
                         <span>{price/Math.pow(10, 8)}</span>
                     </div>,
             align: 'left'
           },
-          { title: <FormattedMessage {...HistoryMessages.From}/>, dataIndex: 'from'},
-          { title: <FormattedMessage {...HistoryMessages.To}/>, dataIndex: 'to'},
-          { title: <FormattedMessage {...HistoryMessages.Date}/>, dataIndex: 'timestamp',
+          { title: <FormattedMessage {...HistoryMessages.From} />, dataIndex: 'from'},
+          { title: <FormattedMessage {...HistoryMessages.To} />, dataIndex: 'to'},
+          { title: <FormattedMessage {...HistoryMessages.Date} />, dataIndex: 'timestamp',
             render: getDateAndTime
           },
           { title: <FormattedMessage {...HistoryMessages.Block}/>, dataIndex: 'block_number'},

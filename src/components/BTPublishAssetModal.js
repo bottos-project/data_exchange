@@ -184,7 +184,7 @@ class BTPublishAssetModal extends PureComponent{
         "basic_info": {
           "username": account_info.username,
           "assetName": this.state.title,
-          "assetType": this.state.dataAssetType,
+          "assetType": Number.parseInt(this.state.dataAssetType),
           "featureTag": featureTag,
           "sampleHash": this.state.sample_hash,
           "storageHash": this.state.storage_hash,
@@ -210,7 +210,7 @@ class BTPublishAssetModal extends PureComponent{
       .then(response=>{
         console.log({response})
         if(response && response.code==1){
-          window.message.success('success')
+          window.message.success(window.localeInfo['PersonalAsset.SuccessfulToRegisterTheAsset'])
         }else{
           window.message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
         }
@@ -240,7 +240,8 @@ class BTPublishAssetModal extends PureComponent{
               </Col>
               <Col span={18}>
                 <Button type='primary' examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>
-                    <FormattedMessage {...PersonalAssetMessages.SetScreeningSample}/>
+                  <Icon type="cloud-upload" />
+                  <FormattedMessage {...PersonalAssetMessages.SetScreeningSample}/>
                 </Button>
                 <span className='filename'>{
                     this.state.getFileNameTemp.length<=14
@@ -259,6 +260,7 @@ class BTPublishAssetModal extends PureComponent{
               </Col>
               <Col span={18}>
                 <Button type='primary' exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>
+                  <Icon type="cloud-upload" />
                   <FormattedMessage {...PersonalAssetMessages.SetScreeningFile}/>
                 </Button>
                 <span className='filename'>{

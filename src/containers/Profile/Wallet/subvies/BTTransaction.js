@@ -70,8 +70,8 @@ class Transaction extends PureComponent{
             "version": 1,
             ...blockInfo,
             "sender": account_name,
-            "contract": "assetmanager@bottoscon",
-            "method": "datafilereg",
+            "contract": "bottos",
+            "method": "transfer",
             "sig_alg": 1
         }
 
@@ -94,112 +94,6 @@ class Transaction extends PureComponent{
             console.log({response})
         }).catch(error=>{
             console.log({error})
-        })
-    }
-
-    // 转账
-    async onHandleSubmit1(){
-        message.destroy();
-        const { getFieldDecorator,getFieldsValue,getFieldValue,setFields } = this.props.form;
-        let fieldValues = getFieldsValue()
-
-        if(!fieldValues.to){
-            window.message.error(window.localeInfo["Wallet.PleaseEnterTheTargetAccount"])
-
-            return}
-        if(!fieldValues.quantity){
-            window.message.error(window.localeInfo["Wallet.PleaseEnterTheMoneyToBeTransferred"])
-            return}
-        if(!fieldValues.password) {
-            window.message.error(window.localeInfo["Wallet.PleaseEnterThePassword"])
-            return}
-        if(fieldValues.quantity<=0){
-            window.message.error(window.localeInfo["Wallet.PleaseEnterAvalidTransferAmount"])
-            return}
-
-
-        //根据密码解密keysotre
-        // let keyStoreObj = BTIPcRenderer.importFile()
-
-        // console.log(keyStoreObj)
-        // let decryptoStr = BTCryptTool.aesDecrypto(keyStoreObj,fieldValues.password);
-        // let decryptoData = JSON.parse(decryptoStr);
-        /*if(decryptoData.code!='0'){
-            window.message.error(window.localeInfo["Header.TheWrongPassword"]);
-            return;
-        }*/
-        // 通过密码获取from账户名
-        let from = this.props.selectWallet;
-        let to = fieldValues.to;
-        let quantity = fieldValues.quantity;
-        // 对keystore进行解密
-
-        // 获取data
-        let reqUrl = '/user/GetDataBin'
-        let dataParams = {
-            code:'currency',
-            action:'transfer',
-            args:{
-                from:from,
-                to:to,
-                quantity:parseFloat(quantity)*Math.pow(10, 8)
-            }
-        }
-
-        let getDataResult = await BTFetch(reqUrl,'POST',dataParams);
-        if(!(getDataResult&&getDataResult.code=='0')){
-            window.message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
-            return
-        };
-        // 获取blockInfo
-        let blockInfo = await getBlockInfo()
-        if(!(blockInfo&&blockInfo.code=='0')){
-            window.message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
-            return
-        };
-        let blockInfoData = blockInfo.data;
-
-        let scope = [from,to].sort()
-        let transactionUrl = '/user/transfer'
-        let transactionParams = {
-                "ref_block_num": blockInfoData.ref_block_num,
-                "ref_block_prefix": blockInfoData.ref_block_prefix,
-                "expiration": blockInfoData.expiration,
-                "scope": scope,
-                "read_scope": [],
-                "messages": [{
-                    "code": "currency",
-                    "type": "transfer",
-                    "authorization": [],
-                    "data": getDataResult.data.bin
-                }],
-                "signatures": []
-        }
-
-        BTFetch(transactionUrl,'POST',transactionParams).then(response=>{
-            message.destroy()
-
-            if(response){
-                if(response.code==0){
-                    window.message.success(window.localeInfo["Wallet.SuccessfulToTransferAccounts"])
-                }else if(response.code==1301){
-                    window.message.error(window.localeInfo["Wallet.TheTargetAccountIsInexistence"]);
-                    return
-                }else if(response.code==1302){
-                    window.message.error(window.localeInfo["Wallet.InsufficientBalance"]);
-                    return
-                }else{
-                    window.message.error(window.localeInfo["Wallet.FailedToTransferAccounts"]);
-                    return
-                }
-            }else{
-                window.message.error(window.localeInfo["Wallet.FailedToTransferAccounts"]);
-                return
-            }
-
-            this.props.closeModal()
-        }).catch(error=>{
-            window.message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
         })
     }
 

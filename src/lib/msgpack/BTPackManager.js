@@ -13,7 +13,7 @@ export const registAssetPack = (did)=>{
 
     let arrUsername = BTPack.PackStr16(basic_info.username)
     let arrAssetName = BTPack.PackStr16(basic_info.assetName)
-    let arrAssetType = BTPack.PackStr16(basic_info.assetType)
+    let arrAssetType = BTPack.PackUint64(basic_info.assetType)
     let arrFeatureTag = BTPack.PackStr16(basic_info.featureTag)
     // let arrSamplePath = BTPack.PackStr16(basic_info.samplePath)
     let arrSampleHash = BTPack.PackStr16(basic_info.sampleHash)
