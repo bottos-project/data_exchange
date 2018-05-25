@@ -44,23 +44,21 @@ class PreSale extends Component {
         render: getDateAndTime
       },
       // { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username' },
-      { title: <FormattedMessage {...CheckMessages.View} />, dataIndex:'asset_id',
-        render: (asset_id) => <Button onClick={() => this.checkTheAsset(asset_id)}>
+      { title: <FormattedMessage {...CheckMessages.View} />, dataIndex:'data_req_id',
+        render: (data_req_id) => <Button onClick={() => this.checkTheAsset(data_req_id)}>
           <FormattedMessage {...CheckMessages.View} />
         </Button>
       }
     ]
   }
 
-  checkTheAsset(asset_id) {
-    BTFetch("/asset/queryAssetByID", "post", {
-      ...getSignaturedParam(getAccount()),
-      asset_id
-    }).then(res => {
+  checkTheAsset(req_id) {
+    BTFetch("/requirement/query", "post", { req_id })
+    .then(res => {
       if (!res) return ;
       if (res.code == 1 && res.data.row != null) {
         let p = querystring.stringify(res.data.row[0])
-        hashHistory.push('/assets/detail?' + p)
+        hashHistory.push('/demand/detail?' + p)
       }
     })
   }
