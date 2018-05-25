@@ -167,7 +167,7 @@ const mapStateToProps = (state) => {
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(headerActions, dispatch)
+  return bindActionCreators({...headerActions, updateFileList}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BTHeader)

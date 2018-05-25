@@ -10,7 +10,7 @@ import {getAccount} from "@/tools/localStore";
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import Base from 'webuploader/base'
 import uploader from './uploader'
-import { file_server } from '@/utils/BTDownloadFile'
+import { downloadFile } from '@/utils/BTDownloadFile'
 
 import ProgressList from './subviews/ProgressList'
 import './style.less'
@@ -33,55 +33,6 @@ function beforeUpload(file) {
   }
 }
 
-
-function getDownloadFileIP(guid) {
-  return fetch(file_server + '/data/getStorageIP', {
-    method: 'POST',
-    body: JSON.stringify({ guid }),
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    })
-  }).then(res => res.json()).then(res => {
-    console.log('getStorageIP res', res);
-    // let _snode_ip = 私钥解密后的 snode_ip
-    // ip 字段中，sguid 其实是 chunk
-    // snode_ip 是加密后的，要通过私钥解密
-    if (res.result == 200 || res.message == 'OK') {
-      let addr = JSON.parse(res.storage_addr)
-      console.log('addr', addr);
-      let ip = addr.map(({sguid, snode_ip}) => ({
-        sguid: guid + sguid,
-        snode_ip
-      }))
-      console.log('ip', ip);
-      return { guid, ip }
-    }
-  })
-}
-
-// getDownloadFileIP("e2f61c3f71d1defd3fa999dfa36953755c690689799962b48bebd836974e8cf9")
-
-function getFileDownloadURL(param, name) {
-
-  fetch(file_server + '/data/getFileDownloadURL', {
-    method: 'POST',
-    body: JSON.stringify(param),
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    })
-  }).then(res => res.json()).then(res => {
-    console.log('getFileDownLoadURL res', res);
-    if (res.message == 'OK' || res.result == '200') {
-      let a = document.createElement('a');
-      a.href = res.url
-      a.download = name
-      a.click();
-    }
-  })
-
-}
-
-
 class BTMyAssetSet extends Component{
     constructor(props){
         super(props);
@@ -95,44 +46,32 @@ class BTMyAssetSet extends Component{
     };
 
     columns(data) {
-        // console.log(data);
-        return [
-            {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name',
-              render: (item) => <div>{item}</div>
-            },
-            {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size',
-              render: size => Base.formatSize( size )
-            },
-            {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time',
-              render: getDateAndTime
-            },
-            {
-                title: <FormattedMessage {...PersonalAssetMessages.Download}/>, key: 'download',
-                render: (text, record) => (
-                    <a onClick={()=>this.download1(record)}>
-                        <Icon type="download"/>
-                    </a>
-                )
-            },
-        ];
+      // console.log(data);
+      return [
+        {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name',
+          render: (item) => <div>{item}</div>
+        },
+        {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size',
+          render: size => Base.formatSize( size )
+        },
+        {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time',
+          render: getDateAndTime
+        },
+        {
+          title: <FormattedMessage {...PersonalAssetMessages.Download}/>,
+          key: 'download',
+          render: (text, record) => (
+              <a onClick={()=>this.download1(record)}>
+                  <Icon type="download"/>
+              </a>
+          )
+        },
+      ];
     }
 
     async download1(record) {
-
-      console.log('record', record);
-
-      const guid = record.file_hash
-
-      let param = await getDownloadFileIP(guid)
-
-      if (!param) {
-        return window.message.error('get download file fail')
-      }
-
-      param.username = getAccount().username
-
-      getFileDownloadURL(param, record.file_name)
-
+      const { file_hash: guid, file_name: filename } = record
+      downloadFile(guid, filename, getAccount().username)
     }
 
     customRequest = ({ file, onSuccess }) => {

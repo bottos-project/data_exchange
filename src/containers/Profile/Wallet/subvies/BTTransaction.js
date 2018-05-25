@@ -142,7 +142,7 @@ class Transaction extends PureComponent{
             args:{
                 from:from,
                 to:to,
-                quantity:parseFloat(quantity)*Math.pow(10,10)
+                quantity:parseFloat(quantity)*Math.pow(10, 8)
             }
         }
 

@@ -93,11 +93,6 @@ class Login extends PureComponent{
           // let result = BTIPcRenderer.decryptKeystore({password,keyStoreObj})
           let result = e.data
           // console.log('result', result);
-          if(result.error){
-            message.error(window.localeInfo["Header.TheWrongPassword"]);
-            return;
-          }
-
           let privateKey = result.privateKey;
 
           let signature = this.getSignature(username,privateKey)
@@ -137,6 +132,13 @@ class Login extends PureComponent{
           })
 
         }
+
+        myWorker.onerror = (e) => {
+          console.error(e);
+          window.message.error(window.localeInfo["Header.TheWrongPassword"]);
+          this.props.setSpin(false)
+        }
+
     }
 
 

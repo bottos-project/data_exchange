@@ -6,8 +6,8 @@ import {getAccount} from '../../tools/localStore'
 import BTFetch from '../../utils/BTFetch';
 import {List,message,Pagination} from 'antd'
 import CustomTabBar from '@/components/CustomTabBar'
+import { arTypeKeyMap } from '@/utils/keyMaps.js'
 
-const keyMap = ['All', 'Text', 'Picture', 'Voice', 'Video']
 
 export default class BTDemand extends PureComponent{
     constructor(props){
@@ -25,14 +25,15 @@ export default class BTDemand extends PureComponent{
     componentDidMount(){
         this.getPagination(1, 16)
     }
-    onChange(page,page_size){
-        this.getPagination(page,page_size)
+    onChange(page, page_size){
+        this.getPagination(page, page_size, activeKey)
     }
-    getPagination(page,page_size){
+    getPagination(page, page_size, req_type){
         let reqUrl = '/requirement/query'
         let param={
             page_size,
             "page_num":page,
+            req_type
         }
         BTFetch(reqUrl,'POST',param).then(response=>{
             if(response && response.code == 1){
@@ -53,6 +54,7 @@ export default class BTDemand extends PureComponent{
 
     handleChange = (activeKey) => {
       this.setState({ activeKey });
+      this.getPagination(1, 16, activeKey)
     }
 
     render(){
@@ -62,7 +64,7 @@ export default class BTDemand extends PureComponent{
 
       return (
         <div className='container column'>
-          <CustomTabBar onChange={this.handleChange} keyMap={keyMap} activeKey={this.state.activeKey} />
+          <CustomTabBar onChange={this.handleChange} keyMap={arTypeKeyMap} activeKey={this.state.activeKey} />
           <List
             grid={{ gutter: 16, column: 4 }}
             dataSource={this.state.dataSource||[]}

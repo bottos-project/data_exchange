@@ -6,8 +6,7 @@ import Assetlist from './subviews/Assetlist'
 import BTMyTag from '../../components/BTMyTag'
 import BTFetch from '../../utils/BTFetch'
 import CustomTabBar from '@/components/CustomTabBar'
-
-const keyMap = ['All', 'Text', 'Picture', 'Voice', 'Video']
+import { arTypeKeyMap } from '@/utils/keyMaps.js'
 
 export default class BTAssets extends Component {
     constructor(props) {
@@ -39,7 +38,7 @@ export default class BTAssets extends Component {
         };
 
         BTFetch(reqUrl,'POST',param).then(response=>{
-            console.log({response})
+            // console.log('response', response)
             if (response && response.code == 1) {
               const {row_count, row} = response.data
                 if (row_count == 0 || !Array.isArray(row)) {
@@ -70,7 +69,10 @@ export default class BTAssets extends Component {
       }
       return (
         <div className='container column'>
-          <CustomTabBar onChange={this.handleChange} keyMap={keyMap} activeKey={this.state.activeKey} />
+          <CustomTabBar
+            onChange={this.handleChange} keyMap={arTypeKeyMap}
+            activeKey={this.state.activeKey}
+          />
           <List
             grid={{ gutter: 16, column: 4 }}
             dataSource={this.state.dataSource}

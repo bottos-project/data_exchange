@@ -155,7 +155,7 @@ export default class BTDemanDetail extends PureComponent{
                         <span>
                             <FormattedMessage {...DemandMessages.ExpectedPrice}/>
                         </span>
-                        {data.price/Math.pow(10,10)}
+                        {data.price/Math.pow(10, 8)}
                         <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
                     </p>
                     <p>

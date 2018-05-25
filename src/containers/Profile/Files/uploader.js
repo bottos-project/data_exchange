@@ -286,7 +286,9 @@ function querySecondProgress(file) {
     } else if ( res.result == 200 && chunks == res.storage_done ) {
       // 说明存储的等于 上传完成的
       console.log('上传真的完成');
+      file.status = 'done'
       store.dispatch( updateUploadProgress(guid, 100) )
+      store.dispatch( updateFile(file) )
 
       // 成功之后的文件注册
       const storeAddr = res.storage_ip.map(({sguid, snode_ip}) => ({ sguid: sguid.slice(guid.length), snode_ip }) )
@@ -320,7 +322,7 @@ function querySecondProgress(file) {
       let b11 = PackStr16(originParam.info.storeAddr)
 
       let param = [...b1,...b2,...b3,...b4,...b5,...b6,...b7,...b8,...b9,...b10,...b11]
-      console.log('param', param);
+      // console.log('param', param);
 
       let blockInfo = await getBlockInfo()
       // console.log('blockInfo', blockInfo);

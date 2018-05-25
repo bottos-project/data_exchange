@@ -51,7 +51,7 @@ export default class BTRequireCell extends PureComponent{
               </p>
               <div>
                 <FormattedMessage {...DemandMessages.ExpectedPrice}/>
-                <span>{data.price/Math.pow(10,10)}</span>
+                <span>{data.price/Math.pow(10, 8)}</span>
                 <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
               </div>
               <span>

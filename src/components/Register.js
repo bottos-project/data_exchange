@@ -222,6 +222,12 @@ class Regist extends PureComponent{
                 message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
               }
 
+              myWorker.onerror = (e) => {
+                console.error('worker error', e);
+                window.message.error(window.localeInfo["Header.FailedRegister"]);
+                this.props.setSpin(false)
+              }
+
           }else if(response.code == 1001){
             this.props.setSpin(false)
             message.warning('verify code is wrong');

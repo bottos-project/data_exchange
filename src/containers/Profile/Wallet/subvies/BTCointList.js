@@ -26,14 +26,14 @@ export default class BTAccountList extends PureComponent{
         console.log("getUserBalance")
         // let balanceList = [{
 		// 	"name": "bto",
-		// 	"balance": 1000 * Math.pow(10,10),
+		// 	"balance": 1000 * Math.pow(10, 8),
 		// 	"cny": 100,
 		// 	"usd": 16
 		// },
 		// {
 		// 	"name": "sto",
 		// 	"balansd": 16
-        // }]ce": 90000 * Math.pow(10,10),
+        // }]ce": 90000 * Math.pow(10, 8),
 		// 	"cny": 100,
 		// 	"u
         let url = '/user/GetAccountInfo'

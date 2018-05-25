@@ -28,7 +28,7 @@ export default class BTHaveBought extends PureComponent{
               render: (price) => (
                 <div>
                     <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
-                    <span>{price/Math.pow(10,10)}</span>
+                    <span>{price/Math.pow(10, 8)}</span>
                 </div>
               )
             },

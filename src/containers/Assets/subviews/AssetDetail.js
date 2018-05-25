@@ -183,7 +183,7 @@ export default class BTAssetDetail extends PureComponent{
                         <span>
                             <FormattedMessage {...AssetMessages.ExpectedPrice}/>
                         </span>
-                        {data.price / Math.pow(10,10)}
+                        {data.price / Math.pow(10, 8)}
                         <img src='./img/token.png' width='15' style={{marginLeft:6}} />
                     </p>
                     <p>
