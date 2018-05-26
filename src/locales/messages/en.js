@@ -143,6 +143,11 @@ module.exports = {
     "Asset.SuccessfulCollect":"Successful Collect",
     "Asset.DeleteCollect":"Delete collection successfully",
     "Asset.FailedCollect":"Failed Collect",
+    "Asset.All":"All",
+    "Asset.Text":"Text",
+    "Asset.Picture":"Picture",
+    "Asset.Voice":"Voice",
+    "Asset.Video":"Video",
 
 
     //history
@@ -201,6 +206,7 @@ module.exports = {
     "PersonalAsset.ClickOrDragFileToThisAreaToUpload":"Click Or Drag File To This Area To Upload",
     "PersonalAsset.PublishDate":"Publish Date",
     "PersonalAsset.UploadTime":"Upload Time",
+    "PersonalAsset.purchaseTime":"Purchase Time",
     "PersonalAsset.ExpireTime":"Expire Time",
     "PersonalAsset.AssetFileName":"File Name",
     "PersonalAsset.AssetOperation":"Operation",

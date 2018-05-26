@@ -11,7 +11,7 @@ import CloseBack from '@/components/CloseBack'
 
 import { PackArraySize, PackStr16 } from '@/lib/msgpack/msgpack'
 
-import { keyMap } from '@/components/BTTypeSelect'
+import { arTypeKeyMap } from '@/utils/keyMaps'
 
 const AssetMessages = messages.Asset;
 // 此处样式在Demand/subviews/styles.less中控制
@@ -177,7 +177,7 @@ export default class BTAssetDetail extends PureComponent{
                         <span>
                             <FormattedMessage {...AssetMessages.AssetType}/>
                         </span>
-                        {keyMap[data.asset_type]}
+                        {arTypeKeyMap[data.asset_type]}
                     </p>
                     <p>
                         <span>

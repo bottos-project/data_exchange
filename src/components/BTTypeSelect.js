@@ -3,13 +3,23 @@ import PropTypes from 'prop-types';
 import { Select } from 'antd'
 const Option = Select.Option;
 
+import { arTypeKeyMap } from '@/utils/keyMaps'
 // 对应关系
-export const keyMap = {
-  11: 'Voice',
-  12: 'Video',
-  13: 'Picture',
-  14: 'Text',
+const {0: x, ...keyMap} = arTypeKeyMap
+// console.log('arTypeKeyMap', arTypeKeyMap);
+// console.log('keyMap', keyMap);
+// console.log('x', x);
+// if (keyMap[0]) {
+  delete keyMap[0]
+// }
+const optionList = []
+
+for (var key in keyMap) {
+  optionList.push(
+    <Option key={key} value={key}>{keyMap[key]}</Option>
+  )
 }
+
 
 class BTTypeSelect extends PureComponent {
   constructor(props) {
@@ -27,10 +37,7 @@ class BTTypeSelect extends PureComponent {
   render() {
     return (
       <Select defaultValue={this.props.defaultValue} style={{ width: 120 }} onChange={this.handleChange}>
-        <Option value="11">Voice</Option>
-        <Option value="12">Video</Option>
-        <Option value="13">Picture</Option>
-        <Option value="14">Text</Option>
+        {optionList}
       </Select>
     );
   }

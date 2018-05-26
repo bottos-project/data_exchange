@@ -3,15 +3,13 @@ import {connect} from 'react-redux'
 import PropTypes from 'prop-types';
 import { Button, Input, Form, message, InputNumber, Col, Row } from 'antd'
 import BTFetch from '../../../../utils/BTFetch';
-import {getBlockInfo} from '../../../../utils/BTCommonApi'
+import {getBlockInfo, getSignaturedFetchParam} from '@/utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
-import BTCryptTool from 'bottos-js-crypto'
 import BTIPcRenderer from "../../../../tools/BTIpcRenderer";
 import BTNumberInput from '../../../../components/BTNumberInput'
 import ConfirmButton from '@/components/ConfirmButton'
 import {transactionPack} from '../../../../lib/msgpack/BTPackManager'
-import {messageSign} from '@/lib/sign/BTSign'
 import { SIGPOLL } from 'constants';
 const WalletMessages = messages.Wallet;
 const FormItem = Form.Item;
@@ -66,30 +64,30 @@ class Transaction extends PureComponent{
         }
         let privateKeyStr = privateKeyResult.privateKey
         let privateKey = Buffer.from(privateKeyStr,'hex')
-        let params = {
-            "version": 1,
-            ...blockInfo,
-            "sender": account_name,
-            "contract": "bottos",
-            "method": "transfer",
-            "sig_alg": 1
-        }
-
         let did = {
             "from": account_name,
             "to": fieldValues.to,
             "price": fieldValues.quantity,
             "remark": "April's rent"
         }
-
         let didBuf = transactionPack(did)
-        params.param = didBuf
-        let sign = messageSign(params,privateKey)
-        params.param = BTCryptTool.buf2hex(didBuf)
-        params.signatures = sign
+
+        let fetchParam = {
+          "version": 1,
+          ...blockInfo,
+          "sender": account_name,
+          "contract": "bottos",
+          "method": "transfer",
+          "sig_alg": 1
+        }
+
+        fetchParam.param = didBuf
+
+        console.log('privateKey', privateKey);
+        getSignaturedFetchParam({fetchParam, privateKey})
 
         let url = '/user/transfer'
-        BTFetch(url,'POST',params)
+        BTFetch(url,'POST', fetchParam)
         .then(response=>{
             console.log({response})
         }).catch(error=>{
@@ -149,6 +147,9 @@ class Transaction extends PureComponent{
     }
 }
 
+let pk = Buffer.from('aaab', 'hex')
+console.log('pk', pk);
+
 const TransactionForm = Form.create()(Transaction)
 
 function mapStateToProps(state){
@@ -157,23 +158,3 @@ function mapStateToProps(state){
 }
 
 export default connect(mapStateToProps)(TransactionForm)
-
-// const mapStateToProps = (state) => {
-//     console.log({
-//         state
-//     })
-//     return {
-//         visible: state.profileWalletState.quantity
-//     }
-// }
-
-
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         setQuantity(quantity) {
-
-//         }
-//     }
-// }
-
-// export default connect(mapStateToProps, mapDispatchToProps)(BTTransaction)
