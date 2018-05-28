@@ -5,7 +5,7 @@
   "private": true,
   "main": "main.js",
   "homepage": ".",
-  "DEV": false,
+  "DEV": true,
   "MOCK": false,
   "description": "Bottos Wallet",
   "author": {
@@ -89,6 +89,7 @@
     "less-loader": "^4.1.0",
     "less-vars-to-js": "^1.2.1",
     "lodash": "^4.17.10",
+    "long": "^4.0.0",
     "prop-types": "^15.6.1",
     "react-hot-loader": "^4.1.1",
     "react-transition-group": "^2.3.1",

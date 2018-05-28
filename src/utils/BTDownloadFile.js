@@ -17,6 +17,10 @@ function getDownloadFileIP(guid) {
     // ip 字段中，sguid 其实是 chunk
     // snode_ip 是加密后的，要通过私钥解密
     if (res.result == 200 || res.message == 'OK') {
+      if (res.storage_addr == "") {
+        window.message.error('Download Error')
+        throw new Error('Invalid storage address!')
+      }
       let addr = JSON.parse(res.storage_addr)
       console.log('addr', addr);
       let ip = addr.map(({sguid, snode_ip}) => ({

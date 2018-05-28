@@ -48,7 +48,7 @@ export default class BTWalletItem extends PureComponent{
         let keyStore = JSON.parse(keyStoreString)
 
         if(this.state.newPassword!=this.state.reNewPassword){
-            window.message.error('两次新密码输入不一致')
+            window.message.error(window.localeInfo['Header.IncorrectPasswordEnteredTwice'])
             return;
         }
         let privateKeyStr = JSON.stringify(keyStore)

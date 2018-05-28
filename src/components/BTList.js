@@ -10,6 +10,7 @@ import {hashHistory} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
 import {getAccount} from "../tools/localStore";
+import { getDateAndTime } from '../utils/dateTimeFormat'
 
 const CollectMessages = messages.Collect;
 
@@ -34,7 +35,9 @@ export default class BTList extends PureComponent{
       return [
         { title: <FormattedMessage {...CollectMessages.GoodName}/>, dataIndex: 'goods_name' },
         { title: <FormattedMessage {...CollectMessages.From}/>, dataIndex: 'username'},
-        { title: <FormattedMessage {...CollectMessages.Time}/>, dataIndex: 'time'},
+        { title: <FormattedMessage {...CollectMessages.Time}/>, dataIndex: 'time',
+          render: getDateAndTime
+        },
         { title: <FormattedMessage {...CollectMessages.Delete}/>, key:'x',
           render: (item) => {
             return (
@@ -89,7 +92,7 @@ export default class BTList extends PureComponent{
         console.log(data)
         let _block=await getBlockInfo();
         if(_block.code!=0){
-            window.message.error('获取区块信息失败');
+            window.message.error(window.localeInfo['PersonalDemand.FailedToGetTheBlockMessages']);
             return;
         }
         let block=_block.data;

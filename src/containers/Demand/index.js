@@ -26,7 +26,7 @@ export default class BTDemand extends PureComponent{
         this.getPagination(1, 16)
     }
     onChange(page, page_size){
-        this.getPagination(page, page_size, activeKey)
+        this.getPagination(page, page_size, this.state.activeKey)
     }
     getPagination(page, page_size, req_type = 0) {
         let reqUrl = '/requirement/query'

@@ -144,6 +144,10 @@ class BTPublishAssetModal extends PureComponent{
     }
 
     async updata(){
+      if (!this.state.storage_hash) {
+        message.warning(window.localeInfo["PersonalAsset.PleaseChooseTheAsset"]);
+        return ;
+      }
       if(this.state.number<=0||this.state.number>=10000000000){
         message.warning(window.localeInfo["PersonalAsset.InputPrice"]);
         return;
@@ -190,7 +194,7 @@ class BTPublishAssetModal extends PureComponent{
           "storageHash": this.state.storage_hash,
           "expireTime": expire_time,
           "opType": 1,
-          "price": Number.parseInt(this.state.number) * Math.pow(10, 8),
+          "price": Number(this.state.number) * Math.pow(10, 8),
           "description": this.state.description
         }
       }
@@ -203,6 +207,7 @@ class BTPublishAssetModal extends PureComponent{
       let sign = BTSign.messageSign(params, privateKey)
       params.signature = sign.toString('hex')
       params.param = BTCryptTool.buf2hex(arrBuf)
+      console.log('params.param', params.param);
 
       let url = '/asset/registerAsset'
 

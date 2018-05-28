@@ -230,6 +230,7 @@ module.exports = {
     "PersonalAsset.FailedToGetUrlOfDocumentStorage":"Failed To Get Url Of Document Storage",
     "PersonalAsset.FailedToUploadTheFile":"Failed To Upload The File",
     "PersonalAsset.SuccessfulToUploadTheFile":"Successful To Upload The File",
+    "PersonalAsset.PleaseChooseTheAsset":"Please Choose The Asset",
     "PersonalAsset.PleaseImproveTheInformation":"Please Improve The Information",
     "PersonalAsset.InputPrice":"Please Enter the Appropriate Price",
     "PersonalAsset.FailedToGetTheGetDataBin":"Failed To Get The Get Data Bin",

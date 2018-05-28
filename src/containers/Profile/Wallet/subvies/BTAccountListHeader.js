@@ -38,13 +38,13 @@ export default class BTAccountListHeader extends PureComponent{
 
     onHandleOk(){
         if(this.state.password=='') {
-            window.message.error('请输入KeyStore文件的密码')
+            window.message.error(window.localeInfo['Wallet.PleaseEnterThePasswordOfKeystore'])
             return
         }
 
         let account = localStore.getAccount()
         if(account==undefined) {
-            window.message.error('请先登录')
+            window.message.error(window.localeInfo['Wallet.PleaseLogInFirst'])
             return
         }
 

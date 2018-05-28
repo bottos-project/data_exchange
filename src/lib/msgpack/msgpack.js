@@ -1,3 +1,5 @@
+const Long = require('long')
+
 const BIN16 = 0xc5
 const UINT8  = 0xcc
 const UINT16 = 0xcd
@@ -46,19 +48,22 @@ const PackUint32 = (value)=>{
     return buf
 }
 
+const PackUint64 = (n)=>{
+  let num = Long.fromNumber(Number(n))
+  let h = num.getHighBitsUnsigned()
+  let l = num.getLowBitsUnsigned()
 
-// TODO:暂时方案
-const PackUint64 = (value)=>{
   const buf = new Uint8Array(9)
   buf[0]=UINT64
-  buf[1]=0
-  buf[2]=0
-  buf[3]=0
-  buf[4]=0
-  buf[5]=value>>24
-  buf[6]=value>>16
-  buf[7]=value>>8
-  buf[8]=value
+  buf[1]=h>>24
+  buf[2]=h>>16
+  buf[3]=h>>8
+  buf[4]=h
+
+  buf[5]=l>>24
+  buf[6]=l>>16
+  buf[7]=l>>8
+  buf[8]=l
   return buf
 }
 
@@ -109,7 +114,7 @@ const convertUnicode2Utf8 = (str,isGetBytes=true)=>{
             byteSize += 2;
             back.push((192 | (31 & (code >> 6))));
             back.push((128 | (63 & code)))
-      } else if ((0x800 <= code && code <= 0xd7ff) 
+      } else if ((0x800 <= code && code <= 0xd7ff)
               || (0xe000 <= code && code <= 0xffff)) {
             byteSize += 3;
             back.push((224 | (15 & (code >> 12))));

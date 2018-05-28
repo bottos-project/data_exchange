@@ -59,7 +59,7 @@ class Transaction extends PureComponent{
         let keyStoreObj = keyStoreResult.keyStoreObj
         let privateKeyResult = BTIPcRenderer.decryptKeystore({password:fieldValues.password,keyStoreObj})
         if(privateKeyResult.error){
-            window.message.error("密码错误")
+            window.message.error(window.localeInfo["Wallet.TheWrongPassword"])
             return
         }
         let privateKeyStr = privateKeyResult.privateKey
