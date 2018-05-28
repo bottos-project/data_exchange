@@ -98,7 +98,7 @@ export default class BTShopCart extends PureComponent{
         console.log(data)
         let _block=await getBlockInfo();
         if(_block.code!=0){
-            window.message.error('获取区块信息失败');
+            window.message.error(window.localeInfo['Asset.FailedToGetTheBlockMessages']);
             return;
         }
         let block=_block.data;

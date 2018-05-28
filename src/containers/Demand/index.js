@@ -43,30 +43,25 @@ export default class BTDemand extends PureComponent{
   }
 
     onChange(page, page_size){
-        this.getPagination(page, page_size, this.state.activeKey)
+      this.getPagination(page, page_size, this.state.activeKey)
     }
     getPagination(page, page_size, req_type = 0) {
-        let reqUrl = '/requirement/query'
-        let param={
-            page_size,
-            "page_num":page,
-            req_type: Number.parseInt(req_type)
+      let reqUrl = '/requirement/query'
+      let param={
+          page_size,
+          "page_num":page,
+          req_type: Number.parseInt(req_type)
+      }
+      BTFetch(reqUrl,'POST',param).then(response=>{
+        if(response && response.code == 1){
+          const {row_count, row} = response.data
+          console.log('response.data', response.data);
+          this.setState({
+            dataSource: row || [],
+            row_count,
+          })
         }
-        BTFetch(reqUrl,'POST',param).then(response=>{
-            if(response && response.code == 1){
-              const {row_count, row} = response.data
-              console.log('response.data', response.data);
-                if(row_count == 0 || !Array.isArray(row)){
-                    // message.warning(window.localeInfo["Demand.ThereIsNoMarketDemandForTheTimeBeing"]);
-                    return;
-                }
-                console.log('response.data', response.data);
-                this.setState({
-                    dataSource: row,
-                    row_count,
-                })
-            }
-        })
+      })
     }
 
     handleChange = (activeKey) => {
@@ -81,7 +76,7 @@ export default class BTDemand extends PureComponent{
 
       return (
         <div className='container column'>
-          <CustomTabBar onChange={this.handleChange} keyMap={this.state.keyMap} activeKey={this.state.activeKey} />
+          <CustomTabBar onChange={this.handleChange} keyMap={arTypeKeyMap} activeKey={this.state.activeKey} />
           <List
             grid={{ gutter: 16, column: 4 }}
             dataSource={this.state.dataSource||[]}

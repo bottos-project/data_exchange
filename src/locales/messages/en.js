@@ -233,6 +233,7 @@ module.exports = {
     "PersonalAsset.FailedToUploadTheFile":"Failed To Upload The File",
     "PersonalAsset.SuccessfulToUploadTheFile":"Successful To Upload The File",
     "PersonalAsset.PleaseChooseTheAsset":"Please Choose The Asset",
+    "PersonalAsset.PleaseChooseTheAssetType":"Please Choose The Asset Type",
     "PersonalAsset.PleaseImproveTheInformation":"Please Improve The Information",
     "PersonalAsset.InputPrice":"Please Enter the Appropriate Price",
     "PersonalAsset.FailedToGetTheGetDataBin":"Failed To Get The Get Data Bin",
@@ -267,6 +268,7 @@ module.exports = {
     "PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing":"There Is No Have Published Demand For The Time Being",
     "PersonalDemand.PleaseImproveTheDemand":"Please Improve The Demand",
     "PersonalDemand.PleaseInputPrice":"Please Enter the Appropriate Price",
+    "PersonalDemand.PleaseChooseTheRequirementType":"Please Choose The Requirement Type",
     "PersonalDemand.FailedToGetTheBlockMessages":"Failed To Get The Block Messages",
     "PersonalDemand.SuccessfulToPublishTheDemand":"Successful To Publish The Demand",
     "PersonalDemand.FailedToPublishTheDemand":"Failed To Publish The Demand",
@@ -297,6 +299,8 @@ module.exports = {
     "Collect.ViewTheDetails":"View The Details",
     "Collect.View":"View",
     "Collect.SureToDelete":"Are you sure you want to delete this?",
+    "Collect.OK":"OK",
+    "Collect.Cancel":"Cancel",
 
 
     //Wallet
@@ -356,5 +360,8 @@ module.exports = {
     "Check.ThereIsNoPersonalMessageForTheTimeBeing":"There Is No Personal Message For The Time Being",
 
     // presale
-    "Presale.Consumer":"Consumer"
+    "Presale.Consumer":"Consumer",
+
+    "File.FileExisted":"This File has existed",
+
 }

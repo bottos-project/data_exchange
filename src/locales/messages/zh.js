@@ -70,6 +70,7 @@ module.exports = {
     "PersonalAsset.FailedToUploadTheFile":"文件上传失败",
     "PersonalAsset.SuccessfulToUploadTheFile":"文件上传成功",
     "PersonalAsset.PleaseChooseTheAsset":"请选择要发布的资产",
+    "PersonalAsset.PleaseChooseTheAssetType":"请选择资产类型",
     "PersonalAsset.PleaseImproveTheInformation":"请完善发布资产",
     "PersonalAsset.InputPrice":"请输入有效的价格",
     "PersonalAsset.FailedToGetTheGetDataBin":"获取getDataBin失败",
@@ -91,6 +92,7 @@ module.exports = {
     "PersonalDemand.ThereIsNoHavePublishedDemandForTheTimeBeing":"暂无已发布需求",
     "PersonalDemand.PleaseImproveTheDemand":"请完善发布需求",
     "PersonalDemand.PleaseInputPrice":"请输入合适的价格",
+    "PersonalDemand.PleaseChooseTheRequirementType":"请选择需求类型",
     "PersonalDemand.FailedToGetTheBlockMessages":"获取区块信息失败",
     "PersonalDemand.SuccessfulToPublishTheDemand":"发布需求成功",
     "PersonalDemand.FailedToPublishTheDemand":"发布需求失败",
@@ -115,6 +117,6 @@ module.exports = {
     "Wallet.PleaseLogInFirst":"请先登录账户",
     "Wallet.TheWrongPassword":"密码错误",
 
-
+    "File.FileExisted":"文件已存在",
 
 }

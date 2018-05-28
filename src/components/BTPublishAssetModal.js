@@ -28,29 +28,31 @@ String.prototype.trim=function() {
 String.prototype.trims=function() {
     return this.replace(/(\s*$)/g,'');
 };
+
+const initState = {
+  title:'',
+  number:'',
+  description:'',
+  tag1:'',
+  tag2:'',
+  tag3:'',
+  dataAssetType: '0',
+  getFileNameTemp:'',
+  getFileName:'',
+  getExampleUrl:'',
+  getRealUrl:'',
+  sample_hash:'',
+  storage_hash:'',
+  newdata:[],
+  date11: '',
+  timeValue: '',
+}
+
 class BTPublishAssetModal extends PureComponent{
     constructor(props){
         super(props)
 
-        this.state = {
-            value:1,
-            title:'',
-            number:'',
-            description:'',
-            tag1:'',
-            tag2:'',
-            tag3:'',
-            dataAssetType: '0',
-            getFileNameTemp:'',
-            getFileName:'',
-            getExampleUrl:'',
-            getRealUrl:'',
-            sample_hash:'',
-            storage_hash:'',
-            newdata:[],
-            date11: '',
-            timeValue: '',
-        }
+        this.state = initState
 
         this.onTimeChange = this.onTimeChange.bind(this)
     }
@@ -104,6 +106,9 @@ class BTPublishAssetModal extends PureComponent{
         if (number >= 1e7) {
           number = 1e7 - 1
         }
+        if (number < 0) {
+          number = 0
+        }
 
         this.setState({number})
 
@@ -132,7 +137,6 @@ class BTPublishAssetModal extends PureComponent{
             this.setState({
                 getFileName:fileInfo.value,
                 storage_hash:fileInfo.hash,
-                getRealUrl:fileInfo.getRealUrl,
             })
         }else if(fileInfo.type=='assetTemp'){
             this.setState({
@@ -154,12 +158,17 @@ class BTPublishAssetModal extends PureComponent{
       }
       let reg=/^\d+(?:\.\d{1,10})?$/
       if(!reg.test(this.state.number)){
-          message.warning('输入正确的价格');
+        message.warning(window.localeInfo["PersonalAsset.InputPrice"]);
           return;
       }
 
       if (this.state.date11 == '') {
         message.warning(window.localeInfo["PersonalAsset.Deadline"]);
+        return;
+      }
+
+      if (this.state.dataAssetType == '0') {
+        message.warning(window.localeInfo["PersonalAsset.PleaseChooseTheAssetType"]);
         return;
       }
 
@@ -214,6 +223,7 @@ class BTPublishAssetModal extends PureComponent{
       .then(response=>{
         console.log({response})
         if(response && response.code==1){
+          this.setState(initState)
           window.message.success(window.localeInfo['PersonalAsset.SuccessfulToRegisterTheAsset'])
         }else{
           window.message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);

@@ -816,6 +816,14 @@ module.exports = {
             id:"Collect.SureToDelete",
             defaultMessage:"确认删除？"
         },
+        OK:{
+          id:"Collect.OK",
+          defaultMessage:"确定",
+        },
+        Cancel:{
+          id:"Collect.Cancel",
+          defaultMessage:"取消",
+        },
     },
     Wallet:{
         ModifyThePassword:{

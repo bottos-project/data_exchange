@@ -45,9 +45,9 @@ export function getSignaturedFetchParam({fetchParam, privateKey}) {
   let encodeBuf = messageProtoEncode(message_pb, fetchParam)
   let hashData = BTCryptTool.sha256(BTCryptTool.buf2hex(encodeBuf))
   let sign = BTCryptTool.sign(hashData, privateKey)
-  console.log('sign', sign);
+  // console.log('sign', sign);
   fetchParam.signature = sign.toString('hex')
-  console.log('fetchParam.signature', fetchParam.signature);
+  // console.log('fetchParam.signature', fetchParam.signature);
   // fetchParam.param = param.map(s1 => int10ToStr16(s1)).join('')
   fetchParam.param = BTCryptTool.buf2hex(fetchParam.param)
   return fetchParam

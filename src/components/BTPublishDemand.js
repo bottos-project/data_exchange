@@ -35,7 +35,7 @@ const initialState = {
     dateString: moment().add(7, 'days').toString(),
     newdata: [],
     getFileNameTemp:'',
-    reqType: '00'
+    reqType: '0'
 }
 
 class BTPublishDemand extends PureComponent{
@@ -101,6 +101,9 @@ class BTPublishDemand extends PureComponent{
         if (number >= 1e7) {
           number = 1e7 - 1
         }
+        if (number < 0) {
+          number = 0
+        }
         number = toFixedWithoutZero(number, 6)
         console.log('number', number);
 
@@ -128,6 +131,11 @@ class BTPublishDemand extends PureComponent{
       if (this.state.number <=0 || this.state.number >= 10000000000){
           message.warning(window.localeInfo["PersonalDemand.PleaseInputPrice"])
           return;
+      }
+
+      if (this.state.reqType == '0') {
+        message.warning(window.localeInfo["PersonalDemand.PleaseChooseTheRequirementType"]);
+        return;
       }
 
       let blockInfo = await getBlockInfo()

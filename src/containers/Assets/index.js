@@ -41,12 +41,12 @@ export default class BTAssets extends Component {
         }
     }
 
-    onChange(page,pageSize,assetType=this.state.activeKey) {
+    onChange(page,pageSize,asset_type=this.state.activeKey) {
         // this.setState({dataSource:[]});
-        this.getPagination(page,pageSize,assetType)
+        this.getPagination(page,pageSize,asset_type)
     }
 
-    getPagination(page,pageSize,assetType=0) {
+    getPagination(page,pageSize,asset_type=0) {
         let reqUrl = '/asset/queryAllAsset';
         let param = {
             "page_size": pageSize,
@@ -58,11 +58,8 @@ export default class BTAssets extends Component {
             // console.log('response', response)
             if (response && response.code == 1) {
               const {row_count, row} = response.data
-                if (row_count == 0 || !Array.isArray(row)) {
-                    return ;
-                }
                 this.setState({
-                    dataSource: row,
+                    dataSource: row || [],
                     row_count,
                 });
             } else {
@@ -86,7 +83,7 @@ export default class BTAssets extends Component {
       }
       return (
         <div className='container column'>
-          <CustomTabBar onChange={this.handleChange} keyMap={this.state.keyMap} activeKey={this.state.activeKey} />
+          <CustomTabBar onChange={this.handleChange} keyMap={arTypeKeyMap} activeKey={this.state.activeKey} />
           <List
             grid={{ gutter: 16, column: 4 }}
             dataSource={this.state.dataSource}

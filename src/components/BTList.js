@@ -1,37 +1,25 @@
 import React,{PureComponent} from 'react'
 import BTListCell from './BTListCell'
-import {Icon,Checkbox,Row,Col,Table,Button,Popconfirm} from 'antd'
+import {Row,Col,Table,Button,Popconfirm} from 'antd'
 import BTFetch from '../utils/BTFetch'
-import BTCryptTool from 'bottos-js-crypto'
-const { queryProtoEncode } = require('@/lib/proto/index');
-
-import {getBlockInfo,getDataInfo} from '../utils/BTCommonApi'
+import { getSignaturedParam } from '../utils/BTCommonApi'
 import {hashHistory} from 'react-router'
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
 import {getAccount} from "../tools/localStore";
 import { getDateAndTime } from '../utils/dateTimeFormat'
+import { getFavReqParam } from './BTFavoriteStar'
 
 const CollectMessages = messages.Collect;
-
-const CheckboxGroup = Checkbox.Group;
-const IconText = ({ type, text }) => (
-    <span>
-      <Icon type={type} style={{ marginRight: 8 }} />
-      {text}
-    </span>
-  );
 
 export default class BTList extends PureComponent{
     constructor(props){
         super(props);
         this.state={
             data:[],
-            username:'',
-            token:''
         }
     }
-    columns (data){
+    columns (){
       return [
         { title: <FormattedMessage {...CollectMessages.GoodName}/>, dataIndex: 'goods_name' },
         { title: <FormattedMessage {...CollectMessages.From}/>, dataIndex: 'username'},
@@ -41,7 +29,12 @@ export default class BTList extends PureComponent{
         { title: <FormattedMessage {...CollectMessages.Delete}/>, key:'x',
           render: (item) => {
             return (
-              <Popconfirm title= {<FormattedMessage {...CollectMessages.SureToDelete}/>} onConfirm={() => this.onDelete(item)}>
+              <Popconfirm
+                title={<FormattedMessage {...CollectMessages.SureToDelete} />}
+                onConfirm={() => this.onDelete(item)}
+                okText={<FormattedMessage {...CollectMessages.OK} />}
+                cancelText={<FormattedMessage {...CollectMessages.Cancel} />}
+                >
                 <a href="#">
                   <FormattedMessage {...CollectMessages.Delete}/>
                 </a>
@@ -87,89 +80,50 @@ export default class BTList extends PureComponent{
         console.log('checked = ', checkedValues);
     }
 
-    async onDelete(data){
-        // const data = [...this.state.data];
-        console.log(data)
-        let _block=await getBlockInfo();
-        if(_block.code!=0){
-            window.message.error(window.localeInfo['PersonalDemand.FailedToGetTheBlockMessages']);
-            return;
-        }
-        let block=_block.data;
-        //获取生成data的参数
-        let param={
-            "code":"favoritemng",
-            "action":"favoritepro",
-            "args":{
-                "user_name":getAccount().username,
-                "session_id":getAccount().token,
-                "op_type":"delete",
-                "goods_type":data.goodsType,
-                "goods_id":data.goodsId,
-                "signature":"signatest"
-            }
-        };
+    async onDelete(good_info){
+      console.log(good_info)
+      // packmsg
+      let favoriteParam = {
+        "Username": getAccount().username,
+        "GoodsId": good_info.goods_id,
+        "GoodsType": good_info.goodsType || 'asset',
+        "OpType": 3, // 3 是删除
+      }
+      // console.log('favoriteParam', favoriteParam);
+      let fetchParam = await getFavReqParam(favoriteParam)
 
-        let _getDataBin=(await getDataInfo(param));
-        if(_getDataBin.code!=0){
-            // window.message.error('获取区块数据失败');
-            window.message.error(window.localeInfo["Asset.FailedToGetTheBlockMessages"])
-            return;
+      BTFetch('/user/favorite', 'post', fetchParam)
+      .then(res => {
+        if (res.code == 1) {
+          let data = this.state.data
+          this.setState({
+            data: data.filter(o => o.goods_id != good_info.goods_id)
+          });
+          window.message.success(window.localeInfo["Asset.DeleteCollect"])
+        } else {
+          window.message.error(window.localeInfo["Asset.FailedCollect"])
         }
-        let favorite={
-            "ref_block_num": block.ref_block_num,
-            "ref_block_prefix": block.ref_block_prefix,
-            "expiration": block.expiration,
-            "scope": [
-                getAccount().username
-            ],
-            "read_scope": [],
-            "messages": [{
-                "code": "favoritemng",
-                "type": "favoritepro",
-                "authorization": [],
-                "data": _getDataBin.data.bin
-            }],
-            "signatures": []
-        };
-        BTFetch('/user/FavoriteMng','post',favorite)
-            .then(res=>{
-                if(res.code==1){
-                    // window.message.success('移除收藏成功')
-                    window.message.success(window.localeInfo["Asset.DeleteCollect"])
-
-                }else{
-                    // window.message.error('删除收藏失败')
-                    window.message.error(window.localeInfo["Asset.FailedCollect"])
-                }
-                console.log(res)
-            }).catch(error=>{
-                console.log(error)
-        });
+      }).catch(err => {
+        console.error('delete error', err);
+      })
 
     }
 
     componentDidMount(){
         if(!getAccount()){
-           message.warning('查询失败');
+           message.warning(window.localeInfo['Header.PleaseLogInFirst']);
            return;
         }
 
-        function getSignature({username,privateKey}){
-            let random = Math.random().toString(16).slice(2)
-            let msg = {username,random}
-            let query_pb = require('../lib/proto/query_pb')
-            let loginProto = queryProtoEncode(query_pb,msg)
-            let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
-            let signature = BTCryptTool.sign(hash, Buffer.from(privateKey,'hex')).toString('hex')
-           return {username,signature,random}
-        }
-
-        BTFetch('/user/GetFavorite', 'post', getSignature(getAccount())).then(res => {
+        BTFetch('/user/GetFavorite', 'post', {
+          ...getSignaturedParam(getAccount()),
+          goods_type: 'asset' // asset 或者 requirement
+        })
+        .then(res => {
             if(res.code==1){
                 let data=res.data;
                 this.setState({
-                    data:res.data.row
+                    data:res.data.row||[]
                 })
                 // console.log(data);
             }else{
@@ -181,8 +135,7 @@ export default class BTList extends PureComponent{
     }
 
     render(){
-        const { data } = this.state;
-        const columns = this.columns(data);
+        const columns = this.columns();
         return (
             <div className="container column">
                 <Table

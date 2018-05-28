@@ -30,16 +30,16 @@ export default class BTWalletItem extends PureComponent{
         let account_name = accountName
         let result = BTIpcRenderer.getKeyStore({username,account_name})
         if(result.error){
-            window.message.error("导出失败");
+            window.message.error(window.localeInfo["Header.FailedToExportedThekeystore"]);
             return
         }
         BTIpcRenderer.exportKeyStore(accountName,result.keyStoreObj)
     }
 
     onHandleOk(){
-        if(this.state.password == '') {window.message.error('请输入原密码');return}
-        if(this.state.newPassword == '') {window.message.error('请输入新密码');return}
-        if(this.state.reNewPassword == '') {window.message.error('请输入确认密码');return}
+        if(this.state.password == '') {window.message.error(window.localeInfo['Wallet.PleaseEnterTheOriginalPassword']);return}
+        if(this.state.newPassword == '') {window.message.error(window.localeInfo['Wallet.PleaseEnterTheNewPassword']);return}
+        if(this.state.reNewPassword == '') {window.message.error(window.localeInfo['Wallet.PleaseEnterTheNewPasswordAgain']);return}
         // 使用原密码解密账户
        try{
         let keyStoreFile = BTIpcRenderer.getKeyStore(this.props.accountName)
@@ -55,7 +55,7 @@ export default class BTWalletItem extends PureComponent{
         let cryptStr = BTCryptTool.aesEncrypto(privateKeyStr,this.state.newPassword)
         // 存储keystore文件到本地
         BTIpcRenderer.saveKeyStore(keyStore.account_name,cryptStr)
-        window.message.success('密码修改成功')
+        window.message.success(window.localeInfo['Wallet.ThePasswordHasBeenModifiedSuccessfully'])
         this.setState({
             visible:false,
             password:'',
@@ -63,7 +63,7 @@ export default class BTWalletItem extends PureComponent{
             reNewPassword:''
         })
        }catch(error){
-           window.message.error('密码修改失败')
+           window.message.error(window.localeInfo['Wallet.FailedToModifyThePassword'])
        }
     }
 
@@ -85,9 +85,9 @@ export default class BTWalletItem extends PureComponent{
                 onOk={()=>this.onHandleOk()}
                 onCancel={()=>this.onHandleCancel()}
             >
-                <Input style={{marginTop:20,marginBottom:20}} type="password" placeholder="请输入原密码" value={this.state.password} onChange={(e)=>this.setState({password:e.target.value})}/>
-                <Input style={{marginBottom:20}} type="password" placeholder="请输入新密码" value={this.state.newPassword} onChange={(e)=>this.setState({newPassword:e.target.value})}/>
-                <Input type="password" placeholder="请再次确认新密码" value={this.state.reNewPassword} onChange={(e)=>this.setState({reNewPassword:e.target.value})}/>
+                <Input style={{marginTop:20,marginBottom:20}} type="password" placeholder={window.localeInfo['Wallet.PleaseEnterTheOriginalPassword']} value={this.state.password} onChange={(e)=>this.setState({password:e.target.value})}/>
+                <Input style={{marginBottom:20}} type="password" placeholder={window.localeInfo['Wallet.PleaseEnterTheNewPassword']} value={this.state.newPassword} onChange={(e)=>this.setState({newPassword:e.target.value})}/>
+                <Input type="password" placeholder={window.localeInfo['Wallet.PleaseEnterTheNewPasswordAgain']} value={this.state.reNewPassword} onChange={(e)=>this.setState({reNewPassword:e.target.value})}/>
             </Modal>
 
             <div className="flex accountLeft">
