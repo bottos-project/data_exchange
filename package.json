@@ -1,18 +1,18 @@
 {
-  "name": "wallet",
+  "name": "BottosWallet",
   "version": "3.0.0alpha.4",
   "publishDate": "2018-5-24",
   "private": true,
   "main": "main.js",
   "homepage": ".",
-  "DEV": false,
+  "DEV": true,
   "MOCK": false,
   "description": "Bottos Wallet",
   "author": {
     "name": "bottos"
   },
   "scripts": {
-    "start": "webpack-dev-server --config ./config/webpack.config.dev.js --hot",
+    "start": "webpack-dev-server --config ./config/webpack.config.dev.js --hot && webpack --config ./config/webpack.config.worker.js --watch",
     "build": "webpack --config ./config/webpack.config.prod.js",
     "buildwithworker": "webpack --config ./config/webpack.config.prod.js && webpack --config ./config/webpack.config.worker.js",
     "electron-start": "electron .",

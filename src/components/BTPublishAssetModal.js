@@ -184,25 +184,29 @@ class BTPublishAssetModal extends PureComponent{
         "basic_info": {
           "username": account_info.username,
           "assetName": this.state.title,
-          "assetType": this.state.dataAssetType,
+          "assetType": Number.parseInt(this.state.dataAssetType),
           "featureTag": featureTag,
           "sampleHash": this.state.sample_hash,
           "storageHash": this.state.storage_hash,
           "expireTime": expire_time,
           "opType": 1,
-          "price": Number.parseInt(this.state.number) * Math.pow(10, 10),
+          "price": Number.parseInt(this.state.number) * Math.pow(10, 8),
           "description": this.state.description
         }
       }
 
       console.log('did basic_info', did.basic_info)
       let arrBuf = registAssetPack(did)
+      console.log({
+        arrBuf:BTCryptTool.buf2hex(arrBuf)
+      })
       let params = Object.assign({}, _message)
       params.param = arrBuf
 
       let sign = BTSign.messageSign(params, privateKey)
       params.signature = sign.toString('hex')
       params.param = BTCryptTool.buf2hex(arrBuf)
+
 
       let url = '/asset/registerAsset'
 

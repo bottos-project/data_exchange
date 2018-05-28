@@ -49,6 +49,7 @@ module.exports = {
     "Header.FailedQuery":"Failed Query",
     "Header.PleaseEnterTheUserName":"Please Enter The User Name(3-10 lowercase letters)",
     "Header.PleaseEnterThePassword":"Please Enter The Password",
+    "Header.PleaseEnterTheKeystore":"Please Enter the Keystore Content",
     "Header.PleaseEnterTheVerificationCode":"Please Enter The Verification Code",
     "Header.PleaseEnterTheSurePassword":"Please Enter The Password again",
     "Header.PleaseEnterTheCompanyName":"Please Enter The Company Name",
@@ -75,6 +76,7 @@ module.exports = {
     "Login.ConfirmPassword":"Confirm Password",
     "Login.ImportTheKeyStore":"Import The KeyStore",
     "Login.VerifyCode":"VerifyCode",
+    "Login.Keystore":"Keystore",
 
     //dashboard
     "Dashboard.Dashboard":"Dashboard",

@@ -12,6 +12,7 @@ module.exports = {
     "Header.FailedQuery":"查询失败",
     "Header.PleaseEnterTheUserName":"请输入账户（3-10 位小写字母）",
     "Header.PleaseEnterThePassword":"请输入密码",
+    "Header.PleaseEnterTheKeystore":"请输入Keystore文本",
     "Header.PleaseEnterTheSurePassword":"请再次输入密码",
     "Header.PleaseEnterTheCompanyName":"请输入公司名",
     "Header.PleaseEnterTheVerificationCode":"请输入验证码",

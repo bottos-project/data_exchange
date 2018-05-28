@@ -22,6 +22,7 @@ export const registAssetPack = (did)=>{
 
     let arrExpireTime = BTPack.PackUint32(basic_info.expireTime)
     let arrOpType = BTPack.PackUint32(basic_info.opType)
+    console.log({price:basic_info.price})
     let arrPrice = BTPack.PackUint64(basic_info.price)
 
     let arrDescription = BTPack.PackStr16(basic_info.description)

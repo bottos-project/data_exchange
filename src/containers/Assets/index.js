@@ -7,7 +7,7 @@ import BTMyTag from '../../components/BTMyTag'
 import BTFetch from '../../utils/BTFetch'
 import CustomTabBar from '@/components/CustomTabBar'
 
-const keyMap = ['All', 'Text', 'Picture', 'Voice', 'Video']
+// const keyMap = ['All', 'Text', 'Picture', 'Voice', 'Video']
 
 export default class BTAssets extends Component {
     constructor(props) {
@@ -16,6 +16,7 @@ export default class BTAssets extends Component {
             dataSource: [],
             row_count: 0,
             activeKey: '0',
+            keyMap:[]
         };
 
         this.onChange = this.onChange.bind(this)
@@ -23,6 +24,20 @@ export default class BTAssets extends Component {
 
     componentDidMount() {
         this.getPagination(1, 10)
+        this.setKeyMap()
+    }
+
+    setKeyMap(){
+        let keyMapZh = ["全部","文本","图片","声音","视频"]
+        let keyMapEn = ['All', 'Text', 'Picture', 'Voice', 'Video']
+        let storage = window.localStorage;
+        let locale = storage.getItem('locale')
+        console.log({locale})
+        if(locale=='en-US'){
+            this.setState({keyMap:keyMapEn})
+        }else{
+            this.setState({keyMap:keyMapZh})
+        }
     }
 
     onChange(page,pageSize,assetType=this.state.activeKey) {
@@ -64,13 +79,12 @@ export default class BTAssets extends Component {
     }
 
     render() {
-
       if ( React.isValidElement(this.props.children) ) {
         return this.props.children
       }
       return (
         <div className='container column'>
-          <CustomTabBar onChange={this.handleChange} keyMap={keyMap} activeKey={this.state.activeKey} />
+          <CustomTabBar onChange={this.handleChange} keyMap={this.state.keyMap} activeKey={this.state.activeKey} />
           <List
             grid={{ gutter: 16, column: 4 }}
             dataSource={this.state.dataSource}
