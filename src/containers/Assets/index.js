@@ -51,7 +51,7 @@ export default class BTAssets extends Component {
         let param = {
             "page_size": pageSize,
             "page_num": page,
-            asset_type: Number.parseInt(asset_type)
+            assetType: Number.parseInt(assetType)
         };
 
         BTFetch(reqUrl,'POST',param).then(response=>{

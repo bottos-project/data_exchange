@@ -21,27 +21,44 @@ class BTOther extends PureComponent{
             Total_BTO:'',
             Total_Trans:'',
             newblock:'',
-            map:[]
+            nodes:[],
+            Total_Nodes:''
         }
     }
 
     componentDidMount(){
-        BTFetch('/dashboard/GetNodeInfos','GET').then(res => {
-            if (res && res.code == 1) {
-                if (res.data == null) {
-                    return ;
-                }
-                let node = [];
-                for(let i of res.data){
-                    node.push(i.address.split('|'));
-                }
-                this.props.setNodeInfos(res.data)
-                this.setState({
-                    map:node,
-                })
-            }
-        }).catch(error=>error)
+        // BTFetch('/dashboard/GetNodeInfos','GET').then(res => {
+        //     if (res && res.code == 1) {
+        //         if (res.data == null) {
+        //             return ;
+        //         }
+        //         let node = [];
+        //         for(let i of res.data){
+        //             node.push(i.address.split('|'));
+        //         }
+        //         this.props.setNodeInfos(res.data)
+        //         this.setState({
+        //             map:node,
+        //         })
+        //     }
+        // }).catch(error=>error)
+        this.getMaps()
     }
+
+
+    getMaps(){
+      let url = '/dashboard/GetNodeInfos'
+      BTFetch(url,'GET').then(response=>{
+          if(response && response.code==1){
+              let data = response.data
+              this.setState({nodes:data,Total_Nodes:data.length})
+          }
+      }).catch(error=>{
+          // console.log({error})
+      })
+    }
+
+
     render() {
       // const routeParams = this.props.routeParams
       // if (routeParams.name == 'allblocks') {
@@ -56,10 +73,10 @@ class BTOther extends PureComponent{
       return (
         <div className="container column">
           <div>
-              <BTOtherAllBlock />
+              <BTOtherAllBlock Total_Nodes={this.state.Total_Nodes}/>
           </div>
           <div>
-              <BTMap node={this.state.map} />
+              <BTMap node={this.state.nodes} />
           </div>
           <Row gutter={16}>
             <Col span={12}>

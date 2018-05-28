@@ -1,6 +1,20 @@
 import React,{PureComponent} from 'react'
 import { Map, Markers } from 'react-amap';
 
+const markers = [
+    {"position": {"longitude": 116.240405,"latitude": 39.953014}},
+    {"position": {"longitude": 117.006668,"latitude": 39.959003}},
+    {"position": {"longitude": 116.471118,"latitude": 39.607907}},
+    {"position": {"longitude": 116.214313,"latitude": 40.08658}},
+    {"position": {"longitude": 121.295489,"latitude": 31.250492}},
+    {"position": {"longitude": 121.141681,"latitude": 31.259884}},
+    {"position": {"longitude": 121.652545,"latitude": 31.250492}},
+    {"position": {"longitude": 121.545428,"latitude": 31.161224}},
+    {"position": {"longitude": 120.147418,"latitude": 30.154743}},
+    {"position": {"longitude": 119.949903,"latitude": 30.166617}},
+    {"position": {"longitude": 120.06114,"latitude": 30.104857}},
+]
+
 export default class BTMap extends PureComponent{
     constructor(props){
         super(props);
@@ -19,7 +33,7 @@ export default class BTMap extends PureComponent{
     }
 
     randomMarker(len){
-        return Array(len).fill(true).map((e, idx) => ({position: this.randomPosition()}))
+        return Array(len).fill(true).map((e, idx) => ({position: this.randomPosition(),idx:idx}))
     }
 
     randomMarkers() {
@@ -50,8 +64,14 @@ export default class BTMap extends PureComponent{
                 markers:nodes||[]
             })
         }
+    }
 
-
+    test(item){
+        return (
+            <div>
+                <span style={{color:"red"}}>{item.idx}</span>
+            </div>
+        )
     }
     render(){
         const YOUR_AMAP_KEY = '0ca394ad5386e23b5ebcca33db764d90'
@@ -62,13 +82,11 @@ export default class BTMap extends PureComponent{
                     zoom={0.9}
                     lang={this.state.lang}
                     zoomEnable={true}
-                    markers={this.state.markers}
                     useCluster={true}
                     isHotspot
                 >
-
                     <Markers
-                        markers={this.state.markers}
+                        markers={this.props.node}
                     />
                 </Map>
             </div>

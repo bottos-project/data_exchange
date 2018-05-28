@@ -13,7 +13,7 @@ class BTOtherAllBlock extends PureComponent{
             block_view:[],
             Total_BTO:'',
             Total_Trans:'',
-            Total_Nodes:'',
+            Total_Nodes:''
         }
     }
     componentDidMount(){
@@ -27,27 +27,28 @@ class BTOtherAllBlock extends PureComponent{
         });*/
         //获取Total_Trans总量
         BTFetch('/dashboard/GetTxNum','GET').then(res=>{
+            console.log({res:res})
             if(res&&res.code == 1){
                 this.setState({
                     Total_Trans:res.data.num
                 })
             }
         });
-
     }
+
 
     render(){
         return (
             <div>
                 <div className="OtherBlockDetails radius shadow">
-                    <div>
+                    {/* <div>
                         <div>
                             <span>
                                 <FormattedMessage {...BlockBrowsingMessages.TotalBTO}/>
                             </span>
                         </div>
                         <p>1,000,000,000</p>
-                    </div>
+                    </div> */}
                     <div>
                         <div>
                             <span>
@@ -70,7 +71,7 @@ class BTOtherAllBlock extends PureComponent{
                                  <FormattedMessage {...BlockBrowsingMessages.TotalNodes}/>
                              </span>
                         </div>
-                        <p>{this.props.totalNodeNum}</p>
+                        <p>{this.props.Total_Nodes}</p>
                     </div>
                 </div>
 
