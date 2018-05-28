@@ -3,7 +3,11 @@ const isUserName = (username)=>{
     return str.test(username)
 }
 
+const trim = (str)=>{
+    return str.replace(/(^\s*)|(\s*$)/g, "");
+}
 
 module.exports = {
-    isUserName
+    isUserName,
+    trim
 }
