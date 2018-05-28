@@ -7,6 +7,7 @@ import messages from '../../../../locales/messages'
 import {getAccount} from "../../../../tools/localStore";
 import { getDateAndTime } from "@/utils/dateTimeFormat";
 import { getSignaturedParam } from '@/utils/BTCommonApi'
+import { downloadFile } from '@/utils/BTDownloadFile'
 
 
 const PersonalAssetMessages = messages.PersonalAsset;
@@ -28,7 +29,7 @@ export default class BTHaveBought extends PureComponent{
               render: (price) => (
                 <div>
                     <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
-                    <span>{price/Math.pow(10,10)}</span>
+                    <span>{price/Math.pow(10, 8)}</span>
                 </div>
               )
             },
@@ -43,23 +44,29 @@ export default class BTHaveBought extends PureComponent{
             // { title: <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>, dataIndex: 'description', key: 'description',
             //   render: (item) => <span>{item.length <= 20 ? item : item.substring(0,20)+'...'}</span>
             // },
-            // { title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time', key: 'date',
-            //   render: getDateAndTime
-            // },
-            // { title: <FormattedMessage {...PersonalAssetMessages.AssetOperation} />, dataIndex: 'storage_path', key: 'x',
-            //   render: (item, record) => {
-            //     // console.log('record', record);
-            //     return <a href={item} download={record.asset_name}>
-            //         <Icon type="download" style={{color:"black",fontWeight:900}} />
-            //     </a>
-            //   }
-            // },
+            { title: <FormattedMessage {...PersonalAssetMessages.purchaseTime} />, dataIndex: 'timestamp',
+              render: getDateAndTime
+            },
+            {
+              title: <FormattedMessage {...PersonalAssetMessages.AssetOperation} />,
+              key: 'download',
+              render: (text, record) => (
+                  <a onClick={()=>this.download(record)}>
+                      <Icon type="download" />
+                  </a>
+              )
+            },
             /*{ title: 'From', dataIndex: '', key: 'y', render:() =>
                     <div>
                         <a href="#" style={{color:"#6d6df5"}}>Jack</a>
                     </div>
             }*/
         ];
+    }
+
+    async download(record) {
+      const { storage_hash: guid, asset_name: filename } = record
+      downloadFile(guid, filename, getAccount().username)
     }
 
     componentDidMount(){

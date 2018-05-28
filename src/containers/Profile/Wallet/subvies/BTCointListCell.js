@@ -36,7 +36,7 @@ export default class BTCointListCell extends PureComponent{
                           <FormattedMessage {...WalletMessages.AvailableCash}/>
                       </span>
                   </div>
-                  <div className="font25 colorRed">{props.balance/Math.pow(10,10)}</div>
+                  <div className="font25 colorRed">{props.balance/Math.pow(10, 8)}</div>
               </div>
               <div>
                   <Button type="primary" onClick={()=>this.transaction()}>

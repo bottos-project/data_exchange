@@ -34,7 +34,7 @@ export default class BTAssetDetail extends PureComponent{
             // { title: <FormattedMessage {...PersonalDemandMessages.FeatureTag}/>, dataIndex: 'feature_tag', key: 'type' },
             { title: <FormattedMessage {...PersonalDemandMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price' ,
               render:(price)=>{
-                return <span>{price/Math.pow(10,10)}</span>
+                return <span>{price/Math.pow(10, 8)}</span>
             }},
             { title: <FormattedMessage {...PersonalDemandMessages.DemandDescription}/>, dataIndex: 'description',
               render:(title)=>{

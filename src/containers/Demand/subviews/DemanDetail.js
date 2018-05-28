@@ -9,7 +9,7 @@ import './styles.less'
 import {getAccount} from "../../../tools/localStore";
 import CloseBack from '@/components/CloseBack'
 import { PackArraySize, PackStr16, PackUint32 } from '@/lib/msgpack/msgpack'
-
+import { downloadFile } from '@/utils/BTDownloadFile'
 const DemandMessages = messages.Demand;
 const { TextArea } = Input;
 
@@ -21,7 +21,9 @@ export default class BTDemanDetail extends PureComponent{
         exampledata: [{"asset_id": "filehashtest","asset_name": "assetnametest","description": "destest","expire_time": 345,"feature_tag":12345,"op_type":1,"price":888,"sample_hash":"hasttest","sample_path":"pathtest","storage_hash":"sthashtest","storage_path":"stpathtest","upload_date": 999}],
         username:''
       }
+      this.download = this.download.bind(this)
   }
+
   commitAsset(){
     message.destroy();
     if(!getAccount()){
@@ -54,6 +56,15 @@ export default class BTDemanDetail extends PureComponent{
       .catch(error => {
           message.warning(window.localeInfo["Demand.FailedToGetTheFileResourceSet"])
       })
+  }
+
+  download() {
+    let { sample_hash: guid, requirement_name: filename, username } = this.props.location.query
+    downloadFile(guid, filename, username)
+    .catch(e => {
+      console.dir(e);
+      console.error('download', e);
+    })
   }
 
   async handleFile(asset_id) {
@@ -155,7 +166,7 @@ export default class BTDemanDetail extends PureComponent{
                         <span>
                             <FormattedMessage {...DemandMessages.ExpectedPrice}/>
                         </span>
-                        {data.price/Math.pow(10,10)}
+                        {data.price/Math.pow(10, 8)}
                         <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
                     </p>
                     <p>
@@ -166,11 +177,11 @@ export default class BTDemanDetail extends PureComponent{
                     </p>
                 </div>
                     <ul>
-                       {/* <li>
-                            <Button onClick={()=>this.download(data.sample_path)} type="danger">
+                       <li>
+                            <Button type="primary" onClick={this.download}>
                                 <FormattedMessage {...DemandMessages.DownLoadTheSample}/>
                             </Button>
-                        </li>*/}
+                        </li>
                         <li>
                             <Button type="primary" onClick={()=>this.commitAsset()}>
                                 <FormattedMessage {...DemandMessages.ProvideTheAsset}/>

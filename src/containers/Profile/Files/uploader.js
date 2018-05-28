@@ -9,7 +9,7 @@ import { addFile, deleteFile, updateFile, updateUploadProgress } from '@/redux/a
 import { get_ms_short } from '@/utils/dateTimeFormat'
 import BTFetch from '@/utils/BTFetch'
 import { getBlockInfo, getSignaturedFetchParam } from "@/utils/BTCommonApi";
-import { file_server } from '@/utils/BTDownloadFile'
+import { file_server, BTFileFetch } from '@/utils/BTDownloadFile'
 import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/msgpack'
 
 // const fs = __non_webpack_require__('fs');
@@ -137,13 +137,8 @@ function getUploadURL(file) {
     slice: sliceInfo,
   }
 
-  return fetch(file_server + '/data/getFileUploadURL', {
-    method: 'post',
-    body: JSON.stringify(param),
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    })
-  }).then(res => res.json()).then(res => {
+  return BTFileFetch('/data/getFileUploadURL', param)
+  .then(res => {
     console.log('res', res);
     if (res.result == 200) {
       file.url = res.url
@@ -180,13 +175,8 @@ async function handleFileQueued(file) {
   console.log('文件大小', file.size);
   // console.log('hashList', hashList);
   // 3. 将 hashList 发到后端校验
-  fetch(file_server + '/data/fileCheck', {
-    method: 'post',
-    body: JSON.stringify({hash: hashList}),
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    })
-  }).then(res => res.json()).then(res => {
+  BTFileFetch('/data/fileCheck', {hash: hashList})
+  .then(res => {
     // console.log('res', res);
     if (res.is_exist == 0) {
       // 4. 校验通过，取得 guid 为 merkle_root_hash
@@ -286,7 +276,9 @@ function querySecondProgress(file) {
     } else if ( res.result == 200 && chunks == res.storage_done ) {
       // 说明存储的等于 上传完成的
       console.log('上传真的完成');
+      file.status = 'done'
       store.dispatch( updateUploadProgress(guid, 100) )
+      store.dispatch( updateFile(file) )
 
       // 成功之后的文件注册
       const storeAddr = res.storage_ip.map(({sguid, snode_ip}) => ({ sguid: sguid.slice(guid.length), snode_ip }) )
@@ -320,7 +312,7 @@ function querySecondProgress(file) {
       let b11 = PackStr16(originParam.info.storeAddr)
 
       let param = [...b1,...b2,...b3,...b4,...b5,...b6,...b7,...b8,...b9,...b10,...b11]
-      console.log('param', param);
+      // console.log('param', param);
 
       let blockInfo = await getBlockInfo()
       // console.log('blockInfo', blockInfo);

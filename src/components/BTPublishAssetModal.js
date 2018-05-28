@@ -144,6 +144,10 @@ class BTPublishAssetModal extends PureComponent{
     }
 
     async updata(){
+      if (!this.state.storage_hash) {
+        message.warning(window.localeInfo["PersonalAsset.PleaseChooseTheAsset"]);
+        return ;
+      }
       if(this.state.number<=0||this.state.number>=10000000000){
         message.warning(window.localeInfo["PersonalAsset.InputPrice"]);
         return;
@@ -190,16 +194,13 @@ class BTPublishAssetModal extends PureComponent{
           "storageHash": this.state.storage_hash,
           "expireTime": expire_time,
           "opType": 1,
-          "price": Number.parseInt(this.state.number) * Math.pow(10, 8),
+          "price": Number(this.state.number) * Math.pow(10, 8),
           "description": this.state.description
         }
       }
 
       console.log('did basic_info', did.basic_info)
       let arrBuf = registAssetPack(did)
-      console.log({
-        arrBuf:BTCryptTool.buf2hex(arrBuf)
-      })
       let params = Object.assign({}, _message)
       params.param = arrBuf
 
@@ -207,14 +208,13 @@ class BTPublishAssetModal extends PureComponent{
       params.signature = sign.toString('hex')
       params.param = BTCryptTool.buf2hex(arrBuf)
 
-
       let url = '/asset/registerAsset'
 
       BTFetch(url,'POST',params)
       .then(response=>{
         console.log({response})
         if(response && response.code==1){
-          window.message.success('success')
+          window.message.success(window.localeInfo['PersonalAsset.SuccessfulToRegisterTheAsset'])
         }else{
           window.message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
         }
@@ -244,7 +244,8 @@ class BTPublishAssetModal extends PureComponent{
               </Col>
               <Col span={18}>
                 <Button type='primary' examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>
-                    <FormattedMessage {...PersonalAssetMessages.SetScreeningSample}/>
+                  <Icon type="cloud-upload" />
+                  <FormattedMessage {...PersonalAssetMessages.SetScreeningSample}/>
                 </Button>
                 <span className='filename'>{
                     this.state.getFileNameTemp.length<=14
@@ -263,6 +264,7 @@ class BTPublishAssetModal extends PureComponent{
               </Col>
               <Col span={18}>
                 <Button type='primary' exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>
+                  <Icon type="cloud-upload" />
                   <FormattedMessage {...PersonalAssetMessages.SetScreeningFile}/>
                 </Button>
                 <span className='filename'>{

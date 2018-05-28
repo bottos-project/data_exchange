@@ -6,6 +6,7 @@ import {getAccount} from '../../tools/localStore'
 import BTFetch from '../../utils/BTFetch';
 import {List,message,Pagination} from 'antd'
 import CustomTabBar from '@/components/CustomTabBar'
+import { arTypeKeyMap } from '@/utils/keyMaps.js'
 
 // const keyMap = ['All', 'Text', 'Picture', 'Voice', 'Video']
 
@@ -40,14 +41,16 @@ export default class BTDemand extends PureComponent{
           this.setState({keyMap:keyMapZh})
       }
   }
-    onChange(page,page_size){
-        this.getPagination(page,page_size)
+
+    onChange(page, page_size){
+        this.getPagination(page, page_size, this.state.activeKey)
     }
-    getPagination(page,page_size){
+    getPagination(page, page_size, req_type = 0) {
         let reqUrl = '/requirement/query'
         let param={
             page_size,
             "page_num":page,
+            req_type: Number.parseInt(req_type)
         }
         BTFetch(reqUrl,'POST',param).then(response=>{
             if(response && response.code == 1){
@@ -68,6 +71,7 @@ export default class BTDemand extends PureComponent{
 
     handleChange = (activeKey) => {
       this.setState({ activeKey });
+      this.getPagination(1, 16, activeKey)
     }
 
     render(){

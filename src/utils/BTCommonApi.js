@@ -45,8 +45,34 @@ export function getSignaturedFetchParam({fetchParam, privateKey}) {
   let encodeBuf = messageProtoEncode(message_pb, fetchParam)
   let hashData = BTCryptTool.sha256(BTCryptTool.buf2hex(encodeBuf))
   let sign = BTCryptTool.sign(hashData, privateKey)
+  console.log('sign', sign);
   fetchParam.signature = sign.toString('hex')
+  console.log('fetchParam.signature', fetchParam.signature);
   // fetchParam.param = param.map(s1 => int10ToStr16(s1)).join('')
   fetchParam.param = BTCryptTool.buf2hex(fetchParam.param)
   return fetchParam
 }
+
+// export function BTRowFetch(url, param) {
+//   BTFetch(reqUrl, 'POST', param)
+//   .then(res => {
+//     if (res) {
+//       if (res.code == 1) {
+//         let data = res.data
+//         if (data.row == null) {
+//           return {
+//
+//           }
+//         } else {
+//           return data.row;
+//         }
+//       } else {
+//         console.error('BTRowFetch error', res.details);
+//         throw new Error(res.code)
+//       }
+//
+//     } else {
+//       throw new Error('request fail')
+//     }
+//   })
+// };

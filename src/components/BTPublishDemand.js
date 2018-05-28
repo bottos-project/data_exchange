@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
 import moment from "moment"
-import { Input, DatePicker, message, Button, Row, Col } from 'antd'
+import { Input, DatePicker, Icon, Button, Row, Col } from 'antd'
 import BTAssetList from './BTAssetList'
 import {getBlockInfo, getDataInfo, getSignaturedParam } from "../utils/BTCommonApi";
 import BTFetch from "../utils/BTFetch";
@@ -153,7 +153,7 @@ class BTPublishDemand extends PureComponent{
           "FeatureTag": 1,
           "SampleHash": this.state.getFileNameTemp || '',
           "ExpireTime": new Date(this.state.dateString).getTime() / 1000,
-          "Price": this.state.number * Math.pow(10, 10),
+          "Price": this.state.number * Math.pow(10, 8),
           "Description": this.state.textArea,
           "FavoriFlag": 1,
           "OpType": 1
@@ -226,6 +226,7 @@ class BTPublishDemand extends PureComponent{
                   examplefile={this.state.exampledata}
                   onClick={()=>this.commitAsset('assetTemp')}
                 >
+                  <Icon type="cloud-upload" />
                   <FormattedMessage {...PersonalAssetMessages.SetScreeningSample}/>
                 </Button>
                 <span className='filename'>{

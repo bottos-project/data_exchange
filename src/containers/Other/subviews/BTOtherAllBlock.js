@@ -26,7 +26,7 @@ class BTOtherAllBlock extends PureComponent{
             }
         });*/
         //获取Total_Trans总量
-        BTFetch('/dashboard/GetAllTxNum','GET').then(res=>{
+        BTFetch('/dashboard/GetTxNum','GET').then(res=>{
             if(res&&res.code == 1){
                 this.setState({
                     Total_Trans:res.data.num

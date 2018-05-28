@@ -96,7 +96,7 @@ export default class BTDashboard extends PureComponent {
                    let ExchangeCoin=[];
                    for(let i of res.data){
                        let time=(new Date(i.time *1000)).toLocaleDateString();
-                       ExchangeCoin.push({day:time,ExchangeCoin:i.count / Math.pow(10, 10)})
+                       ExchangeCoin.push({day:time,ExchangeCoin:i.count / Math.pow(10, 8)})
                    };
                    this.setState({
                        ExchangeCoin,
@@ -165,13 +165,13 @@ export default class BTDashboard extends PureComponent {
         for (let item of data) {
           if ( validatedKeys.includes(item.type) ) {
             if (item.type == 'TxAmount') {
-              obj[item.type] = parseFloat((item.total / Math.pow(10, 10)).toFixed(3))
+              obj[item.type] = parseFloat((item.total / Math.pow(10, 8)).toFixed(3))
             } else {
               obj[item.type] = item.total
             }
           }
         }
-        console.log('obj', obj);
+        // console.log('obj', obj);
         this.setState(obj);
       });
       //注册人数

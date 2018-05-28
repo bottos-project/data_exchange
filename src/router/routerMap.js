@@ -73,7 +73,7 @@ class RouterMap extends PureComponent {
                 <Route path="new" name='CreateNewAccount' breadcrumbName='CreateNewAccount' component={Register} />
               </Route>
             </Route>
-            <Route path="check" name='Check' breadcrumbName='Check' component={BTCheck} />
+            <Route path="check" name='MyMessages' breadcrumbName='MyMessages' component={BTCheck} />
             <Route path="presale" name='PreSale' breadcrumbName='PreSale' component={BTPreSale} />
             <Route path="collect" name='Collect' breadcrumbName='Collect' component={BTCollect} />
             {/* <Route path="shopcart" breadcrumbName='Shopcart' component={BTShopCart} /> */}

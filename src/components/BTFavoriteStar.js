@@ -79,7 +79,7 @@ class BTFavoriteStar extends Component {
     // console.log('param', param);
 
     let privateKey = Buffer.from(getAccount().privateKey, 'hex')
-    // console.log('privateKey', privateKey);
+    console.log('privateKey', privateKey);
 
     let blockInfo = await getBlockInfo()
 

@@ -145,6 +145,11 @@ module.exports = {
     "Asset.SuccessfulCollect":"Successful Collect",
     "Asset.DeleteCollect":"Delete collection successfully",
     "Asset.FailedCollect":"Failed Collect",
+    "Asset.All":"All",
+    "Asset.Text":"Text",
+    "Asset.Picture":"Picture",
+    "Asset.Voice":"Voice",
+    "Asset.Video":"Video",
 
 
     //history
@@ -203,6 +208,7 @@ module.exports = {
     "PersonalAsset.ClickOrDragFileToThisAreaToUpload":"Click Or Drag File To This Area To Upload",
     "PersonalAsset.PublishDate":"Publish Date",
     "PersonalAsset.UploadTime":"Upload Time",
+    "PersonalAsset.purchaseTime":"Purchase Time",
     "PersonalAsset.ExpireTime":"Expire Time",
     "PersonalAsset.AssetFileName":"File Name",
     "PersonalAsset.AssetOperation":"Operation",
@@ -226,6 +232,7 @@ module.exports = {
     "PersonalAsset.FailedToGetUrlOfDocumentStorage":"Failed To Get Url Of Document Storage",
     "PersonalAsset.FailedToUploadTheFile":"Failed To Upload The File",
     "PersonalAsset.SuccessfulToUploadTheFile":"Successful To Upload The File",
+    "PersonalAsset.PleaseChooseTheAsset":"Please Choose The Asset",
     "PersonalAsset.PleaseImproveTheInformation":"Please Improve The Information",
     "PersonalAsset.InputPrice":"Please Enter the Appropriate Price",
     "PersonalAsset.FailedToGetTheGetDataBin":"Failed To Get The Get Data Bin",
@@ -283,7 +290,9 @@ module.exports = {
     "Collect.MyCollection":"Favorites",
     "Collect.WelcomeToCollectMessages":"Welcome to My Favorites",
     "Collect.GoodId":"Goods Id",
+    "Collect.GoodName":"Goods Name",
     "Collect.From":"From",
+    "Collect.Time":"Created Time",
     "Collect.Delete":"Delete",
     "Collect.ViewTheDetails":"View The Details",
     "Collect.View":"View",

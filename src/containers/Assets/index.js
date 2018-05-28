@@ -8,6 +8,7 @@ import BTFetch from '../../utils/BTFetch'
 import CustomTabBar from '@/components/CustomTabBar'
 
 // const keyMap = ['All', 'Text', 'Picture', 'Voice', 'Video']
+import { arTypeKeyMap } from '@/utils/keyMaps.js'
 
 export default class BTAssets extends Component {
     constructor(props) {
@@ -50,11 +51,11 @@ export default class BTAssets extends Component {
         let param = {
             "page_size": pageSize,
             "page_num": page,
-            assetType:assetType
+            asset_type: Number.parseInt(asset_type)
         };
 
         BTFetch(reqUrl,'POST',param).then(response=>{
-            console.log({response})
+            // console.log('response', response)
             if (response && response.code == 1) {
               const {row_count, row} = response.data
                 if (row_count == 0 || !Array.isArray(row)) {
@@ -79,6 +80,7 @@ export default class BTAssets extends Component {
     }
 
     render() {
+
       if ( React.isValidElement(this.props.children) ) {
         return this.props.children
       }

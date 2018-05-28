@@ -354,7 +354,27 @@ module.exports = {
         FeatureTag:{
             id:'Asset.FeatureTag',
             defaultMessage:'标签:'
-        }
+        },
+        All:{
+            id:'Asset.All',
+            defaultMessage:'所有'
+        },
+        Text:{
+            id:'Asset.Text',
+            defaultMessage:'文本'
+        },
+        Picture:{
+            id:'Asset.Picture',
+            defaultMessage:'图片'
+        },
+        Voice:{
+            id:'Asset.Voice',
+            defaultMessage:'音频'
+        },
+        Video:{
+            id:'Asset.Video',
+            defaultMessage:'视频'
+        },
     },
     History:{
         HistoryTransaction:{
@@ -556,6 +576,10 @@ module.exports = {
         UploadTime:{
             id:"PersonalAsset.UploadTime",
             defaultMessage:"上传时间"
+        },
+        purchaseTime:{
+            id:'PersonalAsset.purchaseTime',
+            defaultMessage:'购买时间'
         },
         ExpireTime:{
             id:'PersonalAsset.ExpireTime',
@@ -764,9 +788,17 @@ module.exports = {
             id:"Collect.GoodId",
             defaultMessage:"商品ID"
         },
+        GoodName:{
+            id:"Collect.GoodName",
+            defaultMessage:"商品名称"
+        },
         From:{
             id:"Collect.From",
             defaultMessage:"来源"
+        },
+        Time:{
+            id:"Collect.Time",
+            defaultMessage:"创建时间"
         },
         Delete:{
             id:"Collect.Delete",

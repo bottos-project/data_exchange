@@ -51,16 +51,7 @@ export default class Transfer extends PureComponent{
            }],
            "signatures": []
        };
-       /* BTFetch('/user/transfer','post',data,{
-            full_path:true,
-        }).then(res=>{
-            console.log(res);
-            if(res.code==1){
-                alert('转账成功')
-            }else{
-                alert('转账失败')
-            }
-        })*/
+
 
     }
     clear(){

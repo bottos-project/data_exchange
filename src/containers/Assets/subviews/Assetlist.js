@@ -125,7 +125,7 @@ class Assetlist extends Component {
                 <p>{data.feature_tag}</p>
                 <div>
                   <FormattedMessage {...AssetMessages.ExpectedPrice}/>
-                  <span>{data.price/Math.pow(10,10)}</span>
+                  <span>{data.price/Math.pow(10, 8)}</span>
                   <img src="./img/token.png" width='18' alt="" style={{paddingLeft:'4px'}}/>
                 </div>
             </div>

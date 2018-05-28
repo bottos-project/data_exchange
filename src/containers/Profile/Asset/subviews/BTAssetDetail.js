@@ -52,7 +52,7 @@ export default class BTAssetDetail extends PureComponent{
               title: <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>,
               dataIndex: 'price',
               render: (price) => <div>
-                  <span>{price/Math.pow(10,10)}</span>
+                  <span>{price/Math.pow(10, 8)}</span>
               </div>
             },
             {
