@@ -207,7 +207,6 @@ class BTPublishAssetModal extends PureComponent{
       let sign = BTSign.messageSign(params, privateKey)
       params.signature = sign.toString('hex')
       params.param = BTCryptTool.buf2hex(arrBuf)
-      console.log('params.param', params.param);
 
       let url = '/asset/registerAsset'
 

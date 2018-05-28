@@ -6,6 +6,8 @@ import Assetlist from './subviews/Assetlist'
 import BTMyTag from '../../components/BTMyTag'
 import BTFetch from '../../utils/BTFetch'
 import CustomTabBar from '@/components/CustomTabBar'
+
+// const keyMap = ['All', 'Text', 'Picture', 'Voice', 'Video']
 import { arTypeKeyMap } from '@/utils/keyMaps.js'
 
 export default class BTAssets extends Component {
@@ -15,6 +17,7 @@ export default class BTAssets extends Component {
             dataSource: [],
             row_count: 0,
             activeKey: '0',
+            keyMap:[]
         };
 
         this.onChange = this.onChange.bind(this)
@@ -22,14 +25,28 @@ export default class BTAssets extends Component {
 
     componentDidMount() {
         this.getPagination(1, 10)
+        this.setKeyMap()
     }
 
-    onChange(page,pageSize,asset_type=this.state.activeKey) {
+    setKeyMap(){
+        let keyMapZh = ["全部","文本","图片","声音","视频"]
+        let keyMapEn = ['All', 'Text', 'Picture', 'Voice', 'Video']
+        let storage = window.localStorage;
+        let locale = storage.getItem('locale')
+        console.log({locale})
+        if(locale=='en-US'){
+            this.setState({keyMap:keyMapEn})
+        }else{
+            this.setState({keyMap:keyMapZh})
+        }
+    }
+
+    onChange(page,pageSize,assetType=this.state.activeKey) {
         // this.setState({dataSource:[]});
-        this.getPagination(page,pageSize,asset_type)
+        this.getPagination(page,pageSize,assetType)
     }
 
-    getPagination(page,pageSize, asset_type=0) {
+    getPagination(page,pageSize,assetType=0) {
         let reqUrl = '/asset/queryAllAsset';
         let param = {
             "page_size": pageSize,
@@ -69,10 +86,7 @@ export default class BTAssets extends Component {
       }
       return (
         <div className='container column'>
-          <CustomTabBar
-            onChange={this.handleChange} keyMap={arTypeKeyMap}
-            activeKey={this.state.activeKey}
-          />
+          <CustomTabBar onChange={this.handleChange} keyMap={this.state.keyMap} activeKey={this.state.activeKey} />
           <List
             grid={{ gutter: 16, column: 4 }}
             dataSource={this.state.dataSource}

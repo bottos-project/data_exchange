@@ -238,6 +238,10 @@ module.exports = {
         VerifyCode:{
             id:"Login.VerifyCode",
             defaultMessage:'验证码'
+        },
+        Keystore:{
+            id:"Login.Keystore",
+            defaultMessage:"Keystore"
         }
     },
     Demand:{

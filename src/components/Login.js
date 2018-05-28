@@ -228,12 +228,12 @@ class Login extends PureComponent{
           <div className='route-children-container-title'><FormattedMessage {...HeaderMessages.Login} /></div>
           <Row style={rowStyle}>
             <Col span={5} style={{ textAlign: 'right' }}>
-              <span className='label'><FormattedMessage {...LoginMessages.Account} /></span>
+              <span className='label'><FormattedMessage {...LoginMessages.Keystore} /></span>
             </Col>
             <Col span={18}>
               <TextArea
                 disabled={!!this.state.username}
-                placeholder={window.localeInfo["Header.PleaseEnterTheUserName"]}
+                placeholder={window.localeInfo["Header.PleaseEnterTheKeystore"]}
                 rows={6}
                 value={this.state.keyStore}
                 onChange={(e)=>this.setState({keyStore:e.target.value})}
