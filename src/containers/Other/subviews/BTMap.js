@@ -79,6 +79,7 @@ export default class BTMap extends PureComponent{
         return (
             <div style={{display:"flex",height:"40vh",width:"100%",float:"right"}} >
                <Map
+                    protocol="http"
                     amapkey={YOUR_AMAP_KEY}
                     protocol='http'
                     zoom={0.9}
@@ -88,7 +89,6 @@ export default class BTMap extends PureComponent{
                     isHotspot
                 >
                     <Markers
-                        protocol='http'
                         markers={this.props.node}
                     />
                 </Map>

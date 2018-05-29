@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import {connect} from 'react-redux'
+import {setSpin} from '../../../../redux/actions/HeaderAction'
 import PropTypes from 'prop-types';
 import { Button, Input, Form, message, InputNumber, Col, Row } from 'antd'
 import BTFetch from '../../../../utils/BTFetch';
@@ -11,8 +12,10 @@ import BTNumberInput from '../../../../components/BTNumberInput'
 import ConfirmButton from '@/components/ConfirmButton'
 import {transactionPack} from '../../../../lib/msgpack/BTPackManager'
 import { SIGPOLL } from 'constants';
+import * as BTCrypto from 'bottos-js-crypto'
 const WalletMessages = messages.Wallet;
 const FormItem = Form.Item;
+
 
 const formItemLayout = {
     labelCol: {
@@ -36,9 +39,12 @@ class Transaction extends PureComponent{
     }
 
     async onHandleSubmit(){
+        let {resetFields} = this.props.form
         let account_name = this.props.selectWallet
         let blockInfo = await getBlockInfo()
-        let accountInfo = this.props.account_info;
+        let localStorage = window.localStorage
+
+        let accountInfo = JSON.parse(localStorage.account_info)
         let username = accountInfo.username
         const { getFieldDecorator,getFieldsValue,getFieldValue,setFields } = this.props.form;
         let fieldValues = getFieldsValue()
@@ -57,42 +63,56 @@ class Transaction extends PureComponent{
             return}
         let keyStoreResult = BTIPcRenderer.getKeyStore({username:username,account_name:account_name})
         let keyStoreObj = keyStoreResult.keyStoreObj
-        let privateKeyResult = BTIPcRenderer.decryptKeystore({password:fieldValues.password,keyStoreObj})
-        if(privateKeyResult.error){
-            window.message.error(window.localeInfo["Wallet.TheWrongPassword"])
-            return
+        // 开启遮罩
+        this.props.setSpin(true)
+        var myWorker = new Worker('worker.js');
+        let postData = {
+          type: 'decryptKeystore',
+          data: {password:fieldValues.password,keyStoreObj}
         }
-        let privateKeyStr = privateKeyResult.privateKey
-        let privateKey = Buffer.from(privateKeyStr,'hex')
-        let did = {
-            "from": account_name,
-            "to": fieldValues.to,
-            "price": fieldValues.quantity,
-            "remark": "April's rent"
+        myWorker.postMessage(postData);
+        myWorker.onmessage = (e)=>{
+            let data = e.data
+            let privateKeyStr = data.privateKey
+            let privateKey = Buffer.from(privateKeyStr,'hex')
+            let did = {
+                "from": account_name,
+                "to": fieldValues.to,
+                "price": fieldValues.quantity * Math.pow(10,8),
+                "remark": "April's rent"
+            }
+            let didBuf = transactionPack(did)
+            let fetchParam = {
+            "version": 1,
+            ...blockInfo,
+            "sender": account_name,
+            "contract": "bottos",
+            "method": "transfer",
+            "sig_alg": 1
+            }
+
+            fetchParam.param = didBuf
+            getSignaturedFetchParam({fetchParam, privateKey})
+            let url = '/user/transfer'
+            BTFetch(url,'POST', fetchParam)
+            .then(response=>{
+                if(response && response.code==1){
+                    message.success(window.localeInfo["Wallet.SuccessfulToTransferAccounts"])
+                    resetFields()
+                }else{
+                    message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
+                }
+                this.props.setSpin(false)
+            }).catch(error=>{
+                message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
+                this.props.setSpin(false)
+            })
         }
-        let didBuf = transactionPack(did)
 
-        let fetchParam = {
-          "version": 1,
-          ...blockInfo,
-          "sender": account_name,
-          "contract": "bottos",
-          "method": "transfer",
-          "sig_alg": 1
+        myWorker.onerror = (e)=>{
+            message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
+            this.props.setSpin(false)
         }
-
-        fetchParam.param = didBuf
-
-        console.log('privateKey', privateKey);
-        getSignaturedFetchParam({fetchParam, privateKey})
-
-        let url = '/user/transfer'
-        BTFetch(url,'POST', fetchParam)
-        .then(response=>{
-            console.log({response})
-        }).catch(error=>{
-            console.log({error})
-        })
     }
 
     onChange(value){
@@ -147,14 +167,15 @@ class Transaction extends PureComponent{
     }
 }
 
-let pk = Buffer.from('aaab', 'hex')
-console.log('pk', pk);
-
 const TransactionForm = Form.create()(Transaction)
 
-function mapStateToProps(state){
-    const account_info = state.headerState.account_info
-    return { account_info }
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setSpin(isloading) {
+            console.log({isloading})
+          dispatch(setSpin(isloading))
+        }
+    }
 }
 
-export default connect(mapStateToProps)(TransactionForm)
+export default connect(null,mapDispatchToProps)(TransactionForm)
