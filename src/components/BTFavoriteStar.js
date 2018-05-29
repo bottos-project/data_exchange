@@ -107,14 +107,11 @@ class BTFavoriteStar extends Component {
   }
 
   render() {
-    return (
-      <a>{
-        this.state.spin ?
-        <Spin size="small" />
-        :
-        <Icon type="star-o" onClick={this.toggleFavorite} />
-      }</a>
-    )
+    if (this.state.spin) {
+      return <Spin size='large' />
+    } else {
+      return <Icon type="star-o" onClick={this.toggleFavorite} />;
+    }
   }
 
 }

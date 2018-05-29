@@ -113,7 +113,7 @@ module.exports = {
     "Demand.ThereIsNoDataForTheTimeBeing":"There Is No Data For The Time Being",
     "Demand.FailedToGetTheFileResourceSet":"Failed To Get The File Resource Set",
     "Demand.ThereIsNoAssetForTheTimeBeing":"There Is No Asset For The Time Being",
-    "Demand.FailedToGetTheBlockMessages":"Failed To Get The Block Messages",
+    "Demand.FailedToGetTheRequirementDetails":"Failed To Get The Requirement Details",
     "Demand.SuccessfulPromote":"Successful Promote",
     "Demand.FailedPromote":"Failed Promote",
 

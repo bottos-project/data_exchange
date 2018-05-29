@@ -8,6 +8,7 @@ import BTAssetList from './BTAssetList'
 import './styles.less'
 import {getAccount} from "../../../tools/localStore";
 import CloseBack from '@/components/CloseBack'
+import BTFavoriteStar from '@/components/BTFavoriteStar'
 import { PackArraySize, PackStr16, PackUint32 } from '@/lib/msgpack/msgpack'
 import { downloadFile } from '@/utils/BTDownloadFile'
 const DemandMessages = messages.Demand;
@@ -125,7 +126,8 @@ export default class BTDemanDetail extends PureComponent{
 
     fetchParam = getSignaturedFetchParam({fetchParam, privateKey})
 
-    BTFetch('/asset/preSaleNotice', 'post', fetchParam).then(res => {
+    BTFetch('/asset/preSaleNotice', 'post', fetchParam)
+    .then(res => {
         if (res.code==1 && res.data != 'null') {
             window.message.success(window.localeInfo["Demand.SuccessfulPromote"])
         }else{
@@ -134,12 +136,12 @@ export default class BTDemanDetail extends PureComponent{
     })
   }
 
-  componentDidMount(){
-    console.log('this.props.location', this.props.location);
-  }
+  // componentDidMount(){
+  //   console.log('this.props.location', this.props.location);
+  // }
 
   render() {
-      let data = this.props.location.query||[];
+      let data = this.props.location.query||{};
       let date=(new Date((data.expire_time)*1000)).toLocaleDateString()
       return (
           <div className='route-children-container route-children-bg'>
@@ -151,7 +153,11 @@ export default class BTDemanDetail extends PureComponent{
                     <FormattedMessage {...DemandMessages.DataDetails}/>
                 </h2>
                 <div className="mainData">
+                  <div className="headAndShop">
                     <h1>{data.requirement_name}</h1>
+                    <BTFavoriteStar type='requirement' id={data.requirement_id} />
+                  </div>
+
                     <p>
                         <FormattedMessage {...DemandMessages.Publisher}/>
                         {data.username}

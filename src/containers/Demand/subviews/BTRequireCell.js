@@ -6,7 +6,6 @@ import { Icon } from 'antd'
 import BTFetch from '../../../utils/BTFetch'
 import {getBlockInfo,getDataInfo} from '../../../utils/BTCommonApi'
 import './styles.less'
-import BTFavoriteStar from '@/components/BTFavoriteStar'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from "../../../tools/localStore";
@@ -23,28 +22,36 @@ const IconText = ({ type, text }) => (
 export default class BTRequireCell extends PureComponent{
 
     handleClick = () => {
-      // console.log('hashHistory', hashHistory);
-      const { linkto, ...queryObject } = this.props
-      const q = '?' + querystring.stringify(queryObject)
-      hashHistory.push(linkto + q)
+
+      const username = getAccount() ? getAccount().username : ''
+      const { linkto, requirement_id } = this.props
+
+      BTFetch('/requirement/QueryById', 'post', {
+        req_id: requirement_id,
+        sender: username
+      })
+      .then(res => {
+        if (!res || res.code != 1) {
+          throw new Error('Failed To Get The Requirement Details')
+        }
+        const q = '?' + querystring.stringify(res.data)
+        hashHistory.push(linkto + q)
+      })
+      .catch(err => {
+        window.message.error(window.localeInfo['Demand.FailedToGetTheRequirementDetails'])
+        console.error('/requirement/QueryById err', err);
+      })
+
     }
 
     render(){
         let data = this.props;
-        let linkto = this.props.linkto || '/';
-        let path = {
-            pathname:linkto,
-            state:data
-        }
         let time=new Date((data.expire_time)*1000).toLocaleDateString({...DemandMessages.En});
         return (
             <div className="assetList" onClick={this.handleClick}>
-              <div className="headAndShop">
-                <h4 className='txt_cut'>
-                  {data.requirement_name}
-                </h4>
-                <BTFavoriteStar type='requirement' id={data.requirement_id} />
-              </div>
+              <h4 className='txt_cut'>
+                {data.requirement_name}
+              </h4>
               <p>
                 <FormattedMessage {...DemandMessages.Publisher}/>
                 {data.username}
@@ -56,7 +63,6 @@ export default class BTRequireCell extends PureComponent{
               </div>
               <span>
                 <FormattedMessage {...DemandMessages.ExpireTime}/>
-                {/*{data.expire_time}*/}
                 {time}
               </span>
             </div>

@@ -53,7 +53,7 @@ module.exports = {
     "Demand.ThereIsNoMarketDemandForTheTimeBeing":"暂无市场需求",
     "Demand.FailedToGetTheFileResourceSet":"获取文件资源库失败",
     "Demand.ThereIsNoAssetForTheTimeBeing":"暂无提交资产",
-    "Demand.FailedToGetTheBlockMessages":"获取区块信息失败",
+    "Demand.FailedToGetTheRequirementDetails":"获取需求详情失败",
     "Demand.SuccessfulPromote":"推销资产成功",
     "Demand.FailedPromote":"推销资产失败",
 

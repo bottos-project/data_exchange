@@ -1,11 +1,12 @@
 import React,{PureComponent} from 'react'
-import { Carousel, Button, Tag, Modal, Input } from 'antd';
+import { Row, Col, Button, Tag, Modal, Input } from 'antd';
 import BTFetch from '../../../utils/BTFetch'
 import { getBlockInfo, getSignaturedParam, getSignaturedFetchParam } from '../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from '../../../tools/localStore'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
+import BTFavoriteStar from '@/components/BTFavoriteStar'
 
 import CloseBack from '@/components/CloseBack'
 
@@ -18,14 +19,12 @@ const AssetMessages = messages.Asset;
 const { TextArea } = Input;
 const confirm = Modal.confirm;
 // const username=JSON.parse(window.localStorage.account_info).username||'';
-// const token=JSON.parse(window.localStorage.account_info).token||'';
 export default class BTAssetDetail extends PureComponent{
     constructor(props) {
         super(props)
         this.state = {
             data: this.props.location.query||[],
             username: '',
-            token: '',
             getAssetType: '',
             visible: false
         }
@@ -149,82 +148,105 @@ export default class BTAssetDetail extends PureComponent{
     }
 
     render() {
-        let data=this.props.location.query;
-        let time=new Date((data.expire_time)*1000).toLocaleDateString();
-        let tagsArr = data.feature_tag.split('-')
-        let tags = tagsArr.map((tag, index) => <Tag key={index}>{tag}</Tag>)
+
+      let data=this.props.location.query;
+      let time=new Date((data.expire_time)*1000).toLocaleDateString();
+      let tagsArr = data.feature_tag.split('-')
+      let tags = tagsArr.map((tag, index) =>
+        tag != "" &&
+        <Tag key={index}>{tag}</Tag>
+      )
+
         return (
           <div className='route-children-container route-children-bg'>
             <CloseBack />
             <div className="assetDetailBox">
-                <h2 className='route-children-container-title'>
-                    <FormattedMessage {...AssetMessages.DataDetails}/>
-                </h2>
-                <div className="mainData">
-                    <h1>{data.asset_name}</h1>
-                    <p>
-                        <span>
-                            <FormattedMessage {...AssetMessages.AssetID}/>
-                        </span>
-                        {data.asset_id}
-                        </p>
-                    <p>
-                        <FormattedMessage {...AssetMessages.Publisher}/>
-                        {data.username}
-                    </p>
-
-                    <p>
-                        <span>
-                            <FormattedMessage {...AssetMessages.AssetType}/>
-                        </span>
-                        {arTypeKeyMap[data.asset_type]}
-                    </p>
-                    <p>
-                        <span>
-                            <FormattedMessage {...AssetMessages.ExpectedPrice}/>
-                        </span>
-                        {data.price / Math.pow(10, 8)}
-                        <img src='./img/token.png' width='15' style={{marginLeft:6}} />
-                    </p>
-                    <p>
-                      <FormattedMessage {...AssetMessages.ExpireTime}/>
-                      {getDateAndTime(time)}
-                    </p>
-                    {/*<Tag color="magenta">{data.feature_tag1}</Tag>*/}
-                    <div className="tag">
-                        <FormattedMessage {...AssetMessages.FeatureTag}/>
-                        {/*<FormattedMessage {...AssetMessages.ExpireTime}/>*/}
-                        {tags}
-                    </div>
-
+              <h2 className='route-children-container-title'>
+                <FormattedMessage {...AssetMessages.DataDetails}/>
+              </h2>
+              <div className="mainData">
+                <div className="headAndShop">
+                  <h1>{data.asset_name}</h1>
+                  <BTFavoriteStar type='asset' id={data.asset_id} />
                 </div>
-                <ul>
-                    <li>
-                        <Button onClick={()=>this.showModal()} type="primary" className="buyButton">
-                            <FormattedMessage {...AssetMessages.BuyAssets}/>
-                        </Button>
-                    </li>
-                    <li>
-                        <Button onClick={()=>this.download(data.sample_path)} type="primary">
-                            <FormattedMessage {...AssetMessages.DownLoadTheSample}/>
-                        </Button>
-                        <Modal
-                            visible={this.state.visible}
-                            onOk={(e)=>this.handleOk(e)}
-                            onCancel={(e)=>this.handleCancel(e)}
-                        >
-                            <p>
-                                <FormattedMessage {...AssetMessages.AreYouSureToBuyThisAsset}/>
-                            </p>
-                        </Modal>
-                    </li>
-                </ul>
-                <div className="dataDescription">
-                  <span>
-                    <FormattedMessage {...AssetMessages.DataDescription}/>
-                  </span>
-                  <TextArea readOnly rows={4} defaultValue={data.description} />
-                </div>
+
+                <Row>
+                  <Col span={4}>
+                    <FormattedMessage {...AssetMessages.AssetID}/>
+                  </Col>
+                  <Col span={18}>{data.asset_id}</Col>
+                </Row>
+
+                <Row>
+                  <Col span={4}>
+                    <FormattedMessage {...AssetMessages.Publisher}/>
+                  </Col>
+                  <Col span={18}>{data.username}</Col>
+                </Row>
+
+                <Row>
+                  <Col span={4}>
+                    <FormattedMessage {...AssetMessages.AssetType}/>
+                  </Col>
+                  <Col span={18}>
+                    {arTypeKeyMap[data.asset_type]}
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col span={4}>
+                    <FormattedMessage {...AssetMessages.ExpectedPrice}/>
+                  </Col>
+                  <Col span={18}>
+                    {data.price / Math.pow(10, 8)}
+                    <img src='./img/token.png' width='15' style={{marginLeft:6}} />
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col span={4}>
+                    <FormattedMessage {...AssetMessages.ExpireTime}/>
+                  </Col>
+                  <Col span={18}>{getDateAndTime(time)}</Col>
+                </Row>
+
+                <Row>
+                  <Col span={4}>
+                    <FormattedMessage {...AssetMessages.FeatureTag}/>
+                  </Col>
+                  <Col span={18}>{tags}</Col>
+                </Row>
+
+              </div>
+
+              <ul>
+                  <li>
+                      <Button onClick={()=>this.showModal()} type="primary" className="buyButton">
+                          <FormattedMessage {...AssetMessages.BuyAssets}/>
+                      </Button>
+                  </li>
+                  <li>
+                      <Button onClick={()=>this.download(data.sample_path)} type="primary">
+                          <FormattedMessage {...AssetMessages.DownLoadTheSample}/>
+                      </Button>
+                      <Modal
+                          visible={this.state.visible}
+                          onOk={(e)=>this.handleOk(e)}
+                          onCancel={(e)=>this.handleCancel(e)}
+                      >
+                          <p>
+                              <FormattedMessage {...AssetMessages.AreYouSureToBuyThisAsset}/>
+                          </p>
+                      </Modal>
+                  </li>
+              </ul>
+
+              <div className="dataDescription">
+                <span>
+                  <FormattedMessage {...AssetMessages.DataDescription}/>
+                </span>
+                <TextArea readOnly rows={4} defaultValue={data.description} />
+              </div>
             </div>
           </div>
         )

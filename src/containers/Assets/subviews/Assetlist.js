@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { Link, hashHistory } from 'react-router'
 import querystring from 'querystring'
-import BTFavoriteStar from '@/components/BTFavoriteStar'
 import './styles.less'
 import BTFetch from '../../../utils/BTFetch'
 import { Spin, Icon, Button, message } from 'antd'
@@ -14,11 +13,10 @@ const AssetMessages = messages.Asset;
 
 
 const typeMap = {
-  1: 'voice',
-  2: 'video',
-  3: 'nature',
-  4: 'picture',
-  5: 'text'
+  11: 'text',
+  12: 'picture',
+  13: 'voice',
+  14: 'video',
 }
 
 class Assetlist extends Component {
@@ -105,19 +103,13 @@ class Assetlist extends Component {
 
     render() {
         let data = this.props.list;
-        const asset_type = data.asset_type || 2
-        if (asset_type.length == 8) {
-          var type = asset_type[5]
-        }
-        let className = 'assetList ' + typeMap[type]
+        const asset_type = data.asset_type || 0
+        let className = 'assetList ' + typeMap[asset_type]
         return (
             <div className={className} onClick={this.handleClick}>
-                <div className="headAndShop">
-                  <h4 className='txt_cut'>
-                    {data.asset_name}
-                  </h4>
-                  <BTFavoriteStar type='asset' id={data.asset_id} />
-                </div>
+                <h4 className='txt_cut'>
+                  {data.asset_name}
+                </h4>
                 <p>
                   <FormattedMessage {...AssetMessages.Publisher}/>
                   {data.username}
