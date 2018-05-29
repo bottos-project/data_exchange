@@ -5,12 +5,13 @@ import { Carousel, Button, Tag, Input } from 'antd';
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import BTAssetList from './BTAssetList'
+import { getDateAndTime } from '../../../utils/dateTimeFormat'
 import './styles.less'
 import {getAccount} from "../../../tools/localStore";
 import CloseBack from '@/components/CloseBack'
 import BTFavoriteStar from '@/components/BTFavoriteStar'
 import { PackArraySize, PackStr16, PackUint32 } from '@/lib/msgpack/msgpack'
-import { downloadFile } from '@/utils/BTDownloadFile'
+import { BTDownloadFile } from '@/utils/BTDownloadFile'
 const DemandMessages = messages.Demand;
 const { TextArea } = Input;
 
@@ -18,9 +19,12 @@ const { TextArea } = Input;
 export default class BTDemanDetail extends PureComponent{
   constructor(props){
       super(props)
+
+      // console.log('props.location', props.location);
+
       this.state={
-        exampledata: [{"asset_id": "filehashtest","asset_name": "assetnametest","description": "destest","expire_time": 345,"feature_tag":12345,"op_type":1,"price":888,"sample_hash":"hasttest","sample_path":"pathtest","storage_hash":"sthashtest","storage_path":"stpathtest","upload_date": 999}],
-        username:''
+        exampledata: [],
+        ...props.location.state
       }
       this.download = this.download.bind(this)
   }
@@ -60,8 +64,11 @@ export default class BTDemanDetail extends PureComponent{
   }
 
   download() {
-    let { sample_hash: guid, requirement_name: filename, username } = this.props.location.query
-    downloadFile(guid, filename, username)
+    let data = this.state
+    console.log('data', data);
+    let { sample_hash: guid, requirement_name: filename, username } = data
+    console.log('guid, filename, username', guid, filename, username);
+    BTDownloadFile(guid, filename, username)
     .catch(e => {
       console.dir(e);
       console.error('download', e);
@@ -76,12 +83,11 @@ export default class BTDemanDetail extends PureComponent{
         return ;
     };
 
-    // TODO: 改到这里了，明天继续改。。。。
     let username = getAccount().username
 
     let fileInfo = this.state.exampledata.find(ele => ele.asset_id == asset_id)
 
-    let requirementInfo = this.props.location.query
+    let requirementInfo = this.state
 
     let originParam = {
       "dataPresaleId": window.uuid(),
@@ -128,21 +134,21 @@ export default class BTDemanDetail extends PureComponent{
 
     BTFetch('/asset/preSaleNotice', 'post', fetchParam)
     .then(res => {
-        if (res.code==1 && res.data != 'null') {
-            window.message.success(window.localeInfo["Demand.SuccessfulPromote"])
-        }else{
-            window.message.error(window.localeInfo["Demand.FailedPromote"])
-        }
+      if (!res || res.cole != 1) {
+        throw new Error('Failed Promote')
+      }
+      if (res.data != 'null') {
+        window.message.success(window.localeInfo["Demand.SuccessfulPromote"])
+      }
+    })
+    .catch(err => {
+      console.error('error', err);
+      window.message.error(window.localeInfo["Demand.FailedPromote"])
     })
   }
 
-  // componentDidMount(){
-  //   console.log('this.props.location', this.props.location);
-  // }
-
   render() {
-      let data = this.props.location.query||{};
-      let date=(new Date((data.expire_time)*1000)).toLocaleDateString()
+      let data = this.state
       return (
           <div className='route-children-container route-children-bg'>
             <CloseBack />
@@ -155,45 +161,52 @@ export default class BTDemanDetail extends PureComponent{
                 <div className="mainData">
                   <div className="headAndShop">
                     <h1>{data.requirement_name}</h1>
-                    <BTFavoriteStar type='requirement' id={data.requirement_id} />
+                    <BTFavoriteStar isFavorite={data.is_collection} type='requirement' id={data.requirement_id} />
                   </div>
 
-                    <p>
-                        <FormattedMessage {...DemandMessages.Publisher}/>
-                        {data.username}
-                    </p>
-                    {/*<p>
-                        <span>
-                         <FormattedMessage {...DemandMessages.AssetType}/>
-                        </span>
-                        {data.feature_tag}
-                    </p>*/}
-                    <p>
-                        <span>
-                            <FormattedMessage {...DemandMessages.ExpectedPrice}/>
-                        </span>
-                        {data.price/Math.pow(10, 8)}
-                        <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
-                    </p>
-                    <p>
-                        <span>
-                            <FormattedMessage {...DemandMessages.ExpireTime}/>
-                        </span>
-                        {date}
-                    </p>
+                  <p>
+                      <FormattedMessage {...DemandMessages.Publisher}/>
+                      {data.username}
+                  </p>
+                  {/*<p>
+                      <span>
+                       <FormattedMessage {...DemandMessages.AssetType}/>
+                      </span>
+                      {data.feature_tag}
+                  </p>*/}
+                  <p>
+                      <span>
+                          <FormattedMessage {...DemandMessages.ExpectedPrice}/>
+                      </span>
+                      {data.price/Math.pow(10, 8)}
+                      <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
+                  </p>
+                  <p>
+                      <span>
+                          <FormattedMessage {...DemandMessages.ExpireTime}/>
+                      </span>
+                      {getDateAndTime(data.expire_time)}
+                  </p>
                 </div>
-                    <ul>
-                       <li>
-                            <Button type="primary" onClick={this.download}>
-                                <FormattedMessage {...DemandMessages.DownLoadTheSample}/>
-                            </Button>
-                        </li>
-                        <li>
-                            <Button type="primary" onClick={()=>this.commitAsset()}>
-                                <FormattedMessage {...DemandMessages.ProvideTheAsset}/>
-                            </Button>
-                        </li>
-                    </ul>
+                <ul>
+                   <li>
+                        <Button type="primary" onClick={this.download}>
+                            <FormattedMessage {...DemandMessages.DownLoadTheSample}/>
+                        </Button>
+                    </li>
+                    <li>
+                      {
+                        data.is_presale ?
+                        <Button disabled>
+                          <FormattedMessage {...DemandMessages.HavePresale}/>
+                        </Button>
+                        :
+                        <Button type="primary" onClick={()=>this.commitAsset()}>
+                          <FormattedMessage {...DemandMessages.ProvideTheAsset}/>
+                        </Button>
+                      }
+                    </li>
+                </ul>
                 <div className="dataDescription">
                   <span>
                     <FormattedMessage {...DemandMessages.DataDescription}/>

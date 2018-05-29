@@ -1,13 +1,13 @@
 import React,{PureComponent} from 'react'
 import { Row, Col, Button, Tag, Modal, Input } from 'antd';
 import BTFetch from '../../../utils/BTFetch'
-import { getBlockInfo, getSignaturedParam, getSignaturedFetchParam } from '../../../utils/BTCommonApi'
+import { getBlockInfo, getSignaturedFetchParam } from '../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from '../../../tools/localStore'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import BTFavoriteStar from '@/components/BTFavoriteStar'
-
+import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import CloseBack from '@/components/CloseBack'
 
 import { PackArraySize, PackStr16 } from '@/lib/msgpack/msgpack'
@@ -34,11 +34,17 @@ export default class BTAssetDetail extends PureComponent{
             visible: false,
         });
     }
+
     showModal(e) {
-        this.setState({
-            visible: true,
-        });
+      if (!getAccount()){
+          message.warning(window.localeInfo["Asset.PleaseLogInFirst"])
+          return;
+      }
+      this.setState({
+        visible: true,
+      });
     }
+
     async buySureAsset() {
 
       let originParam = {
@@ -90,45 +96,25 @@ export default class BTAssetDetail extends PureComponent{
     }
 
     async handleOk(){
-        this.setState({
-            visible: false,
-        });
-        message.destroy();
-        if (!getAccount()){
-            message.warning(window.localeInfo["Asset.PleaseLogInFirst"])
-            return;
-        }
-        if (this.state.data.username == getAccount().username) {
-            message.warning(window.localeInfo["Asset.YouAreNotAllowedToBuyYourOwnAssets"])
-            return;
-        }
-        //查询是否已购买资产
-        // "asset_id":this.state.data.asset_id,
+      this.setState({
+        visible: false,
+      });
+      message.destroy();
 
-        await BTFetch('/user/QueryMyBuy','post', {
-          ...getSignaturedParam(getAccount()),
-          "page_size": 50,
-        	"page_num": 1
-        }).then(res => {
-          // console.log('res.data', res.data);
-          // if (res.code == 1 && res.data.rowCount >= 1) {
-          //     message.warning(window.localeInfo["Asset.CannotPurchaseAgain"]);
-          //     return;
-          // } else {
-             this.buySureAsset()
-          // }
+      if (this.state.data.username == getAccount().username) {
+        message.warning(window.localeInfo["Asset.YouAreNotAllowedToBuyYourOwnAssets"])
+        return;
+      }
+      //查询是否已购买资产
+      // "asset_id":this.state.data.asset_id,
 
-        }).catch(error => {
-        });
-
+      this.buySureAsset()
     }
-    download(index) {
-        let a = document.createElement('a');
-        // let url = res.data;
-        let filename = '样例';
-        a.href = index;
-        a.download = filename;
-        a.click();
+
+    download(sample_hash) {
+      let { sample_hash: guid, asset_name: filename, username } = this.props.location.state;
+
+      BTDownloadFile(guid, filename, username)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -149,7 +135,7 @@ export default class BTAssetDetail extends PureComponent{
 
     render() {
 
-      let data=this.props.location.query;
+      let data=this.props.location.state;
       let time=new Date((data.expire_time)*1000).toLocaleDateString();
       let tagsArr = data.feature_tag.split('-')
       let tags = tagsArr.map((tag, index) =>
@@ -167,7 +153,7 @@ export default class BTAssetDetail extends PureComponent{
               <div className="mainData">
                 <div className="headAndShop">
                   <h1>{data.asset_name}</h1>
-                  <BTFavoriteStar type='asset' id={data.asset_id} />
+                  <BTFavoriteStar isFavorite={data.favorite_flag} type='asset' id={data.asset_id} />
                 </div>
 
                 <Row>
@@ -221,25 +207,32 @@ export default class BTAssetDetail extends PureComponent{
 
               <ul>
                   <li>
-                      <Button onClick={()=>this.showModal()} type="primary" className="buyButton">
-                          <FormattedMessage {...AssetMessages.BuyAssets}/>
+                    {data.isBuy_asset_flag ?
+                      <Button disabled>
+                        <FormattedMessage {...AssetMessages.HaveBought}/>
                       </Button>
+                      :
+                      <Button onClick={()=>this.showModal()} type="primary">
+                        <FormattedMessage {...AssetMessages.BuyAssets}/>
+                      </Button>
+                    }
                   </li>
                   <li>
-                      <Button onClick={()=>this.download(data.sample_path)} type="primary">
+                      <Button onClick={()=>this.download()} type="primary">
                           <FormattedMessage {...AssetMessages.DownLoadTheSample}/>
                       </Button>
-                      <Modal
-                          visible={this.state.visible}
-                          onOk={(e)=>this.handleOk(e)}
-                          onCancel={(e)=>this.handleCancel(e)}
-                      >
-                          <p>
-                              <FormattedMessage {...AssetMessages.AreYouSureToBuyThisAsset}/>
-                          </p>
-                      </Modal>
                   </li>
               </ul>
+
+              <Modal
+                visible={this.state.visible}
+                onOk={(e)=>this.handleOk(e)}
+                onCancel={(e)=>this.handleCancel(e)}
+              >
+                <p>
+                  <FormattedMessage {...AssetMessages.AreYouSureToBuyThisAsset}/>
+                </p>
+              </Modal>
 
               <div className="dataDescription">
                 <span>

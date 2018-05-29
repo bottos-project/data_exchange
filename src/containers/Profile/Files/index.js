@@ -10,7 +10,7 @@ import {getAccount} from "@/tools/localStore";
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import Base from 'webuploader/base'
 import uploader from './uploader'
-import { downloadFile } from '@/utils/BTDownloadFile'
+import { BTDownloadFile } from '@/utils/BTDownloadFile'
 
 import ProgressList from './subviews/ProgressList'
 import './style.less'
@@ -71,7 +71,7 @@ class BTMyAssetSet extends Component{
 
     async download1(record) {
       const { file_hash: guid, file_name: filename } = record
-      downloadFile(guid, filename, getAccount().username)
+      BTDownloadFile(guid, filename, getAccount().username)
     }
 
     customRequest = ({ file, onSuccess }) => {

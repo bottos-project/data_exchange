@@ -9,7 +9,7 @@ import {getAccount} from "../../../../tools/localStore";
 import {queryProtoEncode} from '../../../../lib/proto/index'
 import * as BTCryptTool from 'bottos-js-crypto'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
-import { downloadFile } from '@/utils/BTDownloadFile'
+import { BTDownloadFile } from '@/utils/BTDownloadFile'
 
 const PersonalAssetMessages = messages.PersonalAsset;
 const { Option, OptGroup } = Select;
@@ -67,7 +67,7 @@ export default class BTAssetDetail extends PureComponent{
               render: (item) => <span>{item.length < 30 ? item : item.substring(0,30) + '...'}</span>
             },
             { title: <FormattedMessage {...PersonalAssetMessages.AssetOperation} />, dataIndex: 'storage_hash',
-              render: (text, record) => <a onClick={()=> downloadFile(text, record.asset_name, getAccount().username)}>
+              render: (text, record) => <a onClick={()=> BTDownloadFile(text, record.asset_name, getAccount().username)}>
                   <Icon type="download" style={{color:"black",fontWeight:900}} />
               </a>
             },

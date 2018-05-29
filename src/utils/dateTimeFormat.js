@@ -2,7 +2,7 @@ function isUnixTime(time) {
   // console.log('time', time);
   let _time = time.toString()
   // console.log('_time', _time);
-  if (_time.length == 10 && _time.startsWith('15')) {
+  if (_time.length == 10 && _time.startsWith('1')) {
     return true;
   }
   return false;

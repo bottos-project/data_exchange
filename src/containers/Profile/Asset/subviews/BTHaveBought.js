@@ -7,7 +7,7 @@ import messages from '../../../../locales/messages'
 import {getAccount} from "../../../../tools/localStore";
 import { getDateAndTime } from "@/utils/dateTimeFormat";
 import { getSignaturedParam } from '@/utils/BTCommonApi'
-import { downloadFile } from '@/utils/BTDownloadFile'
+import { BTDownloadFile } from '@/utils/BTDownloadFile'
 
 
 const PersonalAssetMessages = messages.PersonalAsset;
@@ -66,7 +66,7 @@ export default class BTHaveBought extends PureComponent{
 
     async download(record) {
       const { storage_hash: guid, asset_name: filename } = record
-      downloadFile(guid, filename, getAccount().username)
+      BTDownloadFile(guid, filename, getAccount().username)
     }
 
     componentDidMount(){

@@ -289,6 +289,10 @@ module.exports = {
             id:'Demand.ProvideTheAsset',
             defaultMessage:'推销资产'
         },
+        HavePresale:{
+            id:'Demand.HavePresale',
+            defaultMessage:'已推销'
+        },
         DataDescription:{
             id:'Demand.DataDescription',
             defaultMessage:'数据描述'
@@ -330,6 +334,10 @@ module.exports = {
         BuyAssets:{
             id:'Asset.BuyAssets',
             defaultMessage:'购买资产'
+        },
+        HaveBought:{
+            id:'Asset.HaveBought',
+            defaultMessage:'已购买'
         },
         DownLoadTheSample:{
             id:'Asset.DownLoadTheSample',

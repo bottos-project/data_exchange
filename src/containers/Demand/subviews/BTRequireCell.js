@@ -1,24 +1,12 @@
 import React,{PureComponent} from 'react'
 import { hashHistory } from 'react-router'
-import querystring from 'querystring'
-
-import { Icon } from 'antd'
 import BTFetch from '../../../utils/BTFetch'
-import {getBlockInfo,getDataInfo} from '../../../utils/BTCommonApi'
 import './styles.less'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from "../../../tools/localStore";
-import collectionState, { getTimeSecond } from "@/tools/sessionStorage";
 const DemandMessages = messages.Demand;
 
-
-const IconText = ({ type, text }) => (
-    <span>
-      <Icon type={type} style={{ marginRight: 8 }} />
-        {text}
-    </span>
-);
 export default class BTRequireCell extends PureComponent{
 
     handleClick = () => {
@@ -34,8 +22,11 @@ export default class BTRequireCell extends PureComponent{
         if (!res || res.code != 1) {
           throw new Error('Failed To Get The Requirement Details')
         }
-        const q = '?' + querystring.stringify(res.data)
-        hashHistory.push(linkto + q)
+        // console.log('res.data', res.data);
+        hashHistory.push({
+          pathname: linkto,
+          state: res.data
+        })
       })
       .catch(err => {
         window.message.error(window.localeInfo['Demand.FailedToGetTheRequirementDetails'])
