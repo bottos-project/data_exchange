@@ -1,7 +1,7 @@
 import React, { Component, PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { setSpin } from '@/redux/actions/HeaderAction'
-import { Form, Spin, Icon, Input, Button, Row, Col } from 'antd'
+import { Form, Spin, Icon, Input, Button, Row, Col ,Tooltip} from 'antd'
 import BTFetch from '../utils/BTFetch'
 import BTCryptTool from 'bottos-js-crypto'
 import './styles.less'
@@ -344,14 +344,19 @@ class Regist extends PureComponent{
         <div className="register">
             <div className='route-children-container-title'><FormattedMessage {...HeaderMessages.Register}/></div>
             <Form style={{maxWidth: 560, paddingRight: '10%'}}>
-
+            
               <FormItem {...formItemLayout} colon={false} label={<FormattedMessage {...LoginMessages.Account} />}>
+                <Tooltip placement="topLeft" title={window.localeInfo["Header.AccountNameRequire"]}>
                   {
                       getFieldDecorator('username',{})(
+                        
                           <Input placeholder={window.localeInfo["Header.PleaseEnterTheUserName"]} id="error1" />
+                       
                       )
                   }
+                </Tooltip>
               </FormItem>
+               
               <FormItem {...formItemLayout} colon={false} label={<FormattedMessage {...LoginMessages.Password} />}>
                   {
                       getFieldDecorator('password',{})(

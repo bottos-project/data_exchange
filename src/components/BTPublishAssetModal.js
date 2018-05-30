@@ -226,10 +226,10 @@ class BTPublishAssetModal extends PureComponent{
           this.setState(initState)
           window.message.success(window.localeInfo['PersonalAsset.SuccessfulToRegisterTheAsset'])
         }else{
-          window.message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
+          window.message.error(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
         }
       }).catch(error=>{
-        window.message.warning(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
+        window.message.error(window.localeInfo["Header.FailedToGetTheFileResourceSet"]);
       })
     }
 

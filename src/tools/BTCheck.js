@@ -1,5 +1,5 @@
 const isUserName = (username)=>{
-    let str = /^[a-km-z][a-km-z1-9]{2,15}$/
+    let str = /^[a-z][a-z0-9]{2,15}$/
     return str.test(username)
 }
 

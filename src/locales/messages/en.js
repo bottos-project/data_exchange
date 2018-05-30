@@ -47,7 +47,7 @@ module.exports = {
     "Header.SuccessToLogOut":"Success To Log Out",
     "Header.FailedLogOut":"Failed Log Out",
     "Header.FailedQuery":"Failed Query",
-    "Header.PleaseEnterTheUserName":"Please Enter The User Name(3-10 lowercase letters)",
+    "Header.PleaseEnterTheUserName":"Please Enter The User Name",
     "Header.PleaseEnterThePassword":"Please Enter The Password",
     "Header.PleaseEnterTheKeystore":"Please Enter the Keystore Content",
     "Header.PleaseEnterTheVerificationCode":"Please Enter The Verification Code",
@@ -68,6 +68,7 @@ module.exports = {
     "Header.UserNameIsNotRight":"username is not right",
     "Header.ImportKeyStoreSuccess":"Import KeyStore Success",
     "Header.ImportKeyStoreFaild":"Import KeyStore Faild",
+    "Header.AccountNameRequire":"3~16 characters can use a~z(all lowercase), the number must start with the letter",
 
 
     //login
