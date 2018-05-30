@@ -55,7 +55,7 @@
   }
 }
 
-.assetList{
+.assetAndReqListItem {
   padding: 10px;
   min-height: 145px;
   height: calc(24vh - 87px);
@@ -68,19 +68,31 @@
     height: 3em;
     margin-bottom: 10px;
     color: #FFF;
-  }
-  h4,a{
     font-weight: bold;
     font-size: 16px;
   }
-  p,span{
+  span{
     font-size: 12px;
     font-weight: lighter;
-    margin: 0;
   }
 }
 
-.assetList {
+.assetListItem {
+  &.voice {
+    background-image: linear-gradient(45deg, #74F5AB 0%, #4AC1FF 100%);
+  }
+  &.video {
+    background-image: linear-gradient(45deg, #7060F3 0%, #6C77F4 17%, #57E3FB 100%);
+  }
+  &.picture {
+    background-image: linear-gradient(45deg, #FF739F 0%, #FF8F90 41%, #FFB77B 100%);
+  }
+  &.text {
+    background-image: linear-gradient(45deg, #5937B9 0%, #BC68D4 100%);
+  }
+}
+
+.requirementListItem {
   &.voice {
     background-image: linear-gradient(-45deg, #74F5AB 0%, #4AC1FF 100%);
   }

@@ -9,7 +9,7 @@ import { getDateAndTime } from '@/utils/dateTimeFormat'
 import BTFavoriteStar from '@/components/BTFavoriteStar'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import CloseBack from '@/components/CloseBack'
-
+import BTTags from '../../AssetAndRequirement/BTTags'
 import { PackArraySize, PackStr16 } from '@/lib/msgpack/msgpack'
 
 import { arTypeKeyMap } from '@/utils/keyMaps'
@@ -18,14 +18,12 @@ const AssetMessages = messages.Asset;
 // 此处样式在Demand/subviews/styles.less中控制
 const { TextArea } = Input;
 const confirm = Modal.confirm;
-// const username=JSON.parse(window.localStorage.account_info).username||'';
+
 export default class BTAssetDetail extends PureComponent{
     constructor(props) {
         super(props)
         this.state = {
-            data: this.props.location.query||[],
-            username: '',
-            getAssetType: '',
+            ...this.props.location.state,
             visible: false
         }
     }
@@ -51,7 +49,7 @@ export default class BTAssetDetail extends PureComponent{
       	"data_deal_id": window.uuid(),
       	"basic_info": {
       		"username": getAccount().username,
-      		"assetId": this.state.data.asset_id
+      		"assetId": this.state.asset_id
       	}
       }
 
@@ -82,16 +80,19 @@ export default class BTAssetDetail extends PureComponent{
 
       BTFetch('/exchange/buyAsset', 'post', getSignaturedFetchParam({fetchParam, privateKey}))
       .then(res=>{
-          console.log(res);
-          if(res.code == 1){
-              window.message.success(window.localeInfo["Asset.SuccessfulPurchase"])
-          }else if(res.code == 4001){
-              message.warning(window.localeInfo["Asset.InsufficientBalance"])
-          }else{
-              window.message.error(window.localeInfo["Asset.FailedPurchase"])
-          }
-      }).catch(error=>{
-
+        if (!res) {
+          throw new Error('buy asset failed')
+        }
+        // console.log(res);
+        if (res.code == 1) {
+          this.setState({ isBuy_asset_flag: true })
+          window.message.success(window.localeInfo["Asset.SuccessfulPurchase"])
+        } else if (res.code == 4001) {
+          message.warning(window.localeInfo["Asset.InsufficientBalance"])
+        }
+      }).catch(err => {
+        console.error('err', err);
+        window.message.error(window.localeInfo["Asset.FailedPurchase"])
       })
     }
 
@@ -101,7 +102,7 @@ export default class BTAssetDetail extends PureComponent{
       });
       message.destroy();
 
-      if (this.state.data.username == getAccount().username) {
+      if (this.state.username == getAccount().username) {
         message.warning(window.localeInfo["Asset.YouAreNotAllowedToBuyYourOwnAssets"])
         return;
       }
@@ -117,31 +118,11 @@ export default class BTAssetDetail extends PureComponent{
       BTDownloadFile(guid, filename, username)
     }
 
-    componentWillReceiveProps(nextProps) {
-        if(this.props == nextProps){
-            return;
-        }
-        // let data=this.props.location.query;
-        // let asset_type=data.asset_type.substring(0,2);
-        // switch (asset_type){
-        //     case '11':this.setState({getAssetType:'Automatic Transmission'});break;
-        //     case '12':this.setState({getAssetType:'Medical'});break;
-        //     case '13':this.setState({getAssetType:'Finance'});break;
-        //     case '14':this.setState({getAssetType:'Retail'});break;
-        //     case '15':this.setState({getAssetType:'Security'});break;
-        // }
-        // console.log(asset_type)
-    }
-
     render() {
 
-      let data=this.props.location.state;
-      let time=new Date((data.expire_time)*1000).toLocaleDateString();
+      let data = this.state;
+      let time = new Date((data.expire_time)*1000).toLocaleDateString();
       let tagsArr = data.feature_tag.split('-')
-      let tags = tagsArr.map((tag, index) =>
-        tag != "" &&
-        <Tag key={index}>{tag}</Tag>
-      )
 
         return (
           <div className='route-children-container route-children-bg'>
@@ -200,7 +181,9 @@ export default class BTAssetDetail extends PureComponent{
                   <Col span={4}>
                     <FormattedMessage {...AssetMessages.FeatureTag}/>
                   </Col>
-                  <Col span={18}>{tags}</Col>
+                  <Col span={18}>
+                    <BTTags tags={tagsArr} />
+                  </Col>
                 </Row>
 
               </div>

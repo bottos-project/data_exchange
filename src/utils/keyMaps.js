@@ -16,3 +16,10 @@ export const arTypeKeyMap = {
   0: <FormattedMessage {...AssetMessage.All } />,
   ...selectType
 }
+
+export const typeValueKeyMap = {
+  11: 'text',
+  12: 'picture',
+  13: 'voice',
+  14: 'video',
+}

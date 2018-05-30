@@ -3,19 +3,13 @@ import { hashHistory } from 'react-router'
 import './styles.less'
 import BTFetch from '../../../utils/BTFetch'
 import {FormattedMessage} from 'react-intl'
+import BTTags from '../../AssetAndRequirement/BTTags'
 import {getAccount} from "../../../tools/localStore";
+import { typeValueKeyMap } from '../../../utils/keyMaps'
 import messages from '../../../locales/messages'
 const AssetMessages = messages.Asset;
 
-
-const typeMap = {
-  11: 'text',
-  12: 'picture',
-  13: 'voice',
-  14: 'video',
-}
-
-class Assetlist extends Component {
+class AssetlistItem extends Component {
 
     handleClick = () => {
 
@@ -46,25 +40,27 @@ class Assetlist extends Component {
     render() {
         let data = this.props.list;
         const asset_type = data.asset_type || 0
-        let className = 'assetList ' + typeMap[asset_type]
+        let className = 'assetAndReqListItem assetListItem ' + typeValueKeyMap[asset_type]
+        let tagsArr = data.feature_tag.split('-')
+
         return (
             <div className={className} onClick={this.handleClick}>
                 <h4 className='txt_cut'>
                   {data.asset_name}
                 </h4>
-                <p>
+                <div>
                   <FormattedMessage {...AssetMessages.Publisher}/>
                   {data.username}
-                </p>
-                <p>{data.feature_tag}</p>
+                </div>
                 <div>
                   <FormattedMessage {...AssetMessages.ExpectedPrice}/>
                   <span>{data.price/Math.pow(10, 8)}</span>
                   <img src="./img/token.png" width='18' alt="" style={{paddingLeft:'4px'}}/>
                 </div>
+                <BTTags tags={tagsArr} />
             </div>
         )
     }
 }
 
-export default Assetlist
+export default AssetlistItem

@@ -4,24 +4,23 @@ import React,{PureComponent} from 'react'
 import { Carousel, Button, Tag, Input } from 'antd';
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
-import BTAssetList from './BTAssetList'
+import BTAssetRadioGroup from './BTAssetRadioGroup'
 import { getDateAndTime } from '../../../utils/dateTimeFormat'
 import './styles.less'
 import {getAccount} from "../../../tools/localStore";
 import CloseBack from '@/components/CloseBack'
 import BTFavoriteStar from '@/components/BTFavoriteStar'
+import { typeValueKeyMap } from '../../../utils/keyMaps'
 import { PackArraySize, PackStr16, PackUint32 } from '@/lib/msgpack/msgpack'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 const DemandMessages = messages.Demand;
 const { TextArea } = Input;
 
 
-export default class BTDemanDetail extends PureComponent{
+export default class BTRequirementItemDetail extends PureComponent{
   constructor(props){
       super(props)
-
       // console.log('props.location', props.location);
-
       this.state={
         exampledata: [],
         ...props.location.state
@@ -85,9 +84,9 @@ export default class BTDemanDetail extends PureComponent{
 
     let username = getAccount().username
 
-    let fileInfo = this.state.exampledata.find(ele => ele.asset_id == asset_id)
-
     let requirementInfo = this.state
+
+    let fileInfo = requirementInfo.exampledata.find(ele => ele.asset_id == asset_id)
 
     let originParam = {
       "dataPresaleId": window.uuid(),
@@ -134,7 +133,7 @@ export default class BTDemanDetail extends PureComponent{
 
     BTFetch('/asset/preSaleNotice', 'post', fetchParam)
     .then(res => {
-      if (!res || res.cole != 1) {
+      if (!res || res.code != 1) {
         throw new Error('Failed Promote')
       }
       if (res.data != 'null') {
@@ -154,7 +153,7 @@ export default class BTDemanDetail extends PureComponent{
             <CloseBack />
 
             <div className="demandDetailBox">
-                <BTAssetList exampledata={this.state.exampledata} ref={(ref)=>this.assetListModal = ref} handleFile={(fileInfo)=>this.handleFile(fileInfo)}/>
+                <BTAssetRadioGroup exampledata={data.exampledata} ref={(ref)=>this.assetListModal = ref} handleFile={(fileInfo)=>this.handleFile(fileInfo)}/>
                 <h2 className='route-children-container-title'>
                     <FormattedMessage {...DemandMessages.DataDetails}/>
                 </h2>

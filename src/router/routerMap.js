@@ -7,7 +7,7 @@ import BTDashboard from '../containers/Dashboard'
 import BTAssets from '../containers/Assets'
 import BTAssetDetail from '../containers/Assets/subviews/AssetDetail'
 import BTDemand from '../containers/Demand'
-import BTDemandDetail from '../containers/Demand/subviews/DemanDetail'
+import BTRequirementItemDetail from '../containers/Demand/subviews/BTRequirementItemDetail'
 import BTHistory from '../containers/History'
 import BTBlockList from '../containers/Other'
 import BTOtherBlocks from '../containers/Other/subviews/BTOtherBlocks'
@@ -43,7 +43,7 @@ class RouterMap extends PureComponent {
           <Route path="dashboard" name='Dashboard' breadcrumbName='Dashboard' component={BTDashboard}/>
 
           <Route path="demand" name='Demand' breadcrumbName='Demand' component={BTDemand}>
-            <Route path="detail" name='DemandDetails' breadcrumbName='Detail' component={BTDemandDetail} />
+            <Route path="detail" name='DemandDetails' breadcrumbName='Detail' component={BTRequirementItemDetail} />
           </Route>
 
           <Route path="assets" name='Asset' breadcrumbName='Asset' component={BTAssets}>
