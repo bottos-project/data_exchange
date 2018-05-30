@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 
 // import BTAssetCell from './subviews/AssetCell'
 import {Pagination, List} from 'antd'
-import Assetlist from './subviews/Assetlist'
+import AssetlistItem from './subviews/AssetlistItem'
 import BTMyTag from '../../components/BTMyTag'
 import BTFetch from '../../utils/BTFetch'
 import CustomTabBar from '@/components/CustomTabBar'
@@ -89,7 +89,7 @@ export default class BTAssets extends Component {
             dataSource={this.state.dataSource}
             renderItem={item => (
               <List.Item>
-                <Assetlist key={item.asset_id} list={item} />
+                <AssetlistItem key={item.asset_id} list={item} />
               </List.Item>
             )}
           />

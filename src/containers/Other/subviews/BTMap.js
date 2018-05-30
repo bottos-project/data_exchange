@@ -41,7 +41,7 @@ export default class BTMap extends PureComponent{
             markers: this.randomMarker(100)
         })
     }
-    
+
 
     componentDidMount(){
         let storage = window.localStorage;
@@ -73,6 +73,7 @@ export default class BTMap extends PureComponent{
             </div>
         )
     }
+
     render(){
         const YOUR_AMAP_KEY = '0ca394ad5386e23b5ebcca33db764d90'
         return (
@@ -80,6 +81,7 @@ export default class BTMap extends PureComponent{
                <Map
                     protocol="http"
                     amapkey={YOUR_AMAP_KEY}
+                    protocol='http'
                     zoom={0.9}
                     lang={this.state.lang}
                     zoomEnable={true}
@@ -87,7 +89,6 @@ export default class BTMap extends PureComponent{
                     isHotspot
                 >
                     <Markers
-                        protocol="http"
                         markers={this.props.node}
                     />
                 </Map>

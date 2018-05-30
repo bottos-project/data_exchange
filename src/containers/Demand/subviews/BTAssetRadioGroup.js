@@ -3,7 +3,7 @@ import { Radio, Row, Col, Modal, message } from 'antd';
 import BTFetch from "../../../utils/BTFetch";
 const RadioGroup = Radio.Group;
 
-export default class BTAssetList extends PureComponent{
+export default class BTAssetRadioGroup extends PureComponent{
     constructor(props){
         super(props)
         this.state = {

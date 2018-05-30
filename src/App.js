@@ -6,8 +6,6 @@ import { setAccountInfo } from './redux/actions/HeaderAction'
 import {LocaleProvider} from 'antd';
 import { IntlProvider } from 'react-intl';
 import appLocale from './locales'
-// 通用样式
-import './static/css/common.less'
 import RouterMap from './router/routerMap'
 
 window.localeInfo = appLocale.messages;

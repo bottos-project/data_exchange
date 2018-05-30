@@ -35,7 +35,7 @@ const initialState = {
     dateString: moment().add(7, 'days').toString(),
     newdata: [],
     getFileNameTemp:'',
-    reqType: '0'
+    reqType: ''
 }
 
 class BTPublishDemand extends PureComponent{
@@ -180,6 +180,7 @@ class BTPublishDemand extends PureComponent{
       BTFetch(url,'POST',params)
       .then(response => {
         if (response && response.code == 1) {
+          this.setState(initialState)
           message.success(window.localeInfo["PersonalDemand.SuccessfulToPublishTheDemand"]);
         } else {
           message.warning(window.localeInfo["PersonalDemand.FailedToPublishTheDemand"]);
@@ -257,7 +258,7 @@ class BTPublishDemand extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.AssetType} />
               </Col>
               <Col span={12}>
-                <BTTypeSelect onChange={(value)=>this.setState({reqType:value})}/>
+                <BTTypeSelect value={this.state.reqType} onChange={(value)=>this.setState({reqType:value})}/>
               </Col>
             </Row>
 

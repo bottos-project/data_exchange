@@ -47,7 +47,7 @@ function getFileDownloadURL(param, filename) {
 }
 
 
-export async function downloadFile(guid, filename, username) {
+export async function BTDownloadFile(guid, filename, username) {
   let param = await getDownloadFileIP(guid)
   if (!param) {
     return window.message.error('get download file fail')

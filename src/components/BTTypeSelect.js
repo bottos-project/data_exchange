@@ -3,27 +3,22 @@ import PropTypes from 'prop-types';
 import { Select } from 'antd'
 const Option = Select.Option;
 
-import { arTypeKeyMap } from '@/utils/keyMaps'
-// 对应关系
-const {0: x, ...keyMap} = arTypeKeyMap
-// console.log('arTypeKeyMap', arTypeKeyMap);
-// console.log('keyMap', keyMap);
-// console.log('x', x);
-// if (keyMap[0]) {
-  delete keyMap[0]
-// }
+import { selectType } from '@/utils/keyMaps'
+
 const optionList = []
 
-for (var key in keyMap) {
+for (var key in selectType) {
   optionList.push(
-    <Option key={key} value={key}>{keyMap[key]}</Option>
+    <Option key={key} value={key}>{selectType[key]}</Option>
   )
 }
-
 
 class BTTypeSelect extends PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      value: props.defaultValue
+    }
     this.handleChange = this.handleChange.bind(this)
   }
 
@@ -34,9 +29,15 @@ class BTTypeSelect extends PureComponent {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.value != this.state.value) {
+      this.setState({ value: nextProps.value })
+    }
+  }
+
   render() {
     return (
-      <Select defaultValue={this.props.defaultValue} style={{ width: 120 }} onChange={this.handleChange}>
+      <Select value={this.state.value} style={{ width: 120 }} onChange={this.handleChange}>
         {optionList}
       </Select>
     );

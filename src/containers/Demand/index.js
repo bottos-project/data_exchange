@@ -1,7 +1,7 @@
 // 需求列表页
 
 import React,{PureComponent} from 'react'
-import BTRequireCell from './subviews/BTRequireCell'
+import BTRequirementListItem from './subviews/BTRequirementListItem'
 import {getAccount} from '../../tools/localStore'
 import BTFetch from '../../utils/BTFetch';
 import {List,message,Pagination} from 'antd'
@@ -82,7 +82,7 @@ export default class BTDemand extends PureComponent{
             dataSource={this.state.dataSource||[]}
             renderItem={(item)=> (
               <List.Item>
-                <BTRequireCell linkto='/demand/detail' {...item}/>
+                <BTRequirementListItem linkto='/demand/detail' {...item}/>
               </List.Item>
             )}
           />

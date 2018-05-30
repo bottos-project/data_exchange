@@ -36,7 +36,7 @@ const initState = {
   tag1:'',
   tag2:'',
   tag3:'',
-  dataAssetType: '0',
+  dataAssetType: '',
   getFileNameTemp:'',
   getFileName:'',
   getExampleUrl:'',
@@ -221,7 +221,7 @@ class BTPublishAssetModal extends PureComponent{
 
       BTFetch(url,'POST',params)
       .then(response=>{
-        console.log({response})
+        // console.log({response})
         if(response && response.code==1){
           this.setState(initState)
           window.message.success(window.localeInfo['PersonalAsset.SuccessfulToRegisterTheAsset'])
@@ -337,7 +337,7 @@ class BTPublishAssetModal extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.AssetType}/>
               </Col>
               <Col span={12}>
-                <BTTypeSelect onChange={this.onChangeDataAssetType} />
+                <BTTypeSelect value={this.state.dataAssetType} onChange={this.onChangeDataAssetType} />
                 {/* <Cascader value={this.state.cascader}
                   options={options}
                   placeholder={window.localeInfo["PersonalAsset.PleaseSelect"]}
