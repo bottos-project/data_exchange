@@ -1,4 +1,150 @@
 
+// 资产或需求列表页面
+.assetAndReqListItem {
+  padding: 10px;
+  min-height: 145px;
+  height: calc(24vh - 87px);
+  max-height: 174px;
+  color: #FFF;
+  background-image: linear-gradient(-45deg, #66A2EA 0%, #CDC8F8 100%);
+  border-radius: 5px;
+  cursor: pointer;
+  h4 {
+    height: 3em;
+    margin-bottom: 10px;
+    color: #FFF;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  span{
+    font-size: 12px;
+    font-weight: lighter;
+  }
+
+}
+
+.assetAndReqListItem, .mainData {
+  &.voice {
+    box-shadow: 0 0 10px 0 rgba(116,245,171,0.8);
+  }
+  &.video {
+    box-shadow: 0 0 10px 0 rgba(87,227,251,0.8);
+  }
+  &.picture {
+    box-shadow: 0 0 10px 0 rgba(255,183,123,0.8);
+  }
+  &.text {
+    box-shadow: 0 0 10px 0 rgba(188,104,212,0.8);
+  }
+}
+
+.assetDetailBox .bt-type-svg-box > .iconfont,
+.assetListItem .iconfont {
+  color: #333;
+  opacity: 0.3;
+}
+
+.assetDetailBox .mainData,
+.assetListItem {
+  &.voice {
+    background-image: linear-gradient(45deg, #74F5AB 0%, #4AC1FF 100%);
+  }
+  &.video {
+    background-image: linear-gradient(45deg, #7060F3 0%, #6C77F4 17%, #57E3FB 100%);
+  }
+  &.picture {
+    background-image: linear-gradient(45deg, #FF739F 0%, #FF8F90 41%, #FFB77B 100%);
+  }
+  &.text {
+    background-image: linear-gradient(45deg, #5937B9 0%, #BC68D4 100%);
+  }
+}
+
+.demandDetailBox .bt-type-svg-box > .iconfont,
+.requirementListItem .iconfont {
+  color: #fff;
+  opacity: 0.8;
+}
+
+.demandDetailBox .mainData,
+.requirementListItem {
+  &.voice {
+    background-image: linear-gradient(-45deg, #74F5AB 0%, #4AC1FF 100%);
+  }
+  &.video {
+    background-image: linear-gradient(-45deg, #7060F3 0%, #6C77F4 17%, #57E3FB 100%);
+  }
+  &.picture {
+    background-image: linear-gradient(-45deg, #FF739F 0%, #FF8F90 41%, #FFB77B 100%);
+  }
+  &.text {
+    background-image: linear-gradient(-45deg, #5937B9 0%, #BC68D4 100%);
+  }
+}
+
+// 资产或需求详情页面
+.assetDetailBox, .demandDetailBox {
+  color: #FFF;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+
+  ul {
+    display: flex;
+    justify-content: center;
+  }
+
+  button{
+    margin:20px;
+    height: 28px;
+    padding: 0 30px;
+  }
+
+}
+
+.mainData {
+  position: relative;
+  padding: 20px 40px 40px 50px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction:column;
+  background-image: linear-gradient(-45deg, #5937B9 0%, #BC68D4 100%);
+  border-radius: 5px;
+  width: 600px;
+  p > span {
+    width:100px;
+    display: inline-block;
+  }
+}
+
+.mainData > .bt-type-svg-box > .iconfont {
+  font-size: 100px;
+}
+
+
+//选中字体颜色
+::selection {
+  background:#4A90E2;
+  color: #fff;
+}
+
+//assetList
+.headAndShop{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-size: 32px;
+  h1 {
+    font-size: 40px;
+    color: #FFFFFF;
+  }
+  i {
+    cursor: pointer;
+  }
+}
+
 .bt-tag {
   display: inline-block;
   margin: 0 2px;

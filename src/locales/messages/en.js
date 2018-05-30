@@ -19,6 +19,7 @@ module.exports = {
     "Menu.ProfileNeed":"Demand",
     "Menu.ProfileFile":"My File",
     "Menu.Collect":"Favorite",
+    "Menu.MyMessages":"My Message",
 
     //header
     "Header.Asset":"Asset",
@@ -107,7 +108,7 @@ module.exports = {
     "Demand.DownLoadTheSample":"DownLoad the Sample",
     "Demand.ProvideTheAsset":"Presale the Asset",
     "Demand.HavePresale":"Have Presale",
-    "Demand.DataDescription":"Data Description:",
+    "Demand.DataDescription":"Data Description",
     "Demand.SetScreening":"Set Filter",
     "Demand.DataDetails":"Demand Details",
     "Demand.ThereIsNoMarketDemandForTheTimeBeing":"No market demand",
@@ -130,7 +131,7 @@ module.exports = {
     "Asset.BuyAssets":"Buy Assets",
     "Asset.HaveBought":"Have Bought",
     "Asset.DownLoadTheSample":"DownLoad the Sample",
-    "Asset.DataDescription":"Data Description:",
+    "Asset.DataDescription":"Data Description",
     "Asset.SetScreeningSample":"Choose Sample",
     "Asset.SetScreeningFile":"Choose File",
     "Asset.Publisher":"Publisher:",
@@ -182,6 +183,7 @@ module.exports = {
     "BlockBrowsing.To":"To",
     "BlockBrowsing.Price":"Price",
     "BlockBrowsing.ThereIsNoDataForTheTimeBeing":"No data found",
+    "BlockBrowsing.All":"All",
 
 
     //PersonalMessages

@@ -143,12 +143,6 @@ class BTHeader extends PureComponent{
                     <FormattedMessage {...HeaderMessages.MyMessages} />
                   </Link>
 
-                  {/* <div>
-                      <Dropdown overlay={this.keyStoreMenu()}>
-                          <i className="iconfont icon-key" style={{fontSize:25,marginLeft:10}}/>
-                      </Dropdown>
-                  </div> */}
-
                 </div>
                 <div className='switch-locate'>
                   <Button onClick={this.setLocale}>

@@ -48,10 +48,9 @@ export default class BTHaveBought extends PureComponent{
               render: getDateAndTime
             },
             {
-              title: <FormattedMessage {...PersonalAssetMessages.AssetOperation} />,
-              key: 'download',
-              render: (text, record) => (
-                  <a onClick={()=>this.download(record)}>
+              title: <FormattedMessage {...PersonalAssetMessages.AssetOperation} />, dataIndex: 'storage_hash',
+              render: (storage_hash) => (
+                  <a onClick={() => BTDownloadFile(storage_hash, getAccount().username) }>
                       <Icon type="download" />
                   </a>
               )
@@ -62,11 +61,6 @@ export default class BTHaveBought extends PureComponent{
                     </div>
             }*/
         ];
-    }
-
-    async download(record) {
-      const { storage_hash: guid, asset_name: filename } = record
-      BTDownloadFile(guid, filename, getAccount().username)
     }
 
     componentDidMount(){

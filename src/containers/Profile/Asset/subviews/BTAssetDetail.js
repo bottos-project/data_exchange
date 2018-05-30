@@ -67,7 +67,7 @@ export default class BTAssetDetail extends PureComponent{
               render: (item) => <span>{item.length < 30 ? item : item.substring(0,30) + '...'}</span>
             },
             { title: <FormattedMessage {...PersonalAssetMessages.AssetOperation} />, dataIndex: 'storage_hash',
-              render: (text, record) => <a onClick={()=> BTDownloadFile(text, record.asset_name, getAccount().username)}>
+              render: (text) => <a onClick={()=> BTDownloadFile(text, getAccount().username)}>
                   <Icon type="download" style={{color:"black",fontWeight:900}} />
               </a>
             },

@@ -9,7 +9,7 @@ import { addFile, deleteFile, updateFile, updateUploadProgress } from '@/redux/a
 import { get_ms_short } from '@/utils/dateTimeFormat'
 import BTFetch from '@/utils/BTFetch'
 import { getBlockInfo, getSignaturedFetchParam } from "@/utils/BTCommonApi";
-import { file_server, BTFileFetch } from '@/utils/BTDownloadFile'
+import { BTFileFetch } from '@/utils/BTDownloadFile'
 import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/msgpack'
 
 // const fs = __non_webpack_require__('fs');
@@ -34,7 +34,7 @@ function calculateSlicedFileSize(size) {
   } else if (size > 500 * MegaByte) {
     return 150 * MegaByte;
   }
-  return 50 * MegaByte;
+  return 80 * MegaByte;
   return 100 * MegaByte;
 }
 
@@ -263,13 +263,8 @@ function querySecondProgress(file) {
   let body = JSON.stringify({ username, slice })
   // console.log('body', body);
 
-  fetch(file_server + '/data/getUploadProgress', {
-    method: 'POST',
-    body,
-    headers: new Headers({
-      'Content-Type': 'application/json'
-    })
-  }).then(res => res.json()).then(async (res) => {
+  BTFileFetch('/data/getUploadProgress', { username, slice })
+  .then(async (res) => {
     console.log('res', res);
     if (res.result != 200) {
       setTimeout(querySecondProgress.bind(null, file), 3000);
