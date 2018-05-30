@@ -16,6 +16,7 @@ import ConfirmButton from './ConfirmButton'
 import BTTypeSelect from './BTTypeSelect'
 import * as BTSign from '../lib/sign/BTSign'
 import {registAssetPack} from '../lib/msgpack/BTPackManager'
+import BTNumberInput from './BTNumberInput'
 
 const PersonalAssetMessages = messages.PersonalAsset;
 const HeaderMessages = messages.Header;
@@ -302,8 +303,7 @@ class BTPublishAssetModal extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>
               </Col>
               <Col span={8}>
-                <Input placeholder={window.localeInfo["PersonalAsset.Price"]}
-                       type='number'
+                <BTNumberInput placeholder={window.localeInfo["PersonalAsset.Price"]}
                        value={this.state.number}
                        onChange={this.handleNumberChange}
                 />

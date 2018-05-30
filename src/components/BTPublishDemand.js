@@ -14,6 +14,7 @@ import { toFixedWithoutZero } from '@/utils/number'
 import {registDemandPack} from '../lib/msgpack/BTPackManager'
 import {messageSign} from '../lib/sign/BTSign'
 import BTCrypto from 'bottos-js-crypto'
+import BTNumberInput from './BTNumberInput'
 
 const PersonalDemandMessages = messages.PersonalDemand;
 const PersonalAssetMessages = messages.PersonalAsset;
@@ -213,8 +214,7 @@ class BTPublishDemand extends PureComponent{
                 <FormattedMessage {...PersonalDemandMessages.RecruitmentPrice}/>
               </Col>
               <Col span={8}>
-                <Input
-                  type='number'
+                <BTNumberInput
                   defaultValue={0}
                   value={this.state.number}
                   onChange={this.handleNumberChange}

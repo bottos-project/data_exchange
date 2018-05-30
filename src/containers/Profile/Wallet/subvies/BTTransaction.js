@@ -48,17 +48,18 @@ class Transaction extends PureComponent{
         let username = accountInfo.username
         const { getFieldDecorator,getFieldsValue,getFieldValue,setFields } = this.props.form;
         let fieldValues = getFieldsValue()
+        let quantity = Number(fieldValues.quantity)
         if(!fieldValues.to){
             window.message.error(window.localeInfo["Wallet.PleaseEnterTheTargetAccount"])
 
             return}
-        if(!fieldValues.quantity){
+        if(!quantity){
             window.message.error(window.localeInfo["Wallet.PleaseEnterTheMoneyToBeTransferred"])
             return}
         if(!fieldValues.password) {
             window.message.error(window.localeInfo["Wallet.PleaseEnterThePassword"])
             return}
-        if(fieldValues.quantity<=0){
+        if(quantity<=0){
             window.message.error(window.localeInfo["Wallet.PleaseEnterAvalidTransferAmount"])
             return}
         let keyStoreResult = BTIPcRenderer.getKeyStore({username:username,account_name:account_name})
@@ -78,7 +79,7 @@ class Transaction extends PureComponent{
             let did = {
                 "from": account_name,
                 "to": fieldValues.to,
-                "price": fieldValues.quantity * Math.pow(10,8),
+                "price": quantity * Math.pow(10,8),
                 "remark": "April's rent"
             }
             let didBuf = transactionPack(did)
@@ -136,7 +137,7 @@ class Transaction extends PureComponent{
 
                     <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout}>
                       {getFieldDecorator('quantity', { rules: [{ required: true, message: '请填写转账金额!' }], })(
-                        <BTNumberInput value={this.state.quantity} onChange={(e)=>this.onChange(e)}/>
+                        <BTNumberInput/>
                       )}
                       <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div>
                       {/* })(<div className="flex row"><InputNumber value={this.state.quantity} onChange={(e)=>this.onChange(e)}/><div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div></div>)} */}
