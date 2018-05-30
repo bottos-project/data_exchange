@@ -106,7 +106,7 @@ class Login extends PureComponent{
           let url = '/user/login'
           BTFetch(url,'POST',params)
           .then(response => {
-            // console.log({response})
+            console.log({response})
             if (response) {
               if (response && response.code == 1) {
                 window.message.success(window.localeInfo["Header.LoginSucceed"])
@@ -114,7 +114,7 @@ class Login extends PureComponent{
                 this.props.setAccountInfo(accountInfo)
                 hashHistory.push('/profile/asset')
               } else if (response.code==1001) {
-                message.warning('verify code is wrong');
+                message.warning(window.localeInfo["Header.PleaseEnterTheVerificationCode"]);
               } else if (response.code==1000 && typeof response.details == 'string') {
                 try {
                   console.error(response.msg, JSON.parse(response.details));

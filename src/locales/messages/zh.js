@@ -15,7 +15,7 @@ module.exports = {
     "Header.PleaseEnterTheKeystore":"请输入Keystore文本",
     "Header.PleaseEnterTheSurePassword":"请再次输入密码",
     "Header.PleaseEnterTheCompanyName":"请输入公司名",
-    "Header.PleaseEnterTheVerificationCode":"请输入验证码",
+    "Header.PleaseEnterTheVerificationCode":"验证码不正确",
     "Header.ThePasswordShouldContainAtLeast8BitCharacters":"密码应该至少包含8位字符",
     "Header.IncorrectPasswordEnteredTwice":"两次输入密码不一致",
     "Header.YourRegistrationHasBeenSuccessfullyCompleted":"注册成功",

@@ -84,3 +84,20 @@ export const favoritePack = (did) => {
 
   return [...b1,...b2,...b3,...b4,...b5]
 }
+
+export const buyAssetGrantCreditPack = (did)=>{
+    let p1 = BTPack.PackArraySize(3)
+    let p2 = BTPack.PackStr16(did.name)
+    let p3 = BTPack.PackStr16(did.spender)
+    let p4 = BTPack.PackUint64(did.limit)
+
+    return [...p1,...p2,...p3,...p4]
+}
+
+export const cancelAssetGrantCreditPack = (did)=>{
+    let p1 = BTPack.PackArraySize(2)
+    let p2 = BTPack.PackStr16(did.name)
+    let p3 = BTPack.PackStr16(did.spender)
+
+    return [...p1,...p2,...p3]
+}
