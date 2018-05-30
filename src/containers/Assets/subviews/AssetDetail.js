@@ -138,21 +138,21 @@ export default class BTAssetDetail extends PureComponent{
                 </div>
 
                 <Row>
-                  <Col span={4}>
+                  <Col span={6}>
                     <FormattedMessage {...AssetMessages.AssetID}/>
                   </Col>
                   <Col span={18}>{data.asset_id}</Col>
                 </Row>
 
                 <Row>
-                  <Col span={4}>
+                  <Col span={6}>
                     <FormattedMessage {...AssetMessages.Publisher}/>
                   </Col>
                   <Col span={18}>{data.username}</Col>
                 </Row>
 
                 <Row>
-                  <Col span={4}>
+                  <Col span={6}>
                     <FormattedMessage {...AssetMessages.AssetType}/>
                   </Col>
                   <Col span={18}>
@@ -161,7 +161,7 @@ export default class BTAssetDetail extends PureComponent{
                 </Row>
 
                 <Row>
-                  <Col span={4}>
+                  <Col span={6}>
                     <FormattedMessage {...AssetMessages.ExpectedPrice}/>
                   </Col>
                   <Col span={18}>
@@ -171,14 +171,14 @@ export default class BTAssetDetail extends PureComponent{
                 </Row>
 
                 <Row>
-                  <Col span={4}>
+                  <Col span={6}>
                     <FormattedMessage {...AssetMessages.ExpireTime}/>
                   </Col>
                   <Col span={18}>{getDateAndTime(time)}</Col>
                 </Row>
 
                 <Row>
-                  <Col span={4}>
+                  <Col span={6}>
                     <FormattedMessage {...AssetMessages.FeatureTag}/>
                   </Col>
                   <Col span={18}>

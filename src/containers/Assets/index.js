@@ -1,13 +1,8 @@
 import React, {Component} from 'react'
-
-// import BTAssetCell from './subviews/AssetCell'
 import {Pagination, List} from 'antd'
 import AssetlistItem from './subviews/AssetlistItem'
-import BTMyTag from '../../components/BTMyTag'
 import BTFetch from '../../utils/BTFetch'
 import CustomTabBar from '@/components/CustomTabBar'
-
-// const keyMap = ['All', 'Text', 'Picture', 'Voice', 'Video']
 import { arTypeKeyMap } from '@/utils/keyMaps.js'
 
 export default class BTAssets extends Component {
@@ -17,7 +12,6 @@ export default class BTAssets extends Component {
             dataSource: [],
             row_count: 0,
             activeKey: '0',
-            keyMap:[]
         };
 
         this.onChange = this.onChange.bind(this)
@@ -25,20 +19,6 @@ export default class BTAssets extends Component {
 
     componentDidMount() {
         this.getPagination(1, 10)
-        this.setKeyMap()
-    }
-
-    setKeyMap(){
-        let keyMapZh = ["全部","文本","图片","声音","视频"]
-        let keyMapEn = ['All', 'Text', 'Picture', 'Voice', 'Video']
-        let storage = window.localStorage;
-        let locale = storage.getItem('locale')
-        console.log({locale})
-        if(locale=='en-US'){
-            this.setState({keyMap:keyMapEn})
-        }else{
-            this.setState({keyMap:keyMapZh})
-        }
     }
 
     onChange(page,pageSize,asset_type=this.state.activeKey) {

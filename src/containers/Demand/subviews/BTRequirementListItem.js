@@ -1,7 +1,6 @@
 import React,{PureComponent} from 'react'
 import { hashHistory } from 'react-router'
 import BTFetch from '../../../utils/BTFetch'
-import './styles.less'
 import {FormattedMessage} from 'react-intl'
 import { typeValueKeyMap } from '../../../utils/keyMaps'
 
@@ -40,13 +39,18 @@ export default class BTRequirementListItem extends PureComponent{
     render(){
         let data = this.props;
         let time=new Date((data.expire_time)*1000).toLocaleDateString({...DemandMessages.En});
-        let className = 'assetAndReqListItem requirementListItem ' + typeValueKeyMap[data.req_type]
+        const req_type = data.req_type || 0
+        const typeValue = typeValueKeyMap[req_type]
+        let className = 'assetAndReqListItem requirementListItem ' + typeValue
 
         return (
             <div className={className} onClick={this.handleClick}>
               <h4 className='txt_cut'>
                 {data.requirement_name}
               </h4>
+              <div className='bt-type-svg-box'>
+                <i className={"iconfont icon-" + typeValue} />
+              </div>
               <div>
                 <FormattedMessage {...DemandMessages.Publisher}/>
                 {data.username}

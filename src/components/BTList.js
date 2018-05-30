@@ -1,5 +1,4 @@
 import React,{PureComponent} from 'react'
-import BTListCell from './BTListCell'
 import {Row,Col,Table,Button,Popconfirm} from 'antd'
 import BTFetch from '../utils/BTFetch'
 import { getSignaturedParam } from '../utils/BTCommonApi'

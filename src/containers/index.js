@@ -61,7 +61,7 @@ class App extends PureComponent {
               </div>
 
               <div className="container contentbody column">
-                <div className="everyTitle">
+                <div className="everyTitle route-children-bg">
                   <h3>
                     {title}
                   </h3>

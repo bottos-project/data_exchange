@@ -6,7 +6,6 @@ import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import BTAssetRadioGroup from './BTAssetRadioGroup'
 import { getDateAndTime } from '../../../utils/dateTimeFormat'
-import './styles.less'
 import {getAccount} from "../../../tools/localStore";
 import CloseBack from '@/components/CloseBack'
 import BTFavoriteStar from '@/components/BTFavoriteStar'

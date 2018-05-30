@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import { hashHistory } from 'react-router'
-import './styles.less'
 import BTFetch from '../../../utils/BTFetch'
 import {FormattedMessage} from 'react-intl'
 import BTTags from '../../AssetAndRequirement/BTTags'
@@ -40,7 +39,8 @@ class AssetlistItem extends Component {
     render() {
         let data = this.props.list;
         const asset_type = data.asset_type || 0
-        let className = 'assetAndReqListItem assetListItem ' + typeValueKeyMap[asset_type]
+        const typeValue = typeValueKeyMap[asset_type]
+        let className = 'assetAndReqListItem assetListItem ' + typeValue
         let tagsArr = data.feature_tag.split('-')
 
         return (
@@ -48,6 +48,9 @@ class AssetlistItem extends Component {
                 <h4 className='txt_cut'>
                   {data.asset_name}
                 </h4>
+                <div className='bt-type-svg-box'>
+                  <i className={"iconfont icon-" + typeValue} />
+                </div>
                 <div>
                   <FormattedMessage {...AssetMessages.Publisher}/>
                   {data.username}
