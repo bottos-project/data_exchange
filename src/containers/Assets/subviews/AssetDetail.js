@@ -11,7 +11,9 @@ import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import CloseBack from '@/components/CloseBack'
 import BTTags from '../../AssetAndRequirement/BTTags'
 import { PackArraySize, PackStr16 } from '@/lib/msgpack/msgpack'
-
+import {buyAssetGrantCreditPack,cancelAssetGrantCreditPack} from '../../../lib/msgpack/BTPackManager'
+import {messageSign} from '../../../lib/sign/BTSign'
+import * as BTCryptTool from 'bottos-js-crypto'
 import { arTypeKeyMap } from '@/utils/keyMaps'
 
 const AssetMessages = messages.Asset;
@@ -44,11 +46,96 @@ export default class BTAssetDetail extends PureComponent{
     }
 
     async buySureAsset() {
+      //获取区块信息
+      let blockInfo = await getBlockInfo()
+      let privateKey = Buffer.from(getAccount().privateKey, 'hex')
+      let username = getAccount().username
+      this.grantCredit(username,blockInfo,privateKey)
+      
+    }
 
+    grantCredit(username,blockInfo,privateKey){
+      let params = {
+        "version": 1,
+        ...blockInfo,
+        "sender": username,
+        "contract": "bottos",
+        "method": "grantcredit",
+        "sig_alg": 1
+      }
+
+      let did = {
+        name:username,
+        spender:'datadealmng',
+        limit:this.state.price
+      }
+
+      let arrBuf = buyAssetGrantCreditPack(did)
+      params.param = arrBuf
+      let sign = messageSign(params, privateKey)
+      params.signature = sign.toString('hex')
+      params.param = BTCryptTool.buf2hex(arrBuf)
+      let url = '/exchange/GrantCredit'
+      BTFetch(url,'POST',params)
+        .then(response=>{
+          if(response){
+            if(response.code==1){
+              this.buyButtonClick(username,blockInfo,privateKey)
+            }else if(response.code==4001){
+              this.calcelCredit(username,blockInfo,privateKey)
+              window.message.error(window.localeInfo["Asset.InsufficientBalance"])
+            }else{
+              this.calcelCredit(username,blockInfo,privateKey)
+              window.message.error(window.localeInfo["Asset.FailedPurchase"])
+            }
+          }
+        }).catch(error=>{
+          this.calcelCredit(username,blockInfo,privateKey)
+          window.message.error(window.localeInfo["Asset.FailedPurchase"])
+        })
+    }
+
+    calcelCredit(username,blockInfo,privateKey){
+      let params = {
+        "version": 1,
+        ...blockInfo,
+        "sender": username,
+        "contract": "bottos",
+        "method": "cancelcredit",
+        "sig_alg": 1,
+      }
+
+      let did = {
+        name:username,
+        spender:"datadealmng"
+      }
+
+      let arrBuf = cancelAssetGrantCreditPack(did)
+      params.param = arrBuf
+      let sign = messageSign(params, privateKey)
+      params.signature = sign.toString('hex')
+      params.param = BTCryptTool.buf2hex(arrBuf)
+
+      let url = '/exchange/CancelCredit'
+      BTFetch(url,'POST',params)
+        .then(response=>{
+          console.log({response})
+          if(response && response.code==1){
+            console.log('取消授权成功')
+          }else{
+            console.log('取消授权失败')
+          }
+        }).catch(error=>{
+          console.log({error})
+        })
+    }
+
+    buyButtonClick(username,blockInfo,privateKey){
+      console.log("buyButtonClick")
       let originParam = {
       	"data_deal_id": window.uuid(),
       	"basic_info": {
-      		"username": getAccount().username,
+      		"username": username,
       		"assetId": this.state.asset_id
       	}
       }
@@ -63,23 +150,19 @@ export default class BTAssetDetail extends PureComponent{
 
       let param = [...b1,...b2,...b3,...b4,...b5]
 
-      //获取区块信息
-      let blockInfo = await getBlockInfo()
-
       let fetchParam = {
         "version": 1,
         ...blockInfo,
-        "sender": getAccount().username,
+        "sender": username,
         "contract": "datadealmng",
         "method": "buydata",
         "param": param,
         "sig_alg": 1
       }
 
-      let privateKey = Buffer.from(getAccount().privateKey, 'hex')
-
       BTFetch('/exchange/buyAsset', 'post', getSignaturedFetchParam({fetchParam, privateKey}))
       .then(res=>{
+        console.log({res})
         if (!res) {
           throw new Error('buy asset failed')
         }
@@ -88,10 +171,12 @@ export default class BTAssetDetail extends PureComponent{
           this.setState({ isBuy_asset_flag: true })
           window.message.success(window.localeInfo["Asset.SuccessfulPurchase"])
         } else if (res.code == 4001) {
+          this.calcelCredit(username,blockInfo,privateKey)
           message.warning(window.localeInfo["Asset.InsufficientBalance"])
         }
       }).catch(err => {
         console.error('err', err);
+        this.calcelCredit(username,blockInfo,privateKey)
         window.message.error(window.localeInfo["Asset.FailedPurchase"])
       })
     }

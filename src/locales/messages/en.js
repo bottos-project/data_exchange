@@ -50,7 +50,7 @@ module.exports = {
     "Header.PleaseEnterTheUserName":"Please Enter The User Name",
     "Header.PleaseEnterThePassword":"Please Enter The Password",
     "Header.PleaseEnterTheKeystore":"Please Enter the Keystore Content",
-    "Header.PleaseEnterTheVerificationCode":"Please Enter The Verification Code",
+    "Header.PleaseEnterTheVerificationCode":"The Verification Code Is Wrong",
     "Header.PleaseEnterTheSurePassword":"Please Enter The Password again",
     "Header.PleaseEnterTheCompanyName":"Please Enter The Company Name",
     "Header.ThePasswordShouldContainAtLeast8BitCharacters":"The password should contain at least 8 digit characters",
