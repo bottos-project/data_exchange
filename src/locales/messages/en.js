@@ -19,6 +19,7 @@ module.exports = {
     "Menu.ProfileNeed":"Demand",
     "Menu.ProfileFile":"My File",
     "Menu.Collect":"Favorite",
+    "Menu.MyMessages":"My Message",
 
     //header
     "Header.Asset":"Asset",

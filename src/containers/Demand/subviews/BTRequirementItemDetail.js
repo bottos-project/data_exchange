@@ -64,9 +64,9 @@ export default class BTRequirementItemDetail extends PureComponent{
   download() {
     let data = this.state
     console.log('data', data);
-    let { sample_hash: guid, requirement_name: filename, username } = data
-    console.log('guid, filename, username', guid, filename, username);
-    BTDownloadFile(guid, filename, username)
+    let { sample_hash: guid, username } = data
+    // console.log('guid, username', guid, username);
+    BTDownloadFile(guid, username)
     .catch(e => {
       console.dir(e);
       console.error('download', e);
@@ -147,6 +147,9 @@ export default class BTRequirementItemDetail extends PureComponent{
 
   render() {
       let data = this.state
+      const req_type = data.req_type || 0
+      const typeValue = typeValueKeyMap[req_type]
+
       return (
           <div className='route-children-container route-children-bg'>
             <CloseBack />
@@ -156,7 +159,11 @@ export default class BTRequirementItemDetail extends PureComponent{
                 <h2 className='route-children-container-title'>
                     <FormattedMessage {...DemandMessages.DataDetails}/>
                 </h2>
-                <div className="mainData">
+                <div className={"mainData " + typeValue}>
+                  <div className='bt-type-svg-box'>
+                    <i className={"iconfont icon-" + typeValue} />
+                  </div>
+
                   <div className="headAndShop">
                     <h1>{data.requirement_name}</h1>
                     <BTFavoriteStar isFavorite={data.is_collection} type='requirement' id={data.requirement_id} />

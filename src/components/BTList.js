@@ -42,9 +42,9 @@ export default class BTList extends PureComponent{
           },
         },
         {
-          title: <FormattedMessage {...CollectMessages.ViewTheDetails}/>, dataIndex: 'goods_id', key: 'looker',
-          render:(item) =>
-            <Button onClick={()=>this.lookfor(item)}><FormattedMessage {...CollectMessages.View}/></Button>
+          title: <FormattedMessage {...CollectMessages.ViewTheDetails}/>, dataIndex: 'goods_id',
+          render:(asset_id) =>
+            <Button onClick={()=>this.lookfor(asset_id)}><FormattedMessage {...CollectMessages.View}/></Button>
         },
       ];
     }
@@ -53,26 +53,25 @@ export default class BTList extends PureComponent{
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
     }
-    lookfor(item){
-        BTFetch('/asset/QueryAssetByID','post', {"asset_id":item})
-            .then(res=>{
-                if(res.code == 1){
-                    console.log(res.data.row)
-                    if(res.data.row.length==1){
-                        hashHistory.push({
-                            pathname:'/assets/detail',
-                            query:res.data.row[0]
-                        })
-                    }
 
-                }else{
-                    window.message.error(window.localeInfo["Header.FailedQuery"]);
-                }
-            })
-            .catch(error=>{
-                window.message.error(window.localeInfo["Header.FailedQuery"]);
-
-            })
+    lookfor(asset_id){
+      BTFetch('/asset/QueryAssetByID', 'post', {asset_id})
+        .then(res => {
+            if(res.code == 1){
+              console.log(res.data)
+              if (res.data) {
+                hashHistory.push({
+                  pathname:'/assets/detail',
+                  state:res.data
+                })
+              }
+            } else {
+              window.message.error(window.localeInfo["Header.FailedQuery"]);
+            }
+        })
+        .catch(error => {
+            window.message.error(window.localeInfo["Header.FailedQuery"]);
+        })
     }
 
     onChange(checkedValues) {

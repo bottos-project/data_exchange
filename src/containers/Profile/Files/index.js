@@ -58,20 +58,14 @@ class BTMyAssetSet extends Component{
           render: getDateAndTime
         },
         {
-          title: <FormattedMessage {...PersonalAssetMessages.Download}/>,
-          key: 'download',
-          render: (text, record) => (
-              <a onClick={()=>this.download1(record)}>
+          title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_hash',
+          render: (file_hash) => (
+              <a onClick={() => BTDownloadFile(file_hash, getAccount().username) }>
                   <Icon type="download"/>
               </a>
           )
         },
       ];
-    }
-
-    async download1(record) {
-      const { file_hash: guid, file_name: filename } = record
-      BTDownloadFile(guid, filename, getAccount().username)
     }
 
     customRequest = ({ file, onSuccess }) => {

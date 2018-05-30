@@ -28,7 +28,7 @@ function getDownloadFileIP(guid) {
         snode_ip
       }))
       console.log('ip', ip);
-      return { guid, ip }
+      return { guid, ip, filename: res.file_name }
     }
   })
 }
@@ -47,8 +47,10 @@ function getFileDownloadURL(param, filename) {
 }
 
 
-export async function BTDownloadFile(guid, filename, username) {
-  let param = await getDownloadFileIP(guid)
+export async function BTDownloadFile(guid, username) {
+  // console.log('arguments', arguments);
+  // const [guid, username] = arguments
+  let { filename, ...param } = await getDownloadFileIP(guid)
   if (!param) {
     return window.message.error('get download file fail')
   }

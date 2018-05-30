@@ -151,6 +151,7 @@ export default class BTMessageTable extends PureComponent{
                 columns={columns}
                 // expandedRowRender={record => <p style={{ margin: 0 }}>{record.description}</p>}
                 dataSource={this.state.data}
+                rowKey='asset_id'
             />
         )
     }
