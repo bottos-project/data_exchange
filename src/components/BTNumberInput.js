@@ -9,7 +9,6 @@ export default class BTNumberInput extends PureComponent{
 
         this.state = {
             title:'',
-            value:'',
             visible:false
         }
     }
@@ -24,7 +23,7 @@ export default class BTNumberInput extends PureComponent{
             this.setState({visible:true,title:window.localeInfo["Wallet.NumberIsTooBig"]})
             return
         }else{
-            this.setState({value,visible:false})
+            this.setState({visible:false})
             this.props.onChange(e)
         } 
     }
@@ -41,9 +40,9 @@ export default class BTNumberInput extends PureComponent{
                     title = {this.state.title || ''}
                 >
                     <Input
+                        {...this.props}
                         onBlur={()=>{this.onBlur()}}
                         onChange={(e)=>this.onChange(e)}
-                        value={this.state.value}
                     />
                 </Tooltip>
             </div>

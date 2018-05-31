@@ -32,10 +32,6 @@ const formItemLayout = {
 class Transaction extends PureComponent{
     constructor(props){
         super(props)
-
-        this.state = {
-            quantity:''
-        }
     }
 
     async onHandleSubmit(){
@@ -46,8 +42,9 @@ class Transaction extends PureComponent{
 
         let accountInfo = JSON.parse(localStorage.account_info)
         let username = accountInfo.username
-        const { getFieldDecorator,getFieldsValue,getFieldValue,setFields } = this.props.form;
+        const { getFieldDecorator,getFieldsValue,getFieldValue,setFields,setFieldsValue } = this.props.form;
         let fieldValues = getFieldsValue()
+
         let quantity = Number(fieldValues.quantity)
         if(!fieldValues.to){
             window.message.error(window.localeInfo["Wallet.PleaseEnterTheTargetAccount"])
@@ -116,12 +113,6 @@ class Transaction extends PureComponent{
         }
     }
 
-    onChange(value){
-        this.setState({
-            quantity:value
-        })
-    }
-
     render(){
         const { getFieldDecorator } = this.props.form;
         return(
@@ -135,12 +126,11 @@ class Transaction extends PureComponent{
                       })(<Input />)}
                     </FormItem>
 
-                    <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout}>
+                    <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout} onValuesChange={console.log("onValuesChange")}>
                       {getFieldDecorator('quantity', { rules: [{ required: true, message: '请填写转账金额!' }], })(
                         <BTNumberInput/>
                       )}
                       <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div>
-                      {/* })(<div className="flex row"><InputNumber value={this.state.quantity} onChange={(e)=>this.onChange(e)}/><div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div></div>)} */}
                     </FormItem>
 
                     <FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
