@@ -6,10 +6,10 @@ import Login from './Login'
 import Register from './Register'
 
 import { FormattedMessage } from 'react-intl'
-import messages from '../locales/messages'
+import messages from '../../locales/messages'
 const HeaderMessages = messages.Header;
 
-import CustomTabBar from './CustomTabBar'
+import CustomTabBar from '../CustomTabBar'
 
 
 const keyMap = {

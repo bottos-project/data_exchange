@@ -40,6 +40,10 @@ export default class BTAssetDetail extends PureComponent{
           message.warning(window.localeInfo["Asset.PleaseLogInFirst"])
           return;
       }
+      if (this.state.username == getAccount().username) {
+        message.warning(window.localeInfo["Asset.YouAreNotAllowedToBuyYourOwnAssets"])
+        return;
+      }
       this.setState({
         visible: true,
       });
@@ -187,13 +191,6 @@ export default class BTAssetDetail extends PureComponent{
       });
       message.destroy();
 
-      if (this.state.username == getAccount().username) {
-        message.warning(window.localeInfo["Asset.YouAreNotAllowedToBuyYourOwnAssets"])
-        return;
-      }
-      //查询是否已购买资产
-      // "asset_id":this.state.data.asset_id,
-
       this.buySureAsset()
     }
 
@@ -301,6 +298,8 @@ export default class BTAssetDetail extends PureComponent{
                 visible={this.state.visible}
                 onOk={(e)=>this.handleOk(e)}
                 onCancel={(e)=>this.handleCancel(e)}
+                okText={<FormattedMessage {...messages.OK} />}
+                cancelText={<FormattedMessage {...messages.Cancel} />}
               >
                 <p>
                   <FormattedMessage {...AssetMessages.AreYouSureToBuyThisAsset}/>

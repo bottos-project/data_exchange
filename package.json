@@ -1,7 +1,7 @@
 {
   "name": "BottosWallet",
-  "version": "3.0.0alpha.5",
-  "publishDate": "2018-5-28",
+  "version": "3.0.0-alpha.6",
+  "publishDate": "2018-5-31",
   "private": true,
   "main": "main.js",
   "homepage": ".",

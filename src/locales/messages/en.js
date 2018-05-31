@@ -1,4 +1,8 @@
 module.exports = {
+
+    "OK":"OK",
+    "Cancel":"Cancel",
+
     //menu
     "Menu.Home":"Home",
     "Menu.Dashboard":"Dashboard",
@@ -9,6 +13,7 @@ module.exports = {
     "Menu.Profile":'Profile',
     "Menu.PreSale":"Presale",
     "Menu.Wallet":"Wallet",
+    "Menu.Walletlist":"Wallet List",
     "Menu.DemandDetails":"Demand Details",
     "Menu.AssetDetails":"Asset Details",
     "Menu.LoginOrRegister":"Login/Register",
@@ -51,7 +56,8 @@ module.exports = {
     "Header.PleaseEnterTheUserName":"Please Enter The User Name",
     "Header.PleaseEnterThePassword":"Please Enter The Password",
     "Header.PleaseEnterTheKeystore":"Please Enter the Keystore Content",
-    "Header.PleaseEnterTheVerificationCode":"The Verification Code Is Wrong",
+    "Header.PleaseEnterTheVerificationCode":"Please Enter The Verification Code",
+    "Header.VerificationCodeWrong":"The Verification Code Is Wrong",
     "Header.PleaseEnterTheSurePassword":"Please Enter The Password again",
     "Header.PleaseEnterTheCompanyName":"Please Enter The Company Name",
     "Header.ThePasswordShouldContainAtLeast8BitCharacters":"The password should contain at least 8 digit characters",

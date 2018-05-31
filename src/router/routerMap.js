@@ -30,7 +30,7 @@ import BTWalletList from '../containers/Profile/Wallet/subvies/BTWalletList'
 import BTPublishDemand from '../components/BTPublishDemand'
 import BTPublishAssetModal from '../components/BTPublishAssetModal'
 import LoginOrRegister from '../components/LoginOrRegister'
-import Register from '../components/Register'
+import Register from '../components/LoginOrRegister/Register'
 
 
 class RouterMap extends PureComponent {

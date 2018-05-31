@@ -7,7 +7,6 @@ import { getSignaturedParam } from '@/utils/BTCommonApi'
 import { FormattedMessage } from 'react-intl'
 import messages from '@/locales/messages'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
-import querystring from 'querystring'
 const CheckMessages = messages.Check;
 const PresaleMessages = messages.Presale;
 
@@ -53,14 +52,21 @@ class PreSale extends Component {
   }
 
   checkTheAsset(req_id) {
-    BTFetch("/requirement/query", "post", { req_id })
+    BTFetch("/requirement/QueryById", "post", { req_id, sender: getAccount().username })
     .then(res => {
-      if (!res) return ;
-      if (res.code == 1 && res.data.row != null) {
-        let p = querystring.stringify(res.data.row[0])
-        hashHistory.push('/demand/detail?' + p)
+      if (!res || res.code != 1) {
+        throw new Error('Failed To Get The Requirement Details')
       }
+      hashHistory.push({
+        pathname: '/demand/detail',
+        state: res.data
+      })
     })
+    .catch(err => {
+      window.message.error(window.localeInfo['Demand.FailedToGetTheRequirementDetails'])
+      console.error('/requirement/QueryById err', err);
+    })
+
   }
 
   componentDidMount() {

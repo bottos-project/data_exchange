@@ -58,9 +58,11 @@ export default class BTMessageTable extends PureComponent{
         asset_id
       }).then(res => {
         if (!res) return ;
-        if (res.code == 1 && res.data.row != null) {
-          let p = querystring.stringify(res.data.row[0])
-          hashHistory.push('/assets/detail?' + p)
+        if (res.code == 1 && res.data != null) {
+          hashHistory.push({
+            pathname: '/assets/detail',
+            state: res.data
+          })
         } else {
           window.message.error(window.localeInfo["Check.QueryFailure"])
         }

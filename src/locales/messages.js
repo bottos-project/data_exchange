@@ -1,4 +1,12 @@
 module.exports = {
+    OK:{
+      id:"OK",
+      defaultMessage:"确定",
+    },
+    Cancel:{
+      id:"Cancel",
+      defaultMessage:"取消",
+    },
     Menu:{
         Home:{
             id:'Menu.Home',

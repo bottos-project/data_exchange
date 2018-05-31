@@ -2,18 +2,18 @@ import React, { Component, PureComponent } from 'react'
 import { connect } from 'react-redux'
 import { setSpin } from '@/redux/actions/HeaderAction'
 import { Form, Spin, Icon, Input, Button, Row, Col ,Tooltip} from 'antd'
-import BTFetch from '../utils/BTFetch'
+import BTFetch from '@/utils/BTFetch'
 import BTCryptTool from 'bottos-js-crypto'
-import './styles.less'
-import BTIpcRenderer from '../tools/BTIpcRenderer'
-import {exportFile} from '../utils/BTUtil'
+import '../styles.less'
+import BTIpcRenderer from '@/tools/BTIpcRenderer'
+import {exportFile} from '@/utils/BTUtil'
 import {FormattedMessage} from 'react-intl'
-import {isUserName} from '../tools/BTCheck'
-import ConfirmButton from './ConfirmButton'
-import messages from '../locales/messages'
-import {messageProtoEncode} from '../lib/proto/index'
-import {getBlockInfo} from '../utils/BTCommonApi'
-const msgpack = require('../lib/msgpack/msgpack')
+import {isUserName} from '@/tools/BTCheck'
+import ConfirmButton from '../ConfirmButton'
+import messages from '@/locales/messages'
+import {messageProtoEncode} from '@/lib/proto/index'
+import {getBlockInfo} from '@/utils/BTCommonApi'
+const msgpack = require('@/lib/msgpack/msgpack')
 
 const HeaderMessages = messages.Header;
 const LoginMessages = messages.Login;
@@ -230,7 +230,7 @@ class Regist extends PureComponent{
 
           }else if(response.code == 1001){
             this.props.setSpin(false)
-            message.warning('verify code is wrong');
+            message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
           }else{
             this.props.setSpin(false)
             console.log(JSON.parse(res.details));
@@ -293,7 +293,7 @@ class Regist extends PureComponent{
     getSign(keys,msg){
         let signObj = Object.assign({},msg)
         let priKey = keys.privateKey
-        const message_pb = require('../lib/proto/message_pb')
+        const message_pb = require('@/lib/proto/message_pb')
         let encodeBuf = messageProtoEncode(message_pb,msg)
         let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(encodeBuf))
         let sign = BTCryptTool.sign(hash,priKey)
@@ -344,19 +344,19 @@ class Regist extends PureComponent{
         <div className="register">
             <div className='route-children-container-title'><FormattedMessage {...HeaderMessages.Register}/></div>
             <Form style={{maxWidth: 560, paddingRight: '10%'}}>
-            
+
               <FormItem {...formItemLayout} colon={false} label={<FormattedMessage {...LoginMessages.Account} />}>
                 <Tooltip placement="topLeft" title={window.localeInfo["Header.AccountNameRequire"]}>
                   {
                       getFieldDecorator('username',{})(
-                        
+
                           <Input placeholder={window.localeInfo["Header.PleaseEnterTheUserName"]} id="error1" />
-                       
+
                       )
                   }
                 </Tooltip>
               </FormItem>
-               
+
               <FormItem {...formItemLayout} colon={false} label={<FormattedMessage {...LoginMessages.Password} />}>
                   {
                       getFieldDecorator('password',{})(

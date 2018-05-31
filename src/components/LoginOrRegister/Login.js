@@ -4,15 +4,15 @@ import { hashHistory } from 'react-router'
 
 import BTCryptTool from 'bottos-js-crypto'
 import { Icon, Input, Button, message, Row, Col } from 'antd'
-import BTFetch from '../utils/BTFetch';
-import { getAccount } from '../tools/localStore'
-import { setAccountInfo, setSpin } from '../redux/actions/HeaderAction'
-import BTIPcRenderer from '../tools/BTIpcRenderer'
-import {importFile} from '../utils/BTUtil'
-import ConfirmButton from './ConfirmButton'
+import BTFetch from '@/utils/BTFetch';
+import { getAccount } from '@/tools/localStore'
+import { setAccountInfo, setSpin } from '@/redux/actions/HeaderAction'
+import BTIPcRenderer from '@/tools/BTIpcRenderer'
+import {importFile} from '@/utils/BTUtil'
+import ConfirmButton from '../ConfirmButton'
 import {FormattedMessage} from 'react-intl'
-import messages from '../locales/messages'
-import {queryProtoEncode} from '../lib/proto/index'
+import messages from '@/locales/messages'
+import {queryProtoEncode} from '@/lib/proto/index'
 const LoginMessages = messages.Login;
 const HeaderMessages = messages.Header;
 const { TextArea } = Input;
@@ -114,7 +114,7 @@ class Login extends PureComponent{
                 this.props.setAccountInfo(accountInfo)
                 hashHistory.push('/profile/asset')
               } else if (response.code==1001) {
-                message.warning(window.localeInfo["Header.PleaseEnterTheVerificationCode"]);
+                message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
               } else if (response.code==1000 && typeof response.details == 'string') {
                 try {
                   console.error(response.msg, JSON.parse(response.details));
@@ -146,7 +146,7 @@ class Login extends PureComponent{
         let privateKey = Buffer.from(privateKeyStr,'hex')
         let random = window.uuid()
         let msg = {username,random}
-        let query_pb = require('../lib/proto/query_pb')
+        let query_pb = require('@/lib/proto/query_pb')
         let loginProto = queryProtoEncode(query_pb,msg)
         let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
         let signature = BTCryptTool.sign(hash,privateKey).toString('hex')
