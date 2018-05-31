@@ -55,7 +55,7 @@ export default class BTList extends PureComponent{
     }
 
     lookfor(asset_id){
-      BTFetch('/asset/QueryAssetByID', 'post', {asset_id})
+      BTFetch('/asset/QueryAssetByID', 'post', {asset_id, sender: getAccount().username})
         .then(res => {
             if(res.code == 1){
               console.log(res.data)

@@ -397,6 +397,10 @@ module.exports = {
             id:'History.TransactionID',
             defaultMessage:'交易ID'
         },
+        Merchandise:{
+            id:'History.Merchandise',
+            defaultMessage:'商品'
+        },
         Price:{
             id:'History.Price',
             defaultMessage:'金额'

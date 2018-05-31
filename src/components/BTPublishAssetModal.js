@@ -32,7 +32,7 @@ String.prototype.trims=function() {
 
 const initState = {
   title:'',
-  number:'',
+  number:'0',
   description:'',
   tag1:'',
   tag2:'',
@@ -164,7 +164,7 @@ class BTPublishAssetModal extends PureComponent{
       }
 
       if (this.state.date11 == '') {
-        message.warning(window.localeInfo["PersonalAsset.Deadline"]);
+        message.warning(window.localeInfo["PersonalAsset.InputDeadline"]);
         return;
       }
 
