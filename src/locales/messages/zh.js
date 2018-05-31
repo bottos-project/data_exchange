@@ -74,6 +74,7 @@ module.exports = {
     "PersonalAsset.PleaseChooseTheAssetType":"请选择资产类型",
     "PersonalAsset.PleaseImproveTheInformation":"请完善发布资产",
     "PersonalAsset.InputPrice":"请输入有效的价格",
+    "PersonalAsset.InputDeadline":"请输入截止时间",
     "PersonalAsset.FailedToGetTheGetDataBin":"获取getDataBin失败",
     "PersonalAsset.SuccessfulToRegisterTheAsset":"注册资产成功",
     "PersonalAsset.FailedToRegisterTheAsset":"注册资产失败",

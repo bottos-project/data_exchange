@@ -118,7 +118,7 @@ export default class BTAssetDetail extends PureComponent{
         const columns = this.columns(data);
         return(
             <div>
-                <Table className="shadow radius table" dataSource={this.state.data} columns={columns} />
+                <Table className="shadow radius table" dataSource={this.state.data} columns={columns} rowKey='requirement_id' />
             </div>
         )
     }

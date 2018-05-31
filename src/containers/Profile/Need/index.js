@@ -3,7 +3,7 @@ import { Tabs } from 'antd';
 import moment from 'moment';
 import './styles.less';
 import BTAssetDetail from './subviews/BTAssetDetail'
-import BTMyAssetSet from "./subviews/BTMyAssetSet"
+// import BTMyAssetSet from "./subviews/BTMyAssetSet"
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 const PersonalDemandMessages = messages.PersonalDemand;

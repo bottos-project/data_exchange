@@ -23,6 +23,7 @@ export default class BTDashboard extends PureComponent{
             render: (item) => {
               return <span style={{maxWidth:124}} className='one_txt_cut'>{item.slice(0, 15)+'...'}</span>
           }},
+          { title: <FormattedMessage {...HistoryMessages.Merchandise} />, dataIndex: 'asset_name'},
           { title: <FormattedMessage {...HistoryMessages.Price} />, dataIndex: 'price',
             render: (price) => <div className=''>
                         <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
