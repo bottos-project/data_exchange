@@ -29,7 +29,7 @@ function itemRender(route, params, routes, paths) {
 
 class App extends PureComponent {
   render() {
-    const { routes } = this.props
+    const { routes, locale } = this.props
     const routeName = routes[routes.length - 1].name || 'Profile'
     const title = findIntl(routeName)
 
@@ -56,7 +56,7 @@ class App extends PureComponent {
           <BTHeader />
           {/* { isInProfile ? <BTPersonalMenu /> : <BTHeader /> } */}
           <div className="container content">
-              <div className="menu" style={{position: 'relative'}}>
+              <div className={"menu " + locale}>
                 <BTMenu />
               </div>
 
@@ -78,7 +78,8 @@ class App extends PureComponent {
 
 function mapStateToProps(state) {
   return {
-    isloading: state.headerState.isloading
+    isloading: state.headerState.isloading,
+    locale: state.headerState.locale
   };
 }
 export default connect(mapStateToProps)(App)

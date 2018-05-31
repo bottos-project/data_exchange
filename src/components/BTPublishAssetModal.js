@@ -23,13 +23,6 @@ const HeaderMessages = messages.Header;
 
 const { TextArea } = Input;
 
-String.prototype.trim=function() {
-    return this.replace(/(^\s*)/g,'');
-};
-String.prototype.trims=function() {
-    return this.replace(/(\s*$)/g,'');
-};
-
 const initState = {
   title:'',
   number:'0',
@@ -95,7 +88,7 @@ class BTPublishAssetModal extends PureComponent{
 
     title(e){
         this.setState({
-            title:e.target.value.trim(),
+            title:e.target.value.trimLeft(),
         })
     }
 
@@ -117,7 +110,7 @@ class BTPublishAssetModal extends PureComponent{
 
     description(e){
         this.setState({
-            description:e.target.value.trim()
+            description:e.target.value.trimLeft()
         })
     }
 
@@ -294,7 +287,7 @@ class BTPublishAssetModal extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.AssetName}/>
               </Col>
               <Col span={8}>
-                <Input placeholder={window.localeInfo["PersonalAsset.Name"]} value={this.state.title} onChange={(e)=>this.title(e)} />
+                <Input maxLength='126' placeholder={window.localeInfo["PersonalAsset.Name"]} value={this.state.title} onChange={(e)=>this.title(e)} />
               </Col>
             </Row>
 
@@ -304,8 +297,8 @@ class BTPublishAssetModal extends PureComponent{
               </Col>
               <Col span={8}>
                 <BTNumberInput placeholder={window.localeInfo["PersonalAsset.Price"]}
-                       value={this.state.number}
-                       onChange={this.handleNumberChange}
+                    value={this.state.number}
+                    onChange={this.handleNumberChange}
                 />
               </Col>
               <Col span={4}>
@@ -351,9 +344,9 @@ class BTPublishAssetModal extends PureComponent{
               </Col>
               <Col span={12}>
                 <Row type="flex" justify="space-between">
-                  <Col span={6}><Input type="text" value={this.state.tag1} onChange={(e)=>this.tag1(e)}/></Col>
-                  <Col span={6}><Input type="text" value={this.state.tag2} onChange={(e)=>this.tag2(e)}/></Col>
-                  <Col span={6}><Input type="text" value={this.state.tag3} onChange={(e)=>this.tag3(e)}/></Col>
+                  <Col span={6}><Input maxLength='20' type="text" value={this.state.tag1} onChange={(e)=>this.tag1(e)}/></Col>
+                  <Col span={6}><Input maxLength='20' type="text" value={this.state.tag2} onChange={(e)=>this.tag2(e)}/></Col>
+                  <Col span={6}><Input maxLength='20' type="text" value={this.state.tag3} onChange={(e)=>this.tag3(e)}/></Col>
                 </Row>
               </Col>
             </Row>
@@ -363,7 +356,7 @@ class BTPublishAssetModal extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.AssetDescription}/>
               </Col>
               <Col span={12}>
-                <TextArea maxLength='120' value={this.state.description} onChange={(e)=>this.description(e)} rows={4} />
+                <TextArea maxLength='255' value={this.state.description} onChange={(e)=>this.description(e)} rows={4} />
               </Col>
             </Row>
 

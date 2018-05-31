@@ -92,14 +92,14 @@ const proConfig = webpackMerge(commonConfig, {
     //   debug: true
     // }),
 
-    // new UglifyJSPlugin({
-    //   parallel: true,
-    //   uglifyOptions: {
-    //     ecma: 6,
-    //     ie8: false,
-    //     warnings: false,
-    //   },
-    // }),
+    new UglifyJSPlugin({
+      parallel: true,
+      uglifyOptions: {
+        ecma: 6,
+        ie8: false,
+        warnings: false,
+      },
+    }),
 
     new ExtractTextPlugin('static/css/[name]-[hash:6].min.css'),
 

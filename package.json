@@ -5,7 +5,7 @@
   "private": true,
   "main": "main.js",
   "homepage": ".",
-  "DEV": true,
+  "DEV": false,
   "MOCK": false,
   "description": "Bottos Wallet",
   "author": {
@@ -28,10 +28,8 @@
     "@bottos-project/bottos-crypto-js": "^1.0.5",
     "asar": "^0.14.3",
     "bottos-js-crypto": "^1.0.12",
-    "buffer": "^5.1.0",
     "crypto-js": "^3.1.9-1",
     "electron-log": "^2.2.14",
-    "event-emitter": "^0.3.5",
     "google-protobuf": "^3.5.0",
     "node-uuid": "^1.4.8"
   },
@@ -71,7 +69,7 @@
     "babel-plugin-import": "^1.6.5",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.11",
-    "electron": "^1.8.4",
+    "electron": "^1.8.7",
     "electron-builder": "^20.11.1",
     "extract-text-webpack-plugin": "4.0.0-beta.0",
     "fs-extra": "^5.0.0",

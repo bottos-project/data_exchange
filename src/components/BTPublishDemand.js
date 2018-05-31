@@ -21,13 +21,6 @@ const PersonalAssetMessages = messages.PersonalAsset;
 
 const { TextArea } = Input;
 
-String.prototype.trim=function() {
-    return this.replace(/(^\s*)/g,'');
-};
-String.prototype.trims=function() {
-    return this.replace(/(\s*$)/g,'');
-};
-
 const initialState = {
     title:"",
     textArea:"",
@@ -89,7 +82,7 @@ class BTPublishDemand extends PureComponent{
 
     onChangeTitle(e){
         this.setState({
-            title:e.target.value.trim()
+            title:e.target.value.trimLeft()
         })
     }
 
@@ -118,7 +111,7 @@ class BTPublishDemand extends PureComponent{
 
     onChangeTextArea(e){
         this.setState({
-            textArea:e.target.value.trim()
+            textArea:e.target.value.trimLeft()
         })
     }
 
@@ -204,7 +197,7 @@ class BTPublishDemand extends PureComponent{
                 <FormattedMessage {...PersonalDemandMessages.DemandName} />
               </Col>
               <Col span={8}>
-                <Input value={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
+                <Input maxLength='126' value={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
               </Col>
             </Row>
 

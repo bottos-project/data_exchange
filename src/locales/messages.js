@@ -54,7 +54,7 @@ module.exports = {
         },
         Back:{
             id:'Menu.Back',
-            defaultMessage:'返回上一级'
+            defaultMessage:'上一级'
         },
         ProfileAsset:{
             id:'Menu.ProfileAsset',

@@ -1,4 +1,4 @@
-@sideWidth:260px;
+@sideWidth:280px;
 @margin:20px;
 @userIconW:50px;
 @userIconH:50px;
@@ -97,6 +97,7 @@
   flex-direction: row;
 
   .menu {
+    position: relative;
     min-width: @sideWidth;
     padding: 20px;
   }
@@ -111,7 +112,7 @@
 // 左侧菜单栏
 .menu-container {
   padding: 20px;
-  width: 220px;
+  width: 245px;
   height: 100%;
   box-shadow: 0 0 10px 0 #D1D3FF;
   border-radius: @radius;
@@ -126,9 +127,13 @@
   height: 60px;
   line-height: 60px;
   color: #bbb;
-  text-align: center;
+  text-align: left;
   font-size: 20px;
   border-radius: 5px;
+}
+
+.zh-CN .menu-link {
+  padding-left: 15px;
 }
 
 .menu-link-active > .menu-link {
@@ -136,6 +141,15 @@
   background-image: -webkit-linear-gradient(7deg, #5F72D8 0%, #6366C7 31%, #6E479D 100%);
   background-image: linear-gradient(7deg, #5F72D8 0%, #6366C7 31%, #6E479D 100%);
   box-shadow: 0 0 5px 0 #D0D3FF;
+}
+
+.menu-link-icon {
+  display: inline-block;
+  margin-left: 20px;
+  width: 40px;
+  > .iconfont {
+    font-size: 24px;
+  }
 }
 
 .contentbody > .everyTitle {
@@ -180,13 +194,10 @@
     border-top:1px solid #2e318e ;
     //border-top:1px solid #2e318e ;
 }
-.ant-menu-dark, .ant-menu-dark .ant-menu-sub{
-}
+
 .content {
     flex-direction: row;
-    .menu {
-        min-width: @sideWidth;
-    }
+
 }
 
 .error{

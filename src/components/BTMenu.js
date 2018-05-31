@@ -14,10 +14,10 @@ const toMapSvg = {
   '/dashboard': SVGDashboard
 }
 
-function NavLink({to, intlMessage}) {
+function NavLink({to, intlMessage, icon}) {
   return <Link to={to} activeClassName='menu-link-active'>
     <div className='menu-link'>
-      {/* <SVGDashboard /> */}
+      {icon}
       <FormattedMessage {...intlMessage} />
     </div>
   </Link>
@@ -36,14 +36,22 @@ function BTPersonalMenu({routeName}) {
   }
   var list = []
   for (var to in personalMenu) {
+    console.log('to', to);
+    let icon = (<span className='menu-link-icon'>
+      <i className={'iconfont icon-my' + to} />
+    </span>)
+
     list.push(
-      <NavLink key={to} to={"/profile/" + to} intlMessage={HeaderMessages[personalMenu[to]]} />
+      <NavLink key={to} icon={icon} to={"/profile/" + to} intlMessage={HeaderMessages[personalMenu[to]]} />
     )
   }
   return (
-    <div className='menu-container'>
+    <div className='menu-container profilepage'>
       <Link to="/dashboard">
         <div className='menu-link'>
+          <span className='menu-link-icon'>
+            <i className='iconfont icon-shichangfenxi_' />
+          </span>
           <FormattedMessage {...MenuMessages.Back} />
         </div>
       </Link>
@@ -87,8 +95,8 @@ class BTMenu extends PureComponent{
     const isInProfile = this.props.location.pathname.startsWith('/profile')
     // let routes = this.props.routes
     // console.error("isInProfile", isInProfile);
-    const { routes } = this.props
-    const routeName = this.props.routes[routes.length - 1].name || 'Profile'
+    const { routes, locale } = this.props
+    const routeName = routes[routes.length - 1].name || 'Profile'
 
     if (isInProfile) {
       return <BTPersonalMenu routeName={routeName} />
@@ -96,17 +104,24 @@ class BTMenu extends PureComponent{
 
     var list = [];
     for (var to in this.homeMenu) {
+      // console.log('to', to);
+      let icon = (<span className='menu-link-icon'>
+        <i className={'iconfont icon-' + to} />
+      </span>)
       list.push(
-        <NavLink key={to} to={'/' + to} intlMessage={MenuMessages[this.homeMenu[to]]} />
+        <NavLink key={to} icon={icon} to={'/' + to} intlMessage={MenuMessages[this.homeMenu[to]]} />
       )
     }
 
     let isProfileClassActive = otherRouteNames.includes(routeName)
     return (
-      <div className='menu-container'>
+      <div className='menu-container homepage'>
         {list}
         <Link className={isProfileClassActive ? 'menu-link-active' : ''}>
           <div className='menu-link' onClick={this.jumpToProfile}>
+            <span className='menu-link-icon'>
+              <i className='iconfont icon-gerenzhongxin' />
+            </span>
             <FormattedMessage {...MenuMessages.Profile} />
           </div>
         </Link>
@@ -118,7 +133,8 @@ class BTMenu extends PureComponent{
 
 const mapStateToProps = (state)=>{
     return {
-        isLogin: state.headerState.account_info != null
+        isLogin: state.headerState.account_info != null,
+        locale: state.headerState.locale
     }
 }
 
