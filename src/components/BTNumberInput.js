@@ -1,6 +1,8 @@
 import React, {PureComponent} from 'react'
 import {Input,Tooltip} from 'antd'
 
+console.log({})
+
 export default class BTNumberInput extends PureComponent{
     constructor(props){
         super(props)
@@ -16,10 +18,10 @@ export default class BTNumberInput extends PureComponent{
         let value = e.target.value
 
         if(isNaN(value)) {
-            this.setState({visible:true,title:"请输入数字"})
+            this.setState({visible:true,title:window.localeInfo["Wallet.PleaseInputNumber"]})
             return;
         }else if(value > Math.pow(10,9)){
-            this.setState({visible:true,title:'输入值太大'})
+            this.setState({visible:true,title:window.localeInfo["Wallet.NumberIsTooBig"]})
             return
         }else{
             this.setState({value,visible:false})

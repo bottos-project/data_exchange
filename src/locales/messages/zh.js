@@ -117,6 +117,8 @@ module.exports = {
     "Wallet.PleaseEnterThePasswordOfKeystore":"请输入keystore文件的密码",
     "Wallet.PleaseLogInFirst":"请先登录账户",
     "Wallet.TheWrongPassword":"密码错误",
+    "Wallet.PleaseInputNumber":"请输入数字",
+    "Wallet.NumberIsTooBig":"数字太大",
 
     "File.FileExisted":"文件已存在",
 

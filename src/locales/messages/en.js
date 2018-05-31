@@ -350,6 +350,8 @@ module.exports = {
     "Wallet.PleaseEnterThePasswordOfKeystore":"Please Enter the Password of Keystore",
     "Wallet.PleaseLogInFirst":"Please Login First",
     "Wallet.TheWrongPassword":"Failed to Modify the Password",
+    "Wallet.PleaseInputNumber":"Please Input Number",
+    "Wallet.NumberIsTooBig":"Number Is Too Big",
 
 
     //check
