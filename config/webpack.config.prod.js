@@ -6,7 +6,9 @@ const webpackMerge = require('webpack-merge');
 const commonConfig = require('./webpack.config.common');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 const lessToJs = require('less-vars-to-js');
@@ -44,40 +46,36 @@ const proConfig = webpackMerge(commonConfig, {
     rules: [
 
       {
-          test: /\.css$/,
-          use: ExtractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: [
-              {
-                loader: 'css-loader',
-                options: {
-                  minimize: true,
-                  // sourceMap: shouldUseSourceMap
-                }
-              },
-            ]
-          })
+        test: /\.css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: {
+              minimize: true,
+              // sourceMap: shouldUseSourceMap
+            }
+          },
+        ]
       },
 
       {
         test: /\.less$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: { url: false, minimize: true }
-            },
-            {
+        use: [
+          MiniCssExtractPlugin.loader,
+          {
+            loader: 'css-loader',
+            options: { url: false, minimize: true }
+          },
+          {
 
-              loader: 'less-loader',
-              options: {
-                javascriptEnabled: true,
-                modifyVars: themeVariables
-              }
-            },
-          ]
-        })
+            loader: 'less-loader',
+            options: {
+              javascriptEnabled: true,
+              modifyVars: themeVariables
+            }
+          },
+        ]
       },
 
 
@@ -101,7 +99,14 @@ const proConfig = webpackMerge(commonConfig, {
       },
     }),
 
-    new ExtractTextPlugin('static/css/[name]-[hash:6].min.css'),
+    // new ExtractTextPlugin('static/css/[name]-[hash:6].min.css'),
+
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: "static/css/[name]-[hash:6].min.css",
+      // chunkFilename: "[id].css"
+    }),
 
     new HtmlWebpackPlugin({
       template: paths.appHtml,
