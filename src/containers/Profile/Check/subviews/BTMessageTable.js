@@ -114,7 +114,7 @@ export default class BTMessageTable extends PureComponent{
         let sign = this.getSignature(username,privateKeyStr)
         let params = {
             "pageSize": 50,
-            "pageNum": 1,
+            "page_num": 1,
             "username": username,
             ...sign
         }

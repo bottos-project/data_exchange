@@ -6,6 +6,8 @@ import { typeValueKeyMap } from '../../../utils/keyMaps'
 
 import messages from '../../../locales/messages'
 import {getAccount} from "../../../tools/localStore";
+import TokenPNG from '@/components/TokenPNG'
+
 const DemandMessages = messages.Demand;
 
 export default class BTRequirementListItem extends PureComponent{
@@ -58,7 +60,7 @@ export default class BTRequirementListItem extends PureComponent{
               <div>
                 <FormattedMessage {...DemandMessages.ExpectedPrice}/>
                 <span>{data.price/Math.pow(10, 8)}</span>
-                <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
+                <TokenPNG />
               </div>
               <span>
                 <FormattedMessage {...DemandMessages.ExpireTime}/>

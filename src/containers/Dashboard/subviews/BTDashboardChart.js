@@ -16,15 +16,17 @@ export default class BTDashboardChart extends Component {
 
   changeWidth() {
     // console.dir(this.chartDiv);
-    const width = this.chartDiv.clientWidth - 20
-    console.log('width', width);
-    this.setState({
-      width: Math.max(width, 800)
-    });
+    return debounce(() => {
+      const width = this.chartDiv.clientWidth - 20
+      console.log('width', width);
+      this.setState({
+        width: Math.max(width, 800)
+      });
+    }, 200)
   }
 
   componentDidMount() {
-    this.debounced = debounce(this.changeWidth, 200)
+    this.debounced = this.changeWidth()
     window.addEventListener('resize', this.debounced)
   }
 

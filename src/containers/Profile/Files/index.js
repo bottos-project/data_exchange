@@ -96,7 +96,7 @@ class BTMyAssetSet extends Component{
         BTFetch('/asset/queryUploadedData', 'post', {
           ...getSignaturedParam(getAccount()),
           pageSize: 12,
-          pageNum: 1,
+          page_num: 1,
           fileType: 1
         }).then(res => {
             if (res.code == 1 && res.data.rowCount > 0) {

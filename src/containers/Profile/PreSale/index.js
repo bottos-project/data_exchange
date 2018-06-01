@@ -14,7 +14,7 @@ function queryPresaleByPageNum(n) {
   return BTFetch("/asset/queryMyPreSale", "post", {
     ...getSignaturedParam(getAccount()),
     "pageSize": 16,
-    "pageNum": n,
+    "page_num": n,
   })
 }
 

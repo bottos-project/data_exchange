@@ -1,24 +1,24 @@
 import React,{PureComponent} from 'react'
 import { Table, Icon } from 'antd';
-import "./styles.less"
-import BTFetch from '../../../../utils/BTFetch'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import {getAccount} from "../../../../tools/localStore";
 import { getDateAndTime } from "@/utils/dateTimeFormat";
-import { getSignaturedParam } from '@/utils/BTCommonApi'
+import { getSignaturedParam, BTRowFetch } from '@/utils/BTCommonApi'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
-
+import { selectType } from '@/utils/keyMaps'
+import TokenPNG from '@/components/TokenPNG'
 
 const PersonalAssetMessages = messages.PersonalAsset;
 
-export default class BTHaveBought extends PureComponent{
+class BTHaveBought extends PureComponent{
     constructor(props){
         super(props);
         this.state={
-            data:[],
-            username:'',
+          dataSource: [],
+          total: 0
         }
+        this.onChange=this.onChange.bind(this)
     }
     columns() {
         return [
@@ -28,11 +28,17 @@ export default class BTHaveBought extends PureComponent{
             { title: <FormattedMessage {...PersonalAssetMessages.AssetTypePrice}/>, dataIndex: 'price',
               render: (price) => (
                 <div>
-                    <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
-                    <span>{price/Math.pow(10, 8)}</span>
+                  <TokenPNG />
+                  <span>{price/Math.pow(10, 8)}</span>
                 </div>
               )
             },
+            {
+              title: <FormattedMessage {...PersonalAssetMessages.AssetType}/>,
+              dataIndex: 'asset_type',
+              render: asset_type => selectType[asset_type]
+            },
+
            /* { title: <FormattedMessage {...PersonalAssetMessages.AssetTypePrice}/>, dataIndex: 'price', key: 'price1',render:(price)=>
                     <div>
                         <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
@@ -48,7 +54,7 @@ export default class BTHaveBought extends PureComponent{
               render: getDateAndTime
             },
             {
-              title: <FormattedMessage {...PersonalAssetMessages.AssetOperation} />, dataIndex: 'storage_hash',
+              title: <FormattedMessage {...PersonalAssetMessages.Download} />, dataIndex: 'storage_hash',
               render: (storage_hash) => (
                   <a onClick={() => BTDownloadFile(storage_hash, getAccount().username) }>
                       <Icon type="download" />
@@ -63,29 +69,29 @@ export default class BTHaveBought extends PureComponent{
         ];
     }
 
-    componentDidMount(){
+    onChange(page, pageSize) {
+        this.getPagination(page, pageSize);
+    }
 
-        BTFetch('/user/QueryMyBuy','post', {
-          ...getSignaturedParam(getAccount()),
-          "page_size": 12,
-          "page_num": 1
-        }).then(res => {
-          if (res.code == 1) {
-            if (res.data.row_count == 0) {
-              return message.warning(window.localeInfo["PersonalAsset.ThereIsNoHaveBoughtAssetForTheTimeBeing"])
-            }
-            this.setState({ data: res.data.row })
-          } else {
-            message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
-            if (res.details) {
-              let details = JSON.parse(res.details)
-              console.error('details', details);
-            }
-          }
-        }).catch(error=>{
-          message.error(window.localeInfo["PersonalAsset.FailedToGetTheHaveBoughtAsset"])
+    getPagination(page, pageSize) {
+
+      BTRowFetch('/user/QueryMyBuy', {
+        ...getSignaturedParam(getAccount()),
+        "page_num": page,
+        "page_size": pageSize,
+      }).then(res => {
+        this.setState({
+          dataSource: res.row,
+          total: res.total
         })
+      }).catch(error=>{
+        message.error(window.localeInfo["PersonalAsset.FailedToGetTheHaveBoughtAsset"])
+      })
 
+    }
+
+    componentDidMount(){
+      this.getPagination(1, this.props.pageSize);
     }
 
     render(){
@@ -97,8 +103,22 @@ export default class BTHaveBought extends PureComponent{
                 columns={columns}
                 rowKey='asset_id'
                 style={{width:"100%"}}
-                dataSource={this.state.data}
+                dataSource={this.state.dataSource}
+                pagination={{
+                  hideOnSinglePage: true,
+                  showQuickJumper: this.state.total / this.props.pageSize > 10,
+                  pageSize: this.props.pageSize,
+                  total: this.state.total,
+                  onChange: this.onChange
+                }}
+
             />
         )
     }
 }
+
+BTHaveBought.defaultProps = {
+  pageSize: 12
+};
+
+export default BTHaveBought

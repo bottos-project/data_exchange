@@ -39,7 +39,7 @@ export default class BTRequirementItemDetail extends PureComponent{
     let param = {
       ...getSignaturedParam(getAccount()),
       "pageSize": 10,
-      "pageNum": 1,
+      "page_num": 1,
     };
     BTFetch('/asset/queryMyAsset', 'post', param)
       .then(res => {

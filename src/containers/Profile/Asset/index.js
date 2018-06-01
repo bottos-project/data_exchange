@@ -3,8 +3,7 @@ import { Tabs } from 'antd';
 const TabPane = Tabs.TabPane;
 import './styles.less';
 
-import BTAssetDetail from './subviews/BTAssetDetail'
-import BTUploadAsset from './subviews/BTUploadAsset'
+import BTPublishedAssets from './subviews/BTPublishedAssets'
 import BTHaveBought from "./subviews/BTHaveBought"
 import BTFetch from "../../../utils/BTFetch";
 import { FormattedMessage } from 'react-intl'
@@ -37,12 +36,12 @@ export default class BTProfileAsset extends PureComponent{
       return this.props.children
     }
     return(
-      <div className='container column' style={{height: '100%'}}>
+      <div className='container column'>
         <CustomTabBar onChange={this.handleChange} keyMap={keyMap} activeKey={this.state.activeKey} />
 
         <Tabs className="tabs" activeKey={this.state.activeKey}>
           <TabPane tab={<FormattedMessage {...PersonalAssetMessages.PublishedAsset} />} key="0">
-            <BTAssetDetail/>
+            <BTPublishedAssets/>
           </TabPane>
           <TabPane tab={<FormattedMessage {...PersonalAssetMessages.HaveBoughtAsset} />} key="1" >
             <BTHaveBought/>

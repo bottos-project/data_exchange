@@ -18,7 +18,7 @@ function getDownloadFileIP(guid) {
     // snode_ip 是加密后的，要通过私钥解密
     if (res.result == 200 || res.message == 'OK') {
       if (res.storage_addr == "") {
-        window.message.error('Download Error')
+        window.message.error(window.localeInfo['PersonalAsset.FailedToDownloadTheFile'])
         throw new Error('Invalid storage address!')
       }
       let addr = JSON.parse(res.storage_addr)

@@ -30,3 +30,7 @@ ul,li{
   height: 100%;
   overflow: hidden;
 }
+
+.dib {
+  display: inline-block;
+}

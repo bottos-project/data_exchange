@@ -31,7 +31,7 @@ module.exports = {
     "Header.FailedToImportedThekeystore":"keystore导入失败",
     "Header.keystoreHasBeenSuccessfullyExported":"keystore导出成功",
     "Header.FailedToExportedThekeystore":"keystore导出失败",
-    "Header.UserNameIsNotRight":"账户不正确",
+    "Header.UserNameIsNotRight":"账户不合规",
     "Header.ImportKeyStoreSuccess":"导入成功",
     "Header.ImportKeyStoreFaild":"导入失败",
     "Header.AccountNameRequire":"3~16个字符 可使用a~z(全小写)、数字 需以字母开头",

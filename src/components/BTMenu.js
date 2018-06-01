@@ -4,15 +4,9 @@ import { Menu } from 'antd';
 import { Link, withRouter } from 'react-router'
 import { FormattedMessage } from 'react-intl'
 import messages from '../locales/messages'
-import SVGDashboard from './SVG/SVGDashboard'
 
 const MenuMessages = messages.Menu;
-
 const HeaderMessages = messages.Header;
-
-const toMapSvg = {
-  '/dashboard': SVGDashboard
-}
 
 function findIntlMessage(routeName) {
   // 先去 MenuMessages 里面找

@@ -136,6 +136,7 @@ module.exports = {
     "Asset.BuyAssets":"Buy Assets",
     "Asset.HaveBought":"Have Bought",
     "Asset.DownLoadTheSample":"DownLoad the Sample",
+    "Asset.NoSample":"No Sample",
     "Asset.DataDescription":"Data Description",
     "Asset.SetScreeningSample":"Choose Sample",
     "Asset.SetScreeningFile":"Choose File",

@@ -50,7 +50,7 @@ export default class BTOtherExchange extends PureComponent{
     getPagination(page,pageSize) {
         let param = {
             pageSize: pageSize,
-            pageNum: page
+            page_num: page
         };
         BTFetch('/dashboard/GetTxList','POST',param).then(res=>{
           if (res.code == 1) {

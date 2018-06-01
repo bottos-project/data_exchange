@@ -28,7 +28,7 @@ define([
 
                 // console.log('this', this);
                 // console.log('opts', opts);
-                // console.log('owner', owner);
+                console.log('owner', owner);
 
             if ( opts.sendAsBinary ) {
                 server += opts.attachInfoToQuery !== false ? ((/\?/.test( server ) ? '&' : '?') +

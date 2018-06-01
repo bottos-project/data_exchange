@@ -1,16 +1,16 @@
 import React, {Component} from 'react'
-import {Pagination, List} from 'antd'
+import { List } from 'antd'
 import AssetlistItem from './subviews/AssetlistItem'
-import BTFetch from '../../utils/BTFetch'
+import { BTRowFetch } from "@/utils/BTCommonApi";
 import CustomTabBar from '@/components/CustomTabBar'
 import { arTypeKeyMap } from '@/utils/keyMaps.js'
 
-export default class BTAssets extends Component {
+class BTAssets extends Component {
     constructor(props) {
         super(props);
         this.state = {
             dataSource: [],
-            row_count: 0,
+            total: 0,
             activeKey: '0',
         };
 
@@ -18,7 +18,7 @@ export default class BTAssets extends Component {
     }
 
     componentDidMount() {
-        this.getPagination(1, 10)
+        this.getPagination(1, this.props.pageSize)
     }
 
     onChange(page,pageSize,asset_type=this.state.activeKey) {
@@ -29,31 +29,25 @@ export default class BTAssets extends Component {
     getPagination(page,pageSize,asset_type=0) {
         let reqUrl = '/asset/queryAllAsset';
         let param = {
-            "page_size": pageSize,
-            "page_num": page,
-            asset_type: Number.parseInt(asset_type)
+          "page_num": page,
+          "page_size": pageSize,
+          asset_type: Number.parseInt(asset_type)
         };
 
-        BTFetch(reqUrl,'POST',param).then(response=>{
-            // console.log('response', response)
-            if (response && response.code == 1) {
-              const {row_count, row} = response.data
-                this.setState({
-                    dataSource: row || [],
-                    row_count,
-                });
-            } else {
-                window.message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
-            }
-        }).catch(error => {
-            window.message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
-
+        BTRowFetch(reqUrl, param).then(res => {
+          this.setState({
+            dataSource: res.row,
+            total: res.total,
+          })
+        }).catch(err => {
+          console.error(err);
+          window.message.error(window.localeInfo["Asset.FailedToQueryTheMarketSource"])
         });
     }
 
     handleChange = (activeKey) => {
       this.setState({ activeKey });
-      this.getPagination(1,10,activeKey)
+      this.getPagination(1, this.props.pageSize, activeKey)
     }
 
     render() {
@@ -72,18 +66,22 @@ export default class BTAssets extends Component {
                 <AssetlistItem key={item.asset_id} list={item} />
               </List.Item>
             )}
-          />
+            pagination={{
+              hideOnSinglePage: true,
+              showQuickJumper: this.state.total / this.props.pageSize > 10,
+              pageSize: this.props.pageSize,
+              total: this.state.total,
+              onChange: this.onChange
+            }}
 
-          <Pagination
-            hideOnSinglePage
-            showQuickJumper
-            total={this.state.row_count}
-            defaultCurrent={1}
-            pageSize={16}
-            onChange={this.onChange}
           />
-
         </div>
       )
     }
 }
+
+BTAssets.defaultProps = {
+  pageSize: 16
+};
+
+export default BTAssets

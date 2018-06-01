@@ -355,6 +355,10 @@ module.exports = {
             id:'Asset.DownLoadTheSample',
             defaultMessage:'下载样例'
         },
+        NoSample:{
+            id:'Asset.NoSample',
+            defaultMessage:'无样例'
+        },
         DataDescription:{
             id:'Asset.DataDescription',
             defaultMessage:'数据描述'

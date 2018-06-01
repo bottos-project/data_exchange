@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
 import moment from "moment"
-import { Input, DatePicker, Icon, Button, Row, Col } from 'antd'
+import { Input, DatePicker, TimePicker, Icon, Button, Row, Col } from 'antd'
 import BTAssetList from './BTAssetList'
 import {getBlockInfo, getDataInfo, getSignaturedParam } from "../utils/BTCommonApi";
 import BTFetch from "../utils/BTFetch";
@@ -25,8 +25,8 @@ const initialState = {
     title:"",
     textArea:"",
     number: 0,
-    date:"",
     dateString: moment().add(7, 'days').toString(),
+    timeValue: '',
     newdata: [],
     getFileNameTemp:'',
     reqType: ''
@@ -36,6 +36,12 @@ class BTPublishDemand extends PureComponent{
     constructor(props) {
         super(props)
         this.state = initialState
+
+        this.onTimeChange = this.onTimeChange.bind(this)
+    }
+
+    onTimeChange(time, timeValue) {
+      this.setState({ timeValue });
     }
 
     commitAsset(type){
@@ -50,7 +56,7 @@ class BTPublishDemand extends PureComponent{
       BTFetch('/asset/queryUploadedData', 'post', {
         ...getSignaturedParam(getAccount()),
         pageSize: 10,
-        pageNum: 1,
+        page_num: 1,
       }).then(res => {
         if (res.code == 1 && res.data.rowCount > 0) {
           this.setState({ newdata: res.data.row })
@@ -106,7 +112,7 @@ class BTPublishDemand extends PureComponent{
 
     //datePicker
     onChangeDate = (date, dateString) => {
-        this.setState({ date, dateString });
+        this.setState({ dateString });
     }
 
     onChangeTextArea(e){
@@ -146,6 +152,9 @@ class BTPublishDemand extends PureComponent{
         "sig_alg": 1
       }
 
+      let expire_time_string = this.state.dateString + ' ' + (this.state.timeValue ? this.state.timeValue : '')
+      let expire_time = new Date(expire_time_string).getTime() / 1000
+
       let did = {
         "dataReqId": window.uuid(),
         "basic_info": {
@@ -154,7 +163,7 @@ class BTPublishDemand extends PureComponent{
           "RequirementType": Number.parseInt(this.state.reqType),
           "FeatureTag": 1,
           "SampleHash": this.state.sample_hash || '',
-          "ExpireTime": new Date(this.state.dateString).getTime() / 1000,
+          "ExpireTime": expire_time,
           "Price": this.state.number * Math.pow(10, 8),
           "Description": this.state.textArea,
           "FavoriFlag": 1,
@@ -200,7 +209,6 @@ class BTPublishDemand extends PureComponent{
                 <Input maxLength='126' value={this.state.title} onChange={(e)=>this.onChangeTitle(e)}  />
               </Col>
             </Row>
-
 
             <Row gutter={16}>
               <Col className='label' span={6}>
@@ -259,14 +267,16 @@ class BTPublishDemand extends PureComponent{
               <Col className='label' span={6}>
                 <FormattedMessage {...PersonalDemandMessages.Deadline}/>
               </Col>
-              <Col span={8}>
+              <Col span={12}>
                 <DatePicker
                   defaultValue={moment().add(7, 'days')}
                   placeholder={window.localeInfo["PersonalDemand.SelectDate"]}
                   onChange={this.onChangeDate}
                   disabledDate={(current) => current < moment().endOf('day')}
-                  // showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }}
                 />
+                {this.state.dateString &&
+                <TimePicker onChange={this.onTimeChange} />}
+
               </Col>
             </Row>
 

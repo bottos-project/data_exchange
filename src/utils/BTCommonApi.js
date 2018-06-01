@@ -53,26 +53,37 @@ export function getSignaturedFetchParam({fetchParam, privateKey}) {
   return fetchParam
 }
 
-// export function BTRowFetch(url, param) {
-//   BTFetch(reqUrl, 'POST', param)
-//   .then(res => {
-//     if (res) {
-//       if (res.code == 1) {
-//         let data = res.data
-//         if (data.row == null) {
-//           return {
-//
-//           }
-//         } else {
-//           return data.row;
-//         }
-//       } else {
-//         console.error('BTRowFetch error', res.details);
-//         throw new Error(res.code)
-//       }
-//
-//     } else {
-//       throw new Error('request fail')
-//     }
-//   })
-// };
+export function BTRowFetch(url, param) {
+  return BTFetch(url, 'POST', param)
+  .then(res => {
+    if (res) {
+      if (res.code == 1) {
+        // 请求成功
+        let data = res.data
+        if (data.row == null) {
+          // 无数据
+          return { row: [], total: 0, page: 0 }
+        } else {
+          // 有数据，驼峰命名法是为了兼容后端不统一的字段
+          let total = data.row_count || data.rowCount
+          let page = data.page_num || data.pageNum
+          return { row: data.row, total, page }
+        }
+      } else {
+        if (res.details) {
+          let details = JSON.parse(res.details)
+          console.error('details', details);
+        }
+
+        console.error('BTRowFetch error', res.details);
+        let error = new Error('response error')
+        error.res = res
+        throw error
+      }
+
+    } else {
+      console.error('请求发送失败');
+      throw new Error('request fail')
+    }
+  })
+};

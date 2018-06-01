@@ -38,7 +38,7 @@ const initState = {
   sample_hash:'',
   storage_hash:'',
   newdata:[],
-  date11: '',
+  dateString: moment().add(7, 'days').toString(),
   timeValue: '',
 }
 
@@ -67,7 +67,7 @@ class BTPublishAssetModal extends PureComponent{
       BTFetch('/asset/queryUploadedData', 'post', {
         ...getSignaturedParam(getAccount()),
         pageSize: 10,
-        pageNum: 1,
+        page_num: 1,
       }).then(res => {
         if (res.code == 1 && res.data.rowCount > 0) {
           // message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
@@ -156,7 +156,7 @@ class BTPublishAssetModal extends PureComponent{
           return;
       }
 
-      if (this.state.date11 == '') {
+      if (this.state.dateString == '') {
         message.warning(window.localeInfo["PersonalAsset.InputDeadline"]);
         return;
       }
@@ -183,7 +183,7 @@ class BTPublishAssetModal extends PureComponent{
       }
 
       let featureTag = this.state.tag1 + '-' + this.state.tag2 + '-' +this.state.tag3
-      let expire_time_string = this.state.date11 + ' ' + (this.state.timeValue ? this.state.timeValue : '')
+      let expire_time_string = this.state.dateString + ' ' + (this.state.timeValue ? this.state.timeValue : '')
       let expire_time = new Date(expire_time_string).getTime() / 1000
 
       let did = {
@@ -228,8 +228,7 @@ class BTPublishAssetModal extends PureComponent{
     }
 
     dataPicker = (date, dateString) => {
-      // console.log('date, dateString', date, dateString);
-      this.setState({ date11: dateString })
+      this.setState({ dateString })
     }
 
     render() {
@@ -252,11 +251,11 @@ class BTPublishAssetModal extends PureComponent{
                   <FormattedMessage {...PersonalAssetMessages.SetScreeningSample}/>
                 </Button>
                 <span className='filename'>{
-                    this.state.getFileNameTemp.length<=14
+                    this.state.getFileNameTemp.length <= 24
                     ?
                     this.state.getFileNameTemp
                     :
-                    this.state.getFileNameTemp.split('.')[0].substring(0,5)+'...'+this.state.getFileNameTemp.split('.')[1]
+                    this.state.getFileNameTemp.split('.')[0].substring(0, 8)+'...'+this.state.getFileNameTemp.split('.')[1]
                 }</span>
               </Col>
             </Row>
@@ -306,20 +305,18 @@ class BTPublishAssetModal extends PureComponent{
               </Col>
             </Row>
 
-
-
             <Row gutter={16}>
               <Col className='label' span={6}>
                 <FormattedMessage {...PersonalAssetMessages.Deadline}/>
               </Col>
               <Col span={12}>
                 <DatePicker
-                    placeholder={window.localeInfo["PersonalAsset.SelectDate"]}
-                    onChange={this.dataPicker}
-                    disabledDate={(current) => current < moment().endOf('day')}
-                    // value={moment(this.state.date11, 'HH:mm:ss')}
+                  defaultValue={moment().add(7, 'days')}
+                  placeholder={window.localeInfo["PersonalAsset.SelectDate"]}
+                  onChange={this.dataPicker}
+                  disabledDate={(current) => current < moment().endOf('day')}
                 />
-                {this.state.date11 &&
+                {this.state.dateString &&
                 <TimePicker onChange={this.onTimeChange} />}
               </Col>
             </Row>

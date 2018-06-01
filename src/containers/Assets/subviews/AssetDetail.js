@@ -195,7 +195,7 @@ export default class BTAssetDetail extends PureComponent{
     }
 
     download() {
-      let { sample_hash: guid, username } = this.props.location.state;
+      let { sample_hash: guid, username } = this.state;
       BTDownloadFile(guid, username)
     }
 
@@ -288,9 +288,17 @@ export default class BTAssetDetail extends PureComponent{
                     }
                   </li>
                   <li>
+                    {
+                      data.sample_hash
+                      ?
                       <Button onClick={()=>this.download()} type="primary">
-                          <FormattedMessage {...AssetMessages.DownLoadTheSample}/>
+                        <FormattedMessage {...AssetMessages.DownLoadTheSample}/>
                       </Button>
+                      :
+                      <Button disabled>
+                        <FormattedMessage {...AssetMessages.NoSample}/>
+                      </Button>
+                    }
                   </li>
               </ul>
 

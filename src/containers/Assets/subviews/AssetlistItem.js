@@ -5,6 +5,8 @@ import {FormattedMessage} from 'react-intl'
 import BTTags from '../../AssetAndRequirement/BTTags'
 import {getAccount} from "../../../tools/localStore";
 import { typeValueKeyMap } from '../../../utils/keyMaps'
+import TokenPNG from '@/components/TokenPNG'
+
 import messages from '../../../locales/messages'
 const AssetMessages = messages.Asset;
 
@@ -58,7 +60,7 @@ class AssetlistItem extends Component {
                 <div>
                   <FormattedMessage {...AssetMessages.ExpectedPrice}/>
                   <span>{data.price/Math.pow(10, 8)}</span>
-                  <img src="./img/token.png" width='18' alt="" style={{paddingLeft:'4px'}}/>
+                  <TokenPNG />
                 </div>
                 <BTTags tags={tagsArr} />
             </div>
