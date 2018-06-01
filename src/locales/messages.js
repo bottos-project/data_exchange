@@ -239,6 +239,10 @@ module.exports = {
           id:'Login.ConfirmPassword',
           defaultMessage:'确认密码'
         },
+        PasteTheKeyStore:{
+          id:'Login.PasteTheKeyStore',
+          defaultMessage:'粘贴Keystore文件'
+        },
         ImportTheKeyStore:{
             id:'Login.ImportTheKeyStore',
             defaultMessage:'导入Keystore文件'

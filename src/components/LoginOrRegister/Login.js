@@ -249,7 +249,9 @@ class Login extends PureComponent{
             {/* <Col span={5} style={{height: '100%'}}></Col> */}
             <Col span={18} offset={5}>
               <Row type='flex' justify='space-around'>
-                <Button type='primary' onClick={this.parseKeystore}>粘贴 Keystore 文本</Button>
+                <Button type='primary' onClick={this.parseKeystore}>
+                  <FormattedMessage {...LoginMessages.PasteTheKeyStore}/>
+                </Button>
 
                 <Button type='primary' onClick={this.importKeyStore}>
                   <FormattedMessage {...LoginMessages.ImportTheKeyStore}/>

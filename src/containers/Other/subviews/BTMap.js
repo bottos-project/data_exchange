@@ -83,7 +83,7 @@ export default class BTMap extends PureComponent{
                     amapkey={YOUR_AMAP_KEY}
                     protocol='http'
                     zoom={3}
-                    zooms={[3, 4]}
+                    zooms={[3, 5]}
                     lang={this.state.lang}
                     zoomEnable={true}
                     useCluster={true}

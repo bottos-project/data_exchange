@@ -14,6 +14,14 @@ const toMapSvg = {
   '/dashboard': SVGDashboard
 }
 
+function findIntlMessage(routeName) {
+  // 先去 MenuMessages 里面找
+  // 如果没找到，去 HeaderMessages 里面找
+  return MenuMessages[routeName] ? MenuMessages[routeName] : (
+    HeaderMessages[routeName] ? HeaderMessages[routeName] : routeName
+  )
+}
+
 function NavLink({to, intlMessage, icon}) {
   return <Link to={to} activeClassName='menu-link-active'>
     <div className='menu-link'>
@@ -26,9 +34,9 @@ function NavLink({to, intlMessage, icon}) {
 function BTPersonalMenu({routeName}) {
   const personalMenu = {
     // dashboard:
-    'asset': 'Asset',
-    'need': 'Demand',
-    'file': 'File',
+    'asset': 'ProfileAsset',
+    'need': 'ProfileNeed',
+    'file': 'ProfileFile',
     'wallet': 'Wallet',
     'check': 'MyMessages',
     'presale': 'PreSale',
@@ -41,8 +49,10 @@ function BTPersonalMenu({routeName}) {
       <i className={'iconfont icon-my' + to} />
     </span>)
 
+    let intlMessage = findIntlMessage(personalMenu[to])
+
     list.push(
-      <NavLink key={to} icon={icon} to={"/profile/" + to} intlMessage={HeaderMessages[personalMenu[to]]} />
+      <NavLink key={to} icon={icon} to={"/profile/" + to} intlMessage={intlMessage} />
     )
   }
   return (
