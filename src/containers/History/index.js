@@ -65,13 +65,15 @@ class BTDashboard extends PureComponent{
         page_size: pageSize,
       }
 
-      BTRowFetch('/dashboard/GetTxList', param).then(res => {
+      BTRowFetch('/dashboard/GetTxList', param)
+      .catch(err => {
+        console.error(err);
+      })
+      .then(res => {
         this.setState({
             dataSource: res.row,
             total: res.total
         })
-      }).catch(err => {
-        console.error(err);
       })
   }
 

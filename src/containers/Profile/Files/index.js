@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {Popconfirm,Table, Upload, Icon, message} from 'antd';
-import BTFetch from "../../../utils/BTFetch"
+import { Upload, Icon } from 'antd';
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
-import {getBlockInfo, getDataInfo, getSignaturedParam} from '../../../utils/BTCommonApi'
+import { getSignaturedParam } from '../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from "@/tools/localStore";
@@ -11,6 +10,7 @@ import { getDateAndTime } from '@/utils/dateTimeFormat'
 import Base from 'webuploader/base'
 import uploader from './uploader'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
+import BTTable from '@/components/BTTable'
 
 import ProgressList from './subviews/ProgressList'
 import './style.less'
@@ -33,6 +33,26 @@ function beforeUpload(file) {
   }
 }
 
+const columns = [
+  {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name',
+    render: (item) => <div>{item}</div>
+  },
+  {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size',
+    render: size => Base.formatSize( size )
+  },
+  {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time',
+    render: getDateAndTime
+  },
+  {
+    title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_hash',
+    render: (file_hash) => (
+        <a onClick={() => BTDownloadFile(file_hash, getAccount().username) }>
+            <Icon type="download"/>
+        </a>
+    )
+  }
+]
+
 class BTMyAssetSet extends Component{
     constructor(props){
         super(props);
@@ -40,33 +60,9 @@ class BTMyAssetSet extends Component{
             data:[],
             hash:'',
             username:'',
-            token:'',
             fileList: []
         }
     };
-
-    columns(data) {
-      // console.log(data);
-      return [
-        {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name',
-          render: (item) => <div>{item}</div>
-        },
-        {title: <FormattedMessage {...PersonalAssetMessages.AssetFileSize}/>, dataIndex: 'file_size',
-          render: size => Base.formatSize( size )
-        },
-        {title: <FormattedMessage {...PersonalAssetMessages.UploadTime}/>, dataIndex: 'create_time',
-          render: getDateAndTime
-        },
-        {
-          title: <FormattedMessage {...PersonalAssetMessages.Download}/>, dataIndex: 'file_hash',
-          render: (file_hash) => (
-              <a onClick={() => BTDownloadFile(file_hash, getAccount().username) }>
-                  <Icon type="download"/>
-              </a>
-          )
-        },
-      ];
-    }
 
     customRequest = ({ file, onSuccess }) => {
       const account_info = this.props.account_info
@@ -83,33 +79,9 @@ class BTMyAssetSet extends Component{
 
       console.log('uploader', uploader);
       uploader.addFile(file)
-
-    }
-
-    onDelete(key){
-        const data = [...this.state.data];
-        this.setState({ data: data.filter(item => item.key !== key) });
-    }
-
-    componentDidMount() {
-
-        BTFetch('/asset/queryUploadedData', 'post', {
-          ...getSignaturedParam(getAccount()),
-          pageSize: 12,
-          page_num: 1,
-          fileType: 1
-        }).then(res => {
-            if (res.code == 1 && res.data.rowCount > 0) {
-              // message.warning(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
-              this.setState({ data: res.data.row })
-            }
-        }).catch(error => console.error(error))
-
     }
 
     render(){
-        const { data } = this.state;
-        const columns = this.columns(data);
         return (
             <div className="set">
                 <Dragger
@@ -125,12 +97,14 @@ class BTMyAssetSet extends Component{
                     </p>
                 </Dragger>
                 <ProgressList />
-                <Table
-                    className="shadow radius table"
-                    columns={columns}
-                    dataSource={data}
-                    rowKey='file_hash'
+                <BTTable
+                  columns={columns}
+                  rowKey='file_hash'
+                  url='/asset/queryUploadedData'
+                  options={{...getSignaturedParam(getAccount()), fileType: 1}}
+                  catchError={error => console.error(error)}
                 />
+
             </div>
         )
     }

@@ -1,6 +1,6 @@
 import React,{PureComponent} from 'react'
-import { Table, Icon } from 'antd';
-import { getSignaturedParam, BTRowFetch } from "../../../../utils/BTCommonApi";
+import { Icon } from 'antd';
+import { getSignaturedParam } from "../../../../utils/BTCommonApi";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import {getAccount} from "../../../../tools/localStore";
@@ -8,6 +8,7 @@ import { getDateAndTime } from '@/utils/dateTimeFormat'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import { selectType } from '@/utils/keyMaps'
 import TokenPNG from '@/components/TokenPNG'
+import BTTable from '@/components/BTTable'
 
 const PersonalAssetMessages = messages.PersonalAsset;
 
@@ -46,59 +47,18 @@ const columns = [
   }
 ]
 
-class BTPublishedAssets extends PureComponent{
-    constructor(props) {
-      super(props);
-      this.state = {
-        dataSource: [],
-        total: 0
-      }
-      this.searchPublishAsset = this.searchPublishAsset.bind(this)
-    }
 
-    searchPublishAsset(page, pageSize){
-      let params = {
-        "page_size": pageSize,
-        "page_num": page,
-        "assetType": 0,
-        ...getSignaturedParam(getAccount())
-      }
+// "assetType": 0,
 
-      BTRowFetch('/asset/queryMyAsset', params)
-      .then(res => {
-        this.setState({
-          dataSource: res.row,
-          total: res.total
-        })
-      }).catch(error => {
-        window.message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])
-      })
-
-    }
-
-    componentDidMount() {
-      this.searchPublishAsset(1, this.props.pageSize)
-    }
-
-    render() {
-      return (
-        <Table
-          className="shadow radius table"
-          dataSource={this.state.dataSource}
-          rowKey='asset_id'
-          columns={columns}
-          pagination={{
-            defaultPageSize: this.props.pageSize,
-            total: this.state.total,
-            onChange: this.searchPublishAsset
-          }}
-        />
-      );
-    }
-}
-
-BTPublishedAssets.defaultProps = {
-  pageSize: 12
+function BTPublishedAssets(props) {
+  return <BTTable
+    columns={columns}
+    rowKey='asset_id'
+    url='/asset/queryMyAsset'
+    options={getSignaturedParam(getAccount())}
+    catchError={(err) => message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])}
+    {...props}
+  />
 }
 
 export default BTPublishedAssets

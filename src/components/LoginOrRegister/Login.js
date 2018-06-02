@@ -114,6 +114,7 @@ class Login extends PureComponent{
                 this.props.setAccountInfo(accountInfo)
                 hashHistory.push('/profile/asset')
               } else if (response.code==1001) {
+                this.requestVerificationCode()
                 message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
               } else if (response.code==1000 && typeof response.details == 'string') {
                 try {
