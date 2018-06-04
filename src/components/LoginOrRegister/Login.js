@@ -2,7 +2,7 @@ import React,{PureComponent} from 'react'
 import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 
-import BTCryptTool from 'bottos-js-crypto'
+import BTCryptTool from 'bottos-crypto-js'
 import { Icon, Input, Button, message, Row, Col } from 'antd'
 import BTFetch from '@/utils/BTFetch';
 import { getAccount } from '@/tools/localStore'

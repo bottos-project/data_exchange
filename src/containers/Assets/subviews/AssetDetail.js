@@ -13,7 +13,7 @@ import BTTags from '../../AssetAndRequirement/BTTags'
 import { PackArraySize, PackStr16 } from '@/lib/msgpack/msgpack'
 import {buyAssetGrantCreditPack,cancelAssetGrantCreditPack} from '../../../lib/msgpack/BTPackManager'
 import {messageSign} from '../../../lib/sign/BTSign'
-import * as BTCryptTool from 'bottos-js-crypto'
+import * as BTCryptTool from 'bottos-crypto-js'
 import { arTypeKeyMap, typeValueKeyMap } from '@/utils/keyMaps'
 
 const AssetMessages = messages.Asset;

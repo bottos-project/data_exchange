@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { addFile } from '@/redux/actions/uploaderAction'
 import { Upload, Icon } from 'antd';
-import BTCryptTool from '@bottos-project/bottos-crypto-js'
+import BTCryptTool from 'bottos-crypto-js'
 import { getSignaturedParam } from '../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'

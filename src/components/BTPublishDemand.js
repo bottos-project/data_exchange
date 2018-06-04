@@ -13,7 +13,7 @@ import BTTypeSelect from './BTTypeSelect'
 import { toFixedWithoutZero } from '@/utils/number'
 import {registDemandPack} from '../lib/msgpack/BTPackManager'
 import {messageSign} from '../lib/sign/BTSign'
-import BTCrypto from 'bottos-js-crypto'
+import BTCrypto from 'bottos-crypto-js'
 import BTNumberInput from './BTNumberInput'
 
 const PersonalDemandMessages = messages.PersonalDemand;

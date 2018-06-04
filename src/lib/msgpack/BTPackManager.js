@@ -1,5 +1,5 @@
 import * as BTPack from './msgpack'
-import * as BTCrypto from 'bottos-js-crypto'
+import * as BTCrypto from 'bottos-crypto-js'
 
 
 export const registAssetPack = (did)=>{

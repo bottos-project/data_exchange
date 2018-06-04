@@ -27,7 +27,7 @@ export const getBlockInfo = async()=>{
 const { queryProtoEncode, messageProtoEncode } = require('@/lib/proto/index');
 const query_pb = require('@/lib/proto/query_pb')
 const message_pb = require('@/lib/proto/message_pb')
-const BTCryptTool = require('bottos-js-crypto')
+const BTCryptTool = require('bottos-crypto-js')
 
 export function getSignaturedParam({username, privateKey}) {
   if (typeof username != 'string' || typeof privateKey != 'string') {

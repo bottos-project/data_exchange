@@ -1,4 +1,4 @@
-import { keystore } from 'bottos-js-crypto'
+import { keystore } from 'bottos-crypto-js'
 
 import { get_ms_short } from './utils/dateTimeFormat'
 

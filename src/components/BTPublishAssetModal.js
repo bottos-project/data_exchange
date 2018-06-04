@@ -5,7 +5,7 @@ import {getAccount} from "../tools/localStore";
 // import messages from '../locales/messages'
 import {Icon, Modal, Radio, Select, Button, Input, DatePicker, TimePicker, Cascader, Col, Row } from 'antd';
 import BTAssetList from './BTAssetList'
-import BTCryptTool from 'bottos-js-crypto'
+import BTCryptTool from 'bottos-crypto-js'
 import {getBlockInfo,getDataInfo, getSignaturedParam} from '../utils/BTCommonApi'
 import BTFetch from "../utils/BTFetch";
 import {options} from '../utils/option'

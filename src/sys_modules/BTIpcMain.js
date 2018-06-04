@@ -3,7 +3,7 @@ const fs = require('fs')
 const appPath = app.getPath("userData");
 const {ipcEventName} = require('../utils/EventName')
 const path = require("path")
-const BTCrypto = require('bottos-js-crypto')
+const BTCrypto = require('bottos-crypto-js')
 const Keystore = BTCrypto.keystore
 
 

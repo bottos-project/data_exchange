@@ -1,6 +1,6 @@
 import * as BTProto from '../proto/index'
 import * as BTPack from '../msgpack/msgpack'
-import * as BTCrypto from 'bottos-js-crypto'
+import * as BTCrypto from 'bottos-crypto-js'
 
 export const messageSign = (msg,privateKey)=>{
     let message_pb = require('../proto/message_pb')

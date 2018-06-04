@@ -35,6 +35,7 @@ function createWindow () {
     BrowserWindow.addDevToolsExtension(path.join(__dirname, './devtools/lmhkpmbekcpmknklioeibfkpmmfibljd/2.15.2_0'))  // Redux Developer Tools
     win.loadURL('http://localhost:3000/')
     // 打开开发者工具。
+    win.webContents.openDevTools()
 
   }else{
     win.loadURL(url.format({
@@ -44,7 +45,6 @@ function createWindow () {
     }))
   }
 
-  win.webContents.openDevTools()
 
   win.webContents.session.on('will-download', (event, item, webContents) => {
     // 设置保存路径,使Electron不提示保存对话框。

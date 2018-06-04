@@ -12,7 +12,7 @@ import BTNumberInput from '../../../../components/BTNumberInput'
 import ConfirmButton from '@/components/ConfirmButton'
 import {transactionPack} from '../../../../lib/msgpack/BTPackManager'
 import { SIGPOLL } from 'constants';
-import * as BTCrypto from 'bottos-js-crypto'
+import * as BTCrypto from 'bottos-crypto-js'
 const WalletMessages = messages.Wallet;
 const FormItem = Form.Item;
 
