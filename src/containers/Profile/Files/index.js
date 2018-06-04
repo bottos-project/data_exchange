@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { addFile } from '@/redux/actions/uploaderAction'
 import { Upload, Icon } from 'antd';
 import BTCryptTool from '@bottos-project/bottos-crypto-js'
 import { getSignaturedParam } from '../../../utils/BTCommonApi'
@@ -81,6 +82,23 @@ class BTMyAssetSet extends Component{
       uploader.addFile(file)
     }
 
+    componentDidMount() {
+      let filesGuidArr = localStorage.getItem('unDoneFiles')
+      if (filesGuidArr == null) {
+        return ;
+      }
+      filesGuidArr = JSON.parse(filesGuidArr)
+      // console.log('filesGuidArr', filesGuidArr);
+      // 如果有以前没有传完的记录
+      // 则遍历这个记录的数组，然后向后端发起请求
+      for (var cachedFile of filesGuidArr) {
+        console.log('cachedFile', cachedFile);
+
+        // cachedFile.name =
+        // this.props.addFile({})
+      }
+    }
+
     render(){
         return (
             <div className="set">
@@ -116,4 +134,12 @@ function mapStateToProps(state) {
   return { account_info, fileList }
 }
 
-export default connect(mapStateToProps)(BTMyAssetSet)
+function mapDispatchToProps(dispatch) {
+  return {
+    addFile(f) {
+      dispatch( addFile(f) )
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BTMyAssetSet)

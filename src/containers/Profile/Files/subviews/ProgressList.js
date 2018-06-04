@@ -22,6 +22,7 @@ class UploadingFile extends PureComponent {
   constructor(props) {
     super(props);
     this.deleteFileFormList = this.deleteFileFormList.bind(this)
+    this.handlePlayOrPause = this.handlePlayOrPause.bind(this)
     this.handleClose = this.handleClose.bind(this)
   }
 
@@ -33,12 +34,27 @@ class UploadingFile extends PureComponent {
     }
   }
 
-  handleClose(event) {
+  handlePlayOrPause(e) {
+    // const { id, status } = this.props
+    // if (status == 'uploading') {
+    //   uploader.stop(this.props.id)
+    // } else if (status == 'error') {
+    //   let file = uploader.getFiles().find(file => file.id == id)
+    //   if (!file) {
+    //
+    //   }
+    //   uploader.retry(file)
+    // } else if (status == 'pause') {
+    //   uploader.upload(id)
+    // }
+  }
+
+  handleClose(e) {
     const { deleteFile, id, status, percent } = this.props
     console.log('status', status);
     if (status == 'done' || status == 'error' || percent == 100) {
       deleteFile(id)
-      event.stopPropagation()
+      e.stopPropagation()
     }
   }
 
@@ -51,21 +67,30 @@ class UploadingFile extends PureComponent {
         {BeforeIcon({status, percent})}
       </span>
       <div className='file-upload-item-name'>{name}</div>
-      {/* <Popconfirm
-        title={<FormattedMessage {...PersonalAssetMessages.SureToDelete} />}
-        onConfirm={this.deleteFileFormList}
-        placement="topRight"
-        > */}
-        <span className='file-upload-item-close' onClick={this.handleClose}>
-          <Icon type="close" />
-        </span>
-      {/* </Popconfirm> */}
+      <div className='file-upload-functional-icons'>
+        {/* <Popconfirm
+          title={<FormattedMessage {...PersonalAssetMessages.SureToDelete} />}
+          onConfirm={this.deleteFileFormList}
+          placement="topRight"
+          > */}
+          <span className='file-upload-item-pause' onClick={this.handlePlayOrPause}>
+            {
+              status != 'done' && (
+                status == 'uploading' ? <Icon type="pause" /> : <Icon type="play-circle-o" />
+              )
+            }
+          </span>
+          <span className='file-upload-item-close' onClick={this.handleClose}>
+            <Icon type="close" />
+          </span>
+          {/* </Popconfirm> */}
+      </div>
     </div>
   }
 }
 
 UploadingFile.propTypes = {
-  status: PropTypes.oneOf(['uploading', 'done', 'error']),
+  status: PropTypes.oneOf(['uploading', 'done', 'error', 'interrupt']),
 };
 
 UploadingFile.defaultProps = {

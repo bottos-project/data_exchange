@@ -3,6 +3,14 @@ import PropTypes from 'prop-types';
 import { Table } from 'antd';
 import { BTRowFetch } from '@/utils/BTCommonApi'
 
+/**
+ * 这个组件被很多地方公用
+ * 需要向父组件暴露方法修改其 state
+ * 目前是通过其 props 的 index 的改变
+ * 来通知组件调用 setState
+ * 之后会尝试更好的方法
+ * @extends Component
+ */
 class BTTable extends Component {
   constructor(props){
     super(props);
@@ -33,8 +41,8 @@ class BTTable extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.key != this.props.key) {
-      const { dataSource, total } = nextProps.dataChange(dataSource)
+    if (nextProps.index != this.props.index) {
+      const { dataSource, total } = nextProps.dataChange(this.state)
       this.setState({ dataSource, total });
     }
   }
@@ -81,6 +89,7 @@ BTTable.propTypes = {
   catchError: PropTypes.func.isRequired,
   pageSize: PropTypes.number,
   style: PropTypes.object,
+  dataChange: PropTypes.func,
 };
 
 export default BTTable;

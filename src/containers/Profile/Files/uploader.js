@@ -166,7 +166,7 @@ async function handleFileQueued(file) {
   // setInterval(async () => {
     var t1 = get_ms_short()
     const hashList = await api.getSliceHash()
-    console.log('hashList', hashList.map(item => item.hash));
+    // console.log('hashList', hashList.map(item => item.hash));
     console.log('hash 计算耗时', get_ms_short() - t1 + 'ms');
   // }, 5000);
   // return

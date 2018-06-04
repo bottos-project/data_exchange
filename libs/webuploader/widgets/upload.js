@@ -147,6 +147,26 @@ define([
         return api;
     }
 
+    // 文件切片已经提前到最开始了
+    function getFileApi(file) {
+      var pending = file.blocks.slice()
+      return {
+          file: file,
+
+          has: function() {
+              return !!pending.length;
+          },
+
+          shift: function() {
+              return pending.shift();
+          },
+
+          unshift: function( block ) {
+              pending.unshift( block );
+          }
+      }
+    }
+
     Uploader.register({
         name: 'upload',
 
@@ -532,8 +552,8 @@ define([
                         return null;
                     }
 
-                    // console.log('file', file);
-                    act = CuteFile( file, opts.chunked ? file.chunkSize : 0 );
+                    // act = CuteFile( file, opts.chunked ? file.chunkSize : 0 );
+                    act = getFileApi( file );
                     me.stack.push(act);
                     return act.shift();
                 };

@@ -7,10 +7,16 @@
   position: relative;
   height: @height;
   line-height: @height;
+  margin: 1px auto;
   &:hover {
 
   }
 }
+
+// .file-upload-item + .file-upload-item {
+//   border-top: 1px solid lightgray;
+// }
+
 .file-upload-item::before {
   content: '';
   position: absolute;
@@ -20,7 +26,7 @@
   background-color: lightblue;
   z-index: -1;
   transform: translateX(var(--percent));
-  transition: transform .3s;
+  transition: transform 1s;
 }
 
 .file-upload-item-name {
@@ -28,15 +34,20 @@
   margin-left: 5px;
 }
 
-.file-upload-item-close {
+.file-upload-functional-icons {
   position: absolute;
+  top: 0;
   right: 5px;
-  display: none;
+  height: @height;
+
+}
+
+.file-upload-item-close {
   height: @height;
   width: @height;
   cursor: pointer;
   text-align: center;
 }
 .file-upload-item:hover .file-upload-item-close {
-  display: inline-block;
+  // display: inline-block;
 }
