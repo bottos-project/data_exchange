@@ -10,8 +10,6 @@ Bottos web wallet is an application to transfer Bottos tokens such as BTO . It p
 
 ![asset](https://github.com/Bottos-project/wallet/blob/master/pic/asset.png)
 
-## V2.0 Release note：
-
    Improve the transaction speed with new consensus algorithm.
    
    Support user and account model.
