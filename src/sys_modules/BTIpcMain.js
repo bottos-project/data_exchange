@@ -21,15 +21,6 @@ const fs = require('fs')
 const appPath = app.getPath("userData");
 const {ipcEventName} = require('../utils/EventName')
 const path = require("path")
-const BTCrypto = require('bottos-crypto-js')
-const Keystore = BTCrypto.keystore
-
-
-// create keystore
-ipcMain.on(ipcEventName.create_keystore,(event,accountInfo)=>{
-     let keystoreObj = BTCrypto.keystore.create(accountInfo)
-     event.returnValue = keystoreObj
-})
 
 //  获取keystore文件
 ipcMain.on(ipcEventName.get_key_store,(event,accountInfo)=>{
@@ -148,19 +139,5 @@ ipcMain.on(ipcEventName.key_store_list,(event,username)=>{
         event.returnValue = result
     }catch(error){
         event.returnValue = []
-    }
-})
-
-ipcMain.on(ipcEventName.decryptKeystore,(event,params)=>{
-    try{
-        let privateKey = Keystore.recover(params.password,params.keyStoreObj).toString('hex')
-        event.returnValue = {
-            error:null,
-            privateKey
-        }
-    }catch(error){
-        event.returnValue = {
-            error
-        }
     }
 })

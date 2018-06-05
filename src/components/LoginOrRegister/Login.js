@@ -31,6 +31,8 @@ import ConfirmButton from '../ConfirmButton'
 import {FormattedMessage} from 'react-intl'
 import messages from '@/locales/messages'
 import {queryProtoEncode} from '@/lib/proto/index'
+import { getWorker } from '@/workerManage'
+
 const LoginMessages = messages.Login;
 const HeaderMessages = messages.Header;
 const { TextArea } = Input;
@@ -100,15 +102,15 @@ class Login extends PureComponent{
 
         this.props.setSpin(true)
 
-        var myWorker = new Worker('worker.js');
         let postData = {
           type: 'decryptKeystore',
           data: {password,keyStoreObj}
         }
+
+        var myWorker = getWorker()
         myWorker.postMessage(postData);
 
         myWorker.onmessage = (e) => {
-          // let result = BTIPcRenderer.decryptKeystore({password,keyStoreObj})
           let result = e.data
           // console.log('result', result);
           let privateKey = result.privateKey;

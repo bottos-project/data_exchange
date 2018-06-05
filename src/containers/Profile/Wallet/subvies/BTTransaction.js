@@ -28,7 +28,9 @@ import messages from '../../../../locales/messages'
 import BTIPcRenderer from "../../../../tools/BTIpcRenderer";
 import BTNumberInput from '../../../../components/BTNumberInput'
 import ConfirmButton from '@/components/ConfirmButton'
+import { getWorker } from '@/workerManage'
 import {transactionPack} from '../../../../lib/msgpack/BTPackManager'
+
 import { SIGPOLL } from 'constants';
 import * as BTCrypto from 'bottos-crypto-js'
 const WalletMessages = messages.Wallet;
@@ -81,7 +83,7 @@ class Transaction extends PureComponent{
         let keyStoreObj = keyStoreResult.keyStoreObj
         // 开启遮罩
         this.props.setSpin(true)
-        var myWorker = new Worker('worker.js');
+        var myWorker = getWorker();
         let postData = {
           type: 'decryptKeystore',
           data: {password:fieldValues.password,keyStoreObj}

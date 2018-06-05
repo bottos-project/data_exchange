@@ -39,13 +39,18 @@
   top: 0;
   right: 5px;
   height: @height;
-
+  > span {
+    margin: 0 5px;
+    cursor: pointer;
+    &:hover {
+      background-color: #75b3f0;
+    }
+  }
 }
 
 .file-upload-item-close {
   height: @height;
   width: @height;
-  cursor: pointer;
   text-align: center;
 }
 .file-upload-item:hover .file-upload-item-close {

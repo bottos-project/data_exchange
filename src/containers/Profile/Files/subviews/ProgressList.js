@@ -17,7 +17,7 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 import React, { Component, PureComponent } from 'react';
-import { deleteFile } from '@/redux/actions/uploaderAction'
+import { deleteFile, updateFile } from '@/redux/actions/uploaderAction'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import { Icon, Popconfirm } from 'antd'
@@ -53,18 +53,20 @@ class UploadingFile extends PureComponent {
   }
 
   handlePlayOrPause(e) {
-    // const { id, status } = this.props
-    // if (status == 'uploading') {
-    //   uploader.stop(this.props.id)
-    // } else if (status == 'error') {
-    //   let file = uploader.getFiles().find(file => file.id == id)
-    //   if (!file) {
-    //
-    //   }
-    //   uploader.retry(file)
-    // } else if (status == 'pause') {
-    //   uploader.upload(id)
-    // }
+    const { id, status, updateFile } = this.props
+    if (status == 'uploading') {
+      uploader.stop(id)
+      updateFile({...this.props, status: 'interrupt'})
+    } else if (status == 'error') {
+      // let file = uploader.getFiles().find(file => file.id == id)
+      // if (!file) {
+      //
+      // }
+      // uploader.retry(file)
+    } else if (status == 'interrupt') {
+      uploader.upload(id)
+      updateFile({...this.props, status: 'uploading'})
+    }
   }
 
   handleClose(e) {
@@ -119,7 +121,7 @@ class ProgressList extends Component {
 
   render() {
 
-    const { fileList, progressMap, deleteFile } = this.props
+    const { fileList, progressMap, deleteFile, updateFile } = this.props
 
     const list = fileList.map((file) => {
       return <UploadingFile
@@ -127,6 +129,7 @@ class ProgressList extends Component {
         {...file}
         percent={progressMap[file.guid]}
         deleteFile={deleteFile}
+        updateFile={updateFile}
       />;
     })
 
@@ -146,6 +149,9 @@ function mapDispatchToProps(dispatch) {
   return {
     deleteFile(f) {
       dispatch( deleteFile(f) )
+    },
+    updateFile(file) {
+      dispatch( updateFile(file) )
     }
   }
 }

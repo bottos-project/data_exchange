@@ -17,19 +17,21 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 import React,{PureComponent} from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import {FormattedMessage} from 'react-intl'
-import {message,Modal,Button,Input} from 'antd'
+import {Modal,Button,Input} from 'antd'
 import BTIpcRenderer from '../../../../tools/BTIpcRenderer'
-import * as localStore from '../../../../tools/localStore'
-import BTCryptTool from 'bottos-crypto-js'
+import { setSpin } from '@/redux/actions/HeaderAction'
+import { getAccount } from '../../../../tools/localStore'
 import ColorfulButton from '@/components/BTButton/ColorfulButton'
+import { getWorker } from '@/workerManage'
 
 import messages from '../../../../locales/messages'
 const WalletMessages = messages.Wallet;
 
 
-export default class BTAccountListHeader extends PureComponent{
+class BTAccountListHeader extends PureComponent{
     constructor(props){
         super(props)
         this.state = {
@@ -60,7 +62,7 @@ export default class BTAccountListHeader extends PureComponent{
             return
         }
 
-        let account = localStore.getAccount()
+        let account = getAccount()
         if(account==undefined) {
             window.message.error(window.localeInfo['Wallet.PleaseLogInFirst'])
             return
@@ -70,15 +72,35 @@ export default class BTAccountListHeader extends PureComponent{
         let account_info = JSON.parse(localStorage.account_info)
         let username = account_info.username
         let password = this.state.password
-        let privateKey = BTIpcRenderer.decryptKeystore({password,keyStoreObj:this.state.keyStoreObj})
-        if(privateKey.error){
-            window.message.error(window.localeInfo["Header.ThePasswordAndTheKeystoreDoNotMatch"])
-            return
-        }
-        let isSave = BTIpcRenderer.saveKeyStore({username:username,account_name:this.state.account_name},this.state.keyStoreObj)
-        isSave ? window.message.success('success') : message.error("failed")
+
         this.setState({visible:false})
-        // window.location.reload()
+
+        let postData = {
+          type: 'decryptKeystore',
+          data: {password,keyStoreObj:this.state.keyStoreObj}
+        }
+        var myWorker = getWorker()
+        myWorker.postMessage(postData);
+
+        this.props.setSpin(true)
+
+        myWorker.onmessage = (e) => {
+          console.log('Message received from worker', e.data);
+          let result = e.data
+          // console.log('result', result);
+          let privateKey = result.privateKey;
+
+          let isSave = BTIpcRenderer.saveKeyStore({username,account_name:this.state.account_name},this.state.keyStoreObj)
+          isSave ? window.message.success('success') : message.error("failed")
+          this.props.setSpin(false)
+        }
+
+        myWorker.onerror = (e) => {
+          console.error('worker error', e);
+          window.message.error(window.localeInfo["Header.ThePasswordAndTheKeystoreDoNotMatch"])
+          this.props.setSpin(false)
+        }
+
     }
 
     onHandleCancel(){
@@ -106,9 +128,21 @@ export default class BTAccountListHeader extends PureComponent{
             <Button onClick={()=>this.importKeyStore()}>
               <FormattedMessage {...WalletMessages.ImportTheKeyStore}/>
             </Button>
-            <Input style={{marginBottom:10}} type="password" name="password" placeholder="请输入导入keystore的密码" value={this.state.password} onChange={(e)=>this.setState({password:e.target.value})}></Input>
+            { this.state.account_name && (this.state.account_name + '.keystore')}
+            <Input style={{marginTop: 10}} type="password" name="password" placeholder="请输入导入keystore的密码" value={this.state.password} onChange={(e)=>this.setState({password:e.target.value})}></Input>
           </Modal>
         </div>
       )
     }
 }
+
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setSpin(isloading) {
+          dispatch(setSpin(isloading))
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(BTAccountListHeader)

@@ -31,7 +31,7 @@ var unDoneFilesCache = null;
 function getCacheFileState() {
   if (!Array.isArray(unDoneFilesCache)) {
     let filesGuidArr = localStorage.getItem(unDoneFiles)
-    unDoneFilesCache = filesGuidArr ? JSON.parse(filesGuidObj) : []
+    unDoneFilesCache = filesGuidArr ? JSON.parse(filesGuidArr) : []
   }
   return unDoneFilesCache;
 }
@@ -60,7 +60,7 @@ function cacheFileState({guid, path, status, name}) {
 
 function fileKeysFilter(file) {
   const { id, name, status, guid, remaning, size, blocks } = file
-  const path = file.getSource().getSource().path
+  const path = file.path || file.getSource().getSource().path
   return { id, name, status, guid, remaning, size, blocks, path }
 }
 

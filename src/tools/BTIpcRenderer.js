@@ -21,10 +21,6 @@ const electron = window.electron;
 const ipcRenderer = electron.ipcRenderer;
 const {ipcEventName} = window.eventName;
 
-const createKeystore = (accountInfo)=>{
-    return ipcRenderer.sendSync(ipcEventName.create_keystore,accountInfo)
-}
-
 /**
  * 通过keystore的文件名来
  * @param {*} fileName 要获取的keystore的文件名，不需要加.bto
@@ -62,18 +58,11 @@ const getKeyStoreList = ()=>{
     return keyStoreList
 }
 
-const decryptKeystore = (params)=>{
-    return ipcRenderer.sendSync(ipcEventName.decryptKeystore,params)
-}
-
-
 export default {
-    createKeystore,
     getKeyStore,
     saveKeyStore,
     importFile,
     exportKeyStore,
     getKeyStoreList,
     mkdir,
-    decryptKeystore
 }

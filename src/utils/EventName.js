@@ -25,8 +25,6 @@ const ipcEventName = {
     key_store_list:'key-store-list',
     export_key_store:'export_key_store',
     mkdir:'mkdir',
-    create_keystore:"create_keystore",
-    decryptKeystore:'decryptKeystore'
 }
 
 module.exports = {

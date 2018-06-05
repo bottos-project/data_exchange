@@ -31,6 +31,8 @@ import ConfirmButton from '../ConfirmButton'
 import messages from '@/locales/messages'
 import {messageProtoEncode} from '@/lib/proto/index'
 import {getBlockInfo} from '@/utils/BTCommonApi'
+import { getWorker } from '@/workerManage'
+
 const msgpack = require('@/lib/msgpack/msgpack')
 
 const HeaderMessages = messages.Header;
@@ -181,14 +183,13 @@ class Regist extends PureComponent{
         let arrSize = msgpack.PackArraySize(2)
         let arrid = msgpack.PackStr16(didParam.Didid)
         let arrStr = msgpack.PackStr16(JSON.stringify(didParam.Didinfo))
-        let len = arrSize.byteLength + arrid.byteLength + arrStr.byteLength
-        let buf = new Uint8Array(len)
-        buf = [...arrSize,...arrid,...arrStr]
+        // let len = arrSize.byteLength + arrid.byteLength + arrStr.byteLength
+        let buf = [...arrSize,...arrid,...arrStr]
 
         let newuser = {
             version:1,
             ...blockHeader,
-            sender:"bottos",
+            sender: username,
             contract:"usermng",
             method:"reguser",
             param: buf,
@@ -218,37 +219,44 @@ class Regist extends PureComponent{
             return
           }
           if (response.code == 1) {
-              // let keystoreObj = BTIpcRenderer.createKeystore({account:username,password,privateKey})
-              var myWorker = new Worker('worker.js');
-              let postData = {
-                type: 'createKeystore',
-                data: {account:username,password,privateKey}
-              }
-              myWorker.postMessage(postData);
 
-              myWorker.onmessage = (e) => {
-                console.log('Message received from worker', e.data);
-                let keystoreObj = e.data
-                // 创建本地用户目录
-                BTIpcRenderer.mkdir(username)
-                // 存储keystore文件到本地
-                let isSaveSuccess = BTIpcRenderer.saveKeyStore({username:username,account_name:username},keystoreObj)
-                isSaveSuccess ? message.success('keystore saved success') : message.error('keystore saved faild')
-                this.registSuccess({username, keystoreObj})
-                this.clearFields()
-                this.props.setSpin(false)
-                message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
-              }
+            let postData = {
+              type: 'createKeystore',
+              data: {account:username,password,privateKey}
+            }
 
-              myWorker.onerror = (e) => {
-                console.error('worker error', e);
-                window.message.error(window.localeInfo["Header.FailedRegister"]);
-                this.props.setSpin(false)
-              }
+            var myWorker = getWorker()
+            myWorker.postMessage(postData);
+
+            myWorker.onmessage = (e) => {
+              console.log('Message received from worker', e.data);
+              let keystoreObj = e.data
+              // 创建本地用户目录
+              BTIpcRenderer.mkdir(username)
+              // 存储keystore文件到本地
+              let isSaveSuccess = BTIpcRenderer.saveKeyStore({username:username,account_name:username},keystoreObj)
+              isSaveSuccess ? message.success('keystore saved success') : message.error('keystore saved faild')
+              this.registSuccess({username, keystoreObj})
+              this.clearFields()
+              this.props.setSpin(false)
+              message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
+            }
+
+            myWorker.onerror = (e) => {
+              console.error('worker error', e);
+              window.message.error(window.localeInfo["Header.FailedRegister"]);
+              this.props.setSpin(false)
+            }
 
           }else if(response.code == 1001){
             this.props.setSpin(false)
             message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
+            this.requestVerificationCode()
+
+          }else if(response.code == 1004){
+            this.props.setSpin(false)
+            console.log('details', JSON.parse(res.details));
+            message.error(window.localeInfo["Header.AccountHasAlreadyExisted"]);
           }else{
             this.props.setSpin(false)
             console.log(JSON.parse(res.details));
@@ -316,12 +324,6 @@ class Regist extends PureComponent{
         let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(encodeBuf))
         let sign = BTCryptTool.sign(hash,priKey)
         return sign
-    }
-
-    createKeystore(username,password,privateKey){
-        let params = {account:username,password,privateKey}
-
-        Keystore.create(params)
     }
 
     handleRadioChange = (e) => {

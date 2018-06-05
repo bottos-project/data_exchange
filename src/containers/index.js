@@ -59,7 +59,7 @@ class App extends PureComponent {
             style={{
               width: '100%',
               height: '100vh',
-              zIndex: 1000,
+              zIndex: 1008,
               backgroundColor: '#e6f7ff',
               opacity: 0.3,
               display: 'flex',
