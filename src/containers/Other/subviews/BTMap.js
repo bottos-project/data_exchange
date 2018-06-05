@@ -109,6 +109,7 @@ export default class BTMap extends PureComponent{
                 >
                     <Markers
                         markers={this.props.node}
+                        render={() => <img src='./img/mark_bs.png' />}
                     />
                 </Map>
             </div>
