@@ -17,7 +17,6 @@
     "buildwithworker": "webpack --mode production --config ./config/webpack.config.worker.js && webpack --config ./config/webpack.config.prod.js",
     "electron-start": "electron .",
     "worker": "webpack --mode development --config ./config/webpack.config.worker.js --watch",
-    "mock": "node ./mock/server.js",
     "pack-mac": "electron-builder --platform=darwin",
     "pack-win": "electron-builder --platform=win",
     "pack-linux": "electron-builder --platform=linux",
