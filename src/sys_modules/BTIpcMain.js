@@ -33,7 +33,7 @@ ipcMain.on(ipcEventName.get_key_store,(event,accountInfo)=>{
                 error
             }
         }else{
-            console.log({result})
+            // console.log({result})
             let keyStoreObj = JSON.parse(result)
             event.returnValue = {error,keyStoreObj}
         }
@@ -102,7 +102,7 @@ ipcMain.on(ipcEventName.save_key_store,(event,accountInfo,params)=>{
     let userName = accountInfo.username;
     let accountName = accountInfo.account_name;
 
-    console.log({appPath,userName})
+    // console.log({appPath,userName})
     let dirPath = path.join(appPath,userName);
     let isDirExists = fs.existsSync(dirPath)
     if(!isDirExists){

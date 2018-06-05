@@ -16,15 +16,17 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-const node_uuid = require('node-uuid')
+
+const uuidv1 = require('uuid/v1');
 const eventName = require('../src/utils/EventName')
+const createHash = require('crypto').createHash
+const fs = require('fs');
+
 global.electron = require('electron')
 
-global.uuid = ()=>node_uuid.v1().replace(/-/g,'')
+global.uuid = () => uuidv1().replace(/-/g,'')
 
 global.eventName = eventName;
-var createHash = require('crypto').createHash
-const fs = require('fs');
 
 global.sha256Chunk = (filePath, start, end, chunk) => {
   return new Promise((resolve, reject) => {
