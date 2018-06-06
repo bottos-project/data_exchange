@@ -86,6 +86,7 @@ module.exports = {
     "PersonalAsset.ThereIsNoHaveBoughtAssetForTheTimeBeing":"暂无已购买资产",
     "PersonalAsset.FailedToGetTheHaveBoughtAsset":"查询已购买资产失败",
     "PersonalAsset.UploadFileSize":"上传文件大小不允许大于 2G",
+    "PersonalAsset.UploadFileSize200M":"上传文件大小不允许大于 200M",
     "PersonalAsset.FailedToGetUrlOfDocumentStorage":"获取文件存储url失败",
     "PersonalAsset.FailedToUploadTheFile":"文件上传失败",
     "PersonalAsset.SuccessfulToUploadTheFile":"文件上传成功",

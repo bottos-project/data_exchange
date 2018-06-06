@@ -56,7 +56,7 @@ function BTPersonalMenu({routeName}) {
   }
   var list = []
   for (var to in personalMenu) {
-    console.log('to', to);
+    // console.log('to', to);
     let icon = (<span className='menu-link-icon'>
       <i className={'iconfont icon-my' + to} />
     </span>)

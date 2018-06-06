@@ -28,8 +28,10 @@ import {getAccount} from "@/tools/localStore";
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import Base from 'webuploader/base'
 import uploader from './uploader'
+import { checkCacheFile } from './uploader/continue'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import BTTable from '@/components/BTTable'
+import { getCacheFileState } from '@/utils/uploadingFileCache'
 
 import ProgressList from './subviews/ProgressList'
 import './style.less'
@@ -43,11 +45,11 @@ const MegaByte = 1 << 20
 
 function beforeUpload(file) {
   // console.log('file.size', file.size)
-  if (file.size > 2 * GigaByte) {
-  // if (file.size > 200 * MegaByte) {
+  // if (file.size > 2 * GigaByte) {
+  if (file.size > 200 * MegaByte) {
     // 文件大小大于 2G
     // 不支持上传
-    window.message.error(window.localeInfo["PersonalAsset.UploadFileSize"])
+    window.message.error(window.localeInfo["PersonalAsset.UploadFileSize200M"])
     return false;
   }
 }
@@ -96,22 +98,21 @@ class BTMyAssetSet extends Component{
         return message.info('重复上传');
       }
 
-      console.log('uploader', uploader);
       uploader.addFile(file)
     }
 
     componentDidMount() {
-      let filesGuidArr = localStorage.getItem('unDoneFiles')
-      if (filesGuidArr == null) {
-        return ;
-      }
-      filesGuidArr = JSON.parse(filesGuidArr)
+      let filesGuidArr = getCacheFileState()
       // console.log('filesGuidArr', filesGuidArr);
       // 如果有以前没有传完的记录
       // 则遍历这个记录的数组，然后向后端发起请求
       for (var cachedFile of filesGuidArr) {
-        console.log('cachedFile', cachedFile);
-
+        cachedFile.cache = true
+        cachedFile.status = 'cache'
+        // cachedFile.id = cachedFile.guid
+        delete cachedFile.id
+        // console.log('cachedFile', cachedFile);
+        checkCacheFile(cachedFile)
         // cachedFile.name =
         // this.props.addFile({})
       }

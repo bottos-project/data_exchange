@@ -22,9 +22,16 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 import { Icon, Popconfirm } from 'antd'
 import { FormattedMessage } from 'react-intl'
+import uploader from '../uploader'
+import { deleteFileCache } from '@/utils/uploadingFileCache'
+
+import _File from 'webuploader/lib/file'
+import WUFile from 'webuploader/file'
+// console.log('_File, WUFile', _File, WUFile);
+
 import messages from '@/locales/messages'
 const PersonalAssetMessages = messages.PersonalAsset
-import uploader from '../uploader'
+
 
 function BeforeIcon({percent, status}) {
   if (percent == 100 || status == 'done') {
@@ -66,20 +73,36 @@ class UploadingFile extends PureComponent {
     } else if (status == 'interrupt') {
       uploader.upload(id)
       updateFile({...this.props, status: 'uploading'})
+    } else if (status == 'cache') {
+      // let info = Object.assign({}, this.props)
+      // delete info.updateFile
+      // delete info.deleteFile
+      // console.log('cache file info', info);
+      uploader.upload(id)
     }
   }
 
   handleClose(e) {
+    e.stopPropagation()
     const { deleteFile, id, status, percent } = this.props
-    console.log('status', status);
-    if (status == 'done' || status == 'error' || percent == 100) {
-      deleteFile(id)
-      e.stopPropagation()
+    // console.log('status', status);
+    if (status == 'uploading' && percent != 100) {
+      return ;
     }
+    deleteFile(id)
+    deleteFileCache(id)
+    // if (uploader.getFiles().findIndex(f => f.id == id) != -1) {
+    //   uploader.cancelFile(id)
+    // }
   }
 
   render() {
-    const { name, status, percent } = this.props
+    let { name, status, percent, cache, progressing_slice_chunk, hashList } = this.props
+    if (cache && percent < 90) {
+      let remanentRate = progressing_slice_chunk.length / hashList.length
+      let hasDoneRate = 1 - remanentRate
+      percent = 90 * hasDoneRate + remanentRate * percent
+    }
     const __percent = (percent || 0) - 100 + '%'
     return <div className='file-upload-item' style={{'--percent': __percent}}>
       <div></div>
@@ -110,7 +133,7 @@ class UploadingFile extends PureComponent {
 }
 
 UploadingFile.propTypes = {
-  status: PropTypes.oneOf(['uploading', 'done', 'error', 'interrupt']),
+  status: PropTypes.oneOf(['uploading', 'done', 'error', 'interrupt', 'cache']),
 };
 
 UploadingFile.defaultProps = {

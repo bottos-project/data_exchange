@@ -1,0 +1,6 @@
+
+export const ADD_FILE = 'ADD_FILE'
+export const DELETE_FILE = 'DELETE_FILE'
+export const UPDATE_FILE = 'UPDATE_FILE'
+export const UPDATE_UPLOAD_PROGRESS = 'UPDATE_UPLOAD_PROGRESS'
+export const UPDATE_FILELIST = 'UPDATE_FILELIST'

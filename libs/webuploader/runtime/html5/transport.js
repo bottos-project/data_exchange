@@ -26,7 +26,7 @@ define([
                 server = opts.server,
                 formData, binary, fr;
 
-                // console.log('this', this);
+                console.log('this', this);
                 // console.log('opts', opts);
                 console.log('owner', owner);
 
@@ -136,6 +136,8 @@ define([
 
             xhr.upload.onprogress = function( e ) {
                 var percentage = 0;
+
+                // console.log('e', e);
 
                 if ( e.lengthComputable ) {
                     percentage = e.loaded / e.total;
