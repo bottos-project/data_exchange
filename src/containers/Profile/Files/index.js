@@ -54,6 +54,10 @@ function beforeUpload(file) {
   }
 }
 
+function findByGuid(arr, guid) {
+  return arr.find(ele => ele.guid == guid)
+}
+
 const columns = [
   {title: <FormattedMessage {...PersonalAssetMessages.AssetFileName}/>, dataIndex: 'file_name',
     render: (item) => <div>{item}</div>
@@ -106,9 +110,14 @@ class BTMyAssetSet extends Component{
       // console.log('filesGuidArr', filesGuidArr);
       // 如果有以前没有传完的记录
       // 则遍历这个记录的数组，然后向后端发起请求
+      // console.log('this.props.fileList', this.props.fileList);
       for (var cachedFile of filesGuidArr) {
+        if ( findByGuid(this.props.fileList, cachedFile.guid)) {
+          continue
+        }
+        // console.log('cachedFile', cachedFile);
         cachedFile.cache = true
-        cachedFile.status = 'cache'
+        cachedFile.status = 'inited'
         // cachedFile.id = cachedFile.guid
         delete cachedFile.id
         // console.log('cachedFile', cachedFile);

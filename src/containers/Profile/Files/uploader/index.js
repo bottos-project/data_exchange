@@ -136,6 +136,7 @@ function beforeFileQueued(file) {
   console.log('beforeFileQueued file', file);
   // 1. 计算文件的 chunkSize
   const chunkSize = calculateSlicedFileSize(file.size)
+  file.status = 'inited'
   file.chunkSize = chunkSize
   let originFile = file.getSource().getSource()
   if (originFile.cache) {
@@ -145,8 +146,6 @@ function beforeFileQueued(file) {
     // file.guid = fileInfo.guid
     // file.path = fileInfo.path
     Object.assign(file, fileInfo)
-  } else {
-    file.status = 'uploading'
   }
   store.dispatch( addFile(file) )
 }
@@ -170,7 +169,6 @@ function getUploadURL(file) {
   .then(res => {
     if (res.result == 200) {
       file.url = res.url
-      uploader.options.server = file.url[0].surl
       // 5. 成功取得 url，触发上传
       // 在上传之前需要单独处理续传的文件
       // 主要是改变 blocks
@@ -182,10 +180,9 @@ function getUploadURL(file) {
           file.progressing_slice_chunk.indexOf(chunk) != -1
         )
         file.remaning = file.blocks.length
-
-        let firstChunk = file.blocks[0].chunk
-        uploader.options.server = file.url[firstChunk].surl
-
+        file.status = 'interrupt'
+        console.log('updateFile', file);
+        store.dispatch( updateFile(file) )
         return
       }
       return uploader.upload(file)
@@ -209,7 +206,7 @@ async function handleFileQueued(file) {
   // const hashList = await api.getSliceHash()
   // console.log('hashList', hashList.map(item => item.hash));
   // setInterval(async () => {
-    var t1 = get_ms_short()
+    let t1 = get_ms_short()
     const hashList = await api.getSliceHash()
     // console.log('hashList', hashList.map(item => item.hash));
     console.log('hash 计算耗时', get_ms_short() - t1 + 'ms');
@@ -266,22 +263,14 @@ function handleUploadStart(file) {
 uploader.on( 'uploadStart', handleUploadStart)
 
 uploader.on( 'uploadBeforeSend', (obj, data, headers) => {
-  console.log('obj', obj);
-  console.log('data', data);
-  // console.log('obj, data, headers', obj, data, headers);
-  // uploader.options.server = obj.file.url[data.chunk + 1]
+  // console.log('obj', obj);
+  // console.log('data', data);
   let file = obj.file
-  let url = file.url
-  let blocks = file.blocks
-  let currentChunkIndex = blocks.findIndex(bc => bc.chunk == obj.chunk)
-  let nextBlock = blocks[currentChunkIndex + 1]
-  if (nextBlock) {
-    let nextChunk = nextBlock.chunk
-    uploader.options.server = url[nextChunk].surl
-  }
+  // console.log('file', file);
+  let urls = file.url
+  // console.log('urls', urls);
+  data.url = urls[obj.chunk].surl
 
-  // console.log('chunk', chunk);
-  // // console.log('this.url', this.url);
   // console.log('this.url[chunk].surl', this.url[chunk].surl);
   headers['Access-Control-Allow-Origin'] = '*'
 })

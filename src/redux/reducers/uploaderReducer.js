@@ -29,7 +29,7 @@ function updateFileListWithFile(fileList, file) {
     return [file]
   }
   const index = fileList.findIndex(element => element.id == file.id)
-  // console.log('index', index);
+  console.log('index', index);
   // console.log('fileList, file', fileList, file);
   if (index == -1)
     return fileList;

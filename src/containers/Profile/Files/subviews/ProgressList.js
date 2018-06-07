@@ -43,6 +43,19 @@ function BeforeIcon({percent, status}) {
   }
 }
 
+function PlayAndPauseIcon({status}) {
+  switch (status) {
+    case 'inited':
+      return <Icon type="clock-circle-o" />
+    case 'uploading':
+      return <Icon type="pause" />
+    case 'done':
+      return null
+    default:
+      return <Icon type="play-circle-o" />
+  }
+}
+
 class UploadingFile extends PureComponent {
   constructor(props) {
     super(props);
@@ -61,22 +74,22 @@ class UploadingFile extends PureComponent {
 
   handlePlayOrPause(e) {
     const { id, status, updateFile } = this.props
+    let info = Object.assign({}, this.props)
+    delete info.updateFile
+    delete info.deleteFile
     if (status == 'uploading') {
       uploader.stop(id)
-      updateFile({...this.props, status: 'interrupt'})
+      updateFile({...info, status: 'interrupt'})
     } else if (status == 'error') {
       // let file = uploader.getFiles().find(file => file.id == id)
       // if (!file) {
       //
       // }
       // uploader.retry(file)
-    } else if (status == 'interrupt') {
+    } else if (status == 'interrupt' ) {
       uploader.upload(id)
-      updateFile({...this.props, status: 'uploading'})
+      updateFile({...info, status: 'uploading'})
     } else if (status == 'cache') {
-      // let info = Object.assign({}, this.props)
-      // delete info.updateFile
-      // delete info.deleteFile
       // console.log('cache file info', info);
       uploader.upload(id)
     }
@@ -92,7 +105,7 @@ class UploadingFile extends PureComponent {
     deleteFile(id)
     deleteFileCache(id)
     // if (uploader.getFiles().findIndex(f => f.id == id) != -1) {
-    //   uploader.cancelFile(id)
+      uploader.cancelFile(id)
     // }
   }
 
@@ -117,11 +130,7 @@ class UploadingFile extends PureComponent {
           placement="topRight"
           > */}
           <span className='file-upload-item-pause' onClick={this.handlePlayOrPause}>
-            {
-              status != 'done' && (
-                status == 'uploading' ? <Icon type="pause" /> : <Icon type="play-circle-o" />
-              )
-            }
+            { PlayAndPauseIcon({status}) }
           </span>
           <span className='file-upload-item-close' onClick={this.handleClose}>
             <Icon type="close" />
@@ -133,7 +142,7 @@ class UploadingFile extends PureComponent {
 }
 
 UploadingFile.propTypes = {
-  status: PropTypes.oneOf(['uploading', 'done', 'error', 'interrupt', 'cache']),
+  status: PropTypes.oneOf(['inited', 'uploading', 'done', 'error', 'interrupt', 'cache']),
 };
 
 UploadingFile.defaultProps = {

@@ -35,9 +35,12 @@ export function checkCacheFile(cachedFile) {
           deleteFileCache(guid)
         } else {
           // 这个才是没有传完
+          // console.log('slice_progressing', res.slice_progressing);
+
           cachedFile.progressing_slice_chunk = res.slice_progressing.map(ele =>
             Number.parseInt(ele.sguid.replace(guid, ''))
           )
+          console.log('cachedFile progressing_slice_chunk', cachedFile.progressing_slice_chunk);
           // store.dispatch(addFile(cachedFile))
           let wfile = wrapFile(cachedFile)
           uploader.addFile(wfile)

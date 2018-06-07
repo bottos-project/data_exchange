@@ -26,9 +26,12 @@ define([
                 server = opts.server,
                 formData, binary, fr;
 
-                console.log('this', this);
+                // console.log('this', this);
                 // console.log('opts', opts);
-                console.log('owner', owner);
+                // console.log('owner', owner);
+                // console.log('owner._formData', owner._formData);
+
+                server = owner._formData.url
 
             if ( opts.sendAsBinary ) {
                 server += opts.attachInfoToQuery !== false ? ((/\?/.test( server ) ? '&' : '?') +
