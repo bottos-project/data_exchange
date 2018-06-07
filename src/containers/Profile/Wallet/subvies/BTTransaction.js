@@ -113,22 +113,26 @@ class Transaction extends PureComponent{
             getSignaturedFetchParam({fetchParam, privateKey})
             let url = '/user/transfer'
             BTFetch(url,'POST', fetchParam)
-            .then(response=>{
-                if(response && response.code==1){
-                    message.success(window.localeInfo["Wallet.SuccessfulToTransferAccounts"])
-                    resetFields()
-                }else{
-                    message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
-                }
-                this.props.setSpin(false)
+            .then(res=>{
+              if (!res) {
+                throw new Error('transfer error')
+              }
+              if (res.code == 1) {
+                  message.success(window.localeInfo["Wallet.SuccessfulToTransferAccounts"])
+
+                  resetFields()
+              } else if (res.code == 10102) {
+                  message.error(window.localeInfo["Wallet.TheTargetAccountIsInexistence"])
+              }
+              this.props.setSpin(false)
             }).catch(error=>{
-                message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
-                this.props.setSpin(false)
+              message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
+              this.props.setSpin(false)
             })
         }
 
         myWorker.onerror = (e)=>{
-            message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
+            message.error(window.localeInfo["Wallet.TheWrongPassword"])
             this.props.setSpin(false)
         }
     }
@@ -148,9 +152,9 @@ class Transaction extends PureComponent{
 
                     <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout} onValuesChange={console.log("onValuesChange")}>
                       {getFieldDecorator('quantity', { rules: [{ required: true, message: '请填写转账金额!' }], })(
-                        <BTNumberInput/>
+                        <BTNumberInput />
                       )}
-                      <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div>
+                      {/* <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div> */}
                     </FormItem>
 
                     <FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
@@ -183,7 +187,6 @@ const TransactionForm = Form.create()(Transaction)
 const mapDispatchToProps = (dispatch) => {
     return {
         setSpin(isloading) {
-            console.log({isloading})
           dispatch(setSpin(isloading))
         }
     }

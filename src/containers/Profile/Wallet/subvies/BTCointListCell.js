@@ -30,6 +30,7 @@ export default class BTCointListCell extends PureComponent{
         super(props)
         this.state = {
           visible: false,
+          balance: props.balance
         }
     }
 
@@ -42,7 +43,8 @@ export default class BTCointListCell extends PureComponent{
     }
 
     render(){
-      let props = this.props;
+      let { balance } = this.state;
+      let { selectWallet } = this.props;
       // console.log('props', this.props)
       return (
         <div className="container column">
@@ -54,22 +56,17 @@ export default class BTCointListCell extends PureComponent{
                           <FormattedMessage {...WalletMessages.AvailableCash}/>
                       </span>
                   </div>
-                  <div className="font25 colorRed">{props.balance/Math.pow(10, 8)}</div>
+                  <div className="font25 colorRed">{balance/Math.pow(10, 8)}</div>
               </div>
-              <div>
-                  <Button type="primary" onClick={()=>this.transaction()}>
-                    <FormattedMessage {...WalletMessages.Transfer} />
-                  </Button>
-                  {/* <Button className="marginRight" type="primary" onClick={()=>this.changePwd(this.props.accountName)}>
-                      <FormattedMessage {...WalletMessages.ModifyThePassword}/>
-                  </Button>
-                  <Button type="primary" onClick={()=>this.exportAccount(this.props.accountName)}>
-                      <FormattedMessage {...WalletMessages.ExportTheAccount}/>
-                  </Button> */}
-              </div>
+              <Button type="primary" onClick={()=>this.transaction()}>
+                <FormattedMessage {...WalletMessages.Transfer} />
+              </Button>
             </div>
             <BTTransitionHeight show={this.state.visible} height={220} style={{marginBottom:20}}>
-              <TransactionForm {...this.props} closeModal={()=>this.onHandleCancel()}/>
+              <TransactionForm
+                closeModal={()=>this.onHandleCancel()}
+                selectWallet={selectWallet}
+              />
             </BTTransitionHeight>
         </div>
       )

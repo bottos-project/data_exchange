@@ -39,6 +39,7 @@ module.exports = {
     "Header.IncorrectPasswordEnteredTwice":"两次输入密码不一致",
     "Header.YourRegistrationHasBeenSuccessfullyCompleted":"注册成功",
     "Header.AccountHasAlreadyExisted":"账号已存在",
+    "Header.AccountIsNotExisted":"账号不存在",
     "Header.FailedRegister":"注册失败",
     "Header.LoginFailure":"登入失败",
     "Header.LoginSucceed":"登入成功",

@@ -655,7 +655,7 @@ define([
             block.blob = block.chunks === 1 ? file.source :
                     file.source.slice( block.start, block.end );
 
-            console.log('block', block);
+            // console.log('block', block);
 
             // hook, 每个分片发送之前可能要做些异步的事情。
             promise = me.request( 'before-send', block, function() {

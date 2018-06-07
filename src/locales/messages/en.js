@@ -81,6 +81,7 @@ module.exports = {
     "Header.YourRegistrationHasBeenSuccessfullyCompleted":"Your registration has been successfully completed",
     "Header.FailedRegister":"Failed to Register",
     "Header.AccountHasAlreadyExisted":"Account Already Existed",
+    "Header.AccountIsNotExisted":"Account is Not Existed",
     "Header.LoginFailure":"Login Failure",
     "Header.PleaseImportTheKeystoreFirst":"Please Import The Keystore First",
     "Header.TheWrongPassword":"The Wrong Password",
@@ -100,7 +101,7 @@ module.exports = {
     "Login.ConfirmPassword":"Confirm Password",
     "Login.PasteTheKeyStore":"Paste The KeyStore",
     "Login.ImportTheKeyStore":"Import The KeyStore",
-    "Login.VerifyCode":"VerifyCode",
+    "Login.VerifyCode":"Verification",
     "Login.Keystore":"Keystore",
 
     //dashboard
