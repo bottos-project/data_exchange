@@ -18,6 +18,7 @@
 */
 import React,{PureComponent} from 'react'
 import { connect } from 'react-redux'
+import { addAccount } from '@/redux/actions/walletAction'
 import { Link } from 'react-router'
 import {FormattedMessage} from 'react-intl'
 import {Modal,Button,Input} from 'antd'
@@ -62,14 +63,13 @@ class BTAccountListHeader extends PureComponent{
             return
         }
 
-        let account = getAccount()
-        if(account==undefined) {
+        const { account_info } = this.props
+
+        if (!account_info) {
             window.message.error(window.localeInfo['Wallet.PleaseLogInFirst'])
             return
         }
 
-        let localStorage = window.localStorage
-        let account_info = JSON.parse(localStorage.account_info)
         let username = account_info.username
         let password = this.state.password
 
@@ -91,7 +91,14 @@ class BTAccountListHeader extends PureComponent{
           let privateKey = result.privateKey;
 
           let isSave = BTIpcRenderer.saveKeyStore({username,account_name:this.state.account_name},this.state.keyStoreObj)
-          isSave ? window.message.success('success') : message.error("failed")
+          if (isSave) {
+            this.props.addAccount(this.state.account_name)
+            window.message.success(window.localeInfo["Header.ImportSuccess"])
+
+          } else {
+            message.error("failed")
+
+          }
           this.props.setSpin(false)
         }
 
@@ -136,13 +143,20 @@ class BTAccountListHeader extends PureComponent{
     }
 }
 
+const mapStateToProps = (state) => {
+  const account_info = state.headerState.account_info
+  return { account_info }
+}
 
 const mapDispatchToProps = (dispatch) => {
     return {
         setSpin(isloading) {
           dispatch(setSpin(isloading))
-        }
+        },
+        addAccount(a) {
+          dispatch(addAccount(a))
+        },
     }
 }
 
-export default connect(null, mapDispatchToProps)(BTAccountListHeader)
+export default connect(mapStateToProps, mapDispatchToProps)(BTAccountListHeader)

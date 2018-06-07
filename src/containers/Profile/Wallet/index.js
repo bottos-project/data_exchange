@@ -18,6 +18,7 @@
 */
 import React,{PureComponent} from 'react'
 import { connect } from 'react-redux'
+import { selectAccount, setAccountList } from '@/redux/actions/walletAction'
 // import {Wallet,Transfer,History} from './Person'
 import { List, Button, Input, message } from 'antd';
 import {Link} from 'react-router'
@@ -36,32 +37,21 @@ const WalletMessages = messages.Wallet;
 class BTWallet extends PureComponent {
     constructor(props){
         super(props)
-        let currentAccount = props.account_info ? props.account_info.username : ''
         this.state = {
             walletList: [],
-            accountList: [currentAccount],
-            selectWallet: '',
-            activeKey: '0',
         }
     }
-    handleChange = (key) => {
-      this.setState({
-        activeKey: key,
-        selectWallet: this.state.accountList[key]
-      });
+
+    handleChange = (key, value) => {
+      this.props.selectAccount(value)
     }
 
     componentDidMount(){
-        let props = this.props;
-        if(props.location) {
-            this.setLoginState(props.location.query.selectWallet)
-        }else{
-            this.setLoginState()
-        }
+      this.setLoginState()
     }
 
-    setLoginState(username){
-      const { account_info, isLogin } = this.props
+    setLoginState(){
+      const { account_info, isLogin, setAccountList } = this.props
       if (isLogin) {
         let walletList = BTIpcRenderer.getKeyStoreList()
         let accountList = []
@@ -70,33 +60,21 @@ class BTWallet extends PureComponent {
             accountList.push(item.slice(0,-9))
           }
         })
-        let selectWallet = username ? username : account_info.username
+        console.log('walletList', walletList);
+        // console.log('accountList', accountList);
+        setAccountList(accountList)
         this.setState({
-            selectWallet,
             walletList,
-            accountList
         })
-          // console.log(BTIpcRenderer.getKeyStore(username),selectWallet)
+        // console.log(BTIpcRenderer.getKeyStore(username),selectWallet)
       }
     }
 
-    checkWallet(item){
-        this.setState({
-            selectWallet:item.slice(0,-9)
-        })
-    }
-
-    componentWillReceiveProps(nextProps){
-      let selectWallet = nextProps.location.query.selectWallet
-      let index = this.state.accountList.indexOf(selectWallet)
-      this.setState({activeKey:index})
-    }
-
     render() {
-      const { children, isLogin } = this.props
+      const { children, account_info, accountList, selectedAccount } = this.props
       if ( React.isValidElement(children) ) {
         return children
-      } else if (!isLogin) {
+      } else if (!account_info) {
         return <div className="container center"><BTUnlogin /></div>
       }
 
@@ -107,13 +85,15 @@ class BTWallet extends PureComponent {
           query:this.state.walletList
       }
 
+      let activeKey = accountList.indexOf(selectedAccount || account_info.username)
+
       return (
         <div className='container column'>
           <CustomTabBar
             style={{position: 'relative'}}
             onChange={this.handleChange}
-            keyMap={this.state.accountList}
-            activeKey={this.state.activeKey}
+            keyMap={accountList}
+            activeKey={activeKey}
           >
             <Link to={walletListPath}>
               <button className='wallet-management'>
@@ -122,7 +102,7 @@ class BTWallet extends PureComponent {
             </Link>
           </CustomTabBar>
 
-          <BTCointList className="flex" selectWallet={this.state.selectWallet}/>
+          <BTCointList className="flex" />
         </div>
       )
 
@@ -130,10 +110,27 @@ class BTWallet extends PureComponent {
     }
 }
 
+BTWallet.defaultProps = {
+  // :
+};
+
 const mapStateToProps = (state) => {
   const account_info = state.headerState.account_info
+  const { accountList, selectedAccount } = state.walletState
   const isLogin = account_info != null
-  return { account_info, isLogin }
+  return { account_info, isLogin, accountList, selectedAccount }
 }
 
-export default connect(mapStateToProps)(BTWallet)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    selectAccount(a) {
+      dispatch(selectAccount(a))
+    },
+    setAccountList(al) {
+      dispatch(setAccountList(al))
+    },
+
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BTWallet)

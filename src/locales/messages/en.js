@@ -380,6 +380,7 @@ module.exports = {
     "Wallet.TheWrongPassword":"Failed to Modify the Password",
     "Wallet.PleaseInputNumber":"Please Input Number",
     "Wallet.NumberIsTooBig":"Number Is Too Big",
+    "Wallet.ImportSuccess":"Import Success",
 
 
     //check

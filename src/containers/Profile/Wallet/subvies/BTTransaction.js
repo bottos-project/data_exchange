@@ -56,7 +56,7 @@ class Transaction extends PureComponent{
 
     async onHandleSubmit(){
         let {resetFields} = this.props.form
-        let account_name = this.props.selectWallet
+        let account_name = this.props.account_name
         let blockInfo = await getBlockInfo()
         let localStorage = window.localStorage
 
@@ -119,7 +119,7 @@ class Transaction extends PureComponent{
               }
               if (res.code == 1) {
                   message.success(window.localeInfo["Wallet.SuccessfulToTransferAccounts"])
-
+                  this.props.balanceReduce(quantity)
                   resetFields()
               } else if (res.code == 10102) {
                   message.error(window.localeInfo["Wallet.TheTargetAccountIsInexistence"])

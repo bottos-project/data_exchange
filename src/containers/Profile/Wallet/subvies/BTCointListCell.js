@@ -42,10 +42,23 @@ export default class BTCointListCell extends PureComponent{
       this.setState({ visible: false })
     }
 
+    balanceReduce = (n) => {
+      let balance = this.state.balance
+
+      this.setState({
+        balance: balance - n * Math.pow(10, 8)
+      })
+    }
+
+    componentWillReceiveProps(nextProps) {
+      // nextProps.balance
+      this.setState({
+        balance: nextProps.balance
+      });
+    }
+
     render(){
       let { balance } = this.state;
-      let { selectWallet } = this.props;
-      // console.log('props', this.props)
       return (
         <div className="container column">
             <div className="container route-children-bg accountItem">
@@ -65,7 +78,8 @@ export default class BTCointListCell extends PureComponent{
             <BTTransitionHeight show={this.state.visible} height={220} style={{marginBottom:20}}>
               <TransactionForm
                 closeModal={()=>this.onHandleCancel()}
-                selectWallet={selectWallet}
+                account_name={this.props.account_name}
+                balanceReduce={this.balanceReduce}
               />
             </BTTransitionHeight>
         </div>

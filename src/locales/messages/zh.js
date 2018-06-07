@@ -141,6 +141,7 @@ module.exports = {
     "Wallet.TheWrongPassword":"密码错误",
     "Wallet.PleaseInputNumber":"请输入数字",
     "Wallet.NumberIsTooBig":"数字太大",
+    "Wallet.ImportSuccess":"导入成功",
 
     "File.FileExisted":"文件已存在",
 
