@@ -185,7 +185,7 @@ export default class BTRequirementItemDetail extends PureComponent{
 
                   <div className="headAndShop">
                     <h1>{data.requirement_name}</h1>
-                    <BTFavoriteStar isFavorite={data.is_collection} type='requirement' id={data.requirement_id} />
+                    {/* <BTFavoriteStar isFavorite={data.is_collection} type='requirement' id={data.requirement_id} /> */}
                   </div>
 
                   <p>

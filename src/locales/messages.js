@@ -826,6 +826,14 @@ module.exports = {
             id:"Collect.MyCollection",
             defaultMessage:"我的收藏"
         },
+        Asset:{
+            id:"Collect.Asset",
+            defaultMessage:"资产"
+        },
+        Demand:{
+            id:"Collect.Demand",
+            defaultMessage:"需求"
+        },
         WelcomeToCollectMessages:{
             id:"Collect.WelcomeToCollectMessages",
             defaultMessage:"欢迎来到我的收藏页面"

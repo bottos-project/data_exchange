@@ -53,7 +53,7 @@ function calculateSlicedFileSize(size) {
   } else if (size > 500 * MegaByte) {
     return 150 * MegaByte;
   }
-  return 20 * MegaByte;
+  return 40 * MegaByte;
   return 100 * MegaByte;
 }
 
@@ -231,10 +231,10 @@ async function handleFileQueued(file) {
       // 校验不通过，或者失败
       if (res.is_exist == 1) {
         // console.log('文件已存在', res);
-        message.info('this file is existed')
+        message.info(window.localeInfo['File.FileExisted'])
         store.dispatch( deleteFile(file.id) )
       } else {
-        window.message.error(res.status || 'this file is existed')
+        window.message.error(res.status || window.localeInfo['File.FileExisted'])
         file.status = 'error'
         store.dispatch( updateFile(file) )
       }
@@ -243,7 +243,7 @@ async function handleFileQueued(file) {
 
   }).catch(err => {
     console.error('fileCheck catch err', err);
-    window.message.error('upload fail')
+    window.message.error(window.localeInfo['File.UploadFail'])
     uploader.removeFile(file)
     store.dispatch( deleteFile(file.id) )
   })

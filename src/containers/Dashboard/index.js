@@ -63,8 +63,17 @@ export default class BTDashboard extends PureComponent {
   }
 
   getAccount = () => {
-    BTFetch('/dashboard/getAccountNumByDay', 'post').then(res => {
-      if (res && res.code == 1) {
+    BTFetch('/dashboard/getAccountNumByDay', 'post')
+    .then(res => {
+      if (!res) {
+        throw new Error('getAccountNumByDay error')
+      }
+
+      if (res.code == 408) {
+        setTimeout(this.getAccount.bind(this), 1000);
+        return ;
+      }
+      if (res.code == 1) {
         if (res.data.length == 0) {
           return;
         }
@@ -80,7 +89,9 @@ export default class BTDashboard extends PureComponent {
           type: <FormattedMessage {...DashboardMessages.Registration}/>,
         })
       }
-    });
+    }).catch(err => {
+      console.error(err);
+    })
   }
 
   exchangeNum = () => {

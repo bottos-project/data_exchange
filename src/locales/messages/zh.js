@@ -144,5 +144,6 @@ module.exports = {
     "Wallet.ImportSuccess":"导入成功",
 
     "File.FileExisted":"文件已存在",
+    "File.UploadFail":"上传失败",
 
 }

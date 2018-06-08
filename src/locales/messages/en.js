@@ -30,12 +30,12 @@ module.exports = {
     "Menu.Blocks":"Blocks",
     "Menu.DemandDetails":"Demand Details",
     "Menu.AssetDetails":"Asset Details",
-    "Menu.LoginOrRegister":"Login/Register",
+    "Menu.LoginOrRegister":"Login / Register",
     "Menu.AllBlocks":"AllBlocks",
     "Menu.AllTransaction":"AllTransaction",
     "Menu.Back":"Back",
     "Menu.Profile":'Profile',
-    "Menu.Wallet":"Wallet",
+    "Menu.Wallet":"My Wallet",
     "Menu.Walletlist":"Wallet List",
     "Menu.ProfileAsset":"My Asset",
     "Menu.ProfileNeed":"My Demand",
@@ -323,11 +323,13 @@ module.exports = {
 
     //Collect
     "Collect.MyCollection":"Favorites",
+    "Collect.Asset":"Asset",
+    "Collect.Demand":"Demand",
     "Collect.WelcomeToCollectMessages":"Welcome to My Favorites",
     "Collect.GoodId":"Goods Id",
     "Collect.GoodName":"Goods Name",
     "Collect.From":"From",
-    "Collect.Time":"Created Time",
+    "Collect.Time":"Favorite Time",
     "Collect.Delete":"Delete",
     "Collect.ViewTheDetails":"View The Details",
     "Collect.View":"View",
@@ -399,5 +401,6 @@ module.exports = {
     "Presale.Consumer":"Consumer",
 
     "File.FileExisted":"This File has existed",
+    "File.UploadFail":"Upload Fail",
 
 }

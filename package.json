@@ -1,11 +1,11 @@
 {
   "name": "BottosWallet",
-  "version": "3.0.0-beta.1",
-  "publishDate": "2018-6-7",
+  "version": "3.0.0",
+  "publishDate": "2018-6-8",
   "private": true,
   "main": "main.js",
   "homepage": ".",
-  "DEV": true,
+  "DEV": false,
   "MOCK": false,
   "description": "Bottos Wallet",
   "author": {
