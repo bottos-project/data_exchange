@@ -17,7 +17,7 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 import React,{PureComponent} from 'react'
-import {Modal,Input,message,Button} from 'antd'
+import {Modal,Input,Button} from 'antd'
 import BTIpcRenderer from '../../../../tools/BTIpcRenderer'
 import BTCryptTool from 'bottos-crypto-js'
 import {Link} from 'react-router'

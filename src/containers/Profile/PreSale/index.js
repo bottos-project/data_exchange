@@ -73,7 +73,7 @@ const columns = [
 function PreSale(props) {
   return <BTTable
     columns={columns}
-    rowKey='asset_id'
+    rowKey='notice_id'
     url='/asset/queryMyPreSale'
     options={getSignaturedParam(getAccount())}
     catchError={(err) => message.error(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])}

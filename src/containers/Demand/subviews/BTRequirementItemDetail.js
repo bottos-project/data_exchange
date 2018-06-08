@@ -154,6 +154,7 @@ export default class BTRequirementItemDetail extends PureComponent{
         throw new Error('Failed Promote')
       }
       if (res.data != 'null') {
+        this.setState({ is_presale: true });
         window.message.success(window.localeInfo["Demand.SuccessfulPromote"])
       }
     })

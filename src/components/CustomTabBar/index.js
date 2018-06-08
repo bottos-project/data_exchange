@@ -41,7 +41,8 @@ class CustomTabBar extends PureComponent {
     this.setState({ activeKey });
     var onChange = this.props.onChange;
     if (onChange) {
-        onChange(activeKey);
+      let value = this.props.keyMap[activeKey]
+      onChange(activeKey, value);
     }
   }
   render() {

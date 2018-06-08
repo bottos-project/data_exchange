@@ -250,8 +250,8 @@ class Regist extends PureComponent{
 
           }else if(response.code == 1001){
             this.props.setSpin(false)
-            message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
             this.requestVerificationCode()
+            message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
 
           }else if(response.code == 1004){
             this.props.setSpin(false)
@@ -336,7 +336,6 @@ class Regist extends PureComponent{
         })
     }
 
-    // TODO: 等后端部署了验证码功能，就可以用了
     requestVerificationCode = () => {
 
       BTFetch('/user/getVerify', 'get').then(res => {
@@ -398,14 +397,14 @@ class Regist extends PureComponent{
                 {/* 这部分是验证码功能，先暂时隐藏起来 */}
                 <FormItem {...formItemLayout} label={<FormattedMessage {...LoginMessages.VerifyCode} />}>
                   <Row gutter={8}>
-                    <Col span={16}>
+                    <Col span={17}>
                       {
                         getFieldDecorator('verificationCode', {}) (
                           <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} id="error1"/>
                         )
                       }
                     </Col>
-                    <Col span={8}>
+                    <Col span={7}>
                       {this.state.verify_data
                         ?
                         <img height='28px'

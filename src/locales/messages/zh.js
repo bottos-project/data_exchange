@@ -39,6 +39,7 @@ module.exports = {
     "Header.IncorrectPasswordEnteredTwice":"两次输入密码不一致",
     "Header.YourRegistrationHasBeenSuccessfullyCompleted":"注册成功",
     "Header.AccountHasAlreadyExisted":"账号已存在",
+    "Header.AccountIsNotExisted":"账号不存在",
     "Header.FailedRegister":"注册失败",
     "Header.LoginFailure":"登入失败",
     "Header.LoginSucceed":"登入成功",
@@ -86,6 +87,7 @@ module.exports = {
     "PersonalAsset.ThereIsNoHaveBoughtAssetForTheTimeBeing":"暂无已购买资产",
     "PersonalAsset.FailedToGetTheHaveBoughtAsset":"查询已购买资产失败",
     "PersonalAsset.UploadFileSize":"上传文件大小不允许大于 2G",
+    "PersonalAsset.UploadFileSize200M":"上传文件大小不允许大于 200M",
     "PersonalAsset.FailedToGetUrlOfDocumentStorage":"获取文件存储url失败",
     "PersonalAsset.FailedToUploadTheFile":"文件上传失败",
     "PersonalAsset.SuccessfulToUploadTheFile":"文件上传成功",
@@ -139,6 +141,7 @@ module.exports = {
     "Wallet.TheWrongPassword":"密码错误",
     "Wallet.PleaseInputNumber":"请输入数字",
     "Wallet.NumberIsTooBig":"数字太大",
+    "Wallet.ImportSuccess":"导入成功",
 
     "File.FileExisted":"文件已存在",
 

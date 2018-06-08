@@ -30,6 +30,7 @@ export default class BTCointListCell extends PureComponent{
         super(props)
         this.state = {
           visible: false,
+          balance: props.balance
         }
     }
 
@@ -41,9 +42,23 @@ export default class BTCointListCell extends PureComponent{
       this.setState({ visible: false })
     }
 
+    balanceReduce = (n) => {
+      let balance = this.state.balance
+
+      this.setState({
+        balance: balance - n * Math.pow(10, 8)
+      })
+    }
+
+    componentWillReceiveProps(nextProps) {
+      // nextProps.balance
+      this.setState({
+        balance: nextProps.balance
+      });
+    }
+
     render(){
-      let props = this.props;
-      // console.log('props', this.props)
+      let { balance } = this.state;
       return (
         <div className="container column">
             <div className="container route-children-bg accountItem">
@@ -54,22 +69,18 @@ export default class BTCointListCell extends PureComponent{
                           <FormattedMessage {...WalletMessages.AvailableCash}/>
                       </span>
                   </div>
-                  <div className="font25 colorRed">{props.balance/Math.pow(10, 8)}</div>
+                  <div className="font25 colorRed">{balance/Math.pow(10, 8)}</div>
               </div>
-              <div>
-                  <Button type="primary" onClick={()=>this.transaction()}>
-                    <FormattedMessage {...WalletMessages.Transfer} />
-                  </Button>
-                  {/* <Button className="marginRight" type="primary" onClick={()=>this.changePwd(this.props.accountName)}>
-                      <FormattedMessage {...WalletMessages.ModifyThePassword}/>
-                  </Button>
-                  <Button type="primary" onClick={()=>this.exportAccount(this.props.accountName)}>
-                      <FormattedMessage {...WalletMessages.ExportTheAccount}/>
-                  </Button> */}
-              </div>
+              <Button type="primary" onClick={()=>this.transaction()}>
+                <FormattedMessage {...WalletMessages.Transfer} />
+              </Button>
             </div>
             <BTTransitionHeight show={this.state.visible} height={220} style={{marginBottom:20}}>
-              <TransactionForm {...this.props} closeModal={()=>this.onHandleCancel()}/>
+              <TransactionForm
+                closeModal={()=>this.onHandleCancel()}
+                account_name={this.props.account_name}
+                balanceReduce={this.balanceReduce}
+              />
             </BTTransitionHeight>
         </div>
       )

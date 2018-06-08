@@ -22,6 +22,9 @@ const eventName = require('../src/utils/EventName')
 const createHash = require('crypto').createHash
 const fs = require('fs');
 
+global.readFileSync = fs.readFileSync
+// const path = require('path');
+
 global.electron = require('electron')
 
 global.uuid = () => uuidv1().replace(/-/g,'')

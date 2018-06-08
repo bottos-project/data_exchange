@@ -29,6 +29,7 @@ import BTFetch from '@/utils/BTFetch'
 import { getBlockInfo, getSignaturedFetchParam } from "@/utils/BTCommonApi";
 import { BTFileFetch } from '@/utils/BTDownloadFile'
 import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/msgpack'
+import { getCacheFileState } from '@/utils/uploadingFileCache'
 
 // const fs = __non_webpack_require__('fs');
 // console.log('fs', fs);
@@ -52,7 +53,7 @@ function calculateSlicedFileSize(size) {
   } else if (size > 500 * MegaByte) {
     return 150 * MegaByte;
   }
-  return 80 * MegaByte;
+  return 20 * MegaByte;
   return 100 * MegaByte;
 }
 
@@ -85,10 +86,8 @@ function CuteFile( file ) {
         },
 
         getSliceHash: function () {
-          let _blob = blob.getSource()
-          const filePath = _blob.path
           let promiseArr = file.blocks.map((block) => {
-            return global.sha256Chunk(filePath, block.start, block.end - 1, block.chunk)
+            return global.sha256Chunk(file.path, block.start, block.end - 1, block.chunk)
           })
 
           return Promise.all(promiseArr);
@@ -128,14 +127,26 @@ var uploader = WebUploader.create({
     resize: false
 })
 
+// console.log('WebUploader', WebUploader);
+console.log('uploader', uploader);
+
 // 在文件入队之前触发
 // 文件切片信息在此获取
-async function beforeFileQueued(file) {
+function beforeFileQueued(file) {
   console.log('beforeFileQueued file', file);
   // 1. 计算文件的 chunkSize
   const chunkSize = calculateSlicedFileSize(file.size)
-  file.status = 'uploading'
+  file.status = 'inited'
   file.chunkSize = chunkSize
+  let originFile = file.getSource().getSource()
+  if (originFile.cache) {
+    let arr = getCacheFileState()
+    let fileInfo = arr.find(f => f.guid == originFile.guid)
+    // console.log('fileInfo', fileInfo);
+    // file.guid = fileInfo.guid
+    // file.path = fileInfo.path
+    Object.assign(file, fileInfo)
+  }
   store.dispatch( addFile(file) )
 }
 uploader.on( 'beforeFileQueued', beforeFileQueued)
@@ -147,8 +158,7 @@ function getUploadURL(file) {
     sguid: file.guid + obj.chunk,
     s_file_hash: obj.hash
   }))
-
-  console.log('sliceInfo', sliceInfo);
+  // console.log('sliceInfo', sliceInfo);
 
   var param = {
     username: store.getState().headerState.account_info.username,
@@ -157,14 +167,28 @@ function getUploadURL(file) {
 
   return BTFileFetch('/data/getFileUploadURL', param)
   .then(res => {
-    console.log('res', res);
     if (res.result == 200) {
       file.url = res.url
-      uploader.options.server = file.url[0].surl
       // 5. 成功取得 url，触发上传
-      return uploader.upload()
+      // 在上传之前需要单独处理续传的文件
+      // 主要是改变 blocks
+      // console.log('file', file);
+      // console.log('uploader', uploader);
+      if (file.cache) {
+        // 是缓存
+        file.blocks = file.blocks.filter(({chunk}) =>
+          file.progressing_slice_chunk.indexOf(chunk) != -1
+        )
+        file.remaning = file.blocks.length
+        file.status = 'interrupt'
+        console.log('updateFile', file);
+        store.dispatch( updateFile(file) )
+        return
+      }
+      return uploader.upload(file)
 
     } else {
+      console.log('res', res);
       file.status = 'error'
       store.dispatch( updateFile(file) )
       window.message.error(res.status)
@@ -182,7 +206,7 @@ async function handleFileQueued(file) {
   // const hashList = await api.getSliceHash()
   // console.log('hashList', hashList.map(item => item.hash));
   // setInterval(async () => {
-    var t1 = get_ms_short()
+    let t1 = get_ms_short()
     const hashList = await api.getSliceHash()
     // console.log('hashList', hashList.map(item => item.hash));
     console.log('hash 计算耗时', get_ms_short() - t1 + 'ms');
@@ -228,17 +252,26 @@ async function handleFileQueued(file) {
 
 uploader.on( 'fileQueued', handleFileQueued)
 
+
+function handleUploadStart(file) {
+  let {blocks, ..._file} = file
+  _file.status = 'uploading'
+  store.dispatch( updateFile(_file) )
+  console.log('uploadStart _file', _file);
+  // console.log('file', file);
+}
+uploader.on( 'uploadStart', handleUploadStart)
+
 uploader.on( 'uploadBeforeSend', (obj, data, headers) => {
-  // console.log('obj, data, headers', obj, data, headers);
-  // uploader.options.server = obj.file.url[data.chunk + 1]
-  var chunk = obj.chunk + 1
-  // console.log('chunk', chunk);
-  // // console.log('this.url', this.url);
-  if (!obj.file.url[chunk]) {
-    chunk -= 1
-  }
+  // console.log('obj', obj);
+  // console.log('data', data);
+  let file = obj.file
+  // console.log('file', file);
+  let urls = file.url
+  // console.log('urls', urls);
+  data.url = urls[obj.chunk].surl
+
   // console.log('this.url[chunk].surl', this.url[chunk].surl);
-  uploader.options.server = obj.file.url[chunk].surl
   headers['Access-Control-Allow-Origin'] = '*'
 })
 
@@ -277,9 +310,6 @@ function querySecondProgress(file) {
   console.log('slice', slice);
 
   const username = store.getState().headerState.account_info.username
-
-  let body = JSON.stringify({ username, slice })
-  // console.log('body', body);
 
   BTFileFetch('/data/getUploadProgress', { username, slice })
   .then(async (res) => {
@@ -369,6 +399,15 @@ function querySecondProgress(file) {
 
 }
 
-uploader.on( 'uploadSuccess', querySecondProgress);
+uploader.on( 'uploadSuccess', function (file) {
+  setTimeout(querySecondProgress.bind(null, file), 1000)
+});
+
+
+function onUploadError(file, reason) {
+  console.log('file, reason', file, reason);
+}
+
+uploader.on( 'uploadError', onUploadError);
 
 export default uploader

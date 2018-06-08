@@ -81,6 +81,7 @@ module.exports = {
     "Header.YourRegistrationHasBeenSuccessfullyCompleted":"Your registration has been successfully completed",
     "Header.FailedRegister":"Failed to Register",
     "Header.AccountHasAlreadyExisted":"Account Already Existed",
+    "Header.AccountIsNotExisted":"Account is Not Existed",
     "Header.LoginFailure":"Login Failure",
     "Header.PleaseImportTheKeystoreFirst":"Please Import The Keystore First",
     "Header.TheWrongPassword":"The Wrong Password",
@@ -100,7 +101,7 @@ module.exports = {
     "Login.ConfirmPassword":"Confirm Password",
     "Login.PasteTheKeyStore":"Paste The KeyStore",
     "Login.ImportTheKeyStore":"Import The KeyStore",
-    "Login.VerifyCode":"VerifyCode",
+    "Login.VerifyCode":"Verification",
     "Login.Keystore":"Keystore",
 
     //dashboard
@@ -258,7 +259,8 @@ module.exports = {
     "PersonalAsset.ThereIsNoDataForTheTimeBeing":"There Is No Data For The Time Being",
     "PersonalAsset.ThereIsNoHaveBoughtAssetForTheTimeBeing":"There Is No Have Bought Asset For The Time Being",
     "PersonalAsset.FailedToGetTheHaveBoughtAsset":"Failed To Get The Have Bought Asset",
-    "PersonalAsset.UploadFileSize":"Upload File Size Does Not Allow Greater Than 200M",
+    "PersonalAsset.UploadFileSize":"Upload File Size Does Not Allow Greater Than 2G",
+    "PersonalAsset.UploadFileSize200M":"Upload File Size Does Not Allow Greater Than 200M",
     "PersonalAsset.FailedToGetUrlOfDocumentStorage":"Failed To Get Url Of Document Storage",
     "PersonalAsset.FailedToUploadTheFile":"Failed To Upload The File",
     "PersonalAsset.SuccessfulToUploadTheFile":"Successful To Upload The File",
@@ -378,6 +380,7 @@ module.exports = {
     "Wallet.TheWrongPassword":"Failed to Modify the Password",
     "Wallet.PleaseInputNumber":"Please Input Number",
     "Wallet.NumberIsTooBig":"Number Is Too Big",
+    "Wallet.ImportSuccess":"Import Success",
 
 
     //check

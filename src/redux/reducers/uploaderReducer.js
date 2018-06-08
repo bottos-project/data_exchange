@@ -17,7 +17,7 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ADD_FILE, DELETE_FILE, UPDATE_FILE, UPDATE_FILELIST, UPDATE_UPLOAD_PROGRESS } from '../actions/uploaderAction'
+import * as uploaderConst from '../consts/uploaderConst'
 
 const initialState = {
   fileList: [],
@@ -29,6 +29,7 @@ function updateFileListWithFile(fileList, file) {
     return [file]
   }
   const index = fileList.findIndex(element => element.id == file.id)
+  console.log('index', index);
   // console.log('fileList, file', fileList, file);
   if (index == -1)
     return fileList;
@@ -39,15 +40,15 @@ function updateFileListWithFile(fileList, file) {
 
 const uploaderReducer = (state = initialState, action) => {
   switch(action.type){
-    case ADD_FILE:
+    case uploaderConst.ADD_FILE:
       return {...state, fileList: state.fileList.concat(action.file)}
-    case DELETE_FILE:
+    case uploaderConst.DELETE_FILE:
       return {...state, fileList: state.fileList.filter(file => file.id != action.fid)}
-    case UPDATE_FILE:
+    case uploaderConst.UPDATE_FILE:
       return {...state, fileList: updateFileListWithFile(state.fileList, action.file)}
-    case UPDATE_FILELIST:
+    case uploaderConst.UPDATE_FILELIST:
       return {...state, fileList: action.fileList}
-    case UPDATE_UPLOAD_PROGRESS:
+    case uploaderConst.UPDATE_UPLOAD_PROGRESS:
       return {...state, progressMap: {...state.progressMap, [action.guid]: action.percent}}
     default:
       return state

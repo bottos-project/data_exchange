@@ -16,11 +16,36 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+export const ADD_ACCOUNT = 'ADD_ACCOUNT'
+export const DELETE_ACCOUNT = 'DELETE_ACCOUNT'
 export const SELECT_ACCOUNT = 'SELECT_ACCOUNT'
+export const SET_ACCOUNT_LIST = 'SET_ACCOUNT_LIST'
+
+export function addAccount(account) {
+  return {
+    type: ADD_ACCOUNT,
+    account
+  };
+}
+
+export function deleteAccount(account) {
+  return {
+    type: DELETE_ACCOUNT,
+    account
+  };
+}
+
 
 export function selectAccount(account) {
   return {
     type: SELECT_ACCOUNT,
     account
+  };
+}
+
+export function setAccountList(accountList) {
+  return {
+    type: SET_ACCOUNT_LIST,
+    accountList
   };
 };

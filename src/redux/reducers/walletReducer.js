@@ -17,16 +17,37 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { SELECT_ACCOUNT } from '../actions/walletAction'
+import { ADD_ACCOUNT,
+  DELETE_ACCOUNT,
+  SELECT_ACCOUNT,
+  SET_ACCOUNT_LIST,
+} from '../actions/walletAction'
+import { getAccount } from '../../tools/localStore'
+
+const initAccount = getAccount() ? getAccount().username : ''
+const accountList = initAccount ? [initAccount] : []
 
 const initialState = {
-  selectedAccount: '',
+  accountList,
+  selectedAccount: initAccount,
 }
 
 const walletReducer = (state = initialState, action) => {
     switch(action.type) {
+      case ADD_ACCOUNT:
+        return {
+          ...state,
+          accountList: state.accountList.concat(action.account)
+        }
+      case DELETE_ACCOUNT:
+        return {
+          ...state,
+          accountList: state.accountList.filter(a => a != action.account)
+        }
       case SELECT_ACCOUNT:
         return {...state, selectedAccount: action.account}
+      case SET_ACCOUNT_LIST:
+        return {...state, accountList: action.accountList}
       default:
         return state
     }

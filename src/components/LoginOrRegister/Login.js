@@ -138,7 +138,11 @@ class Login extends PureComponent{
                 message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
               } else if (response.code==1000 && typeof response.details == 'string') {
                 try {
-                  console.error(response.msg, JSON.parse(response.details));
+                  let details = JSON.parse(response.details)
+                  if (details.errcode == 10204) {
+                    message.info(window.localeInfo["Header.AccountIsNotExisted"]);
+                  }
+                  console.error(response.msg, );
                 } catch (e) {
                   console.error(e);
                 }
@@ -297,7 +301,7 @@ class Login extends PureComponent{
                 <Col span={5} style={{ textAlign: 'right' }}>
                     <span className="label"><FormattedMessage {...LoginMessages.VerifyCode} /></span>
                 </Col>
-                <Col span={7}>
+                <Col span={11}>
                     <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} className="marginRight" onChange={(e)=>{this.setState({verify_code:e.target.value})}}/>
                 </Col>
                 <Col span={8}>

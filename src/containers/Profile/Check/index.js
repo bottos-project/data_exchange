@@ -25,6 +25,8 @@ import { getAccount } from "@/tools/localStore";
 import { getSignaturedParam } from '@/utils/BTCommonApi'
 import BTTable from '@/components/BTTable'
 
+import BTFetch from "@/utils/BTFetch";
+
 import messages from '@/locales/messages'
 import {FormattedMessage} from 'react-intl'
 const CheckMessages = messages.Check;
