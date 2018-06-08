@@ -321,7 +321,10 @@ class Regist extends PureComponent{
         let priKey = keys.privateKey
         const message_pb = require('@/lib/proto/message_pb')
         let encodeBuf = messageProtoEncode(message_pb,msg)
-        let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(encodeBuf))
+        let chainId = Buffer.from("00000000000000000000000000000000","hex")
+        let newMsgProto = new Uint8Array()
+        newMsgProto = [...encodeBuf,...chainId]
+        let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(newMsgProto))
         let sign = BTCryptTool.sign(hash,priKey)
         return sign
     }

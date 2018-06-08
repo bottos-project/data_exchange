@@ -61,7 +61,10 @@ export function getSignaturedParam({username, privateKey}) {
 
 export function getSignaturedFetchParam({fetchParam, privateKey}) {
   let encodeBuf = messageProtoEncode(message_pb, fetchParam)
-  let hashData = BTCryptTool.sha256(BTCryptTool.buf2hex(encodeBuf))
+  let chainId = Buffer.from("00000000000000000000000000000000","hex")
+  let newMsgProto = new Uint8Array()
+  newMsgProto = [...encodeBuf,...chainId]
+  let hashData = BTCryptTool.sha256(BTCryptTool.buf2hex(newMsgProto))
   let sign = BTCryptTool.sign(hashData, privateKey)
   // console.log('sign', sign);
   fetchParam.signature = sign.toString('hex')
