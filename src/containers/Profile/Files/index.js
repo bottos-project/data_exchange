@@ -128,6 +128,9 @@ class BTMyAssetSet extends Component{
     }
 
     render(){
+      if (!getAccount()) {
+        return null
+      }
         return (
             <div className="set">
                 <Dragger

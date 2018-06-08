@@ -218,6 +218,8 @@ class Regist extends PureComponent{
             this.props.setSpin(false)
             return
           }
+          console.log('response', response);
+          console.log('response.code', response.code);
           if (response.code == 1) {
 
             let postData = {
@@ -254,12 +256,15 @@ class Regist extends PureComponent{
             message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
 
           }else if(response.code == 1004){
+            console.log('response.code', response.code);
             this.props.setSpin(false)
             console.log('details', JSON.parse(res.details));
+            this.requestVerificationCode()
             message.error(window.localeInfo["Header.AccountHasAlreadyExisted"]);
           }else{
             this.props.setSpin(false)
-            console.log(JSON.parse(res.details));
+            console.log('details', JSON.parse(res.details));
+            this.requestVerificationCode()
             message.error(window.localeInfo["Header.FailedRegister"]);
           }
 

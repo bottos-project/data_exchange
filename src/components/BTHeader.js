@@ -32,7 +32,7 @@ import messages from "../locales/messages";
 const HeaderMessages = messages.Header;
 const MenuMessages = messages.Menu;
 
-const pkg = require('../../package.json')
+// const pkg = require('../../package.json')
 
 class BTHeader extends PureComponent{
     constructor(props){
@@ -110,11 +110,12 @@ class BTHeader extends PureComponent{
 
     }
 
-    render(){
+    render() {
+      // console.log('btheader render');
         const { account_info } = this.props
         return(
             <div className="container header">
-              <div style={{position: 'absolute', top: 0, right: 10}}>v: {pkg.version}</div>
+              {/* <div style={{position: 'absolute', top: 0, right: 10}}>v: {pkg.version}</div> */}
 
                 <div className="logoStyle">
                     <img src="./img/logo.svg" alt=""/>

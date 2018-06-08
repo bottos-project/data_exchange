@@ -77,7 +77,7 @@ class BTAssets extends Component {
         <div className='container column'>
           <CustomTabBar onChange={this.handleChange} keyMap={arTypeKeyMap} activeKey={this.state.activeKey} />
           <List
-            grid={{ gutter: 16, column: 4 }}
+            grid={{ gutter: 16, column: 4, xxl: 5 }}
             dataSource={this.state.dataSource}
             renderItem={item => (
               <List.Item>
