@@ -27,8 +27,6 @@ import collectionState, { getTimeSecond } from "@/tools/sessionStorage";
 // 下面是加签的 api
 import { favoritePack } from '@/lib/msgpack/BTPackManager'
 
-const { messageProtoEncode, queryProtoEncode } = require('@/lib/proto/index');
-
 const lockTimeSecond = 10
 
 export async function getFavReqParam(favoriteParam) {
