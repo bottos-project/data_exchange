@@ -145,6 +145,7 @@ class Login extends PureComponent{
                   console.error(response.msg, );
                 } catch (e) {
                   console.error(e);
+                  message.error(window.localeInfo["Header.LoginFailure"]);
                 }
               } else {
                 message.error(window.localeInfo["Header.LoginFailure"]);
@@ -173,10 +174,7 @@ class Login extends PureComponent{
         let msg = {username,random}
         let query_pb = require('@/lib/proto/query_pb')
         let loginProto = queryProtoEncode(query_pb,msg)
-        let chainId = Buffer.from("00000000000000000000000000000000","hex")
-        let newMsgProto = new Uint8Array()
-        newMsgProto = [...loginProto,...chainId]
-        let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(newMsgProto))
+        let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
         let signature = BTCryptTool.sign(hash,privateKey).toString('hex')
        return {signature,random}
     }
