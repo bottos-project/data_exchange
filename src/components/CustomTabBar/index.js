@@ -33,10 +33,12 @@ function Tab(props) {
 class CustomTabBar extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      activeKey: props.activeKey || ''
-    };
+    let activeKey = props.activeKey != undefined ? props.activeKey : (
+      props.defaultActiveKey != undefined ? props.defaultActiveKey : ''
+    )
+    this.state = { activeKey }
   }
+
   handleChange = (activeKey) => {
     this.setState({ activeKey });
     var onChange = this.props.onChange;
@@ -45,8 +47,10 @@ class CustomTabBar extends PureComponent {
       onChange(activeKey, value);
     }
   }
+
   render() {
-    const { keyMap, activeKey, children, style } = this.props
+    let { keyMap, activeKey, children, style } = this.props
+    activeKey = activeKey != undefined ? activeKey : this.state.activeKey
     var list = []
     for (var key in keyMap) {
       list.push(
@@ -69,6 +73,7 @@ CustomTabBar.defaultProps = {
 CustomTabBar.propTypes = {
   keyMap: PropTypes.oneOfType([PropTypes.object, PropTypes.array]).isRequired,
   activeKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  defaultActiveKey: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   onChange: PropTypes.func,
   style: PropTypes.object
 };

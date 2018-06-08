@@ -323,11 +323,13 @@ module.exports = {
 
     //Collect
     "Collect.MyCollection":"Favorites",
+    "Collect.Asset":"Asset",
+    "Collect.Demand":"Demand",
     "Collect.WelcomeToCollectMessages":"Welcome to My Favorites",
     "Collect.GoodId":"Goods Id",
     "Collect.GoodName":"Goods Name",
     "Collect.From":"From",
-    "Collect.Time":"Created Time",
+    "Collect.Time":"Favorite Time",
     "Collect.Delete":"Delete",
     "Collect.ViewTheDetails":"View The Details",
     "Collect.View":"View",

@@ -47,13 +47,14 @@ export default class BTMyAssetSet extends PureComponent{
     constructor(props){
         super(props);
         this.columns = [
-            { title: 'sampleName', dataIndex: 'sampleName', key: 'sampleName' },
-            { title: 'sampleSize', dataIndex: 'sampleSize', key: 'sampleSize' },
-            { title: 'Date', dataIndex: 'date', key: 'date' },
-            { title: "Download", dataIndex: '', key: 'x', render: () =>
-                    <a>
-                        <Icon type="download" style={{color:"black",fontWeight:900}}/>
-                    </a>
+            { title: 'sampleName', dataIndex: 'sampleName' },
+            { title: 'sampleSize', dataIndex: 'sampleSize' },
+            { title: 'Date', dataIndex: 'date', },
+            { title: "Download", dataIndex: '', key: 'x',
+              render: () =>
+                <a>
+                    <Icon type="download" style={{color:"black",fontWeight:900}}/>
+                </a>
             },
             { title: 'Delete', dataIndex: 'delete',
                 render: (text, record) => {

@@ -40,6 +40,7 @@ export function cacheFileState(file) {
   const {guid, status} = file
   if (status == 'done') {
     // 传完了之后，就从数组当中去掉
+    console.log('传完了之后，就从数组当中去掉', file);
     deleteFileCache(guid)
   } else if (status != 'done') {
     // 没有传完

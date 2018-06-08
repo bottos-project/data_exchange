@@ -23,7 +23,6 @@ import './styles.less';
 
 import BTPublishedAssets from './subviews/BTPublishedAssets'
 import BTHaveBought from "./subviews/BTHaveBought"
-import BTFetch from "../../../utils/BTFetch";
 import { FormattedMessage } from 'react-intl'
 import messages from '../../../locales/messages'
 const PersonalAssetMessages = messages.PersonalAsset;
