@@ -59,20 +59,20 @@ class BTCollect extends Component {
   render() {
     return (
       <div className='container column'>
-        <CustomTabBar onChange={this.handleChange} keyMap={keyMap} activeKey={this.state.activeKey} />
+        {/* <CustomTabBar onChange={this.handleChange} keyMap={keyMap} activeKey={this.state.activeKey} /> */}
 
-        <Tabs className="tabs" activeKey={this.state.activeKey}>
-          <TabPane tab={<FormattedMessage {...CollectMessages.Asset} />} key="0">
+        {/* <Tabs className="tabs" activeKey={this.state.activeKey}>
+          <TabPane tab={<FormattedMessage {...CollectMessages.Asset} />} key="0"> */}
             <FavoriteAssetList />
-          </TabPane>
+          {/* </TabPane>
           <TabPane tab={<FormattedMessage {...CollectMessages.Demand} />} key="1" >
             <FavoriteReqList />
           </TabPane>
-        </Tabs>
+        </Tabs> */}
 
       </div>
     )
   }
 }
 
-export default BTCollect
+export default FavoriteAssetList
