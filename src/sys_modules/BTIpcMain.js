@@ -16,11 +16,12 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-const {app,ipcMain,dialog} = require('electron')
+const {app,BrowserWindow,ipcMain,dialog} = require('electron')
 const fs = require('fs')
 const appPath = app.getPath("userData");
 const {ipcEventName} = require('../utils/EventName')
 const path = require("path")
+// const {download} = require('electron-dl');
 
 //  获取keystore文件
 ipcMain.on(ipcEventName.get_key_store,(event,accountInfo)=>{

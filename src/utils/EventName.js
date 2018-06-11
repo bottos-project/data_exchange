@@ -25,6 +25,7 @@ const ipcEventName = {
     key_store_list:'key-store-list',
     export_key_store:'export_key_store',
     mkdir:'mkdir',
+    file_download:'file_download',
 }
 
 module.exports = {

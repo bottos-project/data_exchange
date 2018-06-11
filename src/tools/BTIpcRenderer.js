@@ -58,6 +58,15 @@ const getKeyStoreList = ()=>{
     return keyStoreList
 }
 
+const getFileDownLoadPath = (title, filename, urlList) => {
+  console.log('title', title);
+  console.log('filename', filename);
+  // console.log('ipcEventName.file_download', ipcEventName.file_download);
+  let params = {title, defaultPath: filename, urlList}
+  let filePath = ipcRenderer.sendSync(ipcEventName.file_download, params);
+  return filePath
+}
+
 export default {
     getKeyStore,
     saveKeyStore,
@@ -65,4 +74,5 @@ export default {
     exportKeyStore,
     getKeyStoreList,
     mkdir,
+    getFileDownLoadPath,
 }

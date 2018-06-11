@@ -16,7 +16,20 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-export const file_server = 'http://139.219.139.198:8080/v3'
+import config from './config.js'
+const pkg = require('../../package.json')
+import BTIPcRenderer from '../tools/BTIpcRenderer'
+// console.log('getFileDownLoadPath', getFileDownLoadPath);
+
+// export const file_server = 'http://139.219.139.198:8080/v3'
+var file_server = 'http://139.217.202.68:8080/v3'
+
+if (pkg.MOCK) {
+    file_server = config.mock.base_url
+} else {
+    file_server = config.service.base_url + config.service.version
+}
+
 
 export const BTFileFetch = (url, fetchParam) => {
   return fetch(file_server + url, {
@@ -65,12 +78,50 @@ function getFileDownloadURL(param, filename) {
 }
 
 
+function getFileSliceDownloadURL(param) {
+  return BTFileFetch('/data/getFileSliceDownloadURL', param).then(res => {
+    console.log('getFileDownLoadURL res', res);
+    if (res.message == 'OK' || res.result == '200') {
+      console.log('res url', res.url);
+      return res.url;
+    }
+  })
+}
+
+
 export async function BTDownloadFile(guid, username) {
   // console.log('arguments', arguments);
   // const [guid, username] = arguments
-  let { filename, ...param } = await getDownloadFileIP(guid)
-  if (!param) {
+  let { filename, ip } = await getDownloadFileIP(guid)
+  if (!ip) {
     return window.message.error('get download file fail')
   }
-  return getFileDownloadURL({...param, username}, filename)
+
+  // return getFileSliceDownloadURL({ip, username})
+  // let urlList = await BTFileFetch('/data/getFileSliceDownloadURL', {ip, username})
+  let urlList = await getFileSliceDownloadURL({ip, username})
+  if (!urlList) {
+    return window.message.error('get download file fail')
+  }
+
+
+  console.log('urlList', urlList);
+
+  let fPath = BTIPcRenderer.getFileDownLoadPath('file download', filename, urlList)
+  console.log('fPath', fPath);
+  //
+  // if (!fPath) {
+  //   return ;
+  // }
+  //
+  // let newFilename = fPath.filename
+  // console.log('newFilename', newFilename);
+
+  return ;
+
+  // let { filename, ...param } = await getDownloadFileIP(guid)
+  // if (!param) {
+  //   return window.message.error('get download file fail')
+  // }
+  // return getFileDownloadURL({...param, username}, filename)
 }

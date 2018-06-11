@@ -16,10 +16,11 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, ipcMain, dialog} = require('electron');
 const path = require('path')
 const url = require('url')
 const pkg = require('./package.json')
+const {download} = require('electron-dl')
 
 // 保持一个对于 window 对象的全局引用，如果你不这样做，
 // 当 JavaScript 对象被垃圾回收， window 会被自动地关闭
@@ -51,7 +52,6 @@ function createWindow () {
     BrowserWindow.addDevToolsExtension(path.join(__dirname, './devtools/lmhkpmbekcpmknklioeibfkpmmfibljd/2.15.2_0'))  // Redux Developer Tools
     win.loadURL('http://localhost:3000/')
     // 打开开发者工具。
-    win.webContents.openDevTools()
 
   }else{
     win.loadURL(url.format({
@@ -61,6 +61,7 @@ function createWindow () {
     }))
   }
 
+  win.webContents.openDevTools()
 
   win.webContents.session.on('will-download', (event, item, webContents) => {
     // 设置保存路径,使Electron不提示保存对话框。
@@ -127,3 +128,43 @@ app.on('activate', () => {
 
 // 文件模块
 const BTIpcMain = require('./src/sys_modules/BTIpcMain')
+
+// 下载模块
+ipcMain.on('file_download', (event, args) => {
+  const { title, defaultPath, urlList } = args
+  console.log('urlList', urlList);
+    dialog.showSaveDialog({
+        title, defaultPath
+    }, (filename) => {
+      console.log('filename', filename);
+      event.returnValue = filename
+      let basename = path.basename(filename)
+      let promiseArr = []
+      for (let i = 0; i < urlList.length; i++) {
+        let surl = urlList[i].surl
+
+        console.log('i', i);
+        let item = download(win, surl, {
+          filename: basename + i
+        })
+        // .then(dl => console.log(dl.getSavePath()))
+        // .catch(console.error);
+
+        console.log('item', item);
+        promiseArr.push(item)
+      }
+      // console.log('i end', i);
+      let promiseAll = Promise.all(promiseArr)
+      promiseAll.then(all => {
+        console.log('promiseAll all', all);
+        all.map(dl => {
+          console.log('item', console.log(dl.getSavePath()));
+        })
+      }).catch(console.error)
+        // try {
+        //     event.returnValue = filename
+        // } catch (error) {
+        //     event.returnValue = false
+        // }
+    })
+})

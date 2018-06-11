@@ -24,7 +24,7 @@ import store from '@/redux/store'
 import {getAccount} from "@/tools/localStore";
 
 import { addFile, deleteFile, updateFile, updateUploadProgress } from '@/redux/actions/uploaderAction'
-import { get_ms_short } from '@/utils/dateTimeFormat'
+import { get_ms_short, get_s_short } from '@/utils/dateTimeFormat'
 import BTFetch from '@/utils/BTFetch'
 import { getBlockInfo, getSignaturedFetchParam } from "@/utils/BTCommonApi";
 import { BTFileFetch } from '@/utils/BTDownloadFile'
@@ -41,6 +41,8 @@ import { getCacheFileState } from '@/utils/uploadingFileCache'
 // 5. 并发上传
 // 6. 进度查询及缓存，显示进度条
 // 7. 上传成功向后端注册文件
+
+var timeStamp = 0;
 
 const GigaByte = Math.pow(2, 30)
 const MegaByte = 1 << 20
@@ -120,6 +122,7 @@ var uploader = WebUploader.create({
     server: 'http://localhost:9000/',
     // auto: true,
     sendAsBinary: true,
+    threads: 3,
     method: 'PUT',
     chunked: true,
     attachInfoToQuery: false,
@@ -185,6 +188,8 @@ function getUploadURL(file) {
         store.dispatch( updateFile(file) )
         return
       }
+      timeStamp = get_s_short()
+      console.log('upload timeStamp', timeStamp);
       return uploader.upload(file)
 
     } else {
@@ -214,7 +219,7 @@ async function handleFileQueued(file) {
   // return
   file.hashList = hashList
 
-  console.log('文件大小', file.size);
+  console.log('文件大小', file.size, WebUploader.formatSize(file.size));
   // console.log('hashList', hashList);
   // 3. 将 hashList 发到后端校验
   BTFileFetch('/data/fileCheck', {hash: hashList})
@@ -318,7 +323,8 @@ function querySecondProgress(file) {
       setTimeout(querySecondProgress.bind(null, file), 3000);
     } else if ( res.result == 200 && chunks == res.storage_done ) {
       // 说明存储的等于 上传完成的
-      console.log('上传真的完成');
+      console.log('上传真的完成', get_s_short() - timeStamp + 's');
+      return console.log('打断一下，记录时间，不注册', get_s_short() - timeStamp + 's');
       file.status = 'done'
       store.dispatch( updateUploadProgress(guid, 100) )
       store.dispatch( updateFile(file) )
