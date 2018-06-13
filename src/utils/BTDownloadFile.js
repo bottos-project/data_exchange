@@ -107,8 +107,23 @@ export async function BTDownloadFile(guid, username) {
 
   console.log('urlList', urlList);
 
-  let fPath = BTIPcRenderer.getFileDownLoadPath('file download', filename, urlList)
-  console.log('fPath', fPath);
+  // let fPath = BTIPcRenderer.getFileDownLoadPath(, filename, urlList)
+  let title = 'file download'
+  electron.remote.dialog.showSaveDialog({
+    title, defaultPath: filename
+  }, filePath => {
+    if (!filePath) {
+      // 如果 filePath 不存在，就是没有选
+      // return 掉
+      return ;
+    }
+    BTIPcRenderer.fileDownLoad({
+      filePath,
+      urlList,
+      guid,
+    })
+    // console.log('fPath', fPath);
+  })
   //
   // if (!fPath) {
   //   return ;
