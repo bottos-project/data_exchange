@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import { updateDownload } from '../../redux/actions/downloadAction'
 import { Collapse, List } from 'antd';
 import DownloadItem from './subviews/DownloadItem'
+const { ipcRenderer } = window.electron
 
 import './style.less'
 
@@ -36,6 +38,19 @@ const data = [
  */
 class DownloadList extends Component {
 
+  componentDidMount() {
+    let channel = 'file_download'
+
+    ipcRenderer.on(channel, (event, message) => {
+      console.log('message', message);
+      // this.setState({ percent: 100 })
+      let status = message.status
+      if (status == 'done') {
+        this.props.updateDownload(message)
+      }
+    })
+  }
+
   render() {
     const { downloads } = this.props
     return (
@@ -66,4 +81,12 @@ function mapStateToProps(state) {
   return { downloads }
 }
 
-export default connect(mapStateToProps)(DownloadList);
+function mapDispatchToProps(dispatch) {
+  return {
+    updateDownload(f) {
+      dispatch( updateDownload(f) )
+    },
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DownloadList);

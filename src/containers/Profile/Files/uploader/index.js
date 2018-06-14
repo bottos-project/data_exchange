@@ -323,8 +323,8 @@ function querySecondProgress(file) {
       setTimeout(querySecondProgress.bind(null, file), 3000);
     } else if ( res.result == 200 && chunks == res.storage_done ) {
       // 说明存储的等于 上传完成的
-      console.log('上传真的完成', get_s_short() - timeStamp + 's');
-      return console.log('打断一下，记录时间，不注册', get_s_short() - timeStamp + 's');
+      // console.log('上传真的完成', get_s_short() - timeStamp + 's');
+      // return console.log('打断一下，记录时间，不注册', get_s_short() - timeStamp + 's');
       file.status = 'done'
       store.dispatch( updateUploadProgress(guid, 100) )
       store.dispatch( updateFile(file) )

@@ -17,7 +17,7 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { addDownloadCache, cacheDownloadState } from '@/utils/downloadFileCache'
+import { addDownloadCache, cacheDownloadState, updateDownloadCache, deleteDownloadCache } from '@/utils/downloadFileCache'
 
 import * as downloadsConst from '../consts/downloadsConst'
 
@@ -27,29 +27,30 @@ export function addDownloadRecord(params) {
   //   urlList,
   //   guid,
   // } = params
-  addDownloadCache(params)
+  cacheDownloadState(params)
   return {
     type: downloadsConst.ADD_DOWNLOAD,
     file: params
-  };
-};
-
-export function deleteDownload(f) {
-  var guid = ''
-  if (typeof f == 'string') {
-    guid = f
-  } else if (typeof f == 'object') {
-    guid = f.guid
   }
+}
+
+export function deleteDownload(filePath) {
+  // var guid = ''
+  // if (typeof f == 'string') {
+  //   guid = f
+  // } else if (typeof f == 'object') {
+  //   guid = f.filePath
+  // }
+  deleteDownloadCache(filePath)
   return {
     type: downloadsConst.DELETE_DOWNLOAD,
-    guid
+    filePath
   };
 };
 
 export function updateDownload(file) {
   // console.log('updateFile', file);
-  cacheDownloadState(file)
+  updateDownloadCache(file)
   return {
     type: downloadsConst.UPDATE_DOWNLOAD,
     file,

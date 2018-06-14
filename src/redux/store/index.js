@@ -16,10 +16,20 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-import {createStore} from 'redux'
+import { applyMiddleware, createStore } from 'redux';
+import logger from 'redux-logger'
+
 import rootReducer from '../reducers'
 
+// console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+
 const store = createStore(rootReducer,
-    window.devToolsExtension ? window.devToolsExtension() : undefined
+    process.env.NODE_ENV == 'development'
+    ?
+    // window.devToolsExtension()
+    applyMiddleware(logger)
+
+    :
+    undefined
 )
 export default store

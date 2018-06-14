@@ -21,14 +21,14 @@ import * as downloadsConst from '../consts/downloadsConst'
 import { getDownloads } from '@/utils/downloadFileCache'
 
 const initialState = {
-  downloads: getDownloads(),
+  downloads: getDownloads().slice(),
 }
 
 function updateDownloadsWithFile(downloads, file) {
   if (downloads.length == 1) {
     return [file]
   }
-  const index = downloads.findIndex(element => element.id == file.id)
+  const index = downloads.findIndex(element => element.filePath == file.filePath)
   console.log('index', index);
   // console.log('downloads, file', downloads, file);
   if (index == -1)
@@ -39,13 +39,19 @@ function updateDownloadsWithFile(downloads, file) {
 }
 
 const downloadsReducer = (state = initialState, action) => {
+  // console.log('state.downloads', state.downloads);
   switch(action.type){
     case downloadsConst.ADD_DOWNLOAD:
-      return {...state, downloads: state.downloads.concat(action.file)}
+      // console.log('action.file', action.file);
+      // console.log('state.downloads.length', state.downloads.length);
+      let downloads = state.downloads.concat(action.file)
+      // console.log('downloads.length', downloads.length);
+      // console.log('downloads', downloads);
+      return {...state, downloads}
     case downloadsConst.DELETE_DOWNLOAD:
-      return {...state, downloads: state.downloads.filter(file => file.id != action.fid)}
+      return {...state, downloads: state.downloads.filter(file => file.filePath != action.filePath)}
     case downloadsConst.UPDATE_DOWNLOAD:
-      return {...state, downloads: updateFileListWithFile(state.downloads, action.file)}
+      return {...state, downloads: updateDownloadsWithFile(state.downloads, action.file)}
     // case downloadsConst.UPDATE_DOWNLOADLIST:
     //   return {...state, downloads: action.downloads}
     // case downloadsConst.UPDATE_DOWNLOAD_PROGRESS:

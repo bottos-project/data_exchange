@@ -3,7 +3,7 @@ const path = require('path');
 const electron = require('electron');
 // const unusedFilename = require('unused-filename');
 const concat = require('./concat-files.js');
-
+const throttle = require('lodash.throttle');
 const {app, ipcMain, dialog} = electron;
 
 var downloadFileInfo = {
@@ -64,7 +64,7 @@ function registerListener(session, options, cb = () => {}) {
     let sliceInfo = info.urlList[chunk]
     sliceInfo.status = 'downloading'
     sliceInfo.totalBytes = item.getTotalBytes()
-
+    sliceInfo.receivedBytes = 0
 		// 	const filename = item.getFilename();
 		// 	const name = path.extname(filename) ? filename : getFilenameFromMime(filename, item.getMimeType());
 
@@ -86,6 +86,10 @@ function registerListener(session, options, cb = () => {}) {
           let receivedBytes = item.getReceivedBytes()
           sliceInfo.receivedBytes = receivedBytes
           console.log(`Received bytes: ${receivedBytes}`)
+          let channel = 'file_download:' + filePath
+          // console.log('channel', channel);
+          webContents.send(channel, info)
+          // throttle(webContents.send(channel, info), 100)
         }
       }
 
@@ -134,19 +138,22 @@ function registerListener(session, options, cb = () => {}) {
 				// 	app.dock.downloadFinished(filePath);
 				// }
 
-
 				// cb(null, item);
         sliceInfo.status = 'done'
 
         info.remaning = info.remaning - 1
 
-        let channel = 'file_download:' + filePath
+        let channel = 'file_download'
 
+        function isDone(item) {
+          return item.status == 'done'
+        }
         // webContents.send('file_download', {guid, ...info})
-        if (info.remaning == 0) {
+        if (info.remaning == 0 && info.urlList.every(isDone)) {
           concatFileByGuid(guid, function () {
             console.log('Download successfully')
             info.status = 'done'
+            info.guid = guid
             webContents.send(channel, info)
 
           })
@@ -179,7 +186,6 @@ function registerMultipleDownload(win) {
       urlList,
       chunks: urlList.length,
       remaning: urlList.length,
-      win,
       start: function () {
         for (let sliceInfo of urlList) {
           let surl = sliceInfo.surl
