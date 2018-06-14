@@ -22,6 +22,7 @@ import { connect } from 'react-redux'
 
 import BTHeader from '../components/BTHeader'
 import BTMenu from '../components/BTMenu'
+import DownloadList from './DownloadList'
 // import BTPersonalMenu from '../components/BTPersonalMenu'
 import './styles.less'
 import { Breadcrumb, Spin } from 'antd';
@@ -88,6 +89,7 @@ class App extends PureComponent {
                 </div>
                 {this.props.children}
               </div>
+              <DownloadList />
           </div>
       </div>
     )

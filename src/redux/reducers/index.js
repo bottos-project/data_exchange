@@ -22,12 +22,14 @@ import headerState from './HeaderReducer'
 import blocksReducer from './blocksReducer'
 import uploaderReducer from './uploaderReducer'
 import walletReducer from './walletReducer'
+import downloadReducer from './downloadReducer'
 
 const rootReducer = combineReducers({
     headerState,
     blockState: blocksReducer,
     uploaderState: uploaderReducer,
     walletState: walletReducer,
+    downloadState: downloadReducer,
 })
 
 export default rootReducer;

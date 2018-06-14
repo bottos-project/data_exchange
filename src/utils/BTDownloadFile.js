@@ -19,6 +19,10 @@
 import config from './config.js'
 const pkg = require('../../package.json')
 import BTIPcRenderer from '../tools/BTIpcRenderer'
+import store from '@/redux/store'
+import { addDownloadRecord } from '@/redux/actions/downloadAction'
+
+
 // console.log('getFileDownLoadPath', getFileDownLoadPath);
 
 // export const file_server = 'http://139.219.139.198:8080/v3'
@@ -117,11 +121,16 @@ export async function BTDownloadFile(guid, username) {
       // return 掉
       return ;
     }
-    BTIPcRenderer.fileDownLoad({
+    let params = {
       filePath,
       urlList,
       guid,
-    })
+    }
+    BTIPcRenderer.fileDownLoad(params)
+
+
+
+    store.dispatch( addDownloadRecord(params) )
     // console.log('fPath', fPath);
   })
   //

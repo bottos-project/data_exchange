@@ -63,7 +63,7 @@ function registerListener(session, options, cb = () => {}) {
     let slicePath = path.join(dirname, sliceId)
     let sliceInfo = info.urlList[chunk]
     sliceInfo.status = 'downloading'
-    sliceInfo.totalBytes = downloadItem.getTotalBytes()
+    sliceInfo.totalBytes = item.getTotalBytes()
 
 		// 	const filename = item.getFilename();
 		// 	const name = path.extname(filename) ? filename : getFilenameFromMime(filename, item.getMimeType());
@@ -140,13 +140,17 @@ function registerListener(session, options, cb = () => {}) {
 
         info.remaning = info.remaning - 1
 
+        let channel = 'file_download:' + filePath
+
+        // webContents.send('file_download', {guid, ...info})
         if (info.remaning == 0) {
           concatFileByGuid(guid, function () {
             console.log('Download successfully')
+            info.status = 'done'
+            webContents.send(channel, info)
 
           })
         }
-
 
 			} else {
         console.log(`Download failed: ${state}`)
