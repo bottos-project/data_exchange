@@ -47,7 +47,7 @@ const initialState = {
     timeValue: '',
     newdata: [],
     getFileNameTemp:'',
-    reqType: ''
+    reqType: '0'
 }
 
 class BTPublishDemand extends PureComponent{

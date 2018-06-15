@@ -22,7 +22,16 @@ const eventName = require('../src/utils/EventName')
 const createHash = require('crypto').createHash
 const fs = require('fs');
 
-global.readFileSync = fs.readFileSync
+global.existsSync = fs.existsSync
+
+global.wrapFile = function(fileInfo) {
+  let data = fs.readFileSync(fileInfo.path)
+  // console.log(data.buffer);
+  let file = new File([data.buffer], fileInfo.name, {
+    type: "application/octet-stream"
+  })
+  return file
+}
 // const path = require('path');
 
 global.electron = require('electron')

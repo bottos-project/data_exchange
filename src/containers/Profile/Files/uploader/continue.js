@@ -6,22 +6,6 @@ import { addFile } from '@/redux/actions/uploaderAction'
 import {getAccount} from "@/tools/localStore";
 import { deleteFileCache } from '@/utils/uploadingFileCache'
 
-
-function wrapFile(fileInfo) {
-  let data = window.readFileSync(fileInfo.path)
-  // console.log(data.buffer);
-  let file = new File([data.buffer], fileInfo.name, {
-    type: "application/octet-stream"
-  })
-  file.cache = true
-  file.guid = fileInfo.guid
-  return file
-  // file = new _File( '', file );
-  // file = new WUFile( file );
-  // // console.log('file', file);
-  // return Object.assign(file, fileInfo)
-}
-
 export function checkCacheFile(cachedFile) {
 
   function checkProgress({username, slice, guid}) {
@@ -42,7 +26,10 @@ export function checkCacheFile(cachedFile) {
           )
           console.log('cachedFile progressing_slice_chunk', cachedFile.progressing_slice_chunk);
           // store.dispatch(addFile(cachedFile))
-          let wfile = wrapFile(cachedFile)
+          let wfile = window.wrapFile(cachedFile)
+          wfile.cache = true
+          wfile.guid = cachedFile.guid
+
           uploader.addFile(wfile)
 
         }

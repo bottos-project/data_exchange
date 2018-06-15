@@ -40,7 +40,7 @@ const isExists = (path)=>{
 }
 
 const saveKeyStore = (accountInfo,params)=>{
-     return ipcRenderer.sendSync(ipcEventName.save_key_store,accountInfo,params)
+    return ipcRenderer.sendSync(ipcEventName.save_key_store,accountInfo,params)
 }
 
 const importFile = ()=>{

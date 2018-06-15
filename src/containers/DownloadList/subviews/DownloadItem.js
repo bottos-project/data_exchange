@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { deleteDownload, updateDownload } from '../../../redux/actions/downloadAction'
 import { Progress, Icon } from 'antd';
-import { basename } from 'path'
 
-// console.log('basename', basename);
 const { ipcRenderer, shell } = window.electron
 
 class DownloadItem extends Component {
@@ -74,12 +72,15 @@ class DownloadItem extends Component {
     const { filePath, status, basename } = this.props.item
     // const { status,  }
     // console.log('filePath', filePath);
-    // console.log('basename(filePath)', basename(filePath));
+    // console.log()
+    let pathArr = filePath.split('\\')
+    let name = basename || pathArr.pop()
+    // console.log('name', name);
     // let name = basename(filePath) ? basename(filePath) : filePath
     return (
       <div className='download-list-item'>
         <span className=''>
-          {filePath}
+          {name}
         </span>
 
         <span className='download-list-item-status'>

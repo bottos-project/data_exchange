@@ -48,7 +48,7 @@ const initState = {
   tag1:'',
   tag2:'',
   tag3:'',
-  dataAssetType: '',
+  dataAssetType: '0',
   getFileNameTemp:'',
   getFileName:'',
   getExampleUrl:'',
