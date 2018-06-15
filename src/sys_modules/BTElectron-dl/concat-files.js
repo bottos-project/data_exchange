@@ -7,9 +7,6 @@ function concat(files, targetFile, cb) {
   // let writeStream = fs.createWriteStream(targetFile)
   // fs.appendFileSync(targetFile, data[, options])
   // fs.unlinkSync(path)
-  if (fs.existsSync(targetFile)) {
-    fs.unlinkSync(targetFile)
-  }
 
   let i = 0;
   function append() {

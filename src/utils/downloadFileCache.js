@@ -19,8 +19,12 @@ export function getDownloads() {
 
 export function addDownloadCache(fileInfo) {
   let filesGuidArr = getDownloads()
+  let index = filesGuidArr.findIndex(file => file.filePath == fileInfo.filePath)
+  if (index != -1) {
+    filesGuidArr.splice(index, 1)
+  }
 
-  filesGuidArr.push(fileInfo)
+  filesGuidArr.unshift(fileInfo)
   // console.log('filesGuidArr', filesGuidArr);
   let data = JSON.stringify(filesGuidArr)
   localStorage.setItem(DOWNLOADS, data)

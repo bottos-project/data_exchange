@@ -27,7 +27,7 @@ export function addDownloadRecord(params) {
   //   urlList,
   //   guid,
   // } = params
-  cacheDownloadState(params)
+  addDownloadCache(params)
   return {
     type: downloadsConst.ADD_DOWNLOAD,
     file: params

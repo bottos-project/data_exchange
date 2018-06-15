@@ -1,55 +1,32 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { deleteDownload, updateDownload } from '../../../redux/actions/downloadAction'
-import { Progress, Icon } from 'antd';
-
-const { ipcRenderer, shell } = window.electron
+import { Icon } from 'antd';
+import ProgressICON from './ProgressICON';
+const { shell } = window.electron
 
 class DownloadItem extends Component {
-  constructor(props) {
-    super(props);
-    // let status = props.item.status
-    this.state = {
-      percent: 0,
-      // status
-    };
+
+  handleClose = (e) => {
+    const { status, filePath } = this.props.item
+    console.log('status', status);
+    if (status == 'done' || status == 'inexistence') {
+      this.props.deleteDownload(filePath)
+    }
   }
 
   componentDidMount() {
 
-    const { status, filePath, urlList } = this.props.item
+    const { item, updateDownload } = this.props
+    const { status, filePath } = item
 
-    if (status == 'done') {
-      return ;
+    if (status == 'done' && !window.existsSync(filePath)) {
+      updateDownload({
+        ...item,
+        status: 'inexistence',
+      })
     }
 
-    this.channel = 'file_download:' + filePath
-
-    ipcRenderer.on(this.channel, (event, message) => {
-      // console.log('message', message);
-      let urlList = message.urlList
-      // console.log('urlList', urlList);
-      let chunks = urlList.length
-      let total = urlList[0].totalBytes * chunks
-      let received = 0
-      for (var i = 0; i < urlList.length; i++) {
-        received += urlList[i].receivedBytes
-      }
-      if (received > urlList[0].totalBytes * (chunks - 1)) {
-        total = urlList.map(el => el.totalBytes).reduce(function (accumulator, currentValue) {
-          return accumulator + currentValue
-        })
-      }
-      // console.log('received', received);
-      // console.log('total', total);
-      let percent = Number.parseInt(received / total * 100)
-      this.setState({ percent })
-    })
-
-  }
-
-  componentWillUnmount() {
-    ipcRenderer.removeAllListeners(this.channel)
   }
 
   openFolder = () => {
@@ -57,14 +34,17 @@ class DownloadItem extends Component {
     shell.showItemInFolder(filePath)
   }
 
-  handleClose = (e) => {
-    const { status, filePath } = this.props.item
-
-    console.log('status', status);
-
-    if (status == 'done') {
-      this.props.deleteDownload(filePath)
-
+  statusIcon = () => {
+    const { status } = this.props.item
+    switch (status) {
+      case 'inexistence':
+        return null;
+      case 'done':
+        return <span className='download-list-item-open' onClick={this.openFolder}>
+          <Icon type="folder-open" />
+        </span>
+      default:
+        return <ProgressICON {...this.props.item} />
     }
   }
 
@@ -72,27 +52,18 @@ class DownloadItem extends Component {
     const { filePath, status, basename } = this.props.item
     // const { status,  }
     // console.log('filePath', filePath);
-    // console.log()
     let pathArr = filePath.split('\\')
     let name = basename || pathArr.pop()
     // console.log('name', name);
     // let name = basename(filePath) ? basename(filePath) : filePath
     return (
       <div className='download-list-item'>
-        <span className=''>
+        <span className={status}>
           {name}
         </span>
 
         <span className='download-list-item-status'>
-          {
-            status == 'done'
-            ?
-            <span className='download-list-item-open' onClick={this.openFolder}>
-              <Icon type="folder-open" />
-            </span>
-            :
-            <Progress showInfo={false} type="circle" width={20} percent={this.state.percent} />
-          }
+          {this.statusIcon()}
         </span>
 
         <span className='download-list-item-close' onClick={this.handleClose}>

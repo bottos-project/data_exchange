@@ -131,7 +131,7 @@ export async function BTDownloadFile(guid, username) {
     }
     BTIPcRenderer.fileDownLoad(params)
 
-    params.status = ''
+    params.status = 'ready'
 
     store.dispatch( addDownloadRecord(params) )
     // console.log('fPath', fPath);

@@ -17,9 +17,15 @@
   width: 100%;
 }
 
+.download-list-item > .inexistence {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
 .download-list-item-status {
   position: absolute;
   right: 30px;
+  bottom: 0;
 }
 
 .download-list-item-open {
@@ -28,6 +34,16 @@
     background-color: lightblue;
   }
 
+}
+
+.download-list-item-progress {
+  position: relative;
+  > i {
+    position: absolute;
+    top: 6px;
+    left: 3px;
+    cursor: pointer;
+  }
 }
 
 .download-list-item-close {

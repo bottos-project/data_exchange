@@ -33,8 +33,13 @@ class DownloadList extends Component {
       }
     })
 
-
-
+    // const { downloads } = this.props
+    //
+    // downloads.forEach(el => {
+    //   if (el.status == 'done') {
+    //
+    //   }
+    // })
 
   }
 

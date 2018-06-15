@@ -4,6 +4,7 @@ const electron = require('electron');
 // const unusedFilename = require('unused-filename');
 const concat = require('./concat-files.js');
 const throttle = require('lodash.throttle');
+const fs = require('fs');
 const {app, ipcMain, dialog} = electron;
 
 var downloadFileInfo = {
@@ -21,6 +22,10 @@ function concatFileByGuid(guid, cb) {
   let files = info.urlList.map(({sguid}) => {
     return path.join(dirname, sguid);
   })
+
+  if (fs.existsSync(targetFile)) {
+    fs.unlinkSync(targetFile)
+  }
 
   let t1 = new Date().getTime()
   concat(files, targetFile, function (data) {
@@ -150,6 +155,7 @@ function registerListener(session, options, cb = () => {}) {
         }
         // webContents.send('file_download', {guid, ...info})
         if (info.remaning == 0 && info.urlList.every(isDone)) {
+
           concatFileByGuid(guid, function () {
             console.log('Download successfully')
             info.status = 'done'
