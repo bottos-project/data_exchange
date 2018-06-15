@@ -5,6 +5,7 @@ const electron = require('electron');
 const concat = require('./concat-files.js');
 const throttle = require('lodash.throttle');
 const fs = require('fs');
+const { URL } = require('url');
 const {app, ipcMain, dialog} = electron;
 
 var downloadFileInfo = {
@@ -57,8 +58,11 @@ function registerListener(session, options, cb = () => {}) {
 		const win = electron.BrowserWindow.fromWebContents(hostWebContents);
 
     // const dir = options.directory || app.getPath('downloads');
-    let sliceId = item.getFilename()
-    // console.log('item.getFilename()', sliceId);
+    let sliceId = item.getFilename().split('.')[0]
+    // let sliceUrl = item.getURL()
+    // console.log('sliceUrl', sliceUrl);
+    // let sliceId = new URL(sliceUrl).pathname
+    // console.log('sliceId', sliceId);
     let guid = sliceId.slice(0, 64)
     let chunk = sliceId.slice(64)
     let info = downloadFileInfo[guid]
@@ -66,6 +70,11 @@ function registerListener(session, options, cb = () => {}) {
 		let dirname = info.dirname
     // let slicePath = dirname + sliceId
     let slicePath = path.join(dirname, sliceId)
+    if (info.urlList.length == 1) {
+      // 说明文件只有一个分片
+      slicePath = filePath
+    }
+    // console.log('chunk', chunk);
     let sliceInfo = info.urlList[chunk]
     sliceInfo.status = 'downloading'
     sliceInfo.totalBytes = item.getTotalBytes()
@@ -150,19 +159,25 @@ function registerListener(session, options, cb = () => {}) {
 
         let channel = 'file_download'
 
+        function downloadSuccessfully() {
+          console.log('Download successfully')
+          info.status = 'done'
+          info.guid = guid
+          webContents.send(channel, info)
+        }
+
+        if (info.urlList.length == 1) {
+          // 如果只有一个分片就不用合并了
+          downloadSuccessfully()
+          return ;
+        }
+
         function isDone(item) {
           return item.status == 'done'
         }
         // webContents.send('file_download', {guid, ...info})
         if (info.remaning == 0 && info.urlList.every(isDone)) {
-
-          concatFileByGuid(guid, function () {
-            console.log('Download successfully')
-            info.status = 'done'
-            info.guid = guid
-            webContents.send(channel, info)
-
-          })
+          concatFileByGuid(guid, downloadSuccessfully)
         }
 
 			} else {
@@ -200,9 +215,8 @@ function registerMultipleDownload(win) {
       }
     }
 
-    info.start()
-
     downloadFileInfo[guid] = info
+    info.start()
 
   })
 
