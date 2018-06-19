@@ -45,8 +45,8 @@ const MegaByte = 1 << 20
 
 function beforeUpload(file) {
   // console.log('file.size', file.size)
-  // if (file.size > 2 * GigaByte) {
-  if (file.size > 200 * MegaByte) {
+  if (file.size > 2 * GigaByte) {
+  // if (file.size > 200 * MegaByte) {
     // 文件大小大于 2G
     // 不支持上传
     window.message.error(window.localeInfo["PersonalAsset.UploadFileSize200M"])
@@ -107,7 +107,7 @@ class BTMyAssetSet extends Component{
 
     componentDidMount() {
       let filesGuidArr = getCacheFileState()
-      // console.log('filesGuidArr', filesGuidArr);
+      console.log('filesGuidArr', filesGuidArr);
       // 如果有以前没有传完的记录
       // 则遍历这个记录的数组，然后向后端发起请求
       // console.log('this.props.fileList', this.props.fileList);

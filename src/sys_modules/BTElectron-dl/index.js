@@ -16,6 +16,7 @@ var downloadFileInfo = {
   // }
 }
 
+var timeStamp = new Date().getTime()
 
 function concatFileByGuid(guid, cb) {
   let info = downloadFileInfo[guid]
@@ -30,10 +31,12 @@ function concatFileByGuid(guid, cb) {
     fs.unlinkSync(targetFile)
   }
 
-  let t1 = new Date().getTime()
+
+  // let t1 = new Date().getTime()
   concat(files, targetFile, function (data) {
     // console.log('success');
-    console.log('time', new Date().getTime() - t1 + 'ms');
+    console.log('concat success', new Date().getTime() - timeStamp / 1000 + 's');
+    // console.log('time', new Date().getTime() - t1 + 'ms');
     cb()
 
   })
@@ -226,7 +229,8 @@ function startDownload({ filePath, urlList, guid, webContents }) {
   }
 
   downloadFileInfo[guid] = info
-  console.log('startDownload');
+  timeStamp = new Date().getTime()
+  console.log('startDownload', timeStamp);
   info.start()
   webContents.send(channel, info)
 }

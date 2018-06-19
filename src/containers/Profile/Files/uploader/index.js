@@ -23,7 +23,7 @@ import debounce from 'lodash.debounce'
 import store from '@/redux/store'
 import {getAccount} from "@/tools/localStore";
 
-import { addFile, deleteFile, updateFile, updateUploadProgress } from '@/redux/actions/uploaderAction'
+import { addFile, deleteFile, updateFile } from '@/redux/actions/uploaderAction'
 import { get_ms_short, get_s_short } from '@/utils/dateTimeFormat'
 import BTFetch from '@/utils/BTFetch'
 import { getBlockInfo, getSignaturedFetchParam } from "@/utils/BTCommonApi";
@@ -31,6 +31,8 @@ import { BTFileFetch } from '@/utils/BTDownloadFile'
 import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/msgpack'
 import { getCacheFileState } from '@/utils/uploadingFileCache'
 
+import myEmitter from '@/utils/eventEmitter'
+// console.log('myEmitter', myEmitter);
 // const fs = __non_webpack_require__('fs');
 // console.log('fs', fs);
 // 文件上传流程
@@ -122,7 +124,7 @@ var uploader = WebUploader.create({
     server: 'http://localhost:9000/',
     // auto: true,
     sendAsBinary: true,
-    threads: 3,
+    threads: 2,
     method: 'PUT',
     chunked: true,
     attachInfoToQuery: false,
@@ -291,12 +293,13 @@ function progressChange(file, percentage) {
   //   querySecondProgress(file)
   // }
   if (percentage < 1) {
-    store.dispatch( updateUploadProgress(file.guid, percentage * uploadSuccessPercent) )
+    // store.dispatch( updateUploadProgress(file.guid, percentage * uploadSuccessPercent) )
+    myEmitter.emit('uploadProgress', file.guid, percentage * uploadSuccessPercent);
   }
 
 }
 
-var percent_throttled = throttle(progressChange, 200)
+var percent_throttled = throttle(progressChange, 500)
 
 uploader.on( 'uploadProgress', percent_throttled)
 
@@ -324,9 +327,11 @@ function querySecondProgress(file) {
     } else if ( res.result == 200 && chunks == res.storage_done ) {
       // 说明存储的等于 上传完成的
       // console.log('上传真的完成', get_s_short() - timeStamp + 's');
-      // return console.log('打断一下，记录时间，不注册', get_s_short() - timeStamp + 's');
+      console.log('记录最终时间，不注册', get_s_short() - timeStamp + 's');
+      // return
       file.status = 'done'
-      store.dispatch( updateUploadProgress(guid, 100) )
+      // store.dispatch( updateUploadProgress(guid, 100) )
+      myEmitter.emit('uploadProgress', guid, 100);
       store.dispatch( updateFile(file) )
 
       // 成功之后的文件注册
@@ -393,7 +398,8 @@ function querySecondProgress(file) {
     } else {
       console.log('上传没有真的完成');
       let restPercent = res.storage_done / chunks * (100 - uploadSuccessPercent)
-      store.dispatch( updateUploadProgress(guid, uploadSuccessPercent + restPercent) )
+      // store.dispatch( updateUploadProgress(guid, uploadSuccessPercent + restPercent) )
+      myEmitter.emit('uploadProgress', guid, uploadSuccessPercent + restPercent);
 
       setTimeout(querySecondProgress.bind(null, file), 3000);
       // setTimeout(getDownloadFileIP.bind(null, guid), 1000);
@@ -406,6 +412,7 @@ function querySecondProgress(file) {
 }
 
 uploader.on( 'uploadSuccess', function (file) {
+  console.log('uploadSuccess，记录时间', get_s_short() - timeStamp + 's');
   setTimeout(querySecondProgress.bind(null, file), 1000)
 });
 

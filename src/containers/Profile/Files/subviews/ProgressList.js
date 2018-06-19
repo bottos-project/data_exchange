@@ -24,7 +24,8 @@ import { Icon, Popconfirm } from 'antd'
 import { FormattedMessage } from 'react-intl'
 import uploader from '../uploader'
 import { deleteFileCache } from '@/utils/uploadingFileCache'
-
+import myEmitter from '@/utils/eventEmitter'
+console.log('myEmitter', myEmitter);
 import _File from 'webuploader/lib/file'
 import WUFile from 'webuploader/file'
 // console.log('_File, WUFile', _File, WUFile);
@@ -59,9 +60,22 @@ function PlayAndPauseIcon({status}) {
 class UploadingFile extends PureComponent {
   constructor(props) {
     super(props);
+
+    // let { percent, cache, progressing_slice_chunk, hashList } = props
+    // if (cache && percent < 90) {
+    //   let remanentRate = progressing_slice_chunk.length / hashList.length
+    //   let hasDoneRate = 1 - remanentRate
+    //   percent = 90 * hasDoneRate + remanentRate * percent
+    // }
+    //
+    // this.state = {
+    //   percent
+    // }
+
     this.deleteFileFormList = this.deleteFileFormList.bind(this)
     this.handlePlayOrPause = this.handlePlayOrPause.bind(this)
     this.handleClose = this.handleClose.bind(this)
+    // this.updatePercent = this.updatePercent.bind(this)
   }
 
   deleteFileFormList() {
@@ -98,6 +112,8 @@ class UploadingFile extends PureComponent {
   handleClose(e) {
     e.stopPropagation()
     const { deleteFile, id, status, percent } = this.props
+
+    // const { percent } = this.state
     // console.log('status', status);
     if (status == 'uploading' && percent != 100) {
       return ;
@@ -109,14 +125,40 @@ class UploadingFile extends PureComponent {
     // }
   }
 
+  // updatePercent(percent) {
+  //   this.setState({ percent })
+  // }
+  //
+  // componentDidMount() {
+  //   const guid = this.props.guid
+  //   console.log('this.props.guid', this.props.guid);
+  //   if (guid) {
+  //     myEmitter.on('uploadProgress:' + guid, this.updatePercent)
+  //   }
+  // }
+  //
+  // componentWillUnmount() {
+  //   const guid = this.props.guid
+  //   if (guid) {
+  //     myEmitter.removeListener('uploadProgress:' + guid, this.updatePercent)
+  //   }
+  //
+  // }
+
   render() {
-    let { name, status, percent, cache, progressing_slice_chunk, hashList } = this.props
+    let { name, status } = this.props
+    // let { percent } = this.props
+
+    let { percent, cache, progressing_slice_chunk, hashList } = this.props
     if (cache && percent < 90) {
       let remanentRate = progressing_slice_chunk.length / hashList.length
       let hasDoneRate = 1 - remanentRate
       percent = 90 * hasDoneRate + remanentRate * percent
     }
+
+    // let { percent } = this.state
     const __percent = (percent || 0) - 100 + '%'
+
     return <div className='file-upload-item' style={{'--percent': __percent}}>
       <div></div>
       <span>
@@ -150,6 +192,24 @@ UploadingFile.defaultProps = {
 };
 
 class ProgressList extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.updatePercent = this.updatePercent.bind(this)
+  }
+
+  updatePercent(guid, percent) {
+    // console.log('guid, percent', guid, percent);
+    this.setState({ [guid]: percent })
+  }
+
+  componentDidMount() {
+    myEmitter.on('uploadProgress', this.updatePercent)
+  }
+
+  componentWillUnmount() {
+    myEmitter.removeListener('uploadProgress', this.updatePercent)
+  }
 
   render() {
 
@@ -159,7 +219,7 @@ class ProgressList extends Component {
       return <UploadingFile
         key={file.guid || file.id}
         {...file}
-        percent={progressMap[file.guid]}
+        percent={this.state[file.guid]}
         deleteFile={deleteFile}
         updateFile={updateFile}
       />;

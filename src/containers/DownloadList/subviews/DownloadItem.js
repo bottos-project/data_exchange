@@ -28,9 +28,13 @@ class DownloadItem extends Component {
   handleClose = (e) => {
     const { status, filePath } = this.props.item
     console.log('status', status);
+    if (status == 'downloading') {
+      return ;
+    }
     if (status == 'done' || status == 'inexistence') {
       this.props.deleteDownload(filePath)
-    } else if (status == 'interrupted') {
+    } else {
+      console.log('要处理');
       console.log('status', status);
     }
   }
