@@ -1,4 +1,21 @@
+/*
+  Copyright 2017~2022 The Bottos Authors
+  This file is part of the Bottos Data Exchange Client
+  Created by Developers Team of Bottos.
 
+  This program is free software: you can distribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Bottos. If not, see <http://www.gnu.org/licenses/>.
+*/
 // 这里是用来存储文件下载信息的，持久缓存
 const DOWNLOADS = 'DOWNLOADS'
 
@@ -11,8 +28,20 @@ var downloadsCache = null;
 
 export function getDownloads() {
   if (!Array.isArray(downloadsCache)) {
+    // 说明是从缓存中恢复的
     let filesGuidArr = localStorage.getItem(DOWNLOADS)
-    downloadsCache = filesGuidArr ? JSON.parse(filesGuidArr) : []
+    if (filesGuidArr == null) {
+      // 缓存中没有，初始化
+      downloadsCache = []
+    } else {
+      // 缓存中有，status 为 cached
+      downloadsCache = JSON.parse(filesGuidArr)
+      for (let item of downloadsCache) {
+        if (item.status != 'done' && item.status != 'cached') {
+          item.status = 'cached'
+        }
+      }
+    }
   }
   return downloadsCache;
 }

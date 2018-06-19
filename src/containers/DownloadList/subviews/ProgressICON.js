@@ -1,8 +1,34 @@
+/*
+  Copyright 2017~2022 The Bottos Authors
+  This file is part of the Bottos Data Exchange Client
+  Created by Developers Team of Bottos.
+
+  This program is free software: you can distribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Bottos. If not, see <http://www.gnu.org/licenses/>.
+*/
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Progress, Icon } from 'antd';
 const { ipcRenderer } = window.electron
 
+function calcTotal(urlList) {
+  return urlList.map(el => el.totalBytes).reduce(function (accumulator, currentValue, currentIndex) {
+    if (currentValue == undefined) {
+      currentValue = urlList[0].totalBytes
+    }
+    return accumulator + currentValue
+  })
+}
 
 class ProgressICON extends Component {
 
@@ -15,15 +41,40 @@ class ProgressICON extends Component {
 
 
   pause = (e) => {
-    console.log('e target pause', e.target);
+    const { guid } = this.props
+    // console.log('guid pause', guid)
+    ipcRenderer.send('file_download:pause', {
+      guid
+    })
   }
 
   restart = (e) => {
-    console.log('e target restart', e.target);
+    // console.log('e target restart', e.target);
+    const { guid, status, urlList, filePath } = this.props
+    // console.log('this.props', this.props);
+    console.log('urlList', urlList);
+    let params = { guid }
+    if (status == 'cached') {
+      params = {...this.props}
+    }
+    ipcRenderer.send('file_download:resume', params)
   }
 
   componentDidMount() {
-    const { status, filePath } = this.props
+    const { status, filePath, urlList } = this.props
+
+    if (status == 'cached') {
+      let received = 0
+      for (let sliceInfo of urlList) {
+        if (sliceInfo.status == 'done') {
+          received += sliceInfo.receivedBytes
+        }
+      }
+      let total = calcTotal(urlList)
+      let percent = Number.parseInt(received / total * 100)
+      this.setState({ percent })
+
+    }
 
     this.channel = 'file_download:' + filePath
 
@@ -38,9 +89,7 @@ class ProgressICON extends Component {
         received += urlList[i].receivedBytes
       }
       if (received > urlList[0].totalBytes * (chunks - 1)) {
-        total = urlList.map(el => el.totalBytes).reduce(function (accumulator, currentValue) {
-          return accumulator + currentValue
-        })
+        total = calcTotal(urlList)
       }
       // console.log('received', received);
       // console.log('total', total);
@@ -56,14 +105,15 @@ class ProgressICON extends Component {
 
   render() {
     const { status } = this.props
+    console.log('status', status);
 
     return <div className='download-list-item-progress'>
       <Progress showInfo={false} type="circle" width={20} percent={this.state.percent} />
-      {/* {
+      {
         status == 'downloading' ?
         <Icon type="pause" onClick={this.pause} /> :
         <Icon type="caret-right" onClick={this.restart} />
-      } */}
+      }
 
     </div>
 

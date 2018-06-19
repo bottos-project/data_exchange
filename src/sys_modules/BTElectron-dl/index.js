@@ -5,8 +5,10 @@ const electron = require('electron');
 const concat = require('./concat-files.js');
 const throttle = require('lodash.throttle');
 const fs = require('fs');
-const { URL } = require('url');
 const {app, ipcMain, dialog} = electron;
+
+let channel = 'file_download'
+
 
 var downloadFileInfo = {
   // guid: {
@@ -59,9 +61,6 @@ function registerListener(session, options, cb = () => {}) {
 
     // const dir = options.directory || app.getPath('downloads');
     let sliceId = item.getFilename().split('.')[0]
-    // let sliceUrl = item.getURL()
-    // console.log('sliceUrl', sliceUrl);
-    // let sliceId = new URL(sliceUrl).pathname
     // console.log('sliceId', sliceId);
     let guid = sliceId.slice(0, 64)
     let chunk = sliceId.slice(64)
@@ -74,11 +73,25 @@ function registerListener(session, options, cb = () => {}) {
       // 说明文件只有一个分片
       slicePath = filePath
     }
+
+    if (fs.existsSync(slicePath)) {
+      fs.unlinkSync(slicePath)
+    }
+
     // console.log('chunk', chunk);
     let sliceInfo = info.urlList[chunk]
     sliceInfo.status = 'downloading'
     sliceInfo.totalBytes = item.getTotalBytes()
     sliceInfo.receivedBytes = 0
+    sliceInfo.getItem = function () {
+      return item
+    }
+
+    if (info.status != 'downloading') {
+      info.status = 'downloading'
+      webContents.send(channel, info)
+    }
+
 		// 	const filename = item.getFilename();
 		// 	const name = path.extname(filename) ? filename : getFilenameFromMime(filename, item.getMimeType());
 
@@ -95,22 +108,17 @@ function registerListener(session, options, cb = () => {}) {
         console.log('Download is interrupted but can be resumed')
       } else if (state === 'progressing') {
         if (item.isPaused()) {
-          console.log('Download is paused')
+          // console.log('Download is paused')
         } else {
           let receivedBytes = item.getReceivedBytes()
           sliceInfo.receivedBytes = receivedBytes
-          console.log(`Received bytes: ${receivedBytes}`)
-          let channel = 'file_download:' + filePath
-          // console.log('channel', channel);
-          webContents.send(channel, info)
-          // throttle(webContents.send(channel, info), 100)
+          // console.log(`Received bytes: ${receivedBytes}`)
+          let file_channel = 'file_download:' + filePath
+          // console.log('file_channel', file_channel);
+          webContents.send(file_channel, info)
+          // throttle(webContents.send(file_channel, info), 100)
         }
       }
-
-			// receivedBytes = [...downloadItems].reduce((receivedBytes, item) => {
-			// 	receivedBytes += item.getReceivedBytes();
-			// 	return receivedBytes;
-			// }, completedBytes);
 
 			// if (options.showBadge && ['darwin', 'linux'].includes(process.platform)) {
 			// 	app.setBadgeCount(activeDownloadItems());
@@ -120,9 +128,6 @@ function registerListener(session, options, cb = () => {}) {
 			// 	win.setProgressBar(progressDownloadItems());
 			// }
 
-			// if (typeof options.onProgress === 'function') {
-			// 	options.onProgress(progressDownloadItems());
-			// }
 		});
 
 		item.on('done', (e, state) => {
@@ -154,10 +159,10 @@ function registerListener(session, options, cb = () => {}) {
 
 				// cb(null, item);
         sliceInfo.status = 'done'
+        sliceInfo.getItem = null
 
         info.remaning = info.remaning - 1
 
-        let channel = 'file_download'
 
         function downloadSuccessfully() {
           console.log('Download successfully')
@@ -168,9 +173,12 @@ function registerListener(session, options, cb = () => {}) {
 
         if (info.urlList.length == 1) {
           // 如果只有一个分片就不用合并了
+          // 直接就是下载成功
           downloadSuccessfully()
           return ;
         }
+
+        webContents.send(channel, info)
 
         function isDone(item) {
           return item.status == 'done'
@@ -189,35 +197,104 @@ function registerListener(session, options, cb = () => {}) {
 	session.on('will-download', listener);
 }
 
-function registerMultipleDownload(win) {
 
-  registerListener(win.webContents.session)
+function startDownload({ filePath, urlList, guid, webContents }) {
+  let basename = path.basename(filePath)
+  let dirname = path.dirname(filePath)
+
+  let info = {
+    basename,
+    dirname,
+    filePath,
+    urlList,
+    guid,
+    status: 'downloading',
+    chunks: urlList.length,
+    remaning: urlList.length,
+    start: function () {
+      for (let sliceInfo of urlList) {
+        let { sguid, surl, status } = sliceInfo
+        let slicePath = path.join(dirname, sguid)
+        if (status == 'done' && fs.existsSync(slicePath)) {
+          this.remaning -= 1
+          continue
+        }
+        delete sliceInfo.status
+        webContents.downloadURL(surl);
+      }
+    }
+  }
+
+  downloadFileInfo[guid] = info
+  console.log('startDownload');
+  info.start()
+  webContents.send(channel, info)
+}
+
+
+function registerMultipleDownload(win) {
+  const webContents = win.webContents
+
+  registerListener(webContents.session)
+
 
   ipcMain.on('file_download', (event, args) => {
     const { filePath, urlList, guid } = args
-    console.log('urlList', urlList);
+    // console.log('urlList', urlList);
 
-    let basename = path.basename(filePath)
-    let dirname = path.dirname(filePath)
+    startDownload({ filePath, urlList, guid, webContents })
+  })
 
-    let info = {
-      basename,
-      dirname,
-      filePath,
-      urlList,
-      chunks: urlList.length,
-      remaning: urlList.length,
-      start: function () {
-        for (let sliceInfo of urlList) {
-          let surl = sliceInfo.surl
-          win.webContents.downloadURL(surl);
+  ipcMain.on('file_download:pause', function (event, arg) {
+    let guid = arg.guid
+    let info = downloadFileInfo[guid]
+    if (info && info.status == 'downloading') {
+      for (let sliceInfo of info.urlList) {
+        if (sliceInfo.status == 'done') {
+          continue
+        }
+        let downloadItem = sliceInfo.getItem()
+        // console.log('downloadItem', downloadItem);
+        let state = downloadItem.getState()
+        console.log('state', state);
+        if (state == 'progressing') {
+          downloadItem.pause()
         }
       }
+      info.status = 'interrupted'
+      webContents.send(channel, info)
     }
+  })
 
-    downloadFileInfo[guid] = info
-    info.start()
+  ipcMain.on('file_download:resume', function (event, args) {
+    let guid = args.guid
+    let info = downloadFileInfo[guid]
+    // console.log('info', info);
+    if (info == undefined) {
+      // 下载中没有这个信息
+      // 说明是从缓存中恢复的
+      const { filePath, urlList, guid } = args
+      // return console.log(args);
+      startDownload({ filePath, urlList, guid, webContents })
 
+    } else if (info.status == 'interrupted') {
+      // 说明是之前暂停的，直接开始就好了
+      for (let sliceInfo of info.urlList) {
+        if (sliceInfo.status == 'done') {
+          continue
+        }
+        let downloadItem = sliceInfo.getItem()
+        // console.log('downloadItem', downloadItem);
+        // downloadItem.status = 'done'
+        let state = downloadItem.getState()
+        console.log('state', state);
+        if (downloadItem.isPaused()) {
+          downloadItem.resume()
+        }
+      }
+      info.status = 'downloading'
+      webContents.send(channel, info)
+    }
   })
 
 }

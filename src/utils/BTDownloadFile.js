@@ -119,6 +119,7 @@ export async function BTDownloadFile(guid, username) {
     if (!filePath) {
       // 如果 filePath 不存在，就是没有选
       // return 掉
+      console.log('filePath 不存在，就是没有选', filePath);
       return ;
     }
 

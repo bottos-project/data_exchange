@@ -1,3 +1,21 @@
+/*
+  Copyright 2017~2022 The Bottos Authors
+  This file is part of the Bottos Data Exchange Client
+  Created by Developers Team of Bottos.
+
+  This program is free software: you can distribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Bottos. If not, see <http://www.gnu.org/licenses/>.
+*/
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { deleteDownload, updateDownload } from '../../../redux/actions/downloadAction'
@@ -12,6 +30,8 @@ class DownloadItem extends Component {
     console.log('status', status);
     if (status == 'done' || status == 'inexistence') {
       this.props.deleteDownload(filePath)
+    } else if (status == 'interrupted') {
+      console.log('status', status);
     }
   }
 
@@ -21,6 +41,7 @@ class DownloadItem extends Component {
     const { status, filePath } = item
 
     if (status == 'done' && !window.existsSync(filePath)) {
+      console.log('不存在啊');
       updateDownload({
         ...item,
         status: 'inexistence',

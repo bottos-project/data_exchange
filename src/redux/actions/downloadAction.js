@@ -21,12 +21,18 @@ import { addDownloadCache, cacheDownloadState, updateDownloadCache, deleteDownlo
 
 import * as downloadsConst from '../consts/downloadsConst'
 
+const validStatus = ['ready', 'downloading', 'interrupted', 'done', 'cached', 'inexistence']
+function checkStatus(info) {
+  console.assert( validStatus.includes(info.status) )
+}
+
 export function addDownloadRecord(params) {
   // let {
   //   path: filePath,
   //   urlList,
   //   guid,
   // } = params
+  checkStatus(params)
   addDownloadCache(params)
   return {
     type: downloadsConst.ADD_DOWNLOAD,
@@ -50,6 +56,7 @@ export function deleteDownload(filePath) {
 
 export function updateDownload(file) {
   // console.log('updateFile', file);
+  checkStatus(file)
   updateDownloadCache(file)
   return {
     type: downloadsConst.UPDATE_DOWNLOAD,
