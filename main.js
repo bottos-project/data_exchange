@@ -65,6 +65,22 @@ function createWindow () {
 
   win.webContents.openDevTools()
 
+  // const session = win.webContents.session
+  // session.on('will-download', function (e, item) {
+  //   var timeStamp = new Date().getTime()
+  //
+  //   item.on('updated', (event, state) => {
+  //     let receivedBytes = item.getReceivedBytes()
+  //     if (receivedBytes == 0) {
+  //       timeStamp = new Date().getTime()
+  //       console.log('start', timeStamp / 1000 + 's');
+  //     }
+  //     console.log('update receivedBytes', receivedBytes);
+  //   })
+  //   item.on('done', (event, state) => {
+  //     console.log('done', (new Date().getTime() - timeStamp) / 1000 + 's');
+  //   })
+  // });
   registerMultipleDownload(win)
 
   win.once('ready-to-show', () => {

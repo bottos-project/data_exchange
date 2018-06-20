@@ -75,7 +75,7 @@ export default class BTCointListCell extends PureComponent{
                 <FormattedMessage {...WalletMessages.Transfer} />
               </Button>
             </div>
-            <BTTransitionHeight show={this.state.visible} height={220} style={{marginBottom:20}}>
+            <BTTransitionHeight show={this.state.visible} height={220}>
               <TransactionForm
                 closeModal={()=>this.onHandleCancel()}
                 account_name={this.props.account_name}

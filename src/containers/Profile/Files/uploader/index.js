@@ -29,7 +29,7 @@ import BTFetch from '@/utils/BTFetch'
 import { getBlockInfo, getSignaturedFetchParam } from "@/utils/BTCommonApi";
 import { BTFileFetch } from '@/utils/BTDownloadFile'
 import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/msgpack'
-import { getCacheFileState } from '@/utils/uploadingFileCache'
+import { getCacheFileState, deleteFileCache } from '@/utils/uploadingFileCache'
 
 import myEmitter from '@/utils/eventEmitter'
 // console.log('myEmitter', myEmitter);
@@ -56,9 +56,10 @@ function calculateSlicedFileSize(size) {
     return 200 * MegaByte
   } else if (size > 500 * MegaByte) {
     return 150 * MegaByte;
+  } else if (size > 200 * MegaByte) {
+    return 100 * MegaByte;
   }
-  return 40 * MegaByte;
-  return 100 * MegaByte;
+  return 50 * MegaByte;
 }
 
 // 负责将文件切片。
@@ -239,7 +240,9 @@ async function handleFileQueued(file) {
       if (res.is_exist == 1) {
         // console.log('文件已存在', res);
         message.info(window.localeInfo['File.FileExisted'])
-        store.dispatch( deleteFile(file.id) )
+        store.dispatch( deleteFile(file) )
+        console.log('res.merkle_root_hash', res.merkle_root_hash);
+        deleteFileCache(res.merkle_root_hash)
       } else {
         window.message.error(res.status || window.localeInfo['File.FileExisted'])
         file.status = 'error'
@@ -252,7 +255,7 @@ async function handleFileQueued(file) {
     console.error('fileCheck catch err', err);
     window.message.error(window.localeInfo['File.UploadFail'])
     uploader.removeFile(file)
-    store.dispatch( deleteFile(file.id) )
+    store.dispatch( deleteFile(file) )
   })
 
 }

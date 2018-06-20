@@ -65,7 +65,7 @@ class BTCointList extends PureComponent{
     render() {
       return(
         <List
-          style={{flex: 1}}
+          // style={{flexGrow: 1}}
           dataSource={this.state.balanceList}
           renderItem={(item)=>{
             return <BTCointListCell {...item}/>

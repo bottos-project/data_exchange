@@ -7,6 +7,9 @@ const throttle = require('lodash.throttle');
 const fs = require('fs');
 const {app, ipcMain, dialog} = electron;
 
+const Quene = require('./quene');
+// console.log('Quene', Quene);
+
 let channel = 'file_download'
 
 
@@ -15,6 +18,9 @@ var downloadFileInfo = {
   //   ...
   // }
 }
+
+var downloadFileInfoQuene = new Quene()
+
 
 var timeStamp = new Date().getTime()
 
@@ -35,7 +41,7 @@ function concatFileByGuid(guid, cb) {
   // let t1 = new Date().getTime()
   concat(files, targetFile, function (data) {
     // console.log('success');
-    console.log('concat success', new Date().getTime() - timeStamp / 1000 + 's');
+    console.log('43 concat success', (new Date().getTime() - timeStamp) / 1000 + 's');
     // console.log('time', new Date().getTime() - t1 + 'ms');
     cb()
 
@@ -108,7 +114,7 @@ function registerListener(session, options, cb = () => {}) {
 
 		item.on('updated', (event, state) => {
       if (state === 'interrupted') {
-        console.log('Download is interrupted but can be resumed')
+        console.log('111 Download is interrupted but can be resumed')
       } else if (state === 'progressing') {
         if (item.isPaused()) {
           // console.log('Download is paused')
@@ -149,12 +155,12 @@ function registerListener(session, options, cb = () => {}) {
 			// }
 
 			if (state === 'cancelled') {
-        console.error('cancelled');
+        console.error('157 cancelled');
 			} else if (state === 'interrupted') {
 				// const message = pupa(errorMessage, {filename: item.getFilename()});
 				// dialog.showErrorBox(errorTitle, message);
 				// cb(new Error(message));
-        console.error('interrupted');
+        console.error('162 interrupted');
 			} else if (state === 'completed') {
 				// if (process.platform === 'darwin') {
 				// 	app.dock.downloadFinished(filePath);
@@ -168,7 +174,8 @@ function registerListener(session, options, cb = () => {}) {
 
 
         function downloadSuccessfully() {
-          console.log('Download successfully')
+          console.log('176 Download successfully', (new Date().getTime() - timeStamp) / 1000 + 's')
+
           info.status = 'done'
           info.guid = guid
           webContents.send(channel, info)
@@ -188,6 +195,7 @@ function registerListener(session, options, cb = () => {}) {
         }
         // webContents.send('file_download', {guid, ...info})
         if (info.remaning == 0 && info.urlList.every(isDone)) {
+          console.log('198 before concat', (new Date().getTime() - timeStamp) / 1000 + 's');
           concatFileByGuid(guid, downloadSuccessfully)
         }
 
@@ -229,8 +237,9 @@ function startDownload({ filePath, urlList, guid, webContents }) {
   }
 
   downloadFileInfo[guid] = info
+  downloadFileInfoQuene.append(info)
   timeStamp = new Date().getTime()
-  console.log('startDownload', timeStamp);
+  console.log('239 startDownload', timeStamp);
   info.start()
   webContents.send(channel, info)
 }

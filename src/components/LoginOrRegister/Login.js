@@ -48,30 +48,11 @@ class Login extends PureComponent{
             username: '',
             password: '',
             keyStore: null,
-            verify_data:'',
-            verify_id:'',
             verify_code:''
         }
 
         this.onHandleUnlock = this.onHandleUnlock.bind(this)
     }
-
-    componentDidMount(){
-        this.requestVerificationCode()
-    }
-
-    requestVerificationCode = () => {
-
-        BTFetch('/user/getVerify', 'get').then(res => {
-          if(res && res.code==1){
-              this.setState({
-                  verify_data:res.data.verify_data,
-                  verify_id:res.data.verify_id
-              })
-          }
-        })
-
-      }
 
     async onHandleUnlock(){
         message.destroy()
@@ -119,7 +100,7 @@ class Login extends PureComponent{
           let params = {
             ...signature,
             username,
-            verify_id:this.state.verify_id,
+            verify_id:this.props.verify_id,
             verify_value:this.state.verify_code
           }
 
@@ -134,7 +115,7 @@ class Login extends PureComponent{
                 this.props.setAccountInfo(accountInfo)
                 hashHistory.push('/profile/asset')
               } else if (response.code==1001) {
-                this.requestVerificationCode()
+                this.props.requestVerificationCode()
                 message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
               } else if (response.code==1000 && typeof response.details == 'string') {
                 try {
@@ -303,12 +284,12 @@ class Login extends PureComponent{
                     <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} className="marginRight" onChange={(e)=>{this.setState({verify_code:e.target.value})}}/>
                 </Col>
                 <Col span={8}>
-                    {this.state.verify_data
+                    {this.props.verify_data
                     ?
                     <img height='28px'
                         style={{marginBottom: 6, cursor: 'pointer'}}
-                        onClick={this.requestVerificationCode}
-                        src={this.state.verify_data} />
+                        onClick={this.props.requestVerificationCode}
+                        src={this.props.verify_data} />
                     :
                     <Icon type='spin' style={{backgroundColor:'red'}}/>
                     }

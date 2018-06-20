@@ -95,8 +95,6 @@ class Regist extends PureComponent{
         super(props);
         this.state = {
             user_type: 0,
-            verify_data:'', // 验证码图片
-            verify_id: '', // 验证码 id
             isRegistered: false,
             // 下面两个是 BTRegistSuccess 需要的参数
             username: '',
@@ -206,7 +204,7 @@ class Regist extends PureComponent{
                 Pubkey:keys.publicKey.toString('hex')
             },
             user:newuser,
-            verify_id:this.state.verify_id,
+            verify_id:this.props.verify_id,
             verify_value:verificationCode
         }
 
@@ -241,6 +239,7 @@ class Regist extends PureComponent{
               this.registSuccess({username, keystoreObj})
               this.clearFields()
               this.props.setSpin(false)
+              this.props.requestVerificationCode()
               message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
             }
 
@@ -252,19 +251,19 @@ class Regist extends PureComponent{
 
           }else if(response.code == 1001){
             this.props.setSpin(false)
-            this.requestVerificationCode()
+            this.props.requestVerificationCode()
             message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
 
           }else if(response.code == 1004){
             console.log('response.code', response.code);
             this.props.setSpin(false)
             console.log('details', JSON.parse(res.details));
-            this.requestVerificationCode()
+            this.props.requestVerificationCode()
             message.error(window.localeInfo["Header.AccountHasAlreadyExisted"]);
           }else{
             this.props.setSpin(false)
             console.log('details', JSON.parse(res.details));
-            this.requestVerificationCode()
+            this.props.requestVerificationCode()
             message.error(window.localeInfo["Header.FailedRegister"]);
           }
 
@@ -341,23 +340,6 @@ class Regist extends PureComponent{
         })
     }
 
-    requestVerificationCode = () => {
-
-      BTFetch('/user/getVerify', 'get').then(res => {
-        if(res && res.code==1){
-            this.setState({
-                verify_data:res.data.verify_data,
-                verify_id:res.data.verify_id
-            })
-        }
-      })
-
-    }
-
-    componentDidMount() {
-      this.requestVerificationCode()
-    }
-
     render() {
       if (this.state.isRegistered) {
         const {keystoreObj, username} = this.state
@@ -410,12 +392,12 @@ class Regist extends PureComponent{
                       }
                     </Col>
                     <Col span={7}>
-                      {this.state.verify_data
+                      {this.props.verify_data
                         ?
                         <img height='28px'
                           style={{marginBottom: 6, cursor: 'pointer'}}
-                          onClick={this.requestVerificationCode}
-                          src={this.state.verify_data} />
+                          onClick={this.props.requestVerificationCode}
+                          src={this.props.verify_data} />
                         :
                         <Icon type='spin' />
                       }

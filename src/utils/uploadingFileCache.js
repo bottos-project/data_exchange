@@ -30,6 +30,7 @@ function addFileCache(fileInfo) {
 export function deleteFileCache(guid) {
   let filesGuidArr = getCacheFileState()
   let index = filesGuidArr.findIndex(file => file.guid == guid)
+  console.log('index', index);
   if (index == -1) return ;
 
   filesGuidArr.splice(index, 1)
