@@ -22,6 +22,7 @@ import { getDownloads } from '@/utils/downloadFileCache'
 
 const initialState = {
   downloads: getDownloads().slice(),
+  visible: false,
 }
 
 function addDownload(downloads, file) {
@@ -61,6 +62,8 @@ const downloadsReducer = (state = initialState, action) => {
     //   return {...state, downloads: action.downloads}
     // case downloadsConst.UPDATE_DOWNLOAD_PROGRESS:
     //   return {...state, progressMap: {...state.progressMap, [action.guid]: action.percent}}
+    case downloadsConst.TOGGLE_VISIBLE:
+      return {...state, visible: action.visible}
     default:
       return state
   }

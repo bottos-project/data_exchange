@@ -23,6 +23,7 @@ import { connect } from 'react-redux'
 import './styles.less'
 import * as headerActions from '../redux/actions/HeaderAction'
 import { updateFileList } from '../redux/actions/uploaderAction'
+import { toggleVisible } from '../redux/actions/downloadAction'
 import {Button, Modal, Menu, Dropdown, Icon } from 'antd'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import BTFetch from '../utils/BTFetch'
@@ -95,6 +96,11 @@ class BTHeader extends PureComponent{
         )
     }
 
+    toggleDownloadVisible = () => {
+      let {visible, toggleVisible} = this.props
+      toggleVisible(!visible)
+    }
+
     setLocale = () => {
         let storage = window.localStorage;
         let locale = storage.getItem('locale');
@@ -162,6 +168,10 @@ class BTHeader extends PureComponent{
                     <FormattedMessage {...MenuMessages.MyMessages} />
                   </Link>
 
+                  {/* <span onClick={this.toggleDownloadVisible}>
+                    下载
+                  </span> */}
+
                 </div>
                 <div className='switch-locate'>
                   <Button onClick={this.setLocale}>
@@ -176,11 +186,12 @@ class BTHeader extends PureComponent{
 
 const mapStateToProps = (state) => {
   const { account_info, locale } = state.headerState
-  return { account_info, locale }
+  const downloadsVisible = state.downloadState.visible
+  return { account_info, locale, downloadsVisible }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({...headerActions, updateFileList}, dispatch)
+  return bindActionCreators({...headerActions, updateFileList, toggleVisible}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BTHeader)

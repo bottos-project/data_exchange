@@ -78,3 +78,10 @@ export function updateDownload(file) {
 //     fileList
 //   };
 // };
+
+export function toggleVisible(visible) {
+  return {
+    type: downloadsConst.TOGGLE_VISIBLE,
+    visible
+  };
+};

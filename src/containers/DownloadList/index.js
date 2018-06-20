@@ -84,8 +84,8 @@ class DownloadList extends Component {
 }
 
 function mapStateToProps(state) {
-  const downloads = state.downloadState.downloads
-  return { downloads }
+  const {downloads, visible} = state.downloadState
+  return { downloads, visible }
 }
 
 function mapDispatchToProps(dispatch) {
