@@ -25,7 +25,7 @@ import { FormattedMessage } from 'react-intl'
 import uploader from '../uploader'
 import { deleteFileCache } from '@/utils/uploadingFileCache'
 import myEmitter from '@/utils/eventEmitter'
-console.log('myEmitter', myEmitter);
+// console.log('myEmitter', myEmitter);
 import _File from 'webuploader/lib/file'
 import WUFile from 'webuploader/file'
 // console.log('_File, WUFile', _File, WUFile);

@@ -50,14 +50,10 @@ const formItemLayout = {
 
 
 class Transaction extends PureComponent{
-    constructor(props){
-        super(props)
-    }
 
     async onHandleSubmit(){
         let {resetFields} = this.props.form
         let account_name = this.props.account_name
-        let blockInfo = await getBlockInfo()
         let localStorage = window.localStorage
 
         let accountInfo = JSON.parse(localStorage.account_info)
@@ -67,18 +63,24 @@ class Transaction extends PureComponent{
 
         let quantity = Number(fieldValues.quantity)
         if(!fieldValues.to){
-            window.message.error(window.localeInfo["Wallet.PleaseEnterTheTargetAccount"])
-
-            return}
+          window.message.error(window.localeInfo["Wallet.PleaseEnterTheTargetAccount"])
+          return
+        }
         if(!quantity){
-            window.message.error(window.localeInfo["Wallet.PleaseEnterTheMoneyToBeTransferred"])
-            return}
+          window.message.error(window.localeInfo["Wallet.PleaseEnterTheMoneyToBeTransferred"])
+          return
+        }
         if(!fieldValues.password) {
-            window.message.error(window.localeInfo["Wallet.PleaseEnterThePassword"])
-            return}
+          window.message.error(window.localeInfo["Wallet.PleaseEnterThePassword"])
+          return
+        }
         if(quantity<=0){
-            window.message.error(window.localeInfo["Wallet.PleaseEnterAvalidTransferAmount"])
-            return}
+          window.message.error(window.localeInfo["Wallet.PleaseEnterAvalidTransferAmount"])
+          return
+        }
+
+        let blockInfo = await getBlockInfo()
+
         let keyStoreResult = BTIPcRenderer.getKeyStore({username:username,account_name:account_name})
         let keyStoreObj = keyStoreResult.keyStoreObj
         // 开启遮罩
@@ -112,6 +114,8 @@ class Transaction extends PureComponent{
             fetchParam.param = didBuf
             getSignaturedFetchParam({fetchParam, privateKey})
             let url = '/user/transfer'
+
+            // return ;
             BTFetch(url,'POST', fetchParam)
             .then(res=>{
               if (!res) {

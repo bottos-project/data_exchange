@@ -110,7 +110,7 @@ class ProgressICON extends Component {
 
   render() {
     const { status } = this.props
-    console.log('status', status);
+    // console.log('status', status);
 
     return <div className='download-list-item-progress'>
       <Progress showInfo={false} type="circle" width={20} percent={this.state.percent} />

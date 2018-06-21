@@ -134,7 +134,7 @@ var uploader = WebUploader.create({
 })
 
 // console.log('WebUploader', WebUploader);
-console.log('uploader', uploader);
+// console.log('uploader', uploader);
 
 // 在文件入队之前触发
 // 文件切片信息在此获取

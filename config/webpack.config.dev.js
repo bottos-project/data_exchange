@@ -84,9 +84,9 @@ const devConfig = webpackMerge(commonConfig, {
     compress: true,
     hot: true,
     port: 3000,
-    proxy: {
-      '/test': 'http://localhost:3000'
-    }
+    // proxy: {
+    //   '/bottosabi': 'http://localhost:3000/bottosabi'
+    // }
   }
 
 });

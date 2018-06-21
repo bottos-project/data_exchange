@@ -29,15 +29,6 @@ import './style.less'
 
 const Panel = Collapse.Panel;
 
-const customPanelStyle = {
-  flexGrow: 1
-  // background: '#f7f7f7',
-  // borderRadius: 4,
-  // marginBottom: 24,
-  // border: 0,
-  // overflow: 'hidden',
-};
-
 /**
  * 这个组件是显示所有已下载的文件
  * 目前先放在页面的右下角

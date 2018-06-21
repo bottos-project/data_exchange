@@ -42,9 +42,9 @@ export const getBlockInfo = async()=>{
     return params
 }
 
-const { queryProtoEncode, messageProtoEncode } = require('@/lib/proto/index');
-const query_pb = require('@/lib/proto/query_pb')
-const message_pb = require('@/lib/proto/message_pb')
+const { queryProtoEncode, messageProtoEncode } = require('../lib/proto/index');
+const query_pb = require('../lib/proto/query_pb')
+const message_pb = require('../lib/proto/message_pb')
 const BTCryptTool = require('bottos-crypto-js')
 
 export function getSignaturedParam({username, privateKey}) {
