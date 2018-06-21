@@ -64,6 +64,11 @@ const fileDownLoad = ({filePath, urlList, guid}) => {
   ipcRenderer.send(ipcEventName.file_download, params);
 }
 
+const deleteDownLoadCache = ({dirname, urlList, guid}) => {
+  let params = {dirname, urlList, guid}
+  ipcRenderer.send(ipcEventName.delete_download_cache, params);
+}
+
 export default {
     getKeyStore,
     saveKeyStore,
@@ -72,4 +77,5 @@ export default {
     getKeyStoreList,
     mkdir,
     fileDownLoad,
+    deleteDownLoadCache
 }

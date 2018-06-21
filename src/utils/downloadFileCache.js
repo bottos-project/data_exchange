@@ -72,8 +72,8 @@ export function updateDownloadCache(fileInfo) {
 export function deleteDownloadCache(filePath) {
   let filesGuidArr = getDownloads()
   let index = filesGuidArr.findIndex(file => file.filePath == filePath)
+  console.log('index', index);
   if (index == -1) return ;
-
   filesGuidArr.splice(index, 1)
   localStorage.setItem(DOWNLOADS, JSON.stringify(filesGuidArr))
 }

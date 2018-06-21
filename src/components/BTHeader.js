@@ -97,8 +97,9 @@ class BTHeader extends PureComponent{
     }
 
     toggleDownloadVisible = () => {
-      let {visible, toggleVisible} = this.props
-      toggleVisible(!visible)
+      let {downloadsVisible, toggleVisible} = this.props
+      console.log('downloadsVisible', downloadsVisible);
+      toggleVisible(!downloadsVisible)
     }
 
     setLocale = () => {
@@ -168,9 +169,9 @@ class BTHeader extends PureComponent{
                     <FormattedMessage {...MenuMessages.MyMessages} />
                   </Link>
 
-                  {/* <span onClick={this.toggleDownloadVisible}>
+                  <span className='download-list-toggle' onClick={this.toggleDownloadVisible}>
                     下载
-                  </span> */}
+                  </span>
 
                 </div>
                 <div className='switch-locate'>

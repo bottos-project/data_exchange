@@ -1,14 +1,46 @@
 .download-list-simple {
   position: absolute;
-  // top: 0;
-  // right: 0;
-  bottom: 5px;
-  right: 0;
+  top: 0;
+  right: -400px;
+  // bottom: 5px;
   // margin-top: 80px;
   width: 400px;
-  max-height: 400px;
-  // height: 100%;
-  // background-color: lightpink;
+  // max-height: 400px;
+  height: 100%;
+  background-color: #fafafa;
+  z-index: 1000;
+  transition: right .3s ease-out;
+}
+
+.download-list-simple.visible {
+  right: 0;
+}
+
+.download-list-simple > .ant-collapse {
+  position: relative;
+}
+.download-list-simple > .download-list-out {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 15px;
+  border-radius: 4px;
+  background-color: lightblue;
+  cursor: pointer;
+}
+
+.download-list-collapse-panel {
+  width: 394px;
+  margin-left: 5px;
+}
+
+.download-list-collapse-panel .ant-collapse-content-box {
+  height: calc(100vh - 96px);
+  overflow-y: auto;
 }
 
 .ant-collapse>.ant-collapse-item>.ant-collapse-header:focus {

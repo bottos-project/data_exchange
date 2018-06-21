@@ -541,6 +541,10 @@ module.exports = {
             id:"File.UploadSuccess",
             defaultMessage:"上传成功"
         },
+        SureToDelete:{
+            id:"File.SureToDelete",
+            defaultMessage:"确定要删除这个任务吗？"
+        }
     },
     PersonalAsset:{
         PersonalAsset:{

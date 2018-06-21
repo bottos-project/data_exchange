@@ -18,14 +18,25 @@
 */
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { updateDownload } from '../../redux/actions/downloadAction'
+import { bindActionCreators } from 'redux'
+import { updateDownload, toggleVisible } from '../../redux/actions/downloadAction'
 import { Collapse, List } from 'antd';
 import DownloadItem from './subviews/DownloadItem'
+import HasDownloaded from './subviews/HasDownloaded'
 const { ipcRenderer } = window.electron
 
 import './style.less'
 
 const Panel = Collapse.Panel;
+
+const customPanelStyle = {
+  flexGrow: 1
+  // background: '#f7f7f7',
+  // borderRadius: 4,
+  // marginBottom: 24,
+  // border: 0,
+  // overflow: 'hidden',
+};
 
 /**
  * 这个组件是显示所有已下载的文件
@@ -51,24 +62,38 @@ class DownloadList extends Component {
       // }
     })
 
-    // const { downloads } = this.props
-    //
-    // downloads.forEach(el => {
-    //   if (el.status == 'done') {
-    //
-    //   }
-    // })
+  }
 
+  listOut = (e) => {
+    this.props.toggleVisible(false)
   }
 
   render() {
-    const { downloads } = this.props
+    const { downloads, visible } = this.props
+    const className = 'download-list-simple' + (visible ? ' visible' : '')
+    // const className = 'download-list-simple' + ' visible'
+
+    const isDownloading = [], hasDownloaded = [];
+
+    downloads.forEach(ele => {
+      if (ele.status == 'done' || ele.status == 'inexistence') {
+        hasDownloaded.push(ele)
+        // for (let i = 0; i < 8; i++) {
+        // }
+      } else {
+        isDownloading.push(ele)
+        // for (let i = 0; i < 8; i++) {
+        // }
+      }
+    })
+
+
     return (
-      <div className='download-list-simple'>
-        <Collapse>
-          <Panel header="This is Download List" key="1">
+      <div className={className}>
+        <Collapse className='column' accordion defaultActiveKey='1'>
+          <Panel className='download-list-collapse-panel' header="This is Download List" key="1">
             <List
-              dataSource={downloads}
+              dataSource={isDownloading}
               renderItem={item => (
                 <List.Item key={item.filePath}>
                   <DownloadItem item={item} />
@@ -76,7 +101,18 @@ class DownloadList extends Component {
               )}
             />
           </Panel>
+          <Panel className='download-list-collapse-panel' header="This is Download List" key="2">
+            <List
+              dataSource={hasDownloaded}
+              renderItem={item => (
+                <List.Item key={item.filePath}>
+                  <HasDownloaded item={item} />
+                </List.Item>
+              )}
+            />
+          </Panel>
         </Collapse>
+        <div className='download-list-out' onClick={this.listOut}>></div>
       </div>
     );
   }
@@ -89,11 +125,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    updateDownload(f) {
-      dispatch( updateDownload(f) )
-    },
-  }
+  return bindActionCreators({ updateDownload, toggleVisible}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(DownloadList);

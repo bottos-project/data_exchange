@@ -16,14 +16,23 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { deleteDownload, updateDownload } from '../../../redux/actions/downloadAction'
-import { Icon } from 'antd';
+import { Icon, Popconfirm } from 'antd';
 import ProgressICON from './ProgressICON';
-const { shell } = window.electron
+import BTIpcRenderer from '@/tools/BTIpcRenderer'
+import {FormattedMessage} from 'react-intl'
+import messages from '@/locales/messages'
 
-class DownloadItem extends Component {
+const FileMessages = messages.File;
+
+function cancel(e) {
+  // console.log('cancel', e);
+}
+
+class DownloadItem extends PureComponent {
 
   handleClose = (e) => {
     const { status, filePath } = this.props.item
@@ -31,12 +40,10 @@ class DownloadItem extends Component {
     if (status == 'downloading') {
       return ;
     }
-    if (status == 'done' || status == 'inexistence') {
-      this.props.deleteDownload(filePath)
-    } else {
-      console.log('要处理');
-      console.log('status', status);
-    }
+    this.props.deleteDownload(filePath)
+    BTIpcRenderer.deleteDownLoadCache(this.props.item)
+    // console.log('要处理');
+
   }
 
   componentDidMount() {
@@ -54,27 +61,9 @@ class DownloadItem extends Component {
 
   }
 
-  openFolder = () => {
-    const { filePath } = this.props.item
-    shell.showItemInFolder(filePath)
-  }
-
-  statusIcon = () => {
-    const { status } = this.props.item
-    switch (status) {
-      case 'inexistence':
-        return null;
-      case 'done':
-        return <span className='download-list-item-open' onClick={this.openFolder}>
-          <Icon type="folder-open" />
-        </span>
-      default:
-        return <ProgressICON {...this.props.item} />
-    }
-  }
-
   render() {
-    const { filePath, status, basename } = this.props.item
+    const item = this.props.item
+    const { filePath, status, basename } = item
     // const { status,  }
     // console.log('filePath', filePath);
     let pathArr = filePath.split('\\')
@@ -88,26 +77,26 @@ class DownloadItem extends Component {
         </span>
 
         <span className='download-list-item-status'>
-          {this.statusIcon()}
+          <ProgressICON {...item} />
         </span>
 
-        <span className='download-list-item-close' onClick={this.handleClose}>
-          <Icon type="close" />
-        </span>
+        <Popconfirm placement="bottomRight"
+          title={<FormattedMessage {...FileMessages.SureToDelete} />}
+          onConfirm={this.handleClose} onCancel={cancel}
+          okText={<FormattedMessage {...messages.OK} />}
+          cancelText={<FormattedMessage {...messages.Cancel} />}
+          >
+          <span className='download-list-item-close'>
+            <Icon type="close" />
+          </span>
+        </Popconfirm>
       </div>
     );
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    updateDownload(f) {
-      dispatch( updateDownload(f) )
-    },
-    deleteDownload(filePath) {
-      dispatch( deleteDownload(filePath) )
-    },
-  }
+  return bindActionCreators({ updateDownload, deleteDownload}, dispatch)
 }
 
 export default connect(null, mapDispatchToProps)(DownloadItem);

@@ -18,6 +18,8 @@
 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { join } from 'path'
+import cloneDeep from 'lodash/cloneDeep'
 import { Progress, Icon } from 'antd';
 const { ipcRenderer } = window.electron
 
@@ -51,7 +53,7 @@ class ProgressICON extends Component {
   restart = (e) => {
     // console.log('e target restart', e.target);
     const { guid, status, urlList, filePath } = this.props
-    // console.log('this.props', this.props);
+    console.log('this.props', this.props);
     console.log('urlList', urlList);
     let params = { guid }
     if (status == 'cached') {
@@ -61,12 +63,15 @@ class ProgressICON extends Component {
   }
 
   componentDidMount() {
-    const { status, filePath, urlList } = this.props
+    const { status, filePath, urlList, dirname } = this.props
 
     if (status == 'cached') {
       let received = 0
       for (let sliceInfo of urlList) {
         if (sliceInfo.status == 'done') {
+          if (!window.existsSync(join(dirname, sliceInfo.sguid))) {
+            console.log('分片不存在了');
+          }
           received += sliceInfo.receivedBytes
         }
       }

@@ -142,3 +142,28 @@ ipcMain.on(ipcEventName.key_store_list,(event,username)=>{
         event.returnValue = []
     }
 })
+
+// 这个方法于涉及到文件删除操作
+// 所以需要小心验证
+ipcMain.on(ipcEventName.delete_download_cache, (event, info)=>{
+  const { dirname, urlList, guid } = info
+  // console.log('dirname', dirname);
+  // console.log('guid', guid);
+  if (guid.length !== 64) {
+    return console.error('Invalid guid');
+  }
+  // console.log('urlList', urlList);
+  for (var i = 0; i < urlList.length; i++) {
+    let sguid = urlList[i].sguid
+    // console.log('sguid', sguid);
+    if (sguid == guid + i) {
+      // console.log('can delete');
+      let slicePath = path.join(dirname, sguid)
+      fs.unlink(slicePath, function (err) {
+        if (err) {
+          console.error('delete cache error', err);
+        }
+      })
+    }
+  }
+})

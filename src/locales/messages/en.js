@@ -402,5 +402,6 @@ module.exports = {
 
     "File.FileExisted":"This File has existed",
     "File.UploadFail":"Upload Fail",
+    "File.SureToDelete":"Are you sure delete this task?",
 
 }
