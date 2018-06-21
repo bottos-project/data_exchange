@@ -86,6 +86,10 @@ module.exports = {
             id:'Menu.MyMessages',
             defaultMessage:'消息'
         },
+        Download:{
+            id:'Menu.Download',
+            defaultMessage:'下载'
+        },
         LoginOrRegister:{
             id:'Menu.LoginOrRegister',
             defaultMessage:'登录/注册'

@@ -169,9 +169,10 @@ class BTHeader extends PureComponent{
                     <FormattedMessage {...MenuMessages.MyMessages} />
                   </Link>
 
-                  <span className='download-list-toggle' onClick={this.toggleDownloadVisible}>
-                    下载
-                  </span>
+                  <a onClick={this.toggleDownloadVisible}>
+                    <img src='./img/downloads.svg' style={{margin: 8}} />
+                    <FormattedMessage {...MenuMessages.Download} />
+                  </a>
 
                 </div>
                 <div className='switch-locate'>

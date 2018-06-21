@@ -36,6 +36,7 @@ module.exports = {
     "Menu.Back":"Back",
     "Menu.Profile":'Profile',
     "Menu.Wallet":"My Wallet",
+    "Menu.Download":"Downloads",
     "Menu.Walletlist":"Wallet List",
     "Menu.ProfileAsset":"My Asset",
     "Menu.ProfileNeed":"My Demand",

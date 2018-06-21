@@ -35,15 +35,14 @@ function cancel(e) {
 class DownloadItem extends PureComponent {
 
   handleClose = (e) => {
-    const { status, filePath } = this.props.item
+    const { item, deleteDownload } = this.props
+    const { status, filePath } = item
     console.log('status', status);
     if (status == 'downloading') {
       return ;
     }
-    this.props.deleteDownload(filePath)
-    BTIpcRenderer.deleteDownLoadCache(this.props.item)
-    // console.log('要处理');
-
+    deleteDownload(filePath)
+    BTIpcRenderer.deleteDownLoadCache(item)
   }
 
   componentDidMount() {
