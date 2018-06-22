@@ -207,8 +207,8 @@ class BTPublishAssetModal extends PureComponent{
       let did = {
         "asset_id": window.uuid(),
         "basic_info": {
-          "username": account_info.username,
-          "assetName": this.state.title,
+          "user_name": account_info.username,
+          "asset_name": this.state.title,
           "assetType": Number.parseInt(this.state.dataAssetType),
           "featureTag": featureTag,
           "sampleHash": this.state.sample_hash,

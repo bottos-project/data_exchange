@@ -1,7 +1,7 @@
 'use strict'
 import BTPack from './msgpack'
 import BTCrypto from 'bottos-crypto-js'
-
+import { getSignaturedFetchParam } from './BTCommonApi'
 // console.log('BTPack', BTPack);
 // console.log('BTCrypto', BTCrypto);
 
@@ -66,7 +66,7 @@ function parseFields(fields, did, structs) {
       // packByType(type, value)
       let value = did[key]
       if (value == undefined) {
-        return console.error('type error: expected type ' + key + ', but not found in ' + did)
+        return console.error('type error: expected type ' + key + ', but not found.', did)
       }
 
       array = array.concat( packByType(type, value) )
@@ -104,6 +104,8 @@ export function packDID(did, contract, method) {
   })
 }
 
-export function pack(blockInfo, fetchParam, privateKey) {
-
+export function packedParam(did, fetchParam, privateKey) {
+  const { contract, method } = fetchParam
+  fetchParam.param = packDID(did, contract, method)
+  return getSignaturedFetchParam({fetchParam, privateKey})
 }

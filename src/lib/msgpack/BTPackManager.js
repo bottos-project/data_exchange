@@ -29,8 +29,8 @@ export const registAssetPack = (did)=>{
 
     let arr2Size = BTPack.PackArraySize(len)
 
-    let arrUsername = BTPack.PackStr16(basic_info.username)
-    let arrAssetName = BTPack.PackStr16(basic_info.assetName)
+    let arrUsername = BTPack.PackStr16(basic_info.user_name)
+    let arrAssetName = BTPack.PackStr16(basic_info.asset_name)
     let arrAssetType = BTPack.PackUint64(basic_info.assetType)
     let arrFeatureTag = BTPack.PackStr16(basic_info.featureTag)
     // let arrSamplePath = BTPack.PackStr16(basic_info.samplePath)

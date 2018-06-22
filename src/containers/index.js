@@ -62,7 +62,7 @@ class App extends PureComponent {
         "sample_hash": 'this.state.sample_hash',
         "storage_hash": 'this.state.storage_hash',
         "expire_time": new Date().getTime() / 1000,
-        "opType": 1,
+        "op_type": 1,
         "price": 23 * Math.pow(10, 8),
         "description": 'this.state.description'
       }
