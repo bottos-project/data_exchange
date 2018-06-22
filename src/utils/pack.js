@@ -76,7 +76,7 @@ function parseFields(fields, did, structs) {
 
       let did2 = did[key] || did.basic_info
 
-      console.log('fields2, did2', fields2, did2);
+      // console.log('fields2, did2', fields2, did2);
 
       let childArr = parseFields(fields2, did2, structs)
       // console.log('childArr', childArr);

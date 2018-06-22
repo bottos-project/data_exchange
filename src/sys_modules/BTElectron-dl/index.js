@@ -226,10 +226,16 @@ function startDownload({ filePath, urlList, guid, webContents }) {
       for (let sliceInfo of urlList) {
         let { sguid, surl, status } = sliceInfo
         let slicePath = path.join(dirname, sguid)
-        if (status == 'done' && fs.existsSync(slicePath)) {
-          this.remaning -= 1
-          continue
+
+        if ( fs.existsSync(slicePath) ) {
+          if (status == 'done') {
+            this.remaning -= 1
+            continue
+          } else {
+            fs.unlinkSync(slicePath)
+          }
         }
+
         delete sliceInfo.status
         webContents.downloadURL(surl);
       }
@@ -309,6 +315,43 @@ function registerMultipleDownload(win) {
       webContents.send(channel, info)
     }
   })
+
+  // 这个方法于涉及到文件删除操作
+  // 所以需要小心验证
+  ipcMain.on('delete_download_cache', (event, info)=>{
+    const { dirname, urlList, guid } = info
+    // console.log('dirname', dirname);
+    // console.log('guid', guid);
+    if (guid.length !== 64) {
+      return console.error('Invalid guid');
+    }
+
+    let _info = downloadFileInfo[guid]
+    if ( _info != undefined) {
+      for (let sliceInfo of _info.urlList) {
+        if (sliceInfo.status == 'done') {
+          continue
+        }
+        let downloadItem = sliceInfo.getItem()
+        downloadItem.cancel()
+      }
+    }
+    // console.log('urlList', urlList);
+    for (var i = 0; i < urlList.length; i++) {
+      let sguid = urlList[i].sguid
+      // console.log('sguid', sguid);
+      if (sguid == guid + i) {
+        // console.log('can delete');
+        let slicePath = path.join(dirname, sguid)
+        fs.unlink(slicePath, function (err) {
+          if (err) {
+            console.error('delete cache error', err);
+          }
+        })
+      }
+    }
+  })
+
 
 }
 

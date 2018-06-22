@@ -1,7 +1,7 @@
 .download-list-simple {
   position: absolute;
   top: 0;
-  right: -400px;
+  right: -415px;
   // bottom: 5px;
   // margin-top: 80px;
   width: 400px;
@@ -10,6 +10,7 @@
   background-color: #fafafa;
   z-index: 1000;
   transition: right .3s ease-out;
+  border: 1px solid #94bff3;
 }
 
 .download-list-simple.visible {
@@ -21,21 +22,19 @@
 }
 .download-list-simple > .download-list-out {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: -15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  height: 80px;
   width: 15px;
-  border-radius: 4px;
-  background-color: lightblue;
+  transform: translateY(-50%);
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  background-color: #dbdbdb;
   cursor: pointer;
-}
-
-.download-list-collapse-panel {
-  width: 394px;
-  margin-left: 5px;
+  border: 1px solid #94bff3;
 }
 
 .download-list-collapse-panel .ant-collapse-content-box {
@@ -43,16 +42,39 @@
   overflow-y: auto;
 }
 
+.download-list-collapse-panel .ant-collapse-content {
+  background-color: #f2f5f9;
+}
+
 .ant-collapse>.ant-collapse-item>.ant-collapse-header:focus {
   outline: none;
 }
 
+// 下面是 每条 item 相关的样式
 .download-list-item {
   position: relative;
   width: 100%;
+  padding: 6px 10px 8px;
+  background-color: #fff;
+  border-radius: 10px;
 }
 
-.download-list-item > .inexistence {
+.download-item-icon {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: #EFF2F6;
+  width: 80px;
+  height: 54px;
+  border-radius: 5px;
+}
+
+.download-item-info-container {
+  margin-left: 85px;
+  height: 58px;
+}
+
+.download-item-info-container > .inexistence {
   text-decoration: line-through;
   color: #aaa;
 }
@@ -60,7 +82,6 @@
 .download-list-item-status {
   position: absolute;
   right: 30px;
-  bottom: 0;
 }
 
 .download-list-item-open {
@@ -71,22 +92,21 @@
 
 }
 
-.download-list-item-progress {
-  position: relative;
-  > i {
-    position: absolute;
-    top: 6px;
-    left: 3px;
-    cursor: pointer;
-  }
-}
-
-.download-list-item-close {
+.download-list-toggle-icon {
   position: absolute;
-  right: 5px;
-  width: 20px;
+  top: 3px;
+  right: 8px;
   cursor: pointer;
+  font-size: 24px;
   > i:hover {
     background-color: lightblue;
   }
+}
+
+.download-item-delete {
+  position: absolute;
+  right: 5px;
+  top: 40px;
+  cursor: pointer;
+  color: #3A9BFF;
 }

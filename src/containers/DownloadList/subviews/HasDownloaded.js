@@ -3,10 +3,23 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { deleteDownload, updateDownload } from '../../../redux/actions/downloadAction'
 import { Icon } from 'antd';
+import Base from 'webuploader/base'
+
 const { shell } = window.electron
 
 
 class HasDownloaded extends Component {
+  constructor(props) {
+    super(props);
+    let total = props.item.urlList.map(el => el.totalBytes).reduce(function (accumulator, currentValue, currentIndex) {
+      if (currentValue == undefined) {
+        currentValue = urlList[0].totalBytes
+      }
+      return accumulator + currentValue
+    })
+
+    this.total = Base.formatSize(total)
+  }
 
   handleClose = (e) => {
     const { status, filePath } = this.props.item
@@ -48,22 +61,31 @@ class HasDownloaded extends Component {
     // let name = basename(filePath) ? basename(filePath) : filePath
     return (
       <div className='download-list-item'>
-        <span className={status}>
-          {name}
+        <span className='download-item-icon'>
+          <img src='./img/unkown.svg' />
+          
         </span>
 
-        <span className='download-list-item-status'>
+        <div className='download-item-info-container'>
+          <div className={status}>
+            {name}
+          </div>
+
+          <div> {this.total} </div>
+
           {
             status == 'done' &&
             <span className='download-list-item-open' onClick={this.openFolder}>
               <Icon type="folder-open" />
             </span>
           }
+        </div>
+
+
+        <span className='download-list-toggle-icon' onClick={this.handleClose}>
+          <Icon type="close-circle-o" />
         </span>
 
-        <span className='download-list-item-close' onClick={this.handleClose}>
-          <Icon type="close" />
-        </span>
       </div>
     );
   }

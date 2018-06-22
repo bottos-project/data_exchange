@@ -24,7 +24,7 @@ import './styles.less'
 import * as headerActions from '../redux/actions/HeaderAction'
 import { updateFileList } from '../redux/actions/uploaderAction'
 import { toggleVisible } from '../redux/actions/downloadAction'
-import {Button, Modal, Menu, Dropdown, Icon } from 'antd'
+import {Button, Modal, Menu, Dropdown, Icon, Badge } from 'antd'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
 import BTFetch from '../utils/BTFetch'
 import {importFile,exportFile} from '../utils/BTUtil'
@@ -119,7 +119,7 @@ class BTHeader extends PureComponent{
 
     render() {
       // console.log('btheader render');
-        const { account_info } = this.props
+        const { account_info, downloadingNumber } = this.props
         return(
             <div className="container header">
               {/* <div style={{position: 'absolute', top: 0, right: 10}}>v: {pkg.version}</div> */}
@@ -131,11 +131,11 @@ class BTHeader extends PureComponent{
                 <div className="loginBtnStyle">
                   <Link to='/publishAsset' onClick={this.checkAccount} >
                     <img src='./img/publishAsset.svg' />
-                    <FormattedMessage {...HeaderMessages.PublishAsset}/>
+                    <div><FormattedMessage {...HeaderMessages.PublishAsset}/></div>
                   </Link>
                   <Link to='/publishDemand' onClick={this.checkAccount}>
                     <img src='./img/publishDemand.svg' />
-                    <FormattedMessage {...HeaderMessages.PublishDemand}/>
+                    <div><FormattedMessage {...HeaderMessages.PublishDemand}/></div>
                   </Link>
                   {
                     account_info != null
@@ -151,27 +151,31 @@ class BTHeader extends PureComponent{
                     :
 
                     <Link to='/loginOrRegister'>
-                      <div className='flex center' style={{width: 47, height: 47}}>
+                      <div className='flex center' style={{width: 37, height: 37, textAlign: 'center'}}>
                         <img src='./img/profile.svg' />
                       </div>
-                      <FormattedMessage {...MenuMessages.LoginOrRegister}/>
+                      <div><FormattedMessage {...MenuMessages.LoginOrRegister}/></div>
                     </Link>
 
                   }
 
                   <Link to='/profile/wallet' onClick={this.checkAccount}>
                     <img src='./img/wallet.svg' />
-                    <FormattedMessage {...MenuMessages.Wallet} />
+                    <div><FormattedMessage {...MenuMessages.Wallet} /></div>
                   </Link>
 
                   <Link to='/profile/check' onClick={this.checkAccount}>
-                    <img src='./img/check.svg' />
-                    <FormattedMessage {...MenuMessages.MyMessages} />
+                    <Badge count={0}>
+                      <img src='./img/check.svg' />
+                    </Badge>
+                    <div><FormattedMessage {...MenuMessages.MyMessages} /></div>
                   </Link>
 
                   <a onClick={this.toggleDownloadVisible}>
-                    <img src='./img/downloads.svg' style={{margin: 8}} />
-                    <FormattedMessage {...MenuMessages.Download} />
+                    <Badge count={downloadingNumber}>
+                      <img src='./img/downloads.svg' style={{margin: 4}} />
+                    </Badge>
+                    <div><FormattedMessage {...MenuMessages.Download} /></div>
                   </a>
 
                 </div>
@@ -188,8 +192,9 @@ class BTHeader extends PureComponent{
 
 const mapStateToProps = (state) => {
   const { account_info, locale } = state.headerState
-  const downloadsVisible = state.downloadState.visible
-  return { account_info, locale, downloadsVisible }
+  const { visible: downloadsVisible, downloads } = state.downloadState
+  const downloadingNumber = downloads.filter(d => d.status == 'downloading').length
+  return { account_info, locale, downloadsVisible, downloadingNumber }
 }
 
 const mapDispatchToProps = (dispatch) => {

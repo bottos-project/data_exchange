@@ -94,7 +94,7 @@ function getFileSliceDownloadURL(param) {
 }
 
 
-export async function BTDownloadFile(guid, username) {
+export async function BTDownloadFile(guid, username, opt) {
   // var { filename, ...param } = await getDownloadFileIP(guid)
   // if (!param) {
   //   return window.message.error('get download file fail')

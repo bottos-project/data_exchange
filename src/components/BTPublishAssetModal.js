@@ -48,7 +48,7 @@ const initState = {
   tag1:'',
   tag2:'',
   tag3:'',
-  dataAssetType: '0',
+  dataAssetType: '',
   getFileNameTemp:'',
   getFileName:'',
   getExampleUrl:'',
@@ -179,7 +179,7 @@ class BTPublishAssetModal extends PureComponent{
         return;
       }
 
-      if (this.state.dataAssetType == '0') {
+      if (this.state.dataAssetType == '') {
         message.warning(window.localeInfo["PersonalAsset.PleaseChooseTheAssetType"]);
         return;
       }
@@ -209,7 +209,7 @@ class BTPublishAssetModal extends PureComponent{
         "basic_info": {
           "user_name": account_info.username,
           "asset_name": this.state.title,
-          "assetType": Number.parseInt(this.state.dataAssetType),
+          "assetType": Number.parseInt(this.state.dataAssetType) || 0,
           "featureTag": featureTag,
           "sampleHash": this.state.sample_hash,
           "storageHash": this.state.storage_hash,
@@ -273,7 +273,7 @@ class BTPublishAssetModal extends PureComponent{
                     ?
                     this.state.getFileNameTemp
                     :
-                    this.state.getFileNameTemp.split('.')[0].substring(0, 8)+'...'+this.state.getFileNameTemp.split('.')[1]
+                    this.state.getFileNameTemp.split('.')[0].substring(0, 8)+'...'+this.state.getFileNameTemp.split('.').pop()
                 }</span>
               </Col>
             </Row>
@@ -289,11 +289,11 @@ class BTPublishAssetModal extends PureComponent{
                   <FormattedMessage {...PersonalAssetMessages.SetScreeningFile}/>
                 </Button>
                 <span className='filename'>{
-                  this.state.getFileName.length<=14
+                  this.state.getFileName.length <= 24
                   ?
                   this.state.getFileName
                   :
-                  this.state.getFileName.split('.')[0].substring(0,5)+'...'+this.state.getFileName.split('.')[1]
+                  this.state.getFileName.split('.')[0].substring(0, 8)+'...'+this.state.getFileName.split('.').pop()
                 }</span>
               </Col>
             </Row>

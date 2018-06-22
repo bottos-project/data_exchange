@@ -52,32 +52,32 @@ function itemRender(route, params, routes, paths) {
 
 class App extends PureComponent {
   componentDidMount() {
-    let did = {
-      "asset_id": 'window.uuid()',
-      "info": {
-        "user_name": 'usr',
-        "asset_name": 'this.state.title',
-        "asset_type": 12,
-        "feature_tag": 'featureTag-1-2',
-        "sample_hash": 'this.state.sample_hash',
-        "storage_hash": 'this.state.storage_hash',
-        "expire_time": new Date().getTime() / 1000,
-        "op_type": 1,
-        "price": 23 * Math.pow(10, 8),
-        "description": 'this.state.description'
-      }
-    }
-
-    let contract = 'assetmng',
-    method = 'assetreg';
-    let promise = packDID(did, contract, method)
-    console.log('promise', promise);
+    // let did = {
+    //   "asset_id": 'window.uuid()',
+    //   "info": {
+    //     "user_name": 'usr',
+    //     "asset_name": 'this.state.title',
+    //     "asset_type": 12,
+    //     "feature_tag": 'featureTag-1-2',
+    //     "sample_hash": 'this.state.sample_hash',
+    //     "storage_hash": 'this.state.storage_hash',
+    //     "expire_time": new Date().getTime() / 1000,
+    //     "op_type": 1,
+    //     "price": 23 * Math.pow(10, 8),
+    //     "description": 'this.state.description'
+    //   }
+    // }
+    //
+    // let contract = 'assetmng',
+    // method = 'assetreg';
+    // let promise = packDID(did, contract, method)
+    // console.log('promise', promise);
     // let beforePack = registAssetPack(did)
     // console.log('beforePack', beforePack);
-    promise.then(res => {
-      console.log(res)
-      // res.forEach((ele, index) => console.assert(ele == beforePack[index]))
-    })
+    // promise.then(res => {
+    //   console.log(res)
+    //   // res.forEach((ele, index) => console.assert(ele == beforePack[index]))
+    // })
 
   }
 

@@ -45,8 +45,8 @@ const MegaByte = 1 << 20
 
 function beforeUpload(file) {
   // console.log('file.size', file.size)
-  // if (file.size > 2 * GigaByte) {
-  if (file.size > 200 * MegaByte) {
+  if (file.size > 2 * GigaByte) {
+  // if (file.size > 200 * MegaByte) {
     // 文件大小大于 2G
     // 不支持上传
     window.message.error(window.localeInfo["PersonalAsset.UploadFileSize200M"])

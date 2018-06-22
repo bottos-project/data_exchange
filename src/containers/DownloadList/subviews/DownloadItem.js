@@ -20,11 +20,15 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { deleteDownload, updateDownload } from '../../../redux/actions/downloadAction'
-import { Icon, Popconfirm } from 'antd';
-import ProgressICON from './ProgressICON';
+import { Progress, Icon, Popconfirm } from 'antd';
+import { join } from 'path'
+import ToggleICON from './ToggleICON';
 import BTIpcRenderer from '@/tools/BTIpcRenderer'
 import {FormattedMessage} from 'react-intl'
+import Base from 'webuploader/base'
+
 import messages from '@/locales/messages'
+const { ipcRenderer } = window.electron
 
 const FileMessages = messages.File;
 
@@ -32,51 +36,114 @@ function cancel(e) {
   // console.log('cancel', e);
 }
 
+var fileSizeCache = {}
+
+function calcTotal(urlList, guid) {
+  let cacheSize = fileSizeCache[guid]
+  if (cacheSize != undefined) {
+    return cacheSize;
+  }
+  let all = true;
+  let total = urlList.map(el => el.totalBytes).reduce(function (accumulator, currentValue, currentIndex) {
+    if (currentValue == undefined) {
+      currentValue = urlList[0].totalBytes
+      all = false
+    }
+    return accumulator + currentValue
+  })
+  if (all) {
+    fileSizeCache[guid] = total
+  }
+  return total;
+}
+
 class DownloadItem extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      percent: 0,
+    };
+  }
 
   handleClose = (e) => {
     const { item, deleteDownload } = this.props
     const { status, filePath } = item
     console.log('status', status);
-    if (status == 'downloading') {
-      return ;
-    }
     deleteDownload(filePath)
     BTIpcRenderer.deleteDownLoadCache(item)
   }
 
   componentDidMount() {
+    const { item } = this.props
+    const { status, filePath, urlList, dirname, guid } = item
 
-    const { item, updateDownload } = this.props
-    const { status, filePath } = item
+    if (status == 'cached') {
+      let received = 0
+      for (let sliceInfo of urlList) {
+        if (sliceInfo.status == 'done') {
+          if (!window.existsSync(join(dirname, sliceInfo.sguid))) {
+            console.log('分片不存在了');
+          }
+          received += sliceInfo.receivedBytes
+        }
+      }
+      let total = calcTotal(urlList, guid)
+      let percent = Number.parseInt(received / total * 100)
+      this.setState({ percent })
 
-    if (status == 'done' && !window.existsSync(filePath)) {
-      console.log('不存在啊');
-      updateDownload({
-        ...item,
-        status: 'inexistence',
-      })
     }
 
+    this.channel = 'file_download:' + filePath
+
+    ipcRenderer.on(this.channel, (event, message) => {
+      // console.log('message', message);
+      let urlList = message.urlList
+      // console.log('urlList', urlList);
+      let chunks = urlList.length
+      let received = 0
+      for (var i = 0; i < urlList.length; i++) {
+        received += urlList[i].receivedBytes
+      }
+      total = calcTotal(urlList, guid)
+      // console.log('received', received);
+      // console.log('total', total);
+      let percent = Number.parseInt(received / total * 100)
+      this.setState({ percent })
+    })
+
+  }
+
+  componentWillUnmount() {
+    ipcRenderer.removeAllListeners(this.channel)
   }
 
   render() {
     const item = this.props.item
-    const { filePath, status, basename } = item
+    const { filePath, status, basename, guid } = item
     // const { status,  }
     // console.log('filePath', filePath);
     let pathArr = filePath.split('\\')
     let name = basename || pathArr.pop()
+
+    let total = fileSizeCache[guid] ? Base.formatSize(fileSizeCache[guid]) : '--'
     // console.log('name', name);
     // let name = basename(filePath) ? basename(filePath) : filePath
     return (
       <div className='download-list-item'>
-        <span className={status}>
-          {name}
+
+        <span className='download-item-icon'>
+          <img src='./img/unkown.svg' />
         </span>
 
-        <span className='download-list-item-status'>
-          <ProgressICON {...item} />
+        <div className='download-item-info-container'>
+          <span className={status}>
+            {name}
+          </span>
+          <div> {total} </div>
+        </div>
+
+        <span className='download-list-toggle-icon'>
+          <ToggleICON {...item} />
         </span>
 
         <Popconfirm placement="bottomRight"
@@ -85,10 +152,13 @@ class DownloadItem extends PureComponent {
           okText={<FormattedMessage {...messages.OK} />}
           cancelText={<FormattedMessage {...messages.Cancel} />}
           >
-          <span className='download-list-item-close'>
-            <Icon type="close" />
+          <span className='download-item-delete'>
+            删除任务
           </span>
         </Popconfirm>
+
+        <Progress showInfo={false} percent={this.state.percent} />
+
       </div>
     );
   }
