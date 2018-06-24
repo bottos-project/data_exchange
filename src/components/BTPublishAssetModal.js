@@ -204,6 +204,14 @@ class BTPublishAssetModal extends PureComponent{
       let expire_time_string = this.state.dateString + ' ' + (this.state.timeValue ? this.state.timeValue : '')
       let expire_time = new Date(expire_time_string).getTime() / 1000
 
+      // console.log('expire_time', expire_time);
+      // 用来确保 expire_time 是一个有效的时间戳
+      if (expire_time == 0 || Number.isNaN(expire_time)) {
+        console.warn('Invalid expire_time', expire_time);
+        expire_time = (new Date().getTime() / 1000).toFixed()
+        expire_time == Number(expire_time) + 7 * 24 * 3600
+      }
+
       let did = {
         "asset_id": window.uuid(),
         "basic_info": {
@@ -246,6 +254,7 @@ class BTPublishAssetModal extends PureComponent{
     }
 
     dataPicker = (date, dateString) => {
+      console.log('dateString', dateString);
       this.setState({ dateString })
     }
 
