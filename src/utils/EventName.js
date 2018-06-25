@@ -23,6 +23,7 @@ const ipcEventName = {
     import_file:'import-file',
     import_file_reply:'import-file-reply',
     key_store_list:'key-store-list',
+    user_list:'user-list',
     export_key_store:'export_key_store',
     mkdir:'mkdir',
     file_download:'file_download',

@@ -3,7 +3,9 @@ import BTPack from './msgpack'
 import BTCrypto from 'bottos-crypto-js'
 import { getSignaturedFetchParam } from './BTCommonApi'
 import BTFetch from './BTFetch'
-
+const querystring = require('querystring');
+const config = require('./config');
+console.log('config', config);
 // console.log('BTPack', BTPack);
 // console.log('BTCrypto', BTCrypto);
 
@@ -37,23 +39,37 @@ function isBasicType(type) {
   return basicType.includes(type)
 }
 
-
-fetch('http://139.217.202.68:8080/rpc/QueryAbi', {
-  method: 'POST',
-  body: JSON.stringify({contract: 'assetmng'}),
-  contentType: 'application/json'
-}).then(res => {
-  console.log('QueryAbi res', res);
-})
 /**
  * get .abi file content
  * @param  {String} contract contract
  * @return {Promise} Promise
  */
 function getABI(contract) {
-
+  let param = {
+    service: 'bottos',
+    method: 'CoreApi.QueryAbi',
+    request: JSON.stringify({contract})
+  }
+  return fetch(config.service.base_url + 'rpc?' + querystring.stringify(param), {
+    method: 'POST',
+    headers: {
+      contentType: 'application/x-www-form-urlencoded'
+    }
+  }).then(res => res.json()).then(res => {
+    console.log('QueryAbi res', res);
+    if (res.errcode == 0) {
+      let abi = JSON.parse(res.result)
+      console.log('result', abi);
+      return abi;
+    } else {
+      console.error('error msg', res.msg);
+      return null
+    }
+  })
   return fetch(`/bottosabi/${contract}.abi`).then(res => res.json())
 }
+
+getABI('nodeclustermng')
 
 function findFieldsFromStructsByName(structs, name) {
   return structs.find(strc => strc.name == name).fields
@@ -103,6 +119,9 @@ function parseFields(fields, did, structs) {
 export function packDID(did, contract, method) {
   // console.log('did, contract, method', did, contract, method);
   return getABI(contract).then(res => {
+    if (res == null) {
+      return ;
+    }
     // console.log('res', res);
     const { actions, structs } = res
     // console.log('actions', actions);

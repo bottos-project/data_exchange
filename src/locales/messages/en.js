@@ -70,6 +70,7 @@ module.exports = {
     "Header.SuccessToLogOut":"Success To Log Out",
     "Header.FailedLogOut":"Failed Log Out",
     "Header.FailedQuery":"Failed Query",
+    "Header.PleaseSelectTheAccount":"Please Select The Account",
     "Header.PleaseEnterTheUserName":"Please Enter The User Name",
     "Header.PleaseEnterThePassword":"Please Enter The Password",
     "Header.PleaseEnterTheKeystore":"Please Enter the Keystore Content",

@@ -28,6 +28,7 @@ module.exports = {
     "Header.SuccessToLogOut":"退出登录成功",
     "Header.FailedLogOut":"退出登陆失败",
     "Header.FailedQuery":"查询失败",
+    "Header.PleaseSelectTheAccount":"请选择账户",
     "Header.PleaseEnterTheUserName":"请输入账户",
     "Header.PleaseEnterThePassword":"请输入密码",
     "Header.PleaseEnterTheKeystore":"请输入Keystore文本",
