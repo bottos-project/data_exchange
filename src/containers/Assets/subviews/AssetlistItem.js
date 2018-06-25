@@ -24,6 +24,7 @@ import BTTags from '../../AssetAndRequirement/BTTags'
 import {getAccount} from "../../../tools/localStore";
 import { typeValueKeyMap } from '../../../utils/keyMaps'
 import TokenPNG from '@/components/TokenPNG'
+import { getDateAndTime } from '@/utils/dateTimeFormat'
 
 import messages from '../../../locales/messages'
 const AssetMessages = messages.Asset;
@@ -79,6 +80,10 @@ class AssetlistItem extends Component {
                   <FormattedMessage {...AssetMessages.ExpectedPrice}/>
                   <span>{data.price/Math.pow(10, 8)}</span>
                   <TokenPNG />
+                </div>
+                <div>
+                  <FormattedMessage {...AssetMessages.ExpireTime}/>
+                  <span>{getDateAndTime(data.expire_time)}</span>
                 </div>
                 <BTTags tags={tagsArr} />
             </div>

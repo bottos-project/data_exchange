@@ -7,6 +7,8 @@ import {getAccount} from "@/tools/localStore";
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import TokenPNG from '@/components/TokenPNG'
 import BTTable from '@/components/BTTable'
+import myEmitter from '../../../../utils/eventEmitter'
+
 
 const WalletMessages = messages.Wallet;
 
@@ -63,14 +65,24 @@ const columns = [
 
 class BTTransactionHistory extends Component {
 
-  componentDidMount() {
+  changeTableData = () => {
+    this.table.onChange(1, 12)
+  }
 
+  componentWillUnmount() {
+    myEmitter.removeListener('transfer', this.changeTableData)
+  }
+
+  componentDidMount() {
+    // console.log('this.table', this.table);
+    myEmitter.on('transfer', this.changeTableData)
   }
 
   render() {
     return (
       <div style={{marginTop: 20}}>
         <BTTable
+          ref={t => this.table = t}
           columns={columns}
           rowKey='transaction_id'
           url='/user/GetTransfer'

@@ -104,7 +104,7 @@ class DownloadItem extends PureComponent {
       for (var i = 0; i < urlList.length; i++) {
         received += urlList[i].receivedBytes
       }
-      total = calcTotal(urlList, guid)
+      let total = calcTotal(urlList, guid)
       // console.log('received', received);
       // console.log('total', total);
       let percent = Number.parseInt(received / total * 100)
@@ -153,7 +153,7 @@ class DownloadItem extends PureComponent {
           cancelText={<FormattedMessage {...messages.Cancel} />}
           >
           <span className='download-item-delete'>
-            删除任务
+            <FormattedMessage {...FileMessages.DeleteTask} />
           </span>
         </Popconfirm>
 

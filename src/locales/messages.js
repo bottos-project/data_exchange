@@ -545,6 +545,18 @@ module.exports = {
             id:"File.UploadSuccess",
             defaultMessage:"上传成功"
         },
+        DeleteTask:{
+            id:"File.DeleteTask",
+            defaultMessage:"删除任务"
+        },
+        Downloading:{
+            id:"File.Downloading",
+            defaultMessage:"下载中"
+        },
+        Complete:{
+            id:"File.Complete",
+            defaultMessage:"已完成"
+        },
         SureToDelete:{
             id:"File.SureToDelete",
             defaultMessage:"确定要删除这个任务吗？"

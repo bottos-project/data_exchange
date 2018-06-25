@@ -30,6 +30,7 @@ import BTNumberInput from '../../../../components/BTNumberInput'
 import ConfirmButton from '@/components/ConfirmButton'
 import { getWorker } from '@/workerManage'
 import {transactionPack} from '../../../../lib/msgpack/BTPackManager'
+import myEmitter from '../../../../utils/eventEmitter'
 
 import { SIGPOLL } from 'constants';
 import * as BTCrypto from 'bottos-crypto-js'
@@ -124,6 +125,10 @@ class Transaction extends PureComponent{
               if (res.code == 1) {
                   message.success(window.localeInfo["Wallet.SuccessfulToTransferAccounts"])
                   this.props.balanceReduce(quantity)
+                  setTimeout(() => {
+                    // 在一秒之后触发 transfer 事件
+                    myEmitter.emit('transfer', res);
+                  }, 1000);
                   resetFields()
               } else if (res.code == 10102) {
                   message.error(window.localeInfo["Wallet.TheTargetAccountIsInexistence"])

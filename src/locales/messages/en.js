@@ -403,6 +403,9 @@ module.exports = {
 
     "File.FileExisted":"This File has existed",
     "File.UploadFail":"Upload Fail",
+    "File.DeleteTask":"Delete The Task",
+    "File.Downloading":"Downloading",
+    "File.Complete":"Complete",
     "File.SureToDelete":"Are you sure delete this task?",
 
 }

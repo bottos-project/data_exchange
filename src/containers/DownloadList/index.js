@@ -23,9 +23,14 @@ import { updateDownload, toggleVisible } from '../../redux/actions/downloadActio
 import { Collapse, List } from 'antd';
 import DownloadItem from './subviews/DownloadItem'
 import HasDownloaded from './subviews/HasDownloaded'
+import {FormattedMessage} from 'react-intl'
 const { ipcRenderer } = window.electron
 
 import './style.less'
+
+import messages from '@/locales/messages'
+
+const FileMessages = messages.File;
 
 const Panel = Collapse.Panel;
 
@@ -82,7 +87,7 @@ class DownloadList extends Component {
     return (
       <div className={className}>
         <Collapse className='column' accordion defaultActiveKey='1'>
-          <Panel className='download-list-collapse-panel' header="This is Download List" key="1">
+          <Panel className='download-list-collapse-panel' header={<FormattedMessage {...FileMessages.Downloading} />} key="1">
             <List
               dataSource={isDownloading}
               renderItem={item => (
@@ -92,7 +97,7 @@ class DownloadList extends Component {
               )}
             />
           </Panel>
-          <Panel className='download-list-collapse-panel' header="This is Download List" key="2">
+          <Panel className='download-list-collapse-panel' header={<FormattedMessage {...FileMessages.Complete} />} key="2">
             <List
               dataSource={hasDownloaded}
               renderItem={item => (

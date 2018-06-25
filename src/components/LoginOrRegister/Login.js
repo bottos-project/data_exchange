@@ -118,6 +118,7 @@ class Login extends PureComponent{
                 this.props.requestVerificationCode()
                 message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
               } else if (response.code==1000 && typeof response.details == 'string') {
+                this.props.requestVerificationCode()
                 try {
                   let details = JSON.parse(response.details)
                   if (details.errcode == 10204) {
@@ -129,6 +130,7 @@ class Login extends PureComponent{
                   message.error(window.localeInfo["Header.LoginFailure"]);
                 }
               } else {
+                this.props.requestVerificationCode()
                 message.error(window.localeInfo["Header.LoginFailure"]);
               }
             }

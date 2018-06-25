@@ -32,7 +32,7 @@ import { checkCacheFile } from './uploader/continue'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import BTTable from '@/components/BTTable'
 import { getCacheFileState } from '@/utils/uploadingFileCache'
-
+import myEmitter from '../../../utils/eventEmitter'
 import ProgressList from './subviews/ProgressList'
 import './style.less'
 
@@ -105,6 +105,10 @@ class BTMyAssetSet extends Component{
       uploader.addFile(file)
     }
 
+    changeTableData = () => {
+      this.table.onChange(1, 12)
+    }
+
     componentDidMount() {
       let filesGuidArr = getCacheFileState()
       console.log('filesGuidArr', filesGuidArr);
@@ -120,11 +124,18 @@ class BTMyAssetSet extends Component{
         cachedFile.status = 'inited'
         // cachedFile.id = cachedFile.guid
         delete cachedFile.id
-        // console.log('cachedFile', cachedFile);
+        console.log('cachedFile', cachedFile);
         checkCacheFile(cachedFile)
         // cachedFile.name =
         // this.props.addFile({})
       }
+
+      console.log('this.table', this.table);
+      myEmitter.on('registerFile', this.changeTableData)
+    }
+
+    componentWillUnmount() {
+      myEmitter.removeListener('registerFile', this.changeTableData)
     }
 
     render(){
@@ -147,6 +158,7 @@ class BTMyAssetSet extends Component{
                 </Dragger>
                 <ProgressList />
                 <BTTable
+                  ref={t => this.table = t}
                   columns={columns}
                   rowKey='file_hash'
                   url='/asset/queryUploadedData'

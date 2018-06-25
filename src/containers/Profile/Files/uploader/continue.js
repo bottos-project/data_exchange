@@ -26,6 +26,7 @@ export function checkCacheFile(cachedFile) {
           )
           console.log('cachedFile progressing_slice_chunk', cachedFile.progressing_slice_chunk);
           // store.dispatch(addFile(cachedFile))
+
           let wfile = window.wrapFile(cachedFile)
           wfile.cache = true
           wfile.guid = cachedFile.guid
@@ -42,7 +43,11 @@ export function checkCacheFile(cachedFile) {
   }
 
   const username = getAccount().username
-  const { guid, hashList } = cachedFile
+  const { guid, hashList, path } = cachedFile
+
+  if (!window.existsSync(path)) {
+    return deleteFileCache(guid)
+  }
 
   let slice = []
   for (var i = 0; i < hashList.length; i++) {

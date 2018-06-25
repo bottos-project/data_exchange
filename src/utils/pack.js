@@ -2,6 +2,8 @@
 import BTPack from './msgpack'
 import BTCrypto from 'bottos-crypto-js'
 import { getSignaturedFetchParam } from './BTCommonApi'
+import BTFetch from './BTFetch'
+
 // console.log('BTPack', BTPack);
 // console.log('BTCrypto', BTCrypto);
 
@@ -35,12 +37,21 @@ function isBasicType(type) {
   return basicType.includes(type)
 }
 
+
+fetch('http://139.217.202.68:8080/rpc/QueryAbi', {
+  method: 'POST',
+  body: JSON.stringify({contract: 'assetmng'}),
+  contentType: 'application/json'
+}).then(res => {
+  console.log('QueryAbi res', res);
+})
 /**
  * get .abi file content
  * @param  {String} contract contract
  * @return {Promise} Promise
  */
 function getABI(contract) {
+
   return fetch(`/bottosabi/${contract}.abi`).then(res => res.json())
 }
 
