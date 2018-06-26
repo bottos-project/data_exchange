@@ -8,6 +8,8 @@ const { TextArea } = Input;
 const LoginMessages = messages.Login;
 const HeaderMessages = messages.Header;
 
+const electron = window.electron
+const clipboard = electron.clipboard
 
 const rowStyle = {
   maxWidth: 560,
@@ -19,18 +21,14 @@ class KeyStoreLogin extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        username: '',
-        keyStore: null,
+      username: '',
     }
-
   }
 
-  parseKeystore = ()=>{
+  pasteKeystore = ()=>{
     let keyStore = clipboard.readText()
-    console.log({keyStore})
-    this.setState({
-      keyStore:keyStore
-    })
+    // console.log('keyStore', keyStore)
+    this.props.changeKeyStore(keyStore)
   }
 
   importKeyStore = () => {
@@ -75,7 +73,7 @@ class KeyStoreLogin extends Component {
           {/* <Col span={5} style={{height: '100%'}}></Col> */}
           <Col span={18} offset={5}>
             <Row type='flex' justify='space-around'>
-              <Button type='primary' onClick={this.parseKeystore}>
+              <Button type='primary' onClick={this.pasteKeystore}>
                 <FormattedMessage {...LoginMessages.PasteTheKeyStore}/>
               </Button>
 

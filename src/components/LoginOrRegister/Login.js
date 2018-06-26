@@ -37,41 +37,53 @@ import KeyStoreLogin from './KeyStoreLogin'
 const LoginMessages = messages.Login;
 const HeaderMessages = messages.Header;
 const { TextArea } = Input;
-const electron = window.electron
-const clipboard = electron.clipboard
 const Option = Select.Option;
 
 class Login extends PureComponent{
     constructor(props){
         super(props)
-        let list = BTIPcRenderer.getUserList()
-        console.log('list', list);
-        const accountList = list.map(ele => console.log(ele))
-
         this.state = {
             username: '',
             password: '',
             keyStore: null,
             verify_code:'',
             mode: 'username', // username or keystore
-            accountList
+            accountList: BTIPcRenderer.getUserList()
         }
 
         this.onHandleUnlock = this.onHandleUnlock.bind(this)
     }
 
+    getKeyStoreObj() {
+      if (this.state.mode == 'username') {
+        if(this.state.username==''){
+          message.error(window.localeInfo["Header.PleaseSelectTheAccount"]);
+          return
+        }
+        let account = this.state.username
+        let result = BTIPcRenderer.getKeyStore({username:account,account_name:account})
+        console.log('result', result);
+        if (result.error) {
+          console.error(result.error);
+          return ;
+        } else {
+          return result.keyStoreObj
+        }
+      } else {
+        return JSON.parse(this.state.keyStore);
+      }
+
+    }
+
     async onHandleUnlock(){
         message.destroy()
-        // if(this.state.username==''){
-        //     message.error(window.localeInfo["Header.PleaseEnterTheUserName"]);
-        //     return
-        // }
+
 
         if(this.state.password == ''){
             message.error(window.localeInfo["Header.PleaseEnterThePassword"]);
             return
         }
-        let keyStoreObj = JSON.parse(this.state.keyStore)
+        let keyStoreObj = this.getKeyStoreObj()
         let username = keyStoreObj.account;
         let password = this.state.password;
         // let blockInfo = await this.getBlockInfo();
@@ -119,7 +131,7 @@ class Login extends PureComponent{
                 window.message.success(window.localeInfo["Header.LoginSucceed"])
                 let accountInfo = {username,privateKey}
                 this.props.setAccountInfo(accountInfo)
-                this.saveKeyStore()
+                this.saveKeyStore(keyStoreObj)
                 hashHistory.push('/profile/asset')
               } else if (response.code==1001) {
                 this.props.requestVerificationCode()
@@ -145,6 +157,7 @@ class Login extends PureComponent{
           }).catch(error=>{
             this.props.setSpin(false)
             message.error(window.localeInfo["Header.LoginFailure"]);
+            console.error(error);
           })
 
         }
@@ -190,12 +203,9 @@ class Login extends PureComponent{
     }
 
     // keyStore文件保存
-    saveKeyStore() {
-      let keyStore = this.state.keyStore
-      let account = keyStore.account;
-      // return;
-      console.log("saveKeyStore____________")
-      BTIPcRenderer.saveKeyStore({username:account,account_name:account},keyStore)
+    saveKeyStore(keyStoreObj) {
+      let account = keyStoreObj.account;
+      BTIPcRenderer.saveKeyStore({username:account,account_name:account},keyStoreObj)
     }
 
     changeMode = (mode) => {
@@ -216,10 +226,11 @@ class Login extends PureComponent{
         marginTop: 20,
       }
 
+      // console.log('this.state.accountList', this.state.accountList);
       let list = this.state.accountList.map(acc => {
         return <Option key={acc}>{acc}</Option>
       })
-      list.push(<Option key={1}>adfadfadfadf</Option>)
+      // list.push(<Option key={1}>adfadfadfadf</Option>)
 
       return (
         <div className="container column login-container">

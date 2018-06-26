@@ -24,7 +24,10 @@ import BTHeader from '../components/BTHeader'
 import BTMenu from '../components/BTMenu'
 import DownloadList from './DownloadList'
 
-import { packDID } from '../utils/pack'
+// import { packDID } from '../utils/pack'
+const Pack = require('../utils/pack');
+import {getAccount} from '../tools/localStore'
+
 import { registAssetPack } from '../lib/msgpack/BTPackManager'
 // import BTPersonalMenu from '../components/BTPersonalMenu'
 import './styles.less'
@@ -52,24 +55,37 @@ function itemRender(route, params, routes, paths) {
 
 class App extends PureComponent {
   componentDidMount() {
-    // let did = {
-    //   "asset_id": 'window.uuid()',
-    //   "info": {
-    //     "user_name": 'usr',
-    //     "asset_name": 'this.state.title',
-    //     "asset_type": 12,
-    //     "feature_tag": 'featureTag-1-2',
-    //     "sample_hash": 'this.state.sample_hash',
-    //     "storage_hash": 'this.state.storage_hash',
-    //     "expire_time": new Date().getTime() / 1000,
-    //     "op_type": 1,
-    //     "price": 23 * Math.pow(10, 8),
-    //     "description": 'this.state.description'
-    //   }
-    // }
-    //
-    // let contract = 'assetmng',
-    // method = 'assetreg';
+    let did = {
+      "asset_id": 'window.uuid()',
+      "info": {
+        "user_name": 'usr',
+        "asset_name": 'this.state.title',
+        "asset_type": 12,
+        "feature_tag": 'featureTag-1-2',
+        "sample_hash": 'this.state.sample_hash',
+        "storage_hash": 'this.state.storage_hash',
+        "expire_time": new Date().getTime() / 1000,
+        "op_type": 1,
+        "price": 23 * Math.pow(10, 8),
+        "description": 'this.state.description'
+      }
+    }
+
+    // console.log('getAccount', getAccount);
+
+    let contract = 'assetmng',
+    method = 'assetreg';
+    // let username = getAccount().username;
+
+    // console.log('username', username);
+    // var pack = new Pack({contract, method, username, did, blockInfo, privateKey})
+
+    // pack.process()
+    // .then(packedParam => {
+    //   this.fetchParam.
+    // })
+    // .catch(err => console.error(err))
+
     // let promise = packDID(did, contract, method)
     // console.log('promise', promise);
     // let beforePack = registAssetPack(did)

@@ -28,7 +28,7 @@ const accountDir = path.join(appPath, 'account')
 ipcMain.on(ipcEventName.get_key_store,(event,accountInfo)=>{
     let userName = accountInfo.username;
     let accountName = accountInfo.account_name;
-    let keyStorePath = path.join(accountDir,userName+'/'+accountName+'.keystore');
+    let keyStorePath = path.join(accountDir,userName,accountName+'.keystore');
     fs.readFile(keyStorePath,'utf8',(error,result)=>{
         if(error){
             event.returnValue = {
@@ -107,7 +107,12 @@ ipcMain.on(ipcEventName.save_key_store,(event,accountInfo,params)=>{
     let userName = accountInfo.username;
     let accountName = accountInfo.account_name;
 
+    console.log('accountInfo', accountInfo);
+    console.log('accountDir', accountDir);
+    console.log('userName', userName);
+
     let dirPath = path.join(accountDir,userName);
+    console.log('dirPath', dirPath);
     let isDirExists = fs.existsSync(dirPath)
     if(!isDirExists){
         fs.mkdirSync(dirPath)

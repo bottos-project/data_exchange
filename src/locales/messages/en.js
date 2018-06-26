@@ -381,7 +381,7 @@ module.exports = {
     "Wallet.FailedToModifyThePassword":"Failed to Change the Password",
     "Wallet.PleaseEnterThePasswordOfKeystore":"Please Enter the Password of Keystore",
     "Wallet.PleaseLogInFirst":"Please Login First",
-    "Wallet.TheWrongPassword":"Failed to Modify the Password",
+    "Wallet.TheWrongPassword":"Wrong Password",
     "Wallet.PleaseInputNumber":"Please Input Number",
     "Wallet.NumberIsTooBig":"Number Is Too Big",
     "Wallet.ImportSuccess":"Import Success",
