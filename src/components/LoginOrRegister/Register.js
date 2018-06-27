@@ -60,9 +60,11 @@ function BTRegistSuccess({username, keystoreObj}) {
         <FormattedMessage {...HeaderMessages.YourAccountHasBeenRegisteredSuccessfully}/>
       </p>
 
-      <div style={{margin: '0 5%'}}>
+      <div style={{margin: '15px 5%'}}>
         <TextArea rows={8} readOnly defaultValue={cryptStr} />
       </div>
+
+      <p><FormattedMessage {...LoginMessages.AutoBackup} /></p>
 
       <Row type='flex' justify='space-around' style={{marginTop: 20}}>
         <Button type='primary' onClick={copyToClipboard}>

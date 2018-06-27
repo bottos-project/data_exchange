@@ -78,14 +78,14 @@ class LoginOrRegister extends Component {
           <Tabs
             defaultActiveKey="Login"
             activeKey={this.state.activeKey}
-            >
-              <TabPane tab={<FormattedMessage {...HeaderMessages.Login} />} key="Login">
-                <Login {...verifyParams} />
-              </TabPane>
-              <TabPane tab={<FormattedMessage {...HeaderMessages.Register} />} key="Register">
-                <Register {...verifyParams} />
-              </TabPane>
-            </Tabs>
+          >
+            <TabPane tab={<FormattedMessage {...HeaderMessages.Login} />} key="Login">
+              {this.state.activeKey == 'Login' && <Login {...verifyParams} />}
+            </TabPane>
+            <TabPane tab={<FormattedMessage {...HeaderMessages.Register} />} key="Register">
+              {this.state.activeKey == 'Register' && <Register {...verifyParams} />}
+            </TabPane>
+          </Tabs>
         </div>
       </div>
     );

@@ -280,6 +280,10 @@ module.exports = {
         Keystore:{
             id:"Login.Keystore",
             defaultMessage:"Keystore"
+        },
+        AutoBackup:{
+            id:"Login.AutoBackup",
+            defaultMessage:"已自动保存 Keystore，您可以再次手动备份"
         }
     },
     Demand:{

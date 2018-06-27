@@ -252,7 +252,7 @@ class Login extends PureComponent{
                 <span className='label'><FormattedMessage {...LoginMessages.Account} /></span>
               </Col>
               <Col span={12}>
-                <Select onChange={this.changeAccount} style={{width: '100%'}} placeholder={window.localeInfo["Header.PleaseSelectTheAccount"]}>
+                <Select defaultValue={this.state.accountList[0]} onChange={this.changeAccount} style={{width: '100%'}} placeholder={window.localeInfo["Header.PleaseSelectTheAccount"]}>
                   {list}
                 </Select>
                 {/* <Input placeholder={window.localeInfo["Header.PleaseSelectTheAccount"]} className="marginRight" onChange={(e)=>{}}/> */}

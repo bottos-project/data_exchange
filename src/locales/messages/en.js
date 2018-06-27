@@ -106,6 +106,7 @@ module.exports = {
     "Login.VerifyCode":"Verification",
     "Login.UseNewAccount":"Use new Accout",
     "Login.Keystore":"Keystore",
+    "Login.AutoBackup":"Has saved the Keystore for you, and you can backup the Keystore",
 
     //dashboard
     "Dashboard.Dashboard":"Dashboard",
