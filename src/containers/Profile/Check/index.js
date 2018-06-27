@@ -56,7 +56,7 @@ const columns = [
     render:(item) => <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
   },
   { title: <FormattedMessage {...CheckMessages.Consumer}/>, dataIndex: 'consumer' },
-  { title: <FormattedMessage {...CheckMessages.DataPresaleId}/>, dataIndex: 'data_req_name',
+  { title: <FormattedMessage {...CheckMessages.DataPromoteId}/>, dataIndex: 'data_req_name',
     render:(item) => <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
   },
   { title: <FormattedMessage {...CheckMessages.DataTime}/>, dataIndex: 'time',

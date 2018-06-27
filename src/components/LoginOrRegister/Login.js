@@ -258,7 +258,9 @@ class Login extends PureComponent{
                 {/* <Input placeholder={window.localeInfo["Header.PleaseSelectTheAccount"]} className="marginRight" onChange={(e)=>{}}/> */}
               </Col>
               <Col offset={1} span={5}>
-                <Button onClick={this.changeMode.bind(this, 'keystore')}>导入新账户</Button>
+                <Button onClick={this.changeMode.bind(this, 'keystore')}>
+                  <FormattedMessage {...LoginMessages.UseNewAccount} />
+                </Button>
               </Col>
             </Row>
 

@@ -158,12 +158,10 @@ class BTHeader extends PureComponent{
                     </Link>
 
                   }
-
-                  <Link to='/profile/wallet' onClick={this.checkAccount}>
+                  {/* <Link to='/profile/wallet' onClick={this.checkAccount}>
                     <img src='./img/wallet.svg' />
                     <div><FormattedMessage {...MenuMessages.Wallet} /></div>
-                  </Link>
-
+                  </Link> */}
                   <Link to='/profile/check' onClick={this.checkAccount}>
                     <Badge count={0}>
                       <img src='./img/check.svg' />

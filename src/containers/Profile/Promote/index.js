@@ -29,7 +29,7 @@ import BTTable from '@/components/BTTable'
 import messages from '@/locales/messages'
 import {FormattedMessage} from 'react-intl'
 const CheckMessages = messages.Check;
-const PresaleMessages = messages.Presale;
+const PromoteMessages = messages.Promote;
 
 function checkTheAsset(req_id) {
   BTFetch("/requirement/QueryById", "post", { req_id, sender: getAccount().username })
@@ -51,11 +51,11 @@ function checkTheAsset(req_id) {
 
 const columns = [
   {
-    title: <FormattedMessage {...CheckMessages.DataPresaleId}/>,
+    title: <FormattedMessage {...CheckMessages.DataPromoteId}/>,
     dataIndex: 'data_req_name',
     render:(item)=> <span>{item}</span>
   },
-  { title: <FormattedMessage {...PresaleMessages.Consumer}/>, dataIndex: 'consumer' },
+  { title: <FormattedMessage {...PromoteMessages.Consumer}/>, dataIndex: 'consumer' },
   { title: <FormattedMessage {...CheckMessages.AssetID}/>, dataIndex: 'asset_name',
     render:(item)=> <span>{item}</span>
   },
@@ -70,15 +70,15 @@ const columns = [
   }
 ]
 
-function PreSale(props) {
+function Promote(props) {
   return <BTTable
     columns={columns}
     rowKey='notice_id'
-    url='/asset/queryMyPreSale'
+    url='/asset/queryMyPromote'
     options={getSignaturedParam(getAccount())}
     catchError={(err) => message.error(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])}
     {...props}
   />
 }
 
-export default PreSale;
+export default Promote;

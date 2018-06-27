@@ -106,7 +106,7 @@ export default class BTRequirementItemDetail extends PureComponent{
     let fileInfo = requirementInfo.exampledata.find(ele => ele.asset_id == asset_id)
 
     let originParam = {
-      "dataPresaleId": window.uuid(),
+      "dataPromoteId": window.uuid(),
       "info": {
         "userName": username,
         "assetId": asset_id,
@@ -117,7 +117,7 @@ export default class BTRequirementItemDetail extends PureComponent{
     }
 
     let b1 = PackArraySize(2)
-    let b2 = PackStr16(originParam.dataPresaleId)
+    let b2 = PackStr16(originParam.dataPromoteId)
 
     let b3 = PackArraySize(5)
 
@@ -222,7 +222,7 @@ export default class BTRequirementItemDetail extends PureComponent{
                       {
                         data.is_presale ?
                         <Button disabled>
-                          <FormattedMessage {...DemandMessages.HavePresale}/>
+                          <FormattedMessage {...DemandMessages.HavePromote}/>
                         </Button>
                         :
                         <Button type="primary" onClick={()=>this.commitAsset()}>

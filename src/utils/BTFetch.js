@@ -36,7 +36,10 @@ export default (url,method,params,options={
     if(pkg.MOCK){
         reqUrl = mock.base_url+url
     }else{
-        reqUrl = service.base_url + service.version+url
+        reqUrl = service.base_url + service.version + url
+        if (window.useCustomURL === true && window.serviceURL != undefined) {
+          reqUrl = window.serviceURL + url
+        }
     }
 
     // 设置token

@@ -50,6 +50,9 @@ export function cacheFileState(file) {
     if (filesGuidArr.findIndex(file => file.guid == guid) > -1) {
       return ;
     }
+    if (!guid) {
+      return ;
+    }
     const fileInfo = fileCacheKeysFilter(file)
     // console.log('fileInfo', fileInfo);
     addFileCache(fileInfo)

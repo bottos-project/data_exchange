@@ -126,3 +126,4 @@ app.on('activate', () => {
 const BTIpcMain = require('./src/sys_modules/BTIpcMain')
 
 // downloadMultiple()
+// electron-packager . walletTest --platform=win32 --arch=x64 --prune=true --ignore=[/dist/, /src/, /devtools/, /config/]

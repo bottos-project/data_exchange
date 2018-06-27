@@ -5,7 +5,7 @@ const BTCryptTool = require('bottos-crypto-js')
 const BTFetch = require('./BTFetch');
 const querystring = require('querystring');
 const config = require('./config');
-console.log('config', config);
+// console.log('config', config);
 // console.log('BTPack', BTPack);
 // console.log('BTCryptTool', BTCryptTool);
 
@@ -58,6 +58,9 @@ function getABI(contract) {
   }).then(res => res.json()).then(res => {
     // console.log('QueryAbi res', res);
     if (res.errcode == 0) {
+      if (res.result == '') {
+        throw new Error('没有内容')
+      }
       let abi = JSON.parse(res.result)
       console.log('result', abi);
       return abi;

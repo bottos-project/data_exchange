@@ -111,7 +111,7 @@ class BTMyAssetSet extends Component{
 
     componentDidMount() {
       let filesGuidArr = getCacheFileState()
-      console.log('filesGuidArr', filesGuidArr);
+      // console.log('filesGuidArr', filesGuidArr);
       // 如果有以前没有传完的记录
       // 则遍历这个记录的数组，然后向后端发起请求
       // console.log('this.props.fileList', this.props.fileList);
@@ -130,7 +130,7 @@ class BTMyAssetSet extends Component{
         // this.props.addFile({})
       }
 
-      console.log('this.table', this.table);
+      // console.log('this.table', this.table);
       myEmitter.on('registerFile', this.changeTableData)
     }
 

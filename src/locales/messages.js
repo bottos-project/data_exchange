@@ -140,8 +140,8 @@ module.exports = {
             id:"Header.MyMessages",
             defaultMessage:"消息"
         },
-        PreSale:{
-            id:'Menu.PreSale',
+        Promote:{
+            id:'Menu.Promote',
             defaultMessage:'推销'
         },
         Setting:{
@@ -273,6 +273,10 @@ module.exports = {
             id:"Login.VerifyCode",
             defaultMessage:'验证码'
         },
+        UseNewAccount:{
+            id:"Login.UseNewAccount",
+            defaultMessage:'使用新账户'
+        },
         Keystore:{
             id:"Login.Keystore",
             defaultMessage:"Keystore"
@@ -323,8 +327,8 @@ module.exports = {
             id:'Demand.ProvideTheAsset',
             defaultMessage:'推销资产'
         },
-        HavePresale:{
-            id:'Demand.HavePresale',
+        HavePromote:{
+            id:'Demand.HavePromote',
             defaultMessage:'已推销'
         },
         DataDescription:{
@@ -1022,8 +1026,8 @@ module.exports = {
             id:"Check.Consumer",
             defaultMessage:"推销者"
         },
-        DataPresaleId:{
-            id:"Check.DataPresaleId",
+        DataPromoteId:{
+            id:"Check.DataPromoteId",
             defaultMessage:"需求名称"
         },
         DataTime:{
@@ -1043,9 +1047,9 @@ module.exports = {
             defaultMessage:"我的消息"
         }
     },
-    Presale:{
+    Promote:{
         Consumer:{
-            id:"Presale.Consumer",
+            id:"Promote.Consumer",
             defaultMessage:"需求者"
         },
     }
