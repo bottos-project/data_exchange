@@ -286,6 +286,16 @@ module.exports = {
             defaultMessage:"已自动保存 Keystore，您可以再次手动备份"
         }
     },
+    ReqAndAss:{
+        NoSample:{
+            id:"ReqAndAss.NoSample",
+            defaultMessage:"无样例文件",
+        },
+        DownLoadTheSample:{
+            id:'ReqAndAss.DownLoadTheSample',
+            defaultMessage:'下载样例'
+        },
+    },
     Demand:{
         Demand:{
             id:'Demand.Demand',
@@ -322,10 +332,6 @@ module.exports = {
         FailureTime:{
             id:'Demand.FailureTime',
             defaultMessage:'下架时间：'
-        },
-        DownLoadTheSample:{
-            id:'Demand.DownLoadTheSample',
-            defaultMessage:'下载样例'
         },
         ProvideTheAsset:{
             id:'Demand.ProvideTheAsset',
@@ -380,10 +386,6 @@ module.exports = {
         HaveBought:{
             id:'Asset.HaveBought',
             defaultMessage:'已购买'
-        },
-        DownLoadTheSample:{
-            id:'Asset.DownLoadTheSample',
-            defaultMessage:'下载样例'
         },
         NoSample:{
             id:'Asset.NoSample',

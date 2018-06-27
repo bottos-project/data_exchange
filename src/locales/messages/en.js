@@ -122,6 +122,10 @@ module.exports = {
     "Dashboard.IncrementalDemand":"Total Demand",
     "Dashboard.Yesterday":"Yesterday:",
 
+    // both requirement and asset have
+
+    "ReqAndAss.NoSample":"No Sample",
+    "ReqAndAss.DownLoadTheSample":"Download the Sample",
 
     //demand
     "Demand.Demand":"Market Demand",
@@ -133,7 +137,6 @@ module.exports = {
     "Demand.AssetTypePrice":"Asset Price:",
     "Demand.ExpectedPrice":"Expected Price:",
     "Demand.FailureTime":"Failure Time:",
-    "Demand.DownLoadTheSample":"Download the Sample",
     "Demand.ProvideTheAsset":"Promote the Asset",
     "Demand.HavePromote":"Have Promote",
     "Demand.DataDescription":"Data Description",
@@ -158,8 +161,6 @@ module.exports = {
     "Asset.ExpireTime":"Expire Time:",
     "Asset.BuyAssets":"Buy Assets",
     "Asset.HaveBought":"Have Bought",
-    "Asset.DownLoadTheSample":"Download the Sample",
-    "Asset.NoSample":"No Sample",
     "Asset.DataDescription":"Data Description",
     "Asset.SetScreeningSample":"Choose Sample",
     "Asset.SetScreeningFile":"Choose File",

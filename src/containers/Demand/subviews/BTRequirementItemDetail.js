@@ -31,6 +31,7 @@ import { typeValueKeyMap } from '../../../utils/keyMaps'
 import { PackArraySize, PackStr16, PackUint32 } from '@/lib/msgpack/msgpack'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 const DemandMessages = messages.Demand;
+const ReqAndAssMessages = messages.ReqAndAss;
 const { TextArea } = Input;
 
 
@@ -214,9 +215,17 @@ export default class BTRequirementItemDetail extends PureComponent{
                 </div>
                 <ul>
                    <li>
-                        <Button type="primary" onClick={this.download}>
-                            <FormattedMessage {...DemandMessages.DownLoadTheSample}/>
-                        </Button>
+                     {
+                       data.sample_hash
+                       ?
+                       <Button type="primary" onClick={this.download}>
+                         <FormattedMessage {...ReqAndAssMessages.DownLoadTheSample}/>
+                       </Button>
+                       :
+                       <Button disabled>
+                         <FormattedMessage {...ReqAndAssMessages.NoSample}/>
+                       </Button>
+                     }
                     </li>
                     <li>
                       {

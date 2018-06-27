@@ -65,27 +65,24 @@ class DownloadList extends Component {
   }
 
   render() {
-    const { downloads, visible } = this.props
-    const className = 'download-list-simple' + (visible ? ' visible' : '')
+    const { downloads, visible, toggleVisible } = this.props
+    const blackModalClassName = 'black-modal' + (visible ? ' visible' : '')
+    const containerClassName = 'download-list-simple' + (visible ? ' visible' : '')
     // const className = 'download-list-simple' + ' visible'
-
     const isDownloading = [], hasDownloaded = [];
 
     downloads.forEach(ele => {
       if (ele.status == 'done' || ele.status == 'inexistence') {
         hasDownloaded.push(ele)
-        // for (let i = 0; i < 8; i++) {
-        // }
       } else {
         isDownloading.push(ele)
-        // for (let i = 0; i < 8; i++) {
-        // }
       }
     })
 
-
     return (
-      <div className={className}>
+      <React.Fragment>
+      <div className={blackModalClassName} onClick={() => toggleVisible(false)}></div>
+      <div className={containerClassName}>
         <Collapse className='column' accordion defaultActiveKey='1'>
           <Panel className='download-list-collapse-panel' header={<FormattedMessage {...FileMessages.Downloading} />} key="1">
             <List
@@ -110,6 +107,7 @@ class DownloadList extends Component {
         </Collapse>
         <div className='download-list-out' onClick={this.listOut}>></div>
       </div>
+      </React.Fragment>
     );
   }
 

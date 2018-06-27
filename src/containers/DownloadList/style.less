@@ -110,3 +110,17 @@
   cursor: pointer;
   color: #3A9BFF;
 }
+
+.black-modal {
+  position: fixed;
+  display: none;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(33, 33, 33, 0.2);
+  z-index: 999;
+  &.visible {
+    display: block;
+  }
+}

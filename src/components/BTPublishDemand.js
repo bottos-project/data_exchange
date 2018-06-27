@@ -47,7 +47,7 @@ const initialState = {
     timeValue: '',
     newdata: [],
     getFileNameTemp:'',
-    reqType: '0'
+    reqType: ''
 }
 
 class BTPublishDemand extends PureComponent{
@@ -151,7 +151,7 @@ class BTPublishDemand extends PureComponent{
           return;
       }
 
-      if (this.state.reqType == '0') {
+      if (this.state.reqType == '') {
         message.warning(window.localeInfo["PersonalDemand.PleaseChooseTheRequirementType"]);
         return;
       }
@@ -178,7 +178,7 @@ class BTPublishDemand extends PureComponent{
         "basic_info": {
           "Username": account_info.username,
           "RequirementName": this.state.title || 'requirement',
-          "RequirementType": Number.parseInt(this.state.reqType),
+          "RequirementType": Number.parseInt(this.state.reqType) || 0,
           "FeatureTag": 1,
           "SampleHash": this.state.sample_hash || '',
           "ExpireTime": expire_time,

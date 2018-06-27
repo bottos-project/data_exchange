@@ -34,7 +34,9 @@ import {messageSign} from '../../../lib/sign/BTSign'
 import * as BTCryptTool from 'bottos-crypto-js'
 import { arTypeKeyMap, typeValueKeyMap } from '@/utils/keyMaps'
 
+const ReqAndAssMessages = messages.ReqAndAss;
 const AssetMessages = messages.Asset;
+
 // 此处样式在Demand/subviews/styles.less中控制
 const { TextArea } = Input;
 const confirm = Modal.confirm;
@@ -310,11 +312,11 @@ export default class BTAssetDetail extends PureComponent{
                       data.sample_hash
                       ?
                       <Button onClick={()=>this.download()} type="primary">
-                        <FormattedMessage {...AssetMessages.DownLoadTheSample}/>
+                        <FormattedMessage {...ReqAndAssMessages.DownLoadTheSample}/>
                       </Button>
                       :
                       <Button disabled>
-                        <FormattedMessage {...AssetMessages.NoSample}/>
+                        <FormattedMessage {...ReqAndAssMessages.NoSample}/>
                       </Button>
                     }
                   </li>
