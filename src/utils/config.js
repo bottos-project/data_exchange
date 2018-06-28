@@ -29,14 +29,43 @@ var service = {
 }
 
 
+
 function randowFromArray(arr) {
-  let len = arr.len
+  console.assert(Array.isArray(arr))
+  let len = arr.length
   let randomIndex = Math.floor(Math.random() * len)
   if (randomIndex == len) {
     randomIndex = len -1
   }
+  // console.log('randomIndex', randomIndex);
   return arr[randomIndex];
 }
+
+function changeIP() {
+
+  fetch(base_url + service.version + '/dashboard/GetNodeIp', {
+    method: 'POST',
+    contentType: 'application/json',
+    body: JSON.stringify({ page_num: 1, page_size: 8})
+  }).then(res => res.json()).then(res => {
+    if (res.code != 1) {
+      throw new Error('Failed to GetNodeIp')
+    }
+    // console.log('res', res);
+    let data = res.data
+    let IPInfoList = data.row
+    console.log('IPInfoList', IPInfoList);
+    if (!IPInfoList) {
+      throw new Error('IP error')
+    }
+    let info = randowFromArray(IPInfoList)
+    console.log('info', info);
+    hostname = info.ip
+  })
+
+}
+
+// changeIP()
 
 
 Object.defineProperty(service, 'base_url', {
@@ -44,6 +73,7 @@ Object.defineProperty(service, 'base_url', {
     if (window.useCustomIP === true && window.hostname != undefined) {
       hostname = window.hostname
     }
+    // console.log('hostname', hostname);
     base_url = `http://${hostname}:8080/`
     return base_url
   },

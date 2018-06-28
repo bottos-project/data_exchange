@@ -57,7 +57,7 @@ const headerState = (state = initialState, action) => {
         return {...state, account_info: action.info}
 
       case actionTypes.SET_MESSAGE_NUM:
-        console.log('action.notice_num', action.notice_num);
+        // console.log('action.notice_num', action.notice_num);
         return {...state, notice_num: action.notice_num}
 
       case actionTypes.READ_MESSAGE:

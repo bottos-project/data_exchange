@@ -120,15 +120,10 @@ class BTHeader extends PureComponent{
     }
 
     componentDidMount() {
-      BTFetch('/asset/GetUnreadNoticeNum', 'post', getSignaturedParam(getAccount()))
-      .then(res => {
-        if (res.code == 1) {
-          console.log('res.data', res.data);
-          this.props.setNoticeNum(res.data)
-        }
-      }).catch(err => {
-        console.error(err)
-      })
+      const { account_info, getUnread } = this.props
+      if (account_info) {
+        getUnread(account_info)
+      }
     }
 
     render() {

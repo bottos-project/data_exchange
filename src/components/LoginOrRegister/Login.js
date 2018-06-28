@@ -16,15 +16,15 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-import React,{PureComponent} from 'react'
+import React, {PureComponent} from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 
 import BTCryptTool from 'bottos-crypto-js'
 import { Icon, Input, Button, Row, Col, Select } from 'antd'
 import BTFetch from '@/utils/BTFetch';
-import { getAccount } from '@/tools/localStore'
-import { setAccountInfo, setSpin } from '@/redux/actions/HeaderAction'
+import * as headerActions from '../../redux/actions/HeaderAction'
 import BTIPcRenderer from '@/tools/BTIpcRenderer'
 import {importFile} from '@/utils/BTUtil'
 import ConfirmButton from '../ConfirmButton'
@@ -159,7 +159,6 @@ class Login extends PureComponent{
 
     }
 
-
     getSignature(username,privateKeyStr){
         let privateKey = Buffer.from(privateKeyStr,'hex')
         let random = window.uuid()
@@ -169,26 +168,6 @@ class Login extends PureComponent{
         let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(loginProto))
         let signature = BTCryptTool.sign(hash,privateKey).toString('hex')
        return {signature,random}
-    }
-
-    // 获取区块信息
-    async getBlockInfo(){
-        let reqUrl = '/user/GetBlockInfo'
-        return await BTFetch(reqUrl,'GET')
-    }
-
-    // 获取data信息
-    async getDataInfo(username){
-        let reqUrl = '/user/GetDataBin'
-        let params = {
-            "code":"usermng",
-            "action":"userlogin",
-            "args":{
-                "user_name":username,
-                "random_num":Math.round(Math.random()*1000)
-            }
-        }
-        return await BTFetch(reqUrl,'POST',params)
     }
 
     // keyStore文件保存
@@ -294,14 +273,7 @@ class Login extends PureComponent{
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return {
-    setAccountInfo(info) {
-      dispatch( setAccountInfo(info) )
-    },
-    setSpin(isloading) {
-      dispatch(setSpin(isloading))
-    }
-  }
+  return bindActionCreators(headerActions, dispatch)
 }
 
 export default connect(null, mapDispatchToProps)(Login)

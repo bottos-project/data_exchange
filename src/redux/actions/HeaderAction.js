@@ -18,6 +18,21 @@
 */
 import * as actionTypes from '../consts/HeaderConst'
 
+import BTFetch from '../../utils/BTFetch'
+import { getSignaturedParam } from '../../utils/BTCommonApi'
+
+export const getUnread = (account_info) => (dispatch, getState) => {
+  return BTFetch('/asset/GetUnreadNoticeNum', 'post', getSignaturedParam(account_info))
+  .then(res => {
+    if (res.code == 1) {
+      dispatch( setNoticeNum(res.data) )
+    }
+  }).catch(err => {
+    console.error(err)
+  })
+}
+
+
 // // 设置地点
 export const setLocale = (locale) => {
     return {
@@ -26,12 +41,10 @@ export const setLocale = (locale) => {
     }
 }
 
-export const setAccountInfo = (info) => {
-  return {
-    type: actionTypes.SET_ACCOUNT_INFO,
-    info
-  }
-}
+export const setAccountInfo = (info) => ({
+  type: actionTypes.SET_ACCOUNT_INFO,
+  info
+})
 
 export const setSpin = (isloading) => {
   return {
@@ -45,7 +58,7 @@ export const readMessage = () => ({
 })
 
 export const setNoticeNum = (notice_num) => {
-  console.log('notice_num', notice_num);
+  // console.log('notice_num', notice_num);
   return {
     type: actionTypes.SET_MESSAGE_NUM,
     notice_num

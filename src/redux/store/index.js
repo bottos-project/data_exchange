@@ -17,19 +17,21 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 import { applyMiddleware, createStore } from 'redux';
-import logger from 'redux-logger'
+import thunk from 'redux-thunk'
 
 import rootReducer from '../reducers'
 
 // console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+let middleware = [ thunk ]
+if (process.env.NODE_ENV !== 'production') {
+  let logger = require('redux-logger').logger
+  middleware = [ ...middleware, logger ]
+}
+
+// console.log('middleware', middleware);
 
 const store = createStore(rootReducer,
-    process.env.NODE_ENV == 'development'
-    ?
     // window.devToolsExtension()
-    applyMiddleware(logger)
-
-    :
-    undefined
+    applyMiddleware(...middleware)
 )
 export default store
