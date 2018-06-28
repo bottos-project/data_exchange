@@ -17,24 +17,48 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var base_url = 'http://139.219.133.94:8080/'
-// var base_url = 'http://139.219.130.112:8080/'
-// var base_url = 'http://139.219.136.155:8080/'
-// var base_url = 'http://139.219.139.198:8080/'
-// var base_url = 'http://139.217.202.68:8080/'
+var hostname = '139.219.133.94'
+// var hostname = '139.219.130.112'
+// var hostname = '139.219.136.155'
+// var hostname = '139.219.139.198'
+// var hostname = '139.217.202.68'
 
-
-if (window.useCustomURL === true && window.base_url != undefined) {
-  base_url = window.base_url
+var base_url = `http://${hostname}:8080/`
+var service = {
+  version:'v3'
 }
 
-module.exports = {
-    service:{
-      base_url,
-      version:'v3'
-    },
-    mock:{
-        base_url:"http://192.168.9.242:8080/v3"
-        // base_url:"http://192.168.9.223:8080/v3"
+
+function randowFromArray(arr) {
+  let len = arr.len
+  let randomIndex = Math.floor(Math.random() * len)
+  if (randomIndex == len) {
+    randomIndex = len -1
+  }
+  return arr[randomIndex];
+}
+
+
+Object.defineProperty(service, 'base_url', {
+  get: function() {
+    if (window.useCustomIP === true && window.hostname != undefined) {
+      hostname = window.hostname
     }
+    base_url = `http://${hostname}:8080/`
+    return base_url
+  },
+  set: function(newValue) {
+    base_url = newValue
+  },
+  enumerable : true,
+  configurable : true
+})
+
+
+module.exports = {
+  service,
+  mock:{
+    base_url:"http://192.168.9.242:8080/v3"
+    // base_url:"http://192.168.9.223:8080/v3"
+  }
 }
