@@ -40,11 +40,14 @@ const PersonalAssetMessages = messages.PersonalAsset;
 const HeaderMessages = messages.Header;
 
 const { TextArea } = Input;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 const initState = {
   title:'',
   number:'0',
   description:'',
+  token_type: 'bto',
   tag1:'',
   tag2:'',
   tag3:'',
@@ -67,6 +70,7 @@ class BTPublishAssetModal extends PureComponent{
         this.state = initState
 
         this.onTimeChange = this.onTimeChange.bind(this)
+        this.onTokenChange = this.onTokenChange.bind(this)
     }
 
     onChangeDataAssetType = (value) => {
@@ -102,6 +106,12 @@ class BTPublishAssetModal extends PureComponent{
 
     onTimeChange(time, timeValue) {
       this.setState({ timeValue });
+    }
+
+    onTokenChange(e) {
+      let value = e.target.value
+      console.log('e.target.value', e.target.value);
+      this.setState({ token_type: value });
     }
 
     title(e){
@@ -223,6 +233,7 @@ class BTPublishAssetModal extends PureComponent{
           "storageHash": this.state.storage_hash,
           "expireTime": expire_time,
           "opType": 1,
+          "tokenType": this.state.token_type,
           "price": Number(this.state.number) * Math.pow(10, 8),
           "description": this.state.description
         }
@@ -259,9 +270,12 @@ class BTPublishAssetModal extends PureComponent{
     }
 
     render() {
+
+      const { newdata, exampledata, getFileNameTemp, getFileName } = this.state
+
       return (
         <div className='route-children-container route-children-bg'>
-          <BTAssetList  ref={(ref)=>this.assetListModal = ref} newdata={this.state.newdata} handleFile={(fileName)=>this.getFileName(fileName)}/>
+          <BTAssetList  ref={(ref)=>this.assetListModal = ref} newdata={newdata} handleFile={(fileName)=>this.getFileName(fileName)}/>
           <div className="uploadAsset">
             <h2 className='route-children-container-title'>
               <FormattedMessage {...HeaderMessages.PublishAsset}/>
@@ -273,16 +287,16 @@ class BTPublishAssetModal extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.UploadTheSample}/>
               </Col>
               <Col span={18}>
-                <Button type='primary' examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>
+                <Button type='primary' examplefile={exampledata} onClick={()=>this.commitAsset('assetTemp')}>
                   <Icon type="cloud-upload" />
                   <FormattedMessage {...PersonalAssetMessages.SetScreeningSample}/>
                 </Button>
                 <span className='filename'>{
-                    this.state.getFileNameTemp.length <= 24
+                    getFileNameTemp.length <= 24
                     ?
-                    this.state.getFileNameTemp
+                    getFileNameTemp
                     :
-                    this.state.getFileNameTemp.split('.')[0].substring(0, 8)+'...'+this.state.getFileNameTemp.split('.').pop()
+                    getFileNameTemp.split('.')[0].substring(0, 8)+'...'+getFileNameTemp.split('.').pop()
                 }</span>
               </Col>
             </Row>
@@ -293,16 +307,16 @@ class BTPublishAssetModal extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.UploadTheAsset}/>
               </Col>
               <Col span={18}>
-                <Button type='primary' exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>
+                <Button type='primary' exampledata={exampledata} onClick={()=>this.commitAsset('asset')}>
                   <Icon type="cloud-upload" />
                   <FormattedMessage {...PersonalAssetMessages.SetScreeningFile}/>
                 </Button>
                 <span className='filename'>{
-                  this.state.getFileName.length <= 24
+                  getFileName.length <= 24
                   ?
-                  this.state.getFileName
+                  getFileName
                   :
-                  this.state.getFileName.split('.')[0].substring(0, 8)+'...'+this.state.getFileName.split('.').pop()
+                  getFileName.split('.')[0].substring(0, 8)+'...'+getFileName.split('.').pop()
                 }</span>
               </Col>
             </Row>
@@ -328,7 +342,11 @@ class BTPublishAssetModal extends PureComponent{
                 />
               </Col>
               <Col span={4}>
-                <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
+                <RadioGroup onChange={this.onTokenChange} value={this.state.token_type}>
+                  <RadioButton value="bto">BTO</RadioButton>
+                  <RadioButton value="dto">DTO</RadioButton>
+                </RadioGroup>
+                {/* <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/> */}
               </Col>
             </Row>
 

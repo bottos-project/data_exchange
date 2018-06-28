@@ -19,7 +19,7 @@
 import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
 import moment from "moment"
-import { Input, DatePicker, TimePicker, Icon, Button, Row, Col } from 'antd'
+import { Input, DatePicker, TimePicker, Radio, Icon, Button, Row, Col } from 'antd'
 import BTAssetList from './BTAssetList'
 import {getBlockInfo, getDataInfo, getSignaturedParam } from "../utils/BTCommonApi";
 import BTFetch from "../utils/BTFetch";
@@ -38,16 +38,19 @@ const PersonalDemandMessages = messages.PersonalDemand;
 const PersonalAssetMessages = messages.PersonalAsset;
 
 const { TextArea } = Input;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 const initialState = {
     title:"",
     textArea:"",
     number: 0,
+    token_type: 'BTO',
     dateString: moment().add(7, 'days').toString(),
     timeValue: '',
     newdata: [],
     getFileNameTemp:'',
-    reqType: ''
+    reqType: '',
 }
 
 class BTPublishDemand extends PureComponent{
@@ -56,10 +59,17 @@ class BTPublishDemand extends PureComponent{
         this.state = initialState
 
         this.onTimeChange = this.onTimeChange.bind(this)
+        this.onTokenChange = this.onTokenChange.bind(this)
     }
 
     onTimeChange(time, timeValue) {
       this.setState({ timeValue });
+    }
+
+    onTokenChange(e) {
+      let value = e.target.value
+      console.log('e.target.value', e.target.value);
+      this.setState({ token_type: value });
     }
 
     commitAsset(type){
@@ -182,6 +192,7 @@ class BTPublishDemand extends PureComponent{
           "FeatureTag": 1,
           "SampleHash": this.state.sample_hash || '',
           "ExpireTime": expire_time,
+          "token_type": this.state.token_type,
           "Price": this.state.number * Math.pow(10, 8),
           "Description": this.state.textArea,
           "FavoriFlag": 1,
@@ -240,7 +251,11 @@ class BTPublishDemand extends PureComponent{
                 />
               </Col>
               <Col span={4}>
-                <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
+                <RadioGroup onChange={this.onTokenChange} value={this.state.token_type}>
+                  <RadioButton value="BTO">BTO</RadioButton>
+                  <RadioButton value="DTO">DTO</RadioButton>
+                </RadioGroup>
+                {/* <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/> */}
               </Col>
             </Row>
 

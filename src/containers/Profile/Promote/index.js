@@ -74,7 +74,7 @@ function Promote(props) {
   return <BTTable
     columns={columns}
     rowKey='notice_id'
-    url='/asset/queryMyPromote'
+    url='/asset/queryMyPreSale'
     options={getSignaturedParam(getAccount())}
     catchError={(err) => message.error(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])}
     {...props}

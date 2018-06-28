@@ -21,8 +21,8 @@ import PropTypes from 'prop-types';
 import {hashHistory} from 'react-router'
 import { Popconfirm, Tabs } from 'antd'
 import CustomTabBar from '@/components/CustomTabBar'
-import FavoriteAssetList from './subviews/FavoriteAssetList'
-import FavoriteReqList from "./subviews/FavoriteReqList"
+// import FavoriteAssetList from './subviews/FavoriteAssetList'
+import FavoriteList from "./subviews/FavoriteList"
 
 import BTFetch from '@/utils/BTFetch'
 import { getSignaturedParam } from '@/utils/BTCommonApi'
@@ -59,20 +59,21 @@ class BTCollect extends Component {
   render() {
     return (
       <div className='container column'>
-        {/* <CustomTabBar onChange={this.handleChange} keyMap={keyMap} activeKey={this.state.activeKey} /> */}
+        <CustomTabBar onChange={this.handleChange} keyMap={keyMap} activeKey={this.state.activeKey} />
 
-        {/* <Tabs className="tabs" activeKey={this.state.activeKey}>
-          <TabPane tab={<FormattedMessage {...CollectMessages.Asset} />} key="0"> */}
-            <FavoriteAssetList />
-          {/* </TabPane>
-          <TabPane tab={<FormattedMessage {...CollectMessages.Demand} />} key="1" >
-            <FavoriteReqList />
+        <Tabs className="tabs" activeKey={this.state.activeKey}>
+          <TabPane tab={<FormattedMessage {...CollectMessages.Asset} />} key="0">
+            {/* <FavoriteAssetList /> */}
+            <FavoriteList goods_type='asset' />
           </TabPane>
-        </Tabs> */}
+          <TabPane tab={<FormattedMessage {...CollectMessages.Demand} />} key="1" >
+            <FavoriteList goods_type='requirement' />
+          </TabPane>
+        </Tabs>
 
       </div>
     )
   }
 }
 
-export default FavoriteAssetList
+export default BTCollect

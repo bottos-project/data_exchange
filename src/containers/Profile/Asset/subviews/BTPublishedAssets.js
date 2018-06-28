@@ -25,7 +25,7 @@ import {getAccount} from "../../../../tools/localStore";
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import { selectType } from '@/utils/keyMaps'
-import TokenPNG from '@/components/TokenPNG'
+import TokenSymbol from '@/components/TokenSymbol'
 import BTTable from '@/components/BTTable'
 
 const PersonalAssetMessages = messages.PersonalAsset;
@@ -43,8 +43,8 @@ const columns = [
   {
     title: <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>,
     dataIndex: 'price',
-    render: (price) => <div>
-      <TokenPNG />
+    render: (price, record) => <div>
+      <TokenSymbol type={record.token_type} />
       <span>{price/Math.pow(10, 8)}</span>
     </div>
   },

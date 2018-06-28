@@ -25,7 +25,7 @@ import { getDateAndTime } from "@/utils/dateTimeFormat";
 import { getSignaturedParam } from '@/utils/BTCommonApi'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import { selectType } from '@/utils/keyMaps'
-import TokenPNG from '@/components/TokenPNG'
+import TokenSymbol from '@/components/TokenSymbol'
 
 import BTTable from '@/components/BTTable'
 
@@ -36,9 +36,9 @@ const columns = [
     render: (item) => <span>{item}</span>
   },
   { title: <FormattedMessage {...PersonalAssetMessages.AssetTypePrice}/>, dataIndex: 'price',
-    render: (price) => (
+    render: (price, record) => (
       <div>
-        <TokenPNG />
+        <TokenSymbol type={record.token_type} />
         <span>{price/Math.pow(10, 8)}</span>
       </div>
     )

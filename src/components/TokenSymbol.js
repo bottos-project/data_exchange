@@ -18,8 +18,21 @@
 */
 import React from 'react';
 
-export default function TokenPNG(props) {
-  return <span className='dib'>
-    <img style={{margin: '2px 4px 4px'}} width='15px' src='./img/token.png' />
+// export default function Token(props) {
+//   return <span className='dib'>
+//     <img style={{margin: '2px 4px 4px'}} width='15px' src='./img/token.png' />
+//   </span>
+// }
+
+export default function TokenSymbol(props) {
+  let token = props.type == 'bto' ? 'BTO' : 'DTO'
+  let _style = props.style || {}
+  let style = {
+    marginLeft: 5,
+    fontWeight: 700,
+    ..._style
+  }
+  return <span className='dib' style={style}>
+    {token}
   </span>
 }

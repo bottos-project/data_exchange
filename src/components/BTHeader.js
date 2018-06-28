@@ -26,6 +26,8 @@ import { updateFileList } from '../redux/actions/uploaderAction'
 import { toggleVisible } from '../redux/actions/downloadAction'
 import {Button, Modal, Menu, Dropdown, Icon, Badge } from 'antd'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { getSignaturedParam } from "../utils/BTCommonApi";
+import {getAccount} from "../tools/localStore";
 import BTFetch from '../utils/BTFetch'
 import {importFile,exportFile} from '../utils/BTUtil'
 import BTIpcRenderer from '../tools/BTIpcRenderer'
@@ -117,9 +119,21 @@ class BTHeader extends PureComponent{
 
     }
 
+    componentDidMount() {
+      BTFetch('/asset/GetUnreadNoticeNum', 'post', getSignaturedParam(getAccount()))
+      .then(res => {
+        if (res.code == 1) {
+          console.log('res.data', res.data);
+          this.props.setNoticeNum(res.data)
+        }
+      }).catch(err => {
+        console.error(err)
+      })
+    }
+
     render() {
       // console.log('btheader render');
-        const { account_info, downloadingNumber } = this.props
+        const { account_info, downloadingNumber, notice_num } = this.props
         return(
             <div className="container header">
               {/* <div style={{position: 'absolute', top: 0, right: 10}}>v: {pkg.version}</div> */}
@@ -163,7 +177,7 @@ class BTHeader extends PureComponent{
                     <div><FormattedMessage {...MenuMessages.Wallet} /></div>
                   </Link> */}
                   <Link to='/profile/check' onClick={this.checkAccount}>
-                    <Badge count={0}>
+                    <Badge count={notice_num}>
                       <img src='./img/check.svg' />
                     </Badge>
                     <div><FormattedMessage {...MenuMessages.MyMessages} /></div>
@@ -189,10 +203,10 @@ class BTHeader extends PureComponent{
 
 
 const mapStateToProps = (state) => {
-  const { account_info, locale } = state.headerState
+  const { account_info, locale, notice_num } = state.headerState
   const { visible: downloadsVisible, downloads } = state.downloadState
   const downloadingNumber = downloads.filter(d => d.status == 'downloading').length
-  return { account_info, locale, downloadsVisible, downloadingNumber }
+  return { account_info, locale, notice_num, downloadsVisible, downloadingNumber }
 }
 
 const mapDispatchToProps = (dispatch) => {

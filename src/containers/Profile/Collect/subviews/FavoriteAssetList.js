@@ -151,7 +151,7 @@ class FavoriteAssetList extends Component {
         goods_type: 'asset' // asset 或者 requirement
       }}
       index={this.state.index}
-      catchError={(err) => console.error(error)}
+      catchError={(err) => console.error(err)}
       dataChange={this.dataChange}
       {...this.props}
     />

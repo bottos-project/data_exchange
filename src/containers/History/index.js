@@ -21,7 +21,7 @@ import { Table } from 'antd';
 import { BTRowFetch } from "@/utils/BTCommonApi";
 import {FormattedMessage} from 'react-intl'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
-import TokenPNG from '@/components/TokenPNG'
+import TokenSymbol from '@/components/TokenSymbol'
 import './style.less'
 import messages from '../../locales/messages'
 const HistoryMessages = messages.History;
@@ -34,8 +34,8 @@ const columns = [
   }},
   { title: <FormattedMessage {...HistoryMessages.Merchandise} />, dataIndex: 'asset_name'},
   { title: <FormattedMessage {...HistoryMessages.Price} />, dataIndex: 'price',
-    render: (price) => <div className=''>
-      <TokenPNG />
+    render: (price, record) => <div className=''>
+      <TokenSymbol type={record.token_type} />
       <span>{price/Math.pow(10, 8)}</span>
     </div>,
     align: 'left'

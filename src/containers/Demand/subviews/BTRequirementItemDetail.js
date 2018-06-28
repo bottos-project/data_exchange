@@ -26,6 +26,7 @@ import BTAssetRadioGroup from './BTAssetRadioGroup'
 import { getDateAndTime } from '../../../utils/dateTimeFormat'
 import {getAccount} from "../../../tools/localStore";
 import CloseBack from '@/components/CloseBack'
+import TokenSymbol from '@/components/TokenSymbol'
 import BTFavoriteStar from '@/components/BTFavoriteStar'
 import { typeValueKeyMap } from '../../../utils/keyMaps'
 import { PackArraySize, PackStr16, PackUint32 } from '@/lib/msgpack/msgpack'
@@ -186,7 +187,7 @@ export default class BTRequirementItemDetail extends PureComponent{
 
                   <div className="headAndShop">
                     <h1>{data.requirement_name}</h1>
-                    {/* <BTFavoriteStar isFavorite={data.is_collection} type='requirement' id={data.requirement_id} /> */}
+                    <BTFavoriteStar isFavorite={data.is_collection} type='requirement' id={data.requirement_id} />
                   </div>
 
                   <p>
@@ -204,7 +205,7 @@ export default class BTRequirementItemDetail extends PureComponent{
                           <FormattedMessage {...DemandMessages.ExpectedPrice}/>
                       </span>
                       {data.price/Math.pow(10, 8)}
-                      <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
+                      <TokenSymbol type={data.token_type} />
                   </p>
                   <p>
                       <span>

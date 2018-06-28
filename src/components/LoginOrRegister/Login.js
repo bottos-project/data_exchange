@@ -42,13 +42,14 @@ const Option = Select.Option;
 class Login extends PureComponent{
     constructor(props){
         super(props)
+        const accountList = BTIPcRenderer.getUserList()
         this.state = {
-            username: '',
+            username: accountList[0],
             password: '',
             keyStore: null,
             verify_code:'',
             mode: 'username', // username or keystore
-            accountList: BTIPcRenderer.getUserList()
+            accountList
         }
 
         this.onHandleUnlock = this.onHandleUnlock.bind(this)
@@ -78,7 +79,6 @@ class Login extends PureComponent{
     async onHandleUnlock(){
         message.destroy()
 
-
         if(this.state.password == ''){
             message.error(window.localeInfo["Header.PleaseEnterThePassword"]);
             return
@@ -86,18 +86,6 @@ class Login extends PureComponent{
         let keyStoreObj = this.getKeyStoreObj()
         let username = keyStoreObj.account;
         let password = this.state.password;
-        // let blockInfo = await this.getBlockInfo();
-
-        // if(!(blockInfo&&blockInfo.code=="0")) {
-        //     message.error(window.localeInfo["Header.LoginFailure"]);
-        //     return
-        // }
-
-        // let data = await this.getDataInfo(username)
-        // if(!(data && data.code=="0")){
-        //     message.error(window.localeInfo["Header.LoginFailure"]);
-        //     return
-        // }
 
         this.props.setSpin(true)
 
@@ -164,6 +152,7 @@ class Login extends PureComponent{
 
         myWorker.onerror = (e) => {
           console.error(e);
+          this.props.requestVerificationCode()
           window.message.error(window.localeInfo["Header.TheWrongPassword"]);
           this.props.setSpin(false)
         }
@@ -252,7 +241,7 @@ class Login extends PureComponent{
                 <span className='label'><FormattedMessage {...LoginMessages.Account} /></span>
               </Col>
               <Col span={12}>
-                <Select defaultValue={this.state.accountList[0]} onChange={this.changeAccount} style={{width: '100%'}} placeholder={window.localeInfo["Header.PleaseSelectTheAccount"]}>
+                <Select defaultValue={this.state.username} onChange={this.changeAccount} style={{width: '100%'}} placeholder={window.localeInfo["Header.PleaseSelectTheAccount"]}>
                   {list}
                 </Select>
                 {/* <Input placeholder={window.localeInfo["Header.PleaseSelectTheAccount"]} className="marginRight" onChange={(e)=>{}}/> */}

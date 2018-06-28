@@ -34,7 +34,7 @@ import messages from '@/locales/messages'
 
 const CollectMessages = messages.Collect;
 
-function lookFor(asset_id) {
+function lookForAsset(asset_id) {
   BTFetch('/asset/QueryAssetByID', 'post', {asset_id, sender: getAccount().username})
   .then(res => {
     if(res.code == 1){
@@ -54,51 +54,79 @@ function lookFor(asset_id) {
   })
 }
 
-function getColumns() {
-  return [
-    { title: <FormattedMessage {...CollectMessages.GoodName}/>, dataIndex: 'goods_name' },
-    { title: <FormattedMessage {...CollectMessages.From}/>, dataIndex: 'username'},
-    { title: <FormattedMessage {...CollectMessages.Time}/>, dataIndex: 'time',
-      render: getDateAndTime
-    },
-    { title: <FormattedMessage {...CollectMessages.Delete}/>, key:'x',
-      render: (item) =>
-        <Popconfirm
-          title={<FormattedMessage {...CollectMessages.SureToDelete} />}
-          onConfirm={() => {
-            console.log('this', this);
-            this.onDelete(item)
-          }}
-          okText={<FormattedMessage {...CollectMessages.OK} />}
-          cancelText={<FormattedMessage {...CollectMessages.Cancel} />}
-          >
-          <a href="#">
-            <FormattedMessage {...CollectMessages.Delete}/>
-          </a>
-        </Popconfirm>
-      ,
-    },
-    {
-      title: <FormattedMessage {...CollectMessages.ViewTheDetails}/>, dataIndex: 'goods_id',
-      render:(asset_id) =>
-        <Button onClick={() => lookFor(asset_id)}><FormattedMessage {...CollectMessages.View}/></Button>
-    },
-  ]
+function lookForReq(req_id) {
+  BTFetch('/requirement/QueryById', 'post', {req_id, sender: getAccount().username})
+  .then(res => {
+    if (!res || res.code != 1) {
+      throw new Error('Failed To Get The Requirement Details')
+    }
+    console.log(res.data)
+    if (res.data) {
+      hashHistory.push({
+        pathname:'/demand/detail',
+        state:res.data
+      })
+    }
+  })
+  .catch(error => {
+    window.message.error(window.localeInfo["Header.FailedQuery"]);
+    console.error('/requirement/QueryById err', err);
+  })
 }
 
 // "assetType": 0,
 
-class FavoriteReqList extends Component {
+class FavoriteList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       index: 0,
       id: ''
     };
-    this.columns = getColumns.call(this)
+    this.columns = this.getColumns()
 
     this.onDelete = this.onDelete.bind(this)
     this.dataChange = this.dataChange.bind(this)
+    this.lookFor = this.lookFor.bind(this)
+  }
+
+  lookFor(goods_id) {
+    if (this.props.goods_type == 'asset') {
+      lookForAsset(goods_id)
+    } else {
+      lookForReq(goods_id)
+    }
+  }
+
+  getColumns() {
+    return [
+      { title: <FormattedMessage {...CollectMessages.GoodName}/>, dataIndex: 'goods_name' },
+      { title: <FormattedMessage {...CollectMessages.From}/>, dataIndex: 'username'},
+      { title: <FormattedMessage {...CollectMessages.Time}/>, dataIndex: 'time',
+        render: getDateAndTime
+      },
+      { title: <FormattedMessage {...CollectMessages.Delete}/>, key:'x',
+        render: (item) =>
+          <Popconfirm
+            title={<FormattedMessage {...CollectMessages.SureToDelete} />}
+            onConfirm={() => {
+              this.onDelete(item)
+            }}
+            okText={<FormattedMessage {...CollectMessages.OK} />}
+            cancelText={<FormattedMessage {...CollectMessages.Cancel} />}
+            >
+            <a href="#">
+              <FormattedMessage {...CollectMessages.Delete}/>
+            </a>
+          </Popconfirm>
+        ,
+      },
+      {
+        title: <FormattedMessage {...CollectMessages.ViewTheDetails}/>, dataIndex: 'goods_id',
+        render:(goods_id) =>
+          <Button onClick={() => this.lookFor(goods_id)}><FormattedMessage {...CollectMessages.View} /></Button>
+      },
+    ]
   }
 
   async onDelete(good_info) {
@@ -107,7 +135,7 @@ class FavoriteReqList extends Component {
     let favoriteParam = {
       "Username": getAccount().username,
       "GoodsId": good_info.goods_id,
-      "GoodsType": 'requirement',
+      "GoodsType": this.props.goods_type,
       "OpType": 3, // 3 是删除
     }
     // console.log('favoriteParam', favoriteParam);
@@ -142,20 +170,25 @@ class FavoriteReqList extends Component {
   }
 
   render() {
+    const goods_type = this.props.goods_type
     return <BTTable
       columns={this.columns}
       rowKey='goods_id'
       url='/user/GetFavorite'
       options={{
         ...getSignaturedParam(getAccount()),
-        goods_type: 'requirement' // asset 或者 requirement
+        goods_type // asset 或者 requirement
       }}
       index={this.state.index}
-      catchError={(err) => console.error(error)}
+      catchError={(err) => console.error(err)}
       dataChange={this.dataChange}
       {...this.props}
     />
   }
 }
 
-export default FavoriteReqList
+FavoriteList.propTypes = {
+  goods_type: PropTypes.oneOf(['asset', 'requirement']),
+};
+
+export default FavoriteList

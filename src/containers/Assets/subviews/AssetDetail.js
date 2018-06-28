@@ -27,6 +27,7 @@ import { getDateAndTime } from '@/utils/dateTimeFormat'
 import BTFavoriteStar from '@/components/BTFavoriteStar'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import CloseBack from '@/components/CloseBack'
+import TokenSymbol from '@/components/TokenSymbol'
 import BTTags from '../../AssetAndRequirement/BTTags'
 import { PackArraySize, PackStr16 } from '@/lib/msgpack/msgpack'
 import {buyAssetGrantCreditPack,cancelAssetGrantCreditPack} from '../../../lib/msgpack/BTPackManager'
@@ -273,7 +274,7 @@ export default class BTAssetDetail extends PureComponent{
                   </Col>
                   <Col span={18}>
                     {data.price / Math.pow(10, 8)}
-                    <img src='./img/token.png' width='15' style={{marginLeft:6}} />
+                    <TokenSymbol type={data.token_type} />
                   </Col>
                 </Row>
 

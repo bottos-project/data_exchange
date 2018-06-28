@@ -27,3 +27,6 @@ export const SET_SPIN = 'SET_SPIN'
 
 // demand
 // export const TOGGLE_REGISTER_VIEW_VISIBLE = 'TOGGLE_REGISTER_VIEW_VISIBLE'
+
+export const SET_MESSAGE_NUM = 'SET_MESSAGE_NUM'
+export const READ_MESSAGE = 'READ_MESSAGE'

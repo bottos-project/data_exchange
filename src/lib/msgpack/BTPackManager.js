@@ -41,6 +41,8 @@ export const registAssetPack = (did)=>{
     let arrExpireTime = BTPack.PackUint32(basic_info.expireTime)
     let arrOpType = BTPack.PackUint32(basic_info.opType)
     console.log({price:basic_info.price})
+    let arrTokenType = BTPack.PackStr16(basic_info.token_type)
+
     let arrPrice = BTPack.PackUint64(basic_info.price)
 
     let arrDescription = BTPack.PackStr16(basic_info.description)
@@ -48,8 +50,8 @@ export const registAssetPack = (did)=>{
     // let arrSignature = BTPack.PackStr16(basic_info.signature)
 
     let arrBuf = [...arr1Size,...arrAssetId,...arr2Size,...arrUsername,...arrAssetName,...arrAssetType,
-        ...arrFeatureTag,...arrSampleHash,
-        ...arrStorageHash,...arrExpireTime,...arrOpType,...arrPrice,...arrDescription]
+        ...arrFeatureTag,...arrSampleHash,...arrStorageHash,...arrExpireTime,
+        ...arrOpType,...arrTokenType,...arrPrice,...arrDescription]
 
     return arrBuf
 }
@@ -68,12 +70,13 @@ export const registDemandPack = (did)=>{
     let arrSampleHash = BTPack.PackStr16(basic_info.SampleHash)
     let arrExpireTime = BTPack.PackUint64(basic_info.ExpireTime)
     let arrOpType = BTPack.PackUint32(basic_info.OpType)
+    let arrTokenType = BTPack.PackStr16(basic_info.token_type)
     let arrPrice = BTPack.PackUint64(basic_info.Price)
     let arrFavoriFlag = BTPack.PackUint32(basic_info.FavoriFlag)
     let arrDescription = BTPack.PackStr16(basic_info.Description)
 
     let arrBuf = [...arr1Size,...arrDataReqId,...arr2Size,...arrUsername,...arrReqName,...arrReqType,...arrFeatureTag,...arrSampleHash,...arrExpireTime,
-    ...arrOpType,...arrPrice,...arrFavoriFlag,...arrDescription]
+    ...arrOpType,...arrTokenType,...arrPrice,...arrFavoriFlag,...arrDescription]
 
     return arrBuf
 }

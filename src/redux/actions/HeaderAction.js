@@ -39,3 +39,15 @@ export const setSpin = (isloading) => {
     isloading
   }
 }
+
+export const readMessage = () => ({
+  type: actionTypes.READ_MESSAGE
+})
+
+export const setNoticeNum = (notice_num) => {
+  console.log('notice_num', notice_num);
+  return {
+    type: actionTypes.SET_MESSAGE_NUM,
+    notice_num
+  }
+}

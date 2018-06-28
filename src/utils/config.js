@@ -16,14 +16,22 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
+
+var base_url = 'http://139.219.133.94:8080/'
+// var base_url = 'http://139.219.130.112:8080/'
+// var base_url = 'http://139.219.136.155:8080/'
+// var base_url = 'http://139.219.139.198:8080/'
+// var base_url = 'http://139.217.202.68:8080/'
+
+
+if (window.useCustomURL === true && window.base_url != undefined) {
+  base_url = window.base_url
+}
+
 module.exports = {
     service:{
-        base_url:'http://139.219.130.112:8080/',
-        // base_url:'http://139.219.136.155:8080/',
-        // base_url:'http://139.219.139.198:8080/',
-        // base_url:'http://139.219.133.94:8080/',
-        // base_url:'http://139.217.202.68:8080/',
-        version:'v3'
+      base_url,
+      version:'v3'
     },
     mock:{
         base_url:"http://192.168.9.242:8080/v3"

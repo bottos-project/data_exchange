@@ -5,7 +5,7 @@ import {FormattedMessage} from 'react-intl'
 import messages from '@/locales/messages'
 import {getAccount} from "@/tools/localStore";
 import { getDateAndTime } from '@/utils/dateTimeFormat'
-import TokenPNG from '@/components/TokenPNG'
+import TokenSymbol from '@/components/TokenSymbol'
 import BTTable from '@/components/BTTable'
 import myEmitter from '../../../../utils/eventEmitter'
 
@@ -33,8 +33,8 @@ const columns = [
   {
     title: <FormattedMessage {...WalletMessages.Price}/>,
     dataIndex: 'Value',
-    render: (price) => <div>
-      <TokenPNG />
+    render: (price, record) => <div>
+      <TokenSymbol type={record.token_type} />
       <span>{price/Math.pow(10, 8)}</span>
     </div>
   },
