@@ -19,7 +19,7 @@
 import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
 import moment from "moment"
-import { Input, DatePicker, TimePicker, Radio, Icon, Button, Row, Col } from 'antd'
+import { Input, DatePicker, Select, TimePicker, Radio, Icon, Button, Row, Col } from 'antd'
 import BTAssetList from './BTAssetList'
 import {getBlockInfo, getDataInfo, getSignaturedParam } from "../utils/BTCommonApi";
 import BTFetch from "../utils/BTFetch";
@@ -38,8 +38,7 @@ const PersonalDemandMessages = messages.PersonalDemand;
 const PersonalAssetMessages = messages.PersonalAsset;
 
 const { TextArea } = Input;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
+const Option = Select.Option;
 
 const initialState = {
     title:"",
@@ -66,9 +65,8 @@ class BTPublishDemand extends PureComponent{
       this.setState({ timeValue });
     }
 
-    onTokenChange(e) {
-      let value = e.target.value
-      console.log('e.target.value', e.target.value);
+    onTokenChange(value) {
+      // console.log('value', value);
       this.setState({ token_type: value });
     }
 
@@ -251,11 +249,10 @@ class BTPublishDemand extends PureComponent{
                 />
               </Col>
               <Col span={4}>
-                <RadioGroup onChange={this.onTokenChange} value={this.state.token_type}>
-                  <RadioButton value="BTO">BTO</RadioButton>
-                  <RadioButton value="DTO">DTO</RadioButton>
-                </RadioGroup>
-                {/* <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/> */}
+                <Select onChange={this.onTokenChange} value={this.state.token_type}>
+                  <Option value="BTO">BTO</Option>
+                  <Option value="DTO">DTO</Option>
+                </Select>
               </Col>
             </Row>
 

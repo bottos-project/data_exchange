@@ -21,7 +21,7 @@ import { connect } from 'react-redux'
 import {getAccount} from "../tools/localStore";
 // import BTUploadAsset from './BTUploadAsset'
 // import messages from '../locales/messages'
-import {Icon, Modal, Radio, Select, Button, Input, DatePicker, TimePicker, Cascader, Col, Row } from 'antd';
+import {Icon, Modal, Select, Button, Input, DatePicker, TimePicker, Cascader, Col, Row } from 'antd';
 import BTAssetList from './BTAssetList'
 import BTCryptTool from 'bottos-crypto-js'
 import {getBlockInfo,getDataInfo, getSignaturedParam} from '../utils/BTCommonApi'
@@ -40,14 +40,13 @@ const PersonalAssetMessages = messages.PersonalAsset;
 const HeaderMessages = messages.Header;
 
 const { TextArea } = Input;
-const RadioButton = Radio.Button;
-const RadioGroup = Radio.Group;
+const Option = Select.Option;
 
 const initState = {
   title:'',
   number:'0',
   description:'',
-  token_type: 'bto',
+  token_type: 'BTO',
   tag1:'',
   tag2:'',
   tag3:'',
@@ -108,9 +107,8 @@ class BTPublishAssetModal extends PureComponent{
       this.setState({ timeValue });
     }
 
-    onTokenChange(e) {
-      let value = e.target.value
-      console.log('e.target.value', e.target.value);
+    onTokenChange(value) {
+      // console.log('value', value);
       this.setState({ token_type: value });
     }
 
@@ -342,11 +340,10 @@ class BTPublishAssetModal extends PureComponent{
                 />
               </Col>
               <Col span={4}>
-                <RadioGroup onChange={this.onTokenChange} value={this.state.token_type}>
-                  <RadioButton value="bto">BTO</RadioButton>
-                  <RadioButton value="dto">DTO</RadioButton>
-                </RadioGroup>
-                {/* <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/> */}
+                <Select onChange={this.onTokenChange} value={this.state.token_type}>
+                  <Option value="BTO">BTO</Option>
+                  <Option value="DTO">DTO</Option>
+                </Select>
               </Col>
             </Row>
 

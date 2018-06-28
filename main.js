@@ -20,7 +20,6 @@ const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path')
 const url = require('url')
 const pkg = require('./package.json')
-const {download} = require('electron-dl')
 // 下载模块
 const registerMultipleDownload = require('./src/sys_modules/BTElectron-dl');
 
