@@ -83,7 +83,7 @@ module.exports = {
     "Header.YourRegistrationHasBeenSuccessfullyCompleted":"Your registration has been successfully completed",
     "Header.FailedRegister":"Failed to Register",
     "Header.AccountHasAlreadyExisted":"Account Already Existed",
-    "Header.AccountIsNotExisted":"Account is Not Existed",
+    "Header.AccountIsNotExisted":"Account does not exist",
     "Header.LoginFailure":"Login Failure",
     "Header.PleaseImportTheKeystoreFirst":"Please Import the Keystore First",
     "Header.TheWrongPassword":"The Wrong Password",
@@ -411,5 +411,6 @@ module.exports = {
     "File.Downloading":"Downloading",
     "File.Complete":"Complete",
     "File.SureToDelete":"Are you sure delete this task?",
+    "File.FailedGetUploadUrl":"Failed to get upload URL",
 
 }

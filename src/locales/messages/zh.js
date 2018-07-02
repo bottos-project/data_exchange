@@ -146,5 +146,6 @@ module.exports = {
 
     "File.FileExisted":"文件已存在",
     "File.UploadFail":"上传失败",
+    "File.FailedGetUploadUrl":"获取上传地址失败",
 
 }

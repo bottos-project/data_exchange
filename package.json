@@ -5,7 +5,7 @@
   "private": true,
   "main": "main.js",
   "homepage": ".",
-  "DEV": true,
+  "DEV": false,
   "MOCK": false,
   "description": "Bottos Wallet",
   "author": {

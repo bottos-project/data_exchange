@@ -16,12 +16,12 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-import React,{PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import {List,Button} from 'antd'
+import { List } from 'antd'
 import BTFetch from '../../../../utils/BTFetch';
-import messages from '../../../../locales/messages'
-import {getAccount} from "../../../../tools/localStore";
+// import { getSignaturedParam } from '../../../../utils/BTCommonApi'
+// import messages from '../../../../locales/messages'
 import BTCointListCell from './BTCointListCell'
 
 class BTCointList extends PureComponent{
@@ -40,25 +40,32 @@ class BTCointList extends PureComponent{
     componentDidMount() {
       const { account_info, selectedAccount } = this.props
       this.getUserBalance(selectedAccount || account_info.username)
+
+      // BTFetch('/user/GetBalance', 'POST', {username: account_info.username})
+      // .then()
+
     }
 
-    getUserBalance(account_name) {
-        console.log("getUserBalance", account_name)
+    getUserBalance(username) {
+        console.log("getUserBalance", username)
 
-        let url = '/user/GetAccountInfo'
-        let params = { account_name }
+        let url = '/user/GetBalance'
+        let params = {
+          username
+        }
         BTFetch(url,'POST',params)
           .then(res => {
-              let balanceList = []
-              if(res && res.code==1){
-                  let data = res.data
-                  balanceList.push(data)
-                  this.setState({balanceList})
-              }else{
-                  messages.error('failed')
-              }
+            if (!res || res.code != 1) {
+              throw new Error('Get balance error!')
+            }
+            let balanceList = []
+            console.log('res', res);
+            if (Array.isArray(res.data)) {
+              balanceList = res.data
+            }
+            this.setState({balanceList})
           }).catch(error=>{
-              messages.error('failed')
+            message.error('failed')
           })
     }
 

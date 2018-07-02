@@ -30,7 +30,7 @@ export default class BTCointListCell extends PureComponent{
         super(props)
         this.state = {
           visible: false,
-          balance: props.balance
+          balance: props.value
         }
     }
 
@@ -53,18 +53,19 @@ export default class BTCointListCell extends PureComponent{
     componentWillReceiveProps(nextProps) {
       // nextProps.balance
       this.setState({
-        balance: nextProps.balance
+        balance: nextProps.value
       });
     }
 
     render(){
       let { balance } = this.state;
+      const token_type = this.props.token_type
       return (
         <div className="container column">
             <div className="container route-children-bg accountItem">
               <div className="flex accountLeft">
                   <div>
-                      <span className="font25 colorTitle">{"BTO"}</span>
+                      <span className="font25 colorTitle">{this.props.token_type}</span>
                       <span>
                           <FormattedMessage {...WalletMessages.AvailableCash}/>
                       </span>
@@ -75,10 +76,11 @@ export default class BTCointListCell extends PureComponent{
                 <FormattedMessage {...WalletMessages.Transfer} />
               </Button>
             </div>
-            <BTTransitionHeight show={this.state.visible} height={220}>
+            <BTTransitionHeight show={this.state.visible} height={230}>
               <TransactionForm
                 closeModal={()=>this.onHandleCancel()}
                 account_name={this.props.account_name}
+                token_type={token_type}
                 balanceReduce={this.balanceReduce}
               />
             </BTTransitionHeight>

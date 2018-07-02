@@ -54,9 +54,9 @@ class BTOther extends PureComponent{
       BTFetch(url,'GET').then(response=>{
           if(response && response.code==1){
               let data = response.data
-              let nodes = data.row
-              let Total_Nodes = data.row_count
-              this.setState({nodes,Total_Nodes})
+              // let nodes = data.row
+              // let Total_Nodes = data.row_count
+              this.setState({nodes: data, Total_Nodes: data.length})
           }
       }).catch(error => {
         console.error(error);

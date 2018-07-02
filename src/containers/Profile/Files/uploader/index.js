@@ -199,7 +199,7 @@ function getUploadURL(file) {
       console.log('res', res);
       file.status = 'error'
       store.dispatch( updateFile(file) )
-      window.message.error(res.status)
+      window.message.error(res.status || res.detail)
     }
   }).catch(err => {
     console.error('getFileUploadURL error', err);

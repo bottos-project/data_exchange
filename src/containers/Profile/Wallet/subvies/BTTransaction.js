@@ -31,6 +31,7 @@ import ConfirmButton from '@/components/ConfirmButton'
 import { getWorker } from '@/workerManage'
 import {transactionPack} from '../../../../lib/msgpack/BTPackManager'
 import myEmitter from '../../../../utils/eventEmitter'
+import TokenSymbol from '@/components/TokenSymbol'
 
 import { SIGPOLL } from 'constants';
 import * as BTCrypto from 'bottos-crypto-js'
@@ -55,6 +56,7 @@ class Transaction extends PureComponent{
     async onHandleSubmit(){
         let {resetFields} = this.props.form
         let account_name = this.props.account_name
+        let token_type = this.props.token_type
         let localStorage = window.localStorage
 
         let accountInfo = JSON.parse(localStorage.account_info)
@@ -99,6 +101,7 @@ class Transaction extends PureComponent{
             let did = {
                 "from": account_name,
                 "to": fieldValues.to,
+                token_type,
                 "price": quantity * Math.pow(10,8),
                 "remark": "April's rent"
             }
@@ -147,51 +150,60 @@ class Transaction extends PureComponent{
     }
 
     render(){
-        const { getFieldDecorator } = this.props.form;
-        return(
-            <div className='transaction-form-container route-children-bg'>
-              <Form onSubmit={()=>this.onHandleSubmit()} style={{marginTop: 25}}>
-                <Row>
-                  <Col span='18'>
-                    <FormItem label={<FormattedMessage {...WalletMessages.TargetAccount}/>} {...formItemLayout}>
-                      {getFieldDecorator('to', {
-                        rules: [{ required: true, message: '请填写对方账号!' }],
-                      })(<Input />)}
-                    </FormItem>
+      const { getFieldDecorator } = this.props.form;
+      return (
+        <div className='transaction-form-container'>
+          <Form className='route-children-bg'
+            onSubmit={()=>this.onHandleSubmit()}
+            style={{marginTop: 5, paddingTop: 20}}
+            >
+            <Row>
+              <Col span='18'>
+                <FormItem label={<FormattedMessage {...WalletMessages.TargetAccount}/>} {...formItemLayout}>
+                  {getFieldDecorator('to', {
+                    rules: [{ required: true, message: '请填写对方账号!' }],
+                  })(<Input />)}
+                </FormItem>
 
-                    <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout} onValuesChange={console.log("onValuesChange")}>
-                      {getFieldDecorator('quantity', { rules: [{ required: true, message: '请填写转账金额!' }], })(
-                        <BTNumberInput />
-                      )}
-                      {/* <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div> */}
-                    </FormItem>
+                <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout} onValuesChange={console.log("onValuesChange")}>
+                  {getFieldDecorator('quantity', { rules: [{ required: true, message: '请填写转账金额!' }], })(
+                    <BTNumberInput />
+                    // {/* <React.Fragment><BTNumberInput /> {<TokenSymbol type={this.props.token_type} />}</React.Fragment> */}
+                  )}
+                  {/* <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div> */}
+                  <TokenSymbol type={this.props.token_type} />
+                </FormItem>
 
-                    <FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
-                      {getFieldDecorator('password', {
-                        rules: [{ required: true, message: '请填写账号密码!' }],
-                      })(<Input type="password"/>)}
-                    </FormItem>
-                  </Col>
-                  <Col span='6'>
-                    <div className="container marginRight" style={{ height: 100, paddingTop: 60, paddingLeft: 30 }}>
-                        <ConfirmButton onClick={()=>this.onHandleSubmit()}>
-                            <FormattedMessage {...WalletMessages.Submit}/>
-                        </ConfirmButton>
-                    </div>
-                  </Col>
-                </Row>
-                  {/**<FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
-                      {getFieldDecorator('password', {
-                          rules: [{ required: true, message: '请填写账户密码!' }],
-                      })(<Input type="password"/>)}
-                  </FormItem>**/}
-              </Form>
-            </div>
-        )
+                <FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
+                  {getFieldDecorator('password', {
+                    rules: [{ required: true, message: '请填写账号密码!' }],
+                  })(<Input type="password"/>)}
+                </FormItem>
+              </Col>
+              <Col span='6'>
+                <div className="container marginRight" style={{ height: 100, paddingTop: 60, paddingLeft: 30 }}>
+                    <ConfirmButton onClick={()=>this.onHandleSubmit()}>
+                        <FormattedMessage {...WalletMessages.Submit}/>
+                    </ConfirmButton>
+                </div>
+              </Col>
+            </Row>
+              {/**<FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
+                  {getFieldDecorator('password', {
+                      rules: [{ required: true, message: '请填写账户密码!' }],
+                  })(<Input type="password"/>)}
+              </FormItem>**/}
+          </Form>
+        </div>
+      )
     }
 }
 
 const TransactionForm = Form.create()(Transaction)
+
+TransactionForm.propTypes = {
+  token_type: PropTypes.oneOf(['BTO', 'DTO']),
+};
 
 const mapDispatchToProps = (dispatch) => {
     return {

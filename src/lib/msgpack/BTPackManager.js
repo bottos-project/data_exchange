@@ -86,11 +86,12 @@ export const transactionPack = (did)=>{
     let arr1Size = BTPack.PackArraySize(4)
     let arrFrom = BTPack.PackStr16(did.from)
     let arrTo = BTPack.PackStr16(did.to)
+    let arrTokenType = BTPack.PackStr16(did.token_type)
     let arrPrice = BTPack.PackUint64(did.price)
     let arrRemark = BTPack.PackStr16(did.remark)
 
     let arrBuf = new ArrayBuffer()
-    arrBuf = [...arr1Size,...arrFrom,...arrTo,...arrPrice,...arrRemark]
+    arrBuf = [...arr1Size,...arrFrom,...arrTo,...arrTokenType,...arrPrice,...arrRemark]
 
     return arrBuf
 }

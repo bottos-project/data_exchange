@@ -231,7 +231,7 @@ class BTPublishAssetModal extends PureComponent{
           "storageHash": this.state.storage_hash,
           "expireTime": expire_time,
           "opType": 1,
-          "tokenType": this.state.token_type,
+          "token_type": this.state.token_type,
           "price": Number(this.state.number) * Math.pow(10, 8),
           "description": this.state.description
         }
