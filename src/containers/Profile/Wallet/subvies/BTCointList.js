@@ -47,7 +47,7 @@ class BTCointList extends PureComponent{
     }
 
     getUserBalance(username) {
-        console.log("getUserBalance", username)
+        // console.log("getUserBalance", username)
 
         let url = '/user/GetBalance'
         let params = {

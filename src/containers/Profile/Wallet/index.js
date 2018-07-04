@@ -65,7 +65,7 @@ class BTWallet extends PureComponent {
             accountList.push(item.slice(0,-9))
           }
         })
-        console.log('walletList', walletList);
+        // console.log('walletList', walletList);
         // console.log('accountList', accountList);
         setAccountList(accountList)
         this.setState({

@@ -25,8 +25,9 @@ import React from 'react';
 // }
 
 export default function TokenSymbol(props) {
+  // console.log('props.type', props.type);
   let type = typeof props.type == 'string' ? props.type.toUpperCase() : 'BTO'
-  let token = type ? 'BTO' : 'DTO'
+  let token = type === 'BTO' ? 'BTO' : 'DTO'
   let _style = props.style || {}
   let style = {
     marginLeft: 5,
