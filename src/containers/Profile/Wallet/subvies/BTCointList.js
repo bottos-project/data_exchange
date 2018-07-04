@@ -56,7 +56,9 @@ class BTCointList extends PureComponent{
         BTFetch(url,'POST',params)
           .then(res => {
             if (!res || res.code != 1) {
-              throw new Error('Get balance error!')
+              let err = new Error('Get balance error!')
+              err.res = res
+              throw err
             }
             let balanceList = []
             console.log('res', res);
@@ -64,8 +66,21 @@ class BTCointList extends PureComponent{
               balanceList = res.data
             }
             this.setState({balanceList})
-          }).catch(error=>{
-            message.error('failed')
+          }).catch(err => {
+            // console.error(err);
+            if (err.res) {
+              let res = err.res
+              if (res.code == 1006) {
+                try {
+                  console.error(JSON.parse(res.details));
+                } catch (e) {
+                  message.error('failed')
+                }
+              }
+
+            } else {
+              message.error('failed')
+            }
           })
     }
 

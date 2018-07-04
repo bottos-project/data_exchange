@@ -49,10 +49,14 @@ class BTWallet extends PureComponent {
 
     componentDidMount(){
       this.setLoginState()
+      const { isLogin, account_info, selectAccount } = this.props
+      if (isLogin) {
+        selectAccount(account_info.username)
+      }
     }
 
     setLoginState(){
-      const { account_info, isLogin, setAccountList } = this.props
+      const { isLogin, setAccountList } = this.props
       if (isLogin) {
         let walletList = BTIpcRenderer.getKeyStoreList()
         let accountList = []

@@ -55,12 +55,11 @@ class Transaction extends PureComponent{
 
     async onHandleSubmit(){
         let {resetFields} = this.props.form
-        let account_name = this.props.account_name
+        // let account_info = this.props.account_info
+        let selectedAccount = this.props.selectedAccount
         let token_type = this.props.token_type
         let localStorage = window.localStorage
 
-        let accountInfo = JSON.parse(localStorage.account_info)
-        let username = accountInfo.username
         const { getFieldDecorator,getFieldsValue,getFieldValue,setFields,setFieldsValue } = this.props.form;
         let fieldValues = getFieldsValue()
 
@@ -84,7 +83,8 @@ class Transaction extends PureComponent{
 
         let blockInfo = await getBlockInfo()
 
-        let keyStoreResult = BTIPcRenderer.getKeyStore({username:username,account_name:account_name})
+        let keyStoreResult = BTIPcRenderer.getKeyStore({username: selectedAccount, account_name: selectedAccount})
+        console.log('keyStoreResult', keyStoreResult);
         let keyStoreObj = keyStoreResult.keyStoreObj
         // 开启遮罩
         this.props.setSpin(true)
@@ -99,7 +99,7 @@ class Transaction extends PureComponent{
             let privateKeyStr = data.privateKey
             let privateKey = Buffer.from(privateKeyStr,'hex')
             let did = {
-                "from": account_name,
+                "from": selectedAccount,
                 "to": fieldValues.to,
                 token_type,
                 "price": quantity * Math.pow(10,8),
@@ -109,7 +109,7 @@ class Transaction extends PureComponent{
             let fetchParam = {
             "version": 1,
             ...blockInfo,
-            "sender": account_name,
+            "sender": selectedAccount,
             "contract": "bottos",
             "method": "transfer",
             "sig_alg": 1
@@ -205,6 +205,13 @@ TransactionForm.propTypes = {
   token_type: PropTypes.oneOf(['BTO', 'DTO']),
 };
 
+
+const mapStateToProps = (state) => {
+  const account_info = state.headerState.account_info
+  const { selectedAccount } = state.walletState
+  return { account_info, selectedAccount }
+}
+
 const mapDispatchToProps = (dispatch) => {
     return {
         setSpin(isloading) {
@@ -213,4 +220,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null,mapDispatchToProps)(TransactionForm)
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionForm)
