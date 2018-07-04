@@ -47,7 +47,11 @@ const query_pb = require('../lib/proto/query_pb')
 const message_pb = require('../lib/proto/message_pb')
 const BTCryptTool = require('bottos-crypto-js')
 
-export function getSignaturedParam({username, privateKey}) {
+export function getSignaturedParam(account_info) {
+  if (account_info == null) {
+    return console.error('account_info error')
+  }
+  const {username, privateKey} = account_info
   if (typeof username != 'string' || typeof privateKey != 'string') {
     console.error('type error');
   }

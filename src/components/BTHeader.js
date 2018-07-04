@@ -66,9 +66,9 @@ class BTHeader extends PureComponent{
     menu() {
         return <Menu>
             <Menu.Item key="1">
-              <a href="#" onClick={this.logout}>
+              <Link to="/dashboard" onClick={this.logout}>
                   <FormattedMessage {...HeaderMessages.Logout}/>
-              </a>
+              </Link>
             </Menu.Item>
         </Menu>
     }

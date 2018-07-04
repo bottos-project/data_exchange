@@ -249,7 +249,7 @@ class Login extends PureComponent{
                   <span className="label"><FormattedMessage {...LoginMessages.VerifyCode} /></span>
               </Col>
               <Col span={11}>
-                  <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} className="marginRight" onChange={(e)=>{this.setState({verify_code:e.target.value})}}/>
+                  <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} className="marginRight" onChange={(e)=>{this.setState({verify_code:e.target.value})}} onPressEnter={this.onHandleUnlock} />
               </Col>
               <Col span={8}>
                   {this.props.verify_data
