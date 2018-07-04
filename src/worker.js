@@ -16,14 +16,15 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-import { keystore } from 'bottos-crypto-js'
+// import keystore from 'bottos-crypto-js/lib/keystore'
+const keystore = require('bottos-crypto-js/lib/keystore');
 
 import { get_ms_short } from './utils/dateTimeFormat'
 
 let t1 = 0;
 
-function createKeystore(data) {
-  let keystoreObj = keystore.create(data)
+function createKeystore({account, password, privateKey}) {
+  let keystoreObj = keystore.create({account, password, privateKey})
   console.log('keystoreObj', keystoreObj);
   console.log('keys time2', get_ms_short() - t1 );
   postMessage(keystoreObj);

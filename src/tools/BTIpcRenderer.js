@@ -27,7 +27,7 @@ const {ipcEventName} = window.eventName;
  */
 const getKeyStore = (accountInfo)=>{
     let responst = ipcRenderer.sendSync(ipcEventName.get_key_store,accountInfo);
-    console.log({responst})
+    // console.log('responst', responst)
     return responst
 }
 
