@@ -5,7 +5,7 @@
   "private": true,
   "main": "main.js",
   "homepage": ".",
-  "DEV": false,
+  "DEV": true,
   "MOCK": false,
   "description": "Bottos Wallet",
   "author": {
@@ -14,6 +14,7 @@
   "scripts": {
     "start": "webpack-dev-server --config ./config/webpack.config.dev.js --hot",
     "build": "webpack --config ./config/webpack.config.prod.js",
+    "dll": "webpack --config ./config/webpack.config.dll.js",
     "buildwithworker": "webpack --mode production --config ./config/webpack.config.worker.js && webpack --config ./config/webpack.config.prod.js",
     "electron-start": "electron .",
     "worker": "webpack --mode development --config ./config/webpack.config.worker.js --watch",

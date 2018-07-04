@@ -67,12 +67,6 @@ const devConfig = webpackMerge(commonConfig, {
 
   plugins: [
 
-    new webpack.LoaderOptionsPlugin({
-      debug: true
-    }),
-
-    new webpack.NamedModulesPlugin(),
-
     new HtmlWebpackPlugin({
       template: paths.appHtml,
     })
