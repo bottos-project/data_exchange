@@ -74,7 +74,7 @@ Object.defineProperty(service, 'base_url', {
     if (window.useCustomIP === true && window.hostname != undefined) {
       hostname = window.hostname
     }
-    // console.log('hostname', hostname);
+    console.log('hostname', hostname);
     base_url = `http://${hostname}:8080/`
     return base_url
   },

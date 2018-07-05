@@ -16,27 +16,16 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-import config from './config.js'
-const pkg = require('../../package.json')
+const { service } = require('./config')
 import BTIPcRenderer from '../tools/BTIpcRenderer'
 import store from '@/redux/store'
 import { addDownloadRecord } from '@/redux/actions/downloadAction'
 import { basename } from 'path'
 
-
-// console.log('getFileDownLoadPath', getFileDownLoadPath);
-
-// export const file_server = 'http://139.219.139.198:8080/v3'
-var file_server = 'http://139.217.202.68:8080/v3'
-
-if (pkg.MOCK) {
-    file_server = config.mock.base_url
-} else {
-    file_server = config.service.base_url + config.service.version
-}
-
+// console.log('service', service);
 
 export const BTFileFetch = (url, fetchParam) => {
+  var file_server = service.base_url + service.version
   return fetch(file_server + url, {
     method: 'POST',
     body: JSON.stringify(fetchParam),
