@@ -48,7 +48,7 @@ const columns = [
   { title: <FormattedMessage {...HistoryMessages.Block}/>, dataIndex: 'block_number'},
 ]
 
-class BTDashboard extends PureComponent{
+class BTHistory extends PureComponent{
   constructor(props){
       super(props);
       this.state={
@@ -96,6 +96,7 @@ class BTDashboard extends PureComponent{
   }
 
   render() {
+    console.log('afaf');
       return(
         <div className="container column">
           <Table pagination={this.pagination()}
@@ -119,8 +120,8 @@ class BTDashboard extends PureComponent{
 
 }
 
-BTDashboard.defaultProps = {
+BTHistory.defaultProps = {
   pageSize: 12
 };
 
-export default BTDashboard
+export default BTHistory

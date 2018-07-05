@@ -80,7 +80,11 @@ class Transaction extends PureComponent{
           window.message.error(window.localeInfo["Wallet.PleaseEnterThePassword"])
           return
         }
-        if (quantity <= 0 || quantity * Math.pow(10,8) > this.props.balance) {
+        if (quantity <= 0) {
+          window.message.error(window.localeInfo["Wallet.PleaseEnterAvalidTransferAmount"])
+          return
+        }
+        if (quantity * Math.pow(10,8) > this.props.balance) {
           window.message.error(window.localeInfo["Wallet.PleaseEnterAvalidTransferAmount"])
           return
         }
@@ -142,8 +146,9 @@ class Transaction extends PureComponent{
               }
               this.props.setSpin(false)
             }).catch(error=>{
-              message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
+              console.error('err', error);
               this.props.setSpin(false)
+              window.message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
             })
         }
 
