@@ -38,6 +38,7 @@ module.exports = {
     "Menu.Wallet":"My Wallet",
     "Menu.Download":"My Downloads",
     "Menu.Walletlist":"Wallet List",
+    "Menu.TransactionHistory":"Transaction History",
     "Menu.ProfileAsset":"My Asset",
     "Menu.ProfileNeed":"My Demand",
     "Menu.ProfileFile":"My File",
@@ -344,6 +345,7 @@ module.exports = {
 
 
     //Wallet
+    "Wallet.Back":"Back",
     "Wallet.More":"More",
     "Wallet.ModifyThePassword":"Modify the Password",
     "Wallet.ExportTheAccount":"Export the Account",
@@ -356,6 +358,7 @@ module.exports = {
     "Wallet.Cancel":"Cancel",
     "Wallet.Submit":"Submit",
     "Wallet.Token":"Token",
+    "Wallet.TransactionHistory":"Transaction History",
     "Wallet.Transfer":"Transfer",
     "Wallet.TurnOut":"TurnOut",
     "Wallet.Price":"Price",
@@ -372,6 +375,7 @@ module.exports = {
     "Wallet.TheMoneyToBeTransferred":"Transfer Amount",
     "Wallet.Password":"Password",
     "Wallet.PleaseEnterTheTargetAccount":"Please Enter the Recipient Account",
+    "Wallet.CannotTransferToSelf":"Can not transfer to self",
     "Wallet.PleaseEnterTheMoneyToBeTransferred":"Please Enter the amount of Money to Be Transferred",
     "Wallet.PleaseEnterThePassword":"Please Enter the Password",
     "Wallet.PleaseEnterAvalidTransferAmount":"Please Enter a Valid Transfer Amount",

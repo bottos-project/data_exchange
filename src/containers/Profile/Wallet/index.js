@@ -29,7 +29,6 @@ import BTUnlogin from '../../../components/BTUnlogin'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import BTCointList from './subvies/BTCointList'
-import BTTransactionHistory from './subvies/BTTransactionHistory'
 import CustomTabBar from '@/components/CustomTabBar'
 
 const WalletMessages = messages.Wallet;
@@ -108,7 +107,6 @@ class BTWallet extends PureComponent {
           </CustomTabBar>
 
           <BTCointList />
-          <BTTransactionHistory />
         </div>
       )
 

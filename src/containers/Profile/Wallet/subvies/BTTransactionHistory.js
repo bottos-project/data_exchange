@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon } from 'antd';
+import { Icon, Button } from 'antd';
 import { getSignaturedParam } from "@/utils/BTCommonApi";
 import {FormattedMessage} from 'react-intl'
 import messages from '@/locales/messages'
@@ -69,6 +69,10 @@ class BTTransactionHistory extends Component {
     this.table.onChange(1, 12)
   }
 
+  back = () => {
+    this.props.router.goBack()
+  }
+
   componentWillUnmount() {
     myEmitter.removeListener('transfer', this.changeTableData)
   }
@@ -79,14 +83,33 @@ class BTTransactionHistory extends Component {
   }
 
   render() {
+    const { selectedAccount, token_type, balance } = this.props.location.query
     return (
-      <div style={{marginTop: 20}}>
+      <div>
+
+        <div className="container route-children-bg accountItem">
+          <div className="flex accountLeft">
+            <div>
+              <span className="font25 colorTitle">{token_type}</span>
+              <FormattedMessage {...WalletMessages.AvailableCash}/>
+            </div>
+            <div className="font25 colorRed">{balance/Math.pow(10, 8)}</div>
+          </div>
+          <div className='accountRight'>
+            <Button type="primary" onClick={this.back}>
+              <FormattedMessage {...WalletMessages.Back} />
+            </Button>
+          </div>
+        </div>
+
         <BTTable
+          style={{marginTop: 20}}
           ref={t => this.table = t}
           columns={columns}
           rowKey='transaction_id'
           url='/user/GetTransfer'
-          options={getSignaturedParam(getAccount())}
+          // options={{...getSignaturedParam(getAccount()), username: selectedAccount, token_type}}
+          options={{username: selectedAccount, token_type}}
           catchError={(err) => console.log(err)}
           // catchError={(err) => message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])}
           // {...props}

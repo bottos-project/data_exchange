@@ -110,6 +110,10 @@ module.exports = {
           id:'Menu.Walletlist',
           defaultMessage:'钱包列表'
         },
+        TransactionHistory:{
+          id:'Menu.TransactionHistory',
+          defaultMessage:'转账记录'
+        },
     },
     Header:{
         PleaseLogInFirst:{
@@ -910,6 +914,10 @@ module.exports = {
         },
     },
     Wallet:{
+        Back:{
+            id:"Wallet.Back",
+            defaultMessage:"返回"
+        },
         ModifyThePassword:{
             id:"Wallet.ModifyThePassword",
             defaultMessage:"修改密码"
@@ -969,6 +977,10 @@ module.exports = {
         Transfer:{
             id:"Wallet.Transfer",
             defaultMessage:"转账"
+        },
+        TransactionHistory:{
+            id:"Wallet.TransactionHistory",
+            defaultMessage:"转账记录"
         },
         Token:{
             id:"Wallet.Token",

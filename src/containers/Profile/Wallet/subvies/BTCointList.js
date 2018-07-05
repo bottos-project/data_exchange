@@ -90,7 +90,7 @@ class BTCointList extends PureComponent{
           // style={{flexGrow: 1}}
           dataSource={this.state.balanceList}
           renderItem={(item)=>{
-            return <BTCointListCell {...item}/>
+            return <BTCointListCell {...item} selectedAccount={this.props.selectedAccount} />
           }}
         />
       )

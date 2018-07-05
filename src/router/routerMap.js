@@ -44,6 +44,7 @@ import BTMyAssetSet from '../containers/Profile/Files'
 import BTWallet from '../containers/Profile/Wallet'
 import BTSetting from '../containers/Profile/Setting'
 import BTWalletList from '../containers/Profile/Wallet/subvies/BTWalletList'
+import BTTransactionHistory from '../containers/Profile/Wallet/subvies/BTTransactionHistory'
 
 import BTPublishDemand from '../components/BTPublishDemand'
 import BTPublishAssetModal from '../components/BTPublishAssetModal'
@@ -89,6 +90,7 @@ class RouterMap extends PureComponent {
               <Route path="walletlist" name='Walletlist' breadcrumbName='Walletlist' component={BTWalletList}>
                 <Route path="new" name='CreateNewAccount' breadcrumbName='CreateNewAccount' component={Register} />
               </Route>
+              <Route path="TransactionHistory" name='TransactionHistory' breadcrumbName='TransactionHistory' component={BTTransactionHistory} />
             </Route>
             <Route path="check" name='MyMessages' breadcrumbName='MyMessages' component={BTCheck} />
             <Route path="presale" name='Promote' breadcrumbName='Promote' component={BTPromote} />

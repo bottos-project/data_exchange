@@ -40,7 +40,7 @@ export const registAssetPack = (did)=>{
 
     let arrExpireTime = BTPack.PackUint32(basic_info.expireTime)
     let arrOpType = BTPack.PackUint32(basic_info.opType)
-    console.log({price:basic_info.price})
+    // console.log('price', basic_info.price)
     let arrTokenType = BTPack.PackStr16(basic_info.token_type)
 
     let arrPrice = BTPack.PackUint64(basic_info.price)
@@ -81,17 +81,19 @@ export const registDemandPack = (did)=>{
     return arrBuf
 }
 
-
 export const transactionPack = (did)=>{
     let arr1Size = BTPack.PackArraySize(4)
     let arrFrom = BTPack.PackStr16(did.from)
     let arrTo = BTPack.PackStr16(did.to)
-    let arrTokenType = BTPack.PackStr16(did.token_type)
+    let arrTokenType = []
+    if (did.token_type != 'BTO') {
+      arrTokenType = BTPack.PackStr16(did.token_type)
+    }
     let arrPrice = BTPack.PackUint64(did.price)
+    // console.log('arrPrice', arrPrice);
     let arrRemark = BTPack.PackStr16(did.remark)
 
-    let arrBuf = new ArrayBuffer()
-    arrBuf = [...arr1Size,...arrFrom,...arrTo,...arrTokenType,...arrPrice,...arrRemark]
+    let arrBuf = [...arr1Size,...arrFrom,...arrTo,...arrTokenType,...arrPrice,...arrRemark]
 
     return arrBuf
 }

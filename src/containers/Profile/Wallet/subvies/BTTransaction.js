@@ -68,6 +68,10 @@ class Transaction extends PureComponent{
           window.message.error(window.localeInfo["Wallet.PleaseEnterTheTargetAccount"])
           return
         }
+        if (fieldValues.to == selectedAccount) {
+          window.message.error(window.localeInfo["Wallet.CannotTransferToSelf"])
+          return
+        }
         if(!quantity){
           window.message.error(window.localeInfo["Wallet.PleaseEnterTheMoneyToBeTransferred"])
           return
@@ -76,7 +80,7 @@ class Transaction extends PureComponent{
           window.message.error(window.localeInfo["Wallet.PleaseEnterThePassword"])
           return
         }
-        if(quantity<=0){
+        if (quantity <= 0 || quantity * Math.pow(10,8) > this.props.balance) {
           window.message.error(window.localeInfo["Wallet.PleaseEnterAvalidTransferAmount"])
           return
         }
@@ -110,7 +114,7 @@ class Transaction extends PureComponent{
             "version": 1,
             ...blockInfo,
             "sender": selectedAccount,
-            "contract": "bottos",
+            "contract": token_type === "DTO" ? "bottoscontract" : "bottos",
             "method": "transfer",
             "sig_alg": 1
             }
@@ -203,6 +207,8 @@ const TransactionForm = Form.create()(Transaction)
 
 TransactionForm.propTypes = {
   token_type: PropTypes.oneOf(['BTO', 'DTO']),
+  selectedAccount: PropTypes.string.isRequired,
+  balance: PropTypes.number.isRequired,
 };
 
 

@@ -124,6 +124,7 @@ module.exports = {
 
     "Wallet.More":"更多",
     "Wallet.PleaseEnterTheTargetAccount":"请输入对方账户",
+    "Wallet.CannotTransferToSelf":"不能转账给自己",
     "Wallet.PleaseEnterTheMoneyToBeTransferred":"请输入转账金额",
     "Wallet.PleaseEnterThePassword":"请输入密码",
     "Wallet.PleaseEnterAvalidTransferAmount":"请输入有效的转账金额",
