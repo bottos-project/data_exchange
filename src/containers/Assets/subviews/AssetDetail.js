@@ -42,6 +42,22 @@ const AssetMessages = messages.Asset;
 const { TextArea } = Input;
 const confirm = Modal.confirm;
 
+/**
+ * [functionName description]
+ * @param  {Object} titleMessage [description]
+ * @param  {any} content      [description]
+ * @return {Component}              [description]
+ */
+function RowItem({titleMessage, content}) {
+  if (typeof titleMessage != 'object') {
+    console.error('Type Error', titleMessage);
+  }
+  return <Row style={{marginBottom: '0.5em'}}>
+    <Col span={6}><FormattedMessage {...titleMessage} /></Col>
+    <Col span={18}>{content}</Col>
+  </Row>
+}
+
 export default class BTAssetDetail extends PureComponent{
     constructor(props) {
         super(props)
@@ -220,6 +236,10 @@ export default class BTAssetDetail extends PureComponent{
       BTDownloadFile(guid, username)
     }
 
+    renderItemList() {
+
+    }
+
     render() {
 
       let data = this.state;
@@ -245,54 +265,22 @@ export default class BTAssetDetail extends PureComponent{
                   <BTFavoriteStar isFavorite={data.favorite_flag} type='asset' id={data.asset_id} />
                 </div>
 
-                <Row>
-                  <Col span={6}>
-                    <FormattedMessage {...AssetMessages.AssetID}/>
-                  </Col>
-                  <Col span={18}>{data.asset_id}</Col>
-                </Row>
+                <RowItem titleMessage={AssetMessages.AssetID} content={data.asset_id} />
 
-                <Row>
-                  <Col span={6}>
-                    <FormattedMessage {...AssetMessages.Publisher}/>
-                  </Col>
-                  <Col span={18}>{data.username}</Col>
-                </Row>
+                <RowItem titleMessage={AssetMessages.Publisher} content={data.username} />
 
-                <Row>
-                  <Col span={6}>
-                    <FormattedMessage {...AssetMessages.AssetType}/>
-                  </Col>
-                  <Col span={18}>
-                    {arTypeKeyMap[data.asset_type]}
-                  </Col>
-                </Row>
+                <RowItem titleMessage={AssetMessages.AssetType} content={arTypeKeyMap[data.asset_type]} />
 
-                <Row>
-                  <Col span={6}>
-                    <FormattedMessage {...AssetMessages.ExpectedPrice}/>
-                  </Col>
-                  <Col span={18}>
+                <RowItem titleMessage={AssetMessages.ExpectedPrice} content={
+                  <React.Fragment>
                     {data.price / Math.pow(10, 8)}
                     <TokenSymbol type={data.token_type} />
-                  </Col>
-                </Row>
+                  </React.Fragment>
+                } />
 
-                <Row>
-                  <Col span={6}>
-                    <FormattedMessage {...AssetMessages.ExpireTime}/>
-                  </Col>
-                  <Col span={18}>{getDateAndTime(time)}</Col>
-                </Row>
+                <RowItem titleMessage={ReqAndAssMessages.ExpireTime} content={getDateAndTime(time)} />
 
-                <Row>
-                  <Col span={6}>
-                    <FormattedMessage {...AssetMessages.FeatureTag}/>
-                  </Col>
-                  <Col span={18}>
-                    <BTTags tags={tagsArr} />
-                  </Col>
-                </Row>
+                <RowItem titleMessage={AssetMessages.FeatureTag} content={<BTTags tags={tagsArr} />} />
 
               </div>
 

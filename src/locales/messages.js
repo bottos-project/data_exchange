@@ -16,7 +16,22 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-module.exports = {
+
+// function model(id, defaultMessage) {
+//   return { id, defaultMessage }
+// }
+//
+// function assignMessage(id, defaultMessage) {
+//   let parsedID = id.split('.')
+//   for (var i = 0; i < parsedID.length; i++) {
+//     if (messages[id[i]] == undefined) {
+//       messages[id[i]] = {}
+//     }
+//
+//   }
+// }
+
+var messages = {
     OK:{
       id:"OK",
       defaultMessage:"确定",
@@ -299,6 +314,10 @@ module.exports = {
             id:'ReqAndAss.DownLoadTheSample',
             defaultMessage:'下载样例'
         },
+        ExpireTime:{
+            id:'ReqAndAss.ExpireTime',
+            defaultMessage:'有效时间：'
+        }
     },
     Demand:{
         Demand:{
@@ -328,6 +347,10 @@ module.exports = {
         AssetType:{
             id:'Demand.AssetType',
             defaultMessage:'资产类型：'
+        },
+        RequirementType:{
+            id:'Demand.RequirementType',
+            defaultMessage:'需求类型：'
         },
         ExpectedPrice:{
             id:'Demand.ExpectedPrice',
@@ -378,10 +401,6 @@ module.exports = {
         ExpectedPrice:{
             id:'Asset.ExpectedPrice',
             defaultMessage:'期望价格：'
-        },
-        ExpireTime:{
-            id:'Asset.ExpireTime',
-            defaultMessage:'有效时间：'
         },
         BuyAssets:{
             id:'Asset.BuyAssets',
@@ -1008,7 +1027,7 @@ module.exports = {
         },
         AvailableCash:{
             id:"Wallet.AvailableCash",
-            defaultMessage:"可用现金"
+            defaultMessage:"可用金额"
         },
         CreateNewAccount:{
             id:"Wallet.CreateNewAccount",
@@ -1071,4 +1090,6 @@ module.exports = {
             defaultMessage:"需求者"
         },
     }
-};
+}
+
+module.exports = messages

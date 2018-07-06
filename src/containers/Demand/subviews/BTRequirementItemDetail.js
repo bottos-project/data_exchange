@@ -31,10 +31,11 @@ import BTFavoriteStar from '@/components/BTFavoriteStar'
 import { typeValueKeyMap } from '../../../utils/keyMaps'
 import { PackArraySize, PackStr16, PackUint32 } from '@/lib/msgpack/msgpack'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
+import { selectType } from '../../../utils/keyMaps'
+
 const DemandMessages = messages.Demand;
 const ReqAndAssMessages = messages.ReqAndAss;
 const { TextArea } = Input;
-
 
 export default class BTRequirementItemDetail extends PureComponent{
   constructor(props){
@@ -191,26 +192,20 @@ export default class BTRequirementItemDetail extends PureComponent{
                   </div>
 
                   <p>
-                      <FormattedMessage {...DemandMessages.Publisher}/>
+                      <FormattedMessage {...DemandMessages.Publisher} />
                       {data.username}
                   </p>
-                  {/*<p>
-                      <span>
-                       <FormattedMessage {...DemandMessages.AssetType}/>
-                      </span>
-                      {data.feature_tag}
-                  </p>*/}
                   <p>
-                      <span>
-                          <FormattedMessage {...DemandMessages.ExpectedPrice}/>
-                      </span>
+                    <FormattedMessage {...DemandMessages.RequirementType} />
+                    {selectType[data.req_type]}
+                  </p>
+                  <p>
+                      <FormattedMessage {...DemandMessages.ExpectedPrice}/>
                       {data.price/Math.pow(10, 8)}
                       <TokenSymbol type={data.token_type} />
                   </p>
                   <p>
-                      <span>
-                          <FormattedMessage {...DemandMessages.ExpireTime}/>
-                      </span>
+                      <FormattedMessage {...ReqAndAssMessages.ExpireTime}/>
                       {getDateAndTime(data.expire_time)}
                   </p>
                 </div>

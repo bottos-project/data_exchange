@@ -28,6 +28,7 @@ import { getDateAndTime } from '@/utils/dateTimeFormat'
 
 import messages from '../../../locales/messages'
 const AssetMessages = messages.Asset;
+const ReqAndAssMessages = messages.ReqAndAss;
 
 class AssetlistItem extends Component {
 
@@ -82,7 +83,7 @@ class AssetlistItem extends Component {
                   <TokenSymbol type={data.token_type} />
                 </div>
                 <div>
-                  <FormattedMessage {...AssetMessages.ExpireTime} />
+                  <FormattedMessage {...ReqAndAssMessages.ExpireTime} />
                   <span>{getDateAndTime(data.expire_time)}</span>
                 </div>
                 <BTTags tags={tagsArr} />

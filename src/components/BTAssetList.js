@@ -20,6 +20,8 @@ import React,{PureComponent} from 'react'
 import { Radio, Row, Col, Modal, Button } from 'antd';
 import {getAccount} from "../tools/localStore";
 import {Link} from 'react-router'
+import {FormattedMessage} from 'react-intl'
+const messages = require('../locales/messages');
 const RadioGroup = Radio.Group;
 
 export default class BTAssetList extends PureComponent{
@@ -78,6 +80,8 @@ export default class BTAssetList extends PureComponent{
             <Modal visible={this.state.visible}
                 onOk={()=>this.handleOk()}
                 onCancel={()=>this.handleCancel()}
+                okText={<FormattedMessage {...messages.OK} />}
+                cancelText={<FormattedMessage {...messages.Cancel} />}
             >
                 <div style={{height:300,overflow:"auto",margin:20}}>
                     <RadioGroup style={{ width: '100%' }}  onChange={(e)=>this.onChange(e)} defaultValue=''>
