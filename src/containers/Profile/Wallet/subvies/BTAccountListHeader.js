@@ -131,6 +131,8 @@ class BTAccountListHeader extends PureComponent{
             visible={this.state.visible}
             onOk={()=>this.onHandleOk()}
             onCancel={()=>this.onHandleCancel()}
+            okText={<FormattedMessage {...messages.OK} />}
+            cancelText={<FormattedMessage {...messages.Cancel} />}
           >
             <Button onClick={()=>this.importKeyStore()}>
               <FormattedMessage {...WalletMessages.ImportTheKeyStore}/>

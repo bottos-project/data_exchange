@@ -19,6 +19,9 @@
 import React,{PureComponent} from 'react'
 import { Radio, Row, Col, Modal, message } from 'antd';
 import BTFetch from "../../../utils/BTFetch";
+import {FormattedMessage} from 'react-intl'
+import messages from '../../../locales/messages'
+
 const RadioGroup = Radio.Group;
 
 export default class BTAssetRadioGroup extends PureComponent{
@@ -54,6 +57,8 @@ export default class BTAssetRadioGroup extends PureComponent{
             <Modal visible={this.state.visible}
                    onOk={()=>this.handleOk()}
                    onCancel={()=>this.handleCancel()}
+                   okText={<FormattedMessage {...messages.OK} />}
+                   cancelText={<FormattedMessage {...messages.Cancel} />}
             >
                 <div style={{height:300,overflow:"auto",margin:20}}>
                     <RadioGroup style={{ width: '100%' }}  onChange={(e)=>this.onChange(e)} defaultValue=''>

@@ -19,14 +19,11 @@
 import React,{PureComponent} from 'react'
 import { connect } from 'react-redux'
 import {getAccount} from "../tools/localStore";
-// import BTUploadAsset from './BTUploadAsset'
-// import messages from '../locales/messages'
-import {Icon, Modal, Select, Button, Input, DatePicker, TimePicker, Cascader, Col, Row } from 'antd';
+import {Icon, Select, Button, Input, DatePicker, TimePicker, Col, Row } from 'antd';
 import BTAssetList from './BTAssetList'
 import BTCryptTool from 'bottos-crypto-js'
 import {getBlockInfo,getDataInfo, getSignaturedParam} from '../utils/BTCommonApi'
 import BTFetch from "../utils/BTFetch";
-import {options} from '../utils/option'
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
 import moment from "moment"
@@ -370,10 +367,6 @@ class BTPublishAssetModal extends PureComponent{
               </Col>
               <Col span={12}>
                 <BTTypeSelect value={this.state.dataAssetType} onChange={this.onChangeDataAssetType} />
-                {/* <Cascader value={this.state.cascader}
-                  options={options}
-                  placeholder={window.localeInfo["PersonalAsset.PleaseSelect"]}
-                /> */}
               </Col>
             </Row>
 

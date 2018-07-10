@@ -59,7 +59,7 @@ module.exports = {
     "Asset.ThereIsNoMarketAssetForTheTimeBeing":"暂无市场资产",
     "Asset.FailedToQueryTheMarketSource":"市场资源查询失败",
     "Asset.PleaseLogInFirst":"请先登录账户",
-    "Asset.YouAreNotAllowedToBuyYourOwnAssets":"不允许购买自己的资产!",
+    "Asset.YouAreNotAllowedToBuyYourOwnAssets":"不允许购买自己的资产！",
     "Asset.CannotPurchaseAgain":"已经购买过本资产，不能重复购买",
     "Asset.FailedToGetTheBlockMessages":"获取区块信息失败",
     "Asset.SuccessfulPurchase":"购买成功",

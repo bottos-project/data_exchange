@@ -102,6 +102,8 @@ export default class BTWalletItem extends PureComponent{
                 visible={this.state.visible}
                 onOk={()=>this.onHandleOk()}
                 onCancel={()=>this.onHandleCancel()}
+                okText={<FormattedMessage {...messages.OK} />}
+                cancelText={<FormattedMessage {...messages.Cancel} />}
             >
                 <Input style={{marginTop:20,marginBottom:20}} type="password" placeholder={window.localeInfo['Wallet.PleaseEnterTheOriginalPassword']} value={this.state.password} onChange={(e)=>this.setState({password:e.target.value})}/>
                 <Input style={{marginBottom:20}} type="password" placeholder={window.localeInfo['Wallet.PleaseEnterTheNewPassword']} value={this.state.newPassword} onChange={(e)=>this.setState({newPassword:e.target.value})}/>
