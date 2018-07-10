@@ -95,12 +95,13 @@ export default class BTAssetDetail extends PureComponent{
 
     }
 
-    grantCredit(username,blockInfo,privateKey){
+    grantCredit(username, blockInfo, privateKey) {
+      const token_type = this.props.location.state.token_type
       let params = {
         "version": 1,
         ...blockInfo,
         "sender": username,
-        "contract": "bottos",
+        "contract": token_type === "BTO" ? "bottos" : "bottostoken",
         "method": "grantcredit",
         "sig_alg": 1
       }
@@ -108,6 +109,7 @@ export default class BTAssetDetail extends PureComponent{
       let did = {
         name:username,
         spender:'datadealmng',
+        token_type,
         limit:this.state.price
       }
 
@@ -122,33 +124,33 @@ export default class BTAssetDetail extends PureComponent{
           if(response){
             if(response.code==1){
               this.buyButtonClick(username,blockInfo,privateKey)
-            }else if(response.code==4001){
-              this.calcelCredit(username,blockInfo,privateKey)
+            }else if(response.code==4001 || response.code==10105) {
               window.message.error(window.localeInfo["Asset.InsufficientBalance"])
             }else{
-              this.calcelCredit(username,blockInfo,privateKey)
               window.message.error(window.localeInfo["Asset.FailedPurchase"])
             }
           }
         }).catch(error=>{
-          this.calcelCredit(username,blockInfo,privateKey)
           window.message.error(window.localeInfo["Asset.FailedPurchase"])
         })
     }
 
     calcelCredit(username,blockInfo,privateKey){
+      const token_type = this.props.location.state.token_type
+
       let params = {
         "version": 1,
         ...blockInfo,
         "sender": username,
-        "contract": "bottos",
-        "method": "cancelcredit",
+        "contract": token_type === "BTO" ? "bottos" : "bottostoken",
+        "method": token_type === "BTO" ? "cancelcredit" : "deletecredit",
         "sig_alg": 1,
       }
 
       let did = {
         name:username,
-        spender:"datadealmng"
+        spender:"datadealmng",
+        token_type,
       }
 
       let arrBuf = cancelAssetGrantCreditPack(did)
@@ -197,13 +199,12 @@ export default class BTAssetDetail extends PureComponent{
         "sender": username,
         "contract": "datadealmng",
         "method": "buydata",
-        "param": param,
+        param,
         "sig_alg": 1
       }
 
       BTFetch('/exchange/buyAsset', 'post', getSignaturedFetchParam({fetchParam, privateKey}))
       .then(res=>{
-        console.log({res})
         if (!res) {
           throw new Error('buy asset failed')
         }
@@ -214,6 +215,8 @@ export default class BTAssetDetail extends PureComponent{
         } else if (res.code == 4001) {
           this.calcelCredit(username,blockInfo,privateKey)
           message.warning(window.localeInfo["Asset.InsufficientBalance"])
+        } else {
+          throw new Error('buy asset failed')
         }
       }).catch(err => {
         console.error('err', err);
@@ -234,10 +237,6 @@ export default class BTAssetDetail extends PureComponent{
     download() {
       let { sample_hash: guid, username } = this.state;
       BTDownloadFile(guid, username)
-    }
-
-    renderItemList() {
-
     }
 
     render() {

@@ -110,18 +110,28 @@ export const favoritePack = (did) => {
 }
 
 export const buyAssetGrantCreditPack = (did)=>{
-    let p1 = BTPack.PackArraySize(3)
+    let p1 = BTPack.PackArraySize(4)
     let p2 = BTPack.PackStr16(did.name)
     let p3 = BTPack.PackStr16(did.spender)
+
+    let arrTokenType = []
+    if (did.token_type != 'BTO') {
+      arrTokenType = BTPack.PackStr16(did.token_type)
+    }
+
     let p4 = BTPack.PackUint64(did.limit)
 
-    return [...p1,...p2,...p3,...p4]
+    return [...p1,...p2,...p3,...arrTokenType,...p4]
 }
 
 export const cancelAssetGrantCreditPack = (did)=>{
-    let p1 = BTPack.PackArraySize(2)
+    let p1 = BTPack.PackArraySize(3)
     let p2 = BTPack.PackStr16(did.name)
     let p3 = BTPack.PackStr16(did.spender)
+    let arrTokenType = []
+    if (did.token_type != 'BTO') {
+      arrTokenType = BTPack.PackStr16(did.token_type)
+    }
 
-    return [...p1,...p2,...p3]
+    return [...p1,...p2,...p3,...arrTokenType]
 }
