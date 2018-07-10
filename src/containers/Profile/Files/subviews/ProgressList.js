@@ -111,7 +111,7 @@ class UploadingFile extends PureComponent {
 
   handleClose(e) {
     e.stopPropagation()
-    const { deleteFile, id, status, percent } = this.props
+    const { deleteFile, id, guid, status, percent } = this.props
 
     // const { percent } = this.state
     // console.log('status', status);
@@ -119,7 +119,9 @@ class UploadingFile extends PureComponent {
       return ;
     }
     deleteFile(id)
-    deleteFileCache(id)
+    if (guid) {
+      deleteFileCache(guid)
+    }
     // if (uploader.getFiles().findIndex(f => f.id == id) != -1) {
       uploader.cancelFile(id)
     // }
