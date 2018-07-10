@@ -36,7 +36,7 @@ const CheckMessages = messages.Check;
 
 
 function BTCheck(props) {
-  function lookFor(asset_id, notice_id) {
+  function lookFor(asset_id, notice_id, isRead) {
     BTFetch("/asset/queryAssetByID", "post", {
       ...getSignaturedParam(getAccount()),
       asset_id
@@ -55,15 +55,17 @@ function BTCheck(props) {
       window.message.error(window.localeInfo["Check.QueryFailure"])
     })
 
-    // console.log('props', props);
-    BTFetch("/asset/ModifyMyNoticeStatus", "post", {
-      ...getSignaturedParam(getAccount()),
-      noticeId: notice_id
-    }).then(res => {
-      if (res.code == 1) {
-        props.readMessage()
-      }
-    }).catch(err => console.error(err))
+    if (isRead == 0) {
+      BTFetch("/asset/ModifyMyNoticeStatus", "post", {
+        ...getSignaturedParam(getAccount()),
+        noticeId: notice_id
+      }).then(res => {
+        if (res.code == 1) {
+          props.readMessage()
+        }
+      }).catch(err => console.error(err))
+    }
+    
   }
 
   const columns = [
@@ -80,8 +82,9 @@ function BTCheck(props) {
     // { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username', key:'user_name' },
     { title: <FormattedMessage {...CheckMessages.View}/>, dataIndex:'asset_id',
       render: (asset_id, record) => {
-        let style = record.isRead == 0 ? {fontWeight: 700} : null
-        return <Button style={style} onClick={()=> lookFor(asset_id, record.notice_id)}>
+        const { isRead, notice_id } = record
+        let style = isRead == 0 ? {fontWeight: 700} : null
+        return <Button style={style} onClick={()=> lookFor(asset_id, notice_id, isRead)}>
           <FormattedMessage {...CheckMessages.View} />
         </Button>
       }

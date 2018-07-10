@@ -61,8 +61,8 @@ const headerState = (state = initialState, action) => {
         return {...state, notice_num: action.notice_num}
 
       case actionTypes.READ_MESSAGE:
-        return {...state, notice_num: state.notice_num - 1}
-
+        var notice_num = state.notice_num - 1 < 0 ? 0 : state.notice_num - 1
+        return {...state, notice_num}
       default:
         return state
     }
