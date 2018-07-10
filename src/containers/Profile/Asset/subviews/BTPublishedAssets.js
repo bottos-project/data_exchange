@@ -18,7 +18,7 @@
 */
 import React,{PureComponent} from 'react'
 import { Icon } from 'antd';
-import { getSignaturedParam } from "../../../../utils/BTCommonApi";
+import { getSignaturedParam, lookForAsset } from "../../../../utils/BTCommonApi";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import {getAccount} from "../../../../tools/localStore";
@@ -34,10 +34,11 @@ const columns = [
   {
     title: <FormattedMessage {...PersonalAssetMessages.AssetName}/>,
     dataIndex: 'asset_name',
-    render: (item) => {
-      return <span title={item}>
+    render: (item, record) => {
+      const asset_id = record.asset_id
+      return <a title={item} onClick={() => lookForAsset(asset_id, getAccount())}>
          {item.length < 25? item:item.substring(0,25)+'...'}
-      </span>
+      </a>
     }
   },
   {

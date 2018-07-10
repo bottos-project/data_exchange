@@ -17,6 +17,7 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 import BTFetch from './BTFetch'
+import { hashHistory } from 'react-router'
 
 
 // 获取data信息
@@ -112,3 +113,33 @@ export function BTRowFetch(url, param) {
     }
   })
 };
+
+
+/**
+ * 查找 asset 信息
+ * @param {String} asset_id [description]
+ */
+export function lookForAsset(asset_id, account_info) {
+  if (typeof asset_id != 'string' || account_info == null) {
+    window.message.error(window.localeInfo["Check.QueryFailure"])
+    throw new Error('Type Error')
+  }
+  BTFetch("/asset/queryAssetByID", "post", {
+    ...getSignaturedParam(account_info),
+    asset_id
+  }).then(res => {
+    if (!res) return ;
+    if (res.code == 1 && res.data != null) {
+      hashHistory.push({
+        pathname: '/assets/detail',
+        state: res.data
+      })
+    } else {
+      window.message.error(window.localeInfo["Check.QueryFailure"])
+    }
+  })
+  .catch(error=>{
+    window.message.error(window.localeInfo["Check.QueryFailure"])
+  })
+
+}

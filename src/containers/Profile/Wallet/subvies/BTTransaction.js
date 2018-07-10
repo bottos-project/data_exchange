@@ -141,8 +141,10 @@ class Transaction extends PureComponent{
                     myEmitter.emit('transfer', res);
                   }, 1000);
                   resetFields()
-              } else if (res.code == 10102) {
+              } else if (res.code == 10105) {
                   message.error(window.localeInfo["Wallet.TheTargetAccountIsInexistence"])
+              } else {
+                throw new Error('transfer error')
               }
               this.props.setSpin(false)
             }).catch(error=>{
