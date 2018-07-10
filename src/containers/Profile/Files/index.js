@@ -99,7 +99,8 @@ class BTMyAssetSet extends Component{
 
       let hadFile = this.props.fileList.find(item => item.path == file.path)
       if (hadFile && hadFile.status != 'error') {
-        return message.info('重复上传');
+        message.info('重复上传');
+        return false
       }
 
       uploader.addFile(file)
