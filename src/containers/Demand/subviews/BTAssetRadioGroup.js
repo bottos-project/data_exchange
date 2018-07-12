@@ -52,7 +52,7 @@ export default class BTAssetRadioGroup extends PureComponent{
     render(){
         // console.log(this.props);
         let exampledata=this.props.exampledata;
-        console.log('exampledata', exampledata);
+        // console.log('exampledata', exampledata);
         return(
             <Modal visible={this.state.visible}
                    onOk={()=>this.handleOk()}

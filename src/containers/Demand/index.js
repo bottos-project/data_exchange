@@ -52,7 +52,7 @@ export default class BTDemand extends PureComponent{
         page_size,
         req_type: Number.parseInt(req_type)
       }
-      console.log('page_size', page_size);
+      // console.log('page_size', page_size);
       BTRowFetch(reqUrl, param).then(res => {
         this.setState({
           dataSource: res.row,
