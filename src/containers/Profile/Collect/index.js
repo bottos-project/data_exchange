@@ -29,7 +29,6 @@ import { getSignaturedParam } from '@/utils/BTCommonApi'
 import {getAccount} from "@/tools/localStore";
 
 import { getDateAndTime } from '@/utils/dateTimeFormat'
-import { getFavReqParam } from '@/components/BTFavoriteStar'
 
 import {FormattedMessage} from 'react-intl'
 import messages from '@/locales/messages'

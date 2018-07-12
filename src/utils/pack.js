@@ -68,7 +68,7 @@ function getABI(contract) {
       }
       let abi = JSON.parse(res.result)
       // console.log('result', abi);
-      console.log('result', JSON.stringify(abi, null, 1));
+      // console.log('result', JSON.stringify(abi, null, 1));
       return abi;
     } else {
       throw new Error(res.msg)
@@ -178,12 +178,16 @@ function _getSignaturedFetchParam(fetchParam, privateKey) {
   return _fetchParam
 }
 
-function packedParam(did, fetchParam, privateKey) {
+function packDIDToParamArr(did, fetchParam) {
   const { contract, method } = fetchParam
   return getABI(contract).then(abi => {
     if (abi == null) return ;
     return packDIDWithABIandMethod(did, abi, method);
-  }).then(arr => {
+  })
+}
+
+function packedParam(did, fetchParam, privateKey) {
+  return packDIDToParamArr(did, fetchParam).then(arr => {
     fetchParam.param = arr
     return _getSignaturedFetchParam(fetchParam, privateKey)
   })
@@ -219,6 +223,7 @@ Pack.isValidBlockInfo = function isValidBlockInfo(blockInfo) {
   }
 }
 
+Pack.packDIDToParamArr = packDIDToParamArr
 Pack.packedParam = packedParam
 
 Pack.prototype.getABI = function () {

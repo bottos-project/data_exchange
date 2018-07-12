@@ -133,10 +133,10 @@ class FavoriteList extends Component {
     console.log(good_info)
     // packmsg
     let favoriteParam = {
-      "Username": getAccount().username,
-      "GoodsId": good_info.goods_id,
-      "GoodsType": this.props.goods_type,
-      "OpType": 3, // 3 是删除
+      "userName": getAccount().username,
+      "opType": 3, // 3 是删除
+      "goodsType": this.props.goods_type,
+      "goodsId": good_info.goods_id,
     }
     // console.log('favoriteParam', favoriteParam);
     let fetchParam = await getFavReqParam(favoriteParam)

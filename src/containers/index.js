@@ -77,7 +77,7 @@ class App extends PureComponent {
 
     let contract = 'assetmng',
     method = 'assetreg';
-    let username = getAccount().username;
+    // let username = getAccount().username;
 
     // let promise = packedParam(did, contract, method)
     // let beforePack = registAssetPack(did)
