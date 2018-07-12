@@ -26,7 +26,7 @@ import {getAccount} from "@/tools/localStore";
 import { addFile, deleteFile, updateFile } from '@/redux/actions/uploaderAction'
 import { get_ms_short, get_s_short } from '@/utils/dateTimeFormat'
 import BTFetch from '@/utils/BTFetch'
-import { getBlockInfo, getSignaturedFetchParam } from "@/utils/BTCommonApi";
+import { getBlockInfo } from "@/utils/BTCommonApi";
 import { BTFileFetch } from '@/utils/BTDownloadFile'
 import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/msgpack'
 import { getCacheFileState, deleteFileCache } from '@/utils/uploadingFileCache'

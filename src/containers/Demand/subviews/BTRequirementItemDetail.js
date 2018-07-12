@@ -17,7 +17,7 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 import BTFetch from "../../../utils/BTFetch";
-import { getBlockInfo, getSignaturedParam, getSignaturedFetchParam } from "../../../utils/BTCommonApi";
+import { getBlockInfo, getSignaturedParam } from "../../../utils/BTCommonApi";
 import React,{PureComponent} from 'react'
 import { Carousel, Button, Tag, Input } from 'antd';
 import {FormattedMessage} from 'react-intl'

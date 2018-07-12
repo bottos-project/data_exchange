@@ -1,7 +1,6 @@
 'use strict'
 const BTPack = require('../lib/msgpack/msgpack');
 const BTCryptTool = require('bottos-crypto-js')
-// const { getSignaturedFetchParam } = require('./BTCommonApi')
 const BTFetch = require('./BTFetch');
 const querystring = require('querystring');
 const config = require('./config');

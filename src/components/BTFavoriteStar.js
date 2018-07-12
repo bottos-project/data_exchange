@@ -25,15 +25,11 @@ import { Spin, Icon } from 'antd'
 import {getAccount} from "@/tools/localStore";
 import collectionState, { getTimeSecond } from "@/tools/sessionStorage";
 // 下面是加签的 api
-import { favoritePack } from '@/lib/msgpack/BTPackManager'
 import { packedParam } from '../utils/pack'
 
 const lockTimeSecond = 5
 
 export async function getFavReqParam(favoriteParam) {
-
-  // let param = favoritePack(favoriteParam).map((x) => ('00' + x.toString(16)).slice(-2)).join('')
-  // console.log('param', param);
   let blockInfo = await getBlockInfo()
 
   let fetchParam = {
@@ -48,13 +44,7 @@ export async function getFavReqParam(favoriteParam) {
 
   let privateKey = Buffer.from(getAccount().privateKey, 'hex')
   // console.log('privateKey', privateKey);
-  let params = await packedParam(favoriteParam, fetchParam, privateKey)
-
-  // console.log('params', params);
-  //
-  // console.assert( params.param === param, '不相等', param, params.param)
-
-  return params
+  return await packedParam(favoriteParam, fetchParam, privateKey)
 }
 
 class BTFavoriteStar extends Component {

@@ -81,19 +81,20 @@ export const registDemandPack = (did)=>{
     return arrBuf
 }
 
-export const transactionPack = (did)=>{
-    let arr1Size = BTPack.PackArraySize(5)
-    let arrFrom = BTPack.PackStr16(did.from)
-    let arrTo = BTPack.PackStr16(did.to)
-    let arrTokenType = []
+export const transactionPack = (did) => {
+    let arrTokenType = [], num = 3;
     if (did.token_type != 'BTO') {
       arrTokenType = BTPack.PackStr16(did.token_type)
+      num = 4
     }
+
+    let arr1Size = BTPack.PackArraySize(num)
+    let arrFrom = BTPack.PackStr16(did.from)
+    let arrTo = BTPack.PackStr16(did.to)
     let arrPrice = BTPack.PackUint64(did.price)
     // console.log('arrPrice', arrPrice);
-    let arrRemark = BTPack.PackStr16(did.remark)
 
-    let arrBuf = [...arr1Size,...arrFrom,...arrTo,...arrTokenType,...arrPrice,...arrRemark]
+    let arrBuf = [...arr1Size,...arrFrom,...arrTo,...arrTokenType,...arrPrice]
 
     return arrBuf
 }
@@ -110,14 +111,16 @@ export const favoritePack = (did) => {
 }
 
 export const buyAssetGrantCreditPack = (did)=>{
-    let p1 = BTPack.PackArraySize(4)
-    let p2 = BTPack.PackStr16(did.name)
-    let p3 = BTPack.PackStr16(did.spender)
 
-    let arrTokenType = []
+    let arrTokenType = [], num = 3;
     if (did.token_type != 'BTO') {
       arrTokenType = BTPack.PackStr16(did.token_type)
+      num = 4
     }
+
+    let p1 = BTPack.PackArraySize(num)
+    let p2 = BTPack.PackStr16(did.name)
+    let p3 = BTPack.PackStr16(did.spender)
 
     let p4 = BTPack.PackUint64(did.limit)
 

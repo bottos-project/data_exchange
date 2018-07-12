@@ -19,7 +19,7 @@
 import React,{PureComponent} from 'react'
 import { Row, Col, Button, Tag, Modal, Input } from 'antd';
 import BTFetch from '../../../utils/BTFetch'
-import { getBlockInfo, getSignaturedFetchParam } from '../../../utils/BTCommonApi'
+import { getBlockInfo } from '../../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../locales/messages'
 import {getAccount} from '../../../tools/localStore'

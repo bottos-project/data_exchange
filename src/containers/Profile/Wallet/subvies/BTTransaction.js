@@ -110,8 +110,7 @@ class Transaction extends PureComponent{
                 "from": selectedAccount,
                 "to": fieldValues.to,
                 token_type,
-                "price": quantity * Math.pow(10,8),
-                "remark": "April's rent"
+                "price": quantity * Math.pow(10,8)
             }
             let didBuf = transactionPack(did)
             let fetchParam = {
