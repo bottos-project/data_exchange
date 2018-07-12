@@ -32,6 +32,7 @@ import BTTypeSelect from './BTTypeSelect'
 import * as BTSign from '../lib/sign/BTSign'
 import {registAssetPack} from '../lib/msgpack/BTPackManager'
 import BTNumberInput from './BTNumberInput'
+import { packedParam } from '../utils/pack'
 
 const PersonalAssetMessages = messages.PersonalAsset;
 const HeaderMessages = messages.Header;
@@ -196,12 +197,13 @@ class BTPublishAssetModal extends PureComponent{
 
       // console.log('blockInfo', blockInfo);
 
+      const [contract, method] = ['assetmng', 'assetreg']
       let _message = {
         "version": 1,
         ...blockInfo,
         "sender": account_info.username,
-        "contract": "assetmng",
-        "method": "assetreg",
+        contract,
+        method,
         "sig_alg": 1
       }
 
@@ -218,32 +220,35 @@ class BTPublishAssetModal extends PureComponent{
       }
 
       let did = {
-        "asset_id": window.uuid(),
-        "basic_info": {
-          "user_name": account_info.username,
-          "asset_name": this.state.title,
+        "assetId": window.uuid(),
+        "info": {
+          "userName": account_info.username,
+          "assetName": this.state.title,
           "assetType": Number.parseInt(this.state.dataAssetType) || 0,
           "featureTag": featureTag,
           "sampleHash": this.state.sample_hash,
           "storageHash": this.state.storage_hash,
           "expireTime": expire_time,
           "opType": 1,
-          "token_type": this.state.token_type,
+          "tokenType": this.state.token_type,
           "price": Number(this.state.number) * Math.pow(10, 8),
           "description": this.state.description
         }
       }
 
-      console.log('did basic_info', did.basic_info)
-      let arrBuf = registAssetPack(did)
-      let params = Object.assign({}, _message)
-      params.param = arrBuf
+      console.log('did info', did.info)
+      // let arrBuf = registAssetPack(did)
+      // let arrBuf = await packDID(did, contract, method)
 
-      let sign = BTSign.messageSign(params, privateKey)
-      params.signature = sign.toString('hex')
-      params.param = BTCryptTool.buf2hex(arrBuf)
+      // let params = Object.assign({}, _message)
+      // params.param = arrBuf
+      //
+      // let sign = BTSign.messageSign(params, privateKey)
+      // params.signature = sign.toString('hex')
+      // params.param = BTCryptTool.buf2hex(arrBuf)
 
       let url = '/asset/registerAsset'
+      let params = await packedParam(did, _message, privateKey)
 
       BTFetch(url,'POST',params)
       .then(response=>{

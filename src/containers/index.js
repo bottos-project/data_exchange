@@ -24,8 +24,10 @@ import BTHeader from '../components/BTHeader'
 import BTMenu from '../components/BTMenu'
 import DownloadList from './DownloadList'
 
-// import { packDID } from '../utils/pack'
-const Pack = require('../utils/pack');
+const { packedParam } = require('../utils/pack');
+// const Pack = require('../utils/pack');
+// console.log('Pack', Pack);
+
 import {getAccount} from '../tools/localStore'
 
 import { registAssetPack } from '../lib/msgpack/BTPackManager'
@@ -56,43 +58,32 @@ function itemRender(route, params, routes, paths) {
 class App extends PureComponent {
   componentDidMount() {
     let did = {
-      "asset_id": 'window.uuid()',
+      "assetId": 'window.uuid()',
       "info": {
-        "user_name": 'usr',
-        "asset_name": 'this.state.title',
-        "asset_type": 12,
-        "feature_tag": 'featureTag-1-2',
-        "sample_hash": 'this.state.sample_hash',
-        "storage_hash": 'this.state.storage_hash',
-        "expire_time": new Date().getTime() / 1000,
-        "op_type": 1,
+        "userName": 'usr',
+        "assetName": 'this.state.title',
+        "assetType": 12,
+        "featureTag": 'featureTag-1-2',
+        "sampleHash": 'this.state.sample_hash',
+        "storageHash": 'this.state.storage_hash',
+        "expireTime": new Date().getTime() / 1000,
+        "opType": 1,
+        "tokenType": 'BTO',
         "price": 23 * Math.pow(10, 8),
         "description": 'this.state.description'
       }
     }
 
-    // console.log('getAccount', getAccount);
 
     let contract = 'assetmng',
     method = 'assetreg';
-    // let username = getAccount().username;
+    let username = getAccount().username;
 
-    // console.log('username', username);
-    // var pack = new Pack({contract, method, username, did, blockInfo, privateKey})
-
-    // pack.process()
-    // .then(packedParam => {
-    //   this.fetchParam.
-    // })
-    // .catch(err => console.error(err))
-
-    // let promise = packDID(did, contract, method)
-    // console.log('promise', promise);
+    // let promise = packedParam(did, contract, method)
     // let beforePack = registAssetPack(did)
-    // console.log('beforePack', beforePack);
+    // // console.log('beforePack', beforePack);
     // promise.then(res => {
-    //   console.log(res)
-    //   // res.forEach((ele, index) => console.assert(ele == beforePack[index]))
+    //   res.forEach((ele, index) => console.assert(ele == beforePack[index], index, ele))
     // })
 
   }

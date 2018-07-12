@@ -34,6 +34,7 @@ import {buyAssetGrantCreditPack,cancelAssetGrantCreditPack} from '../../../lib/m
 import {messageSign} from '../../../lib/sign/BTSign'
 import * as BTCryptTool from 'bottos-crypto-js'
 import { arTypeKeyMap, typeValueKeyMap } from '@/utils/keyMaps'
+import { packedParam } from '../../../utils/pack'
 
 const ReqAndAssMessages = messages.ReqAndAss;
 const AssetMessages = messages.Asset;
@@ -173,22 +174,22 @@ export default class BTAssetDetail extends PureComponent{
         })
     }
 
-    buyButtonClick(username,blockInfo,privateKey){
-      console.log("buyButtonClick")
+    async buyButtonClick(username, blockInfo, privateKey){
+      // console.log("buyButtonClick")
       let originParam = {
-      	"data_deal_id": window.uuid(),
+      	"dataExchangeId": window.uuid(),
       	"basic_info": {
-      		"username": username,
+      		"userName": username,
       		"assetId": this.state.asset_id
       	}
       }
 
       let b1 = PackArraySize(2)
-      let b2 = PackStr16(originParam.data_deal_id)
+      let b2 = PackStr16(originParam.dataExchangeId)
 
       let b3 = PackArraySize(2)
 
-      let b4 = PackStr16(originParam.basic_info.username)
+      let b4 = PackStr16(originParam.basic_info.userName)
       let b5 = PackStr16(originParam.basic_info.assetId)
 
       let param = [...b1,...b2,...b3,...b4,...b5]
@@ -203,7 +204,11 @@ export default class BTAssetDetail extends PureComponent{
         "sig_alg": 1
       }
 
-      BTFetch('/exchange/buyAsset', 'post', getSignaturedFetchParam({fetchParam, privateKey}))
+      let params = await packedParam(originParam, fetchParam, privateKey)
+
+      console.assert( BTCryptTool.buf2hex(param) === params.param, '不相等')
+
+      BTFetch('/exchange/buyAsset', 'post', params)
       .then(res=>{
         if (!res) {
           throw new Error('buy asset failed')

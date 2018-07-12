@@ -33,6 +33,7 @@ import {registDemandPack} from '../lib/msgpack/BTPackManager'
 import {messageSign} from '../lib/sign/BTSign'
 import BTCrypto from 'bottos-crypto-js'
 import BTNumberInput from './BTNumberInput'
+import { packedParam } from '../utils/pack'
 
 const PersonalDemandMessages = messages.PersonalDemand;
 const PersonalAssetMessages = messages.PersonalAsset;
@@ -184,30 +185,34 @@ class BTPublishDemand extends PureComponent{
       let did = {
         "dataReqId": window.uuid(),
         "basic_info": {
-          "Username": account_info.username,
-          "RequirementName": this.state.title || 'requirement',
-          "RequirementType": Number.parseInt(this.state.reqType) || 0,
-          "FeatureTag": 1,
-          "SampleHash": this.state.sample_hash || '',
-          "ExpireTime": expire_time,
-          "token_type": this.state.token_type,
-          "Price": this.state.number * Math.pow(10, 8),
-          "Description": this.state.textArea,
-          "FavoriFlag": 1,
-          "OpType": 1
+          "userName": account_info.username,
+          "reqName": this.state.title || 'requirement',
+          "reqType": Number.parseInt(this.state.reqType) || 0,
+          "featureTag": 1,
+          "sampleHash": this.state.sample_hash || '',
+          "expireTime": expire_time,
+          "opType": 1,
+          "tokenType": this.state.token_type,
+          "price": this.state.number * Math.pow(10, 8),
+          "favoriFlag": 1,
+          "description": this.state.textArea,
         }
       }
       // console.log('did', did);
 
-      let packBuf = registDemandPack(did)
-      params.param = packBuf
-      let sign = messageSign(params,privateKey)
-      params.signature = sign.toString('hex')
-      params.param = BTCrypto.buf2hex(packBuf)
+      // let packBuf = registDemandPack(did)
+      // params.param = packBuf
+      // let sign = messageSign(params,privateKey)
+      // params.signature = sign.toString('hex')
+      // let param = BTCrypto.buf2hex(packBuf)
       // console.log('params.param', params.param);
 
       let url = '/requirement/Publish'
-      BTFetch(url,'POST',params)
+      let _params = await packedParam(did, params, privateKey)
+
+      // console.assert( _params.param === param, '不相等')
+
+      BTFetch(url,'POST',_params)
       .then(response => {
         if (response && response.code == 1) {
           this.setState(initialState)

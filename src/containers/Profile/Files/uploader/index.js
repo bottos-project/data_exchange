@@ -30,6 +30,7 @@ import { getBlockInfo, getSignaturedFetchParam } from "@/utils/BTCommonApi";
 import { BTFileFetch } from '@/utils/BTDownloadFile'
 import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/msgpack'
 import { getCacheFileState, deleteFileCache } from '@/utils/uploadingFileCache'
+import { packedParam } from '../../../../utils/pack'
 
 import myEmitter from '@/utils/eventEmitter'
 // console.log('myEmitter', myEmitter);
@@ -347,28 +348,28 @@ function querySecondProgress(file) {
           "fileName": file.name || 'name',
           "filePolicy": "policytest",
           "fileNumber": 1,
-          "simOrass": 0,
+          "simorass": 0,
       		"opType": 1,
           "storeAddr": JSON.stringify(storeAddr)
         }
       }
 
-      let b1 = PackArraySize(2)
-      let b2 = PackStr16(originParam.fileHash)
+      // let b1 = PackArraySize(2)
+      // let b2 = PackStr16(originParam.fileHash)
+      //
+      // let b3 = PackArraySize(8)
+      //
+      // let b4 = PackStr16(originParam.info.userName)
+      // let b5 = PackUint64(originParam.info.fileSize)
+      // let b6 = PackStr16(originParam.info.fileName)
+      // let b7 = PackStr16(originParam.info.filePolicy)
+      //
+      // let b8 = PackUint64(originParam.info.fileNumber)
+      // let b9 = PackUint32(originParam.info.simorass)
+      // let b10 = PackUint32(originParam.info.opType)
+      // let b11 = PackStr16(originParam.info.storeAddr)
 
-      let b3 = PackArraySize(8)
-
-      let b4 = PackStr16(originParam.info.userName)
-      let b5 = PackUint64(originParam.info.fileSize)
-      let b6 = PackStr16(originParam.info.fileName)
-      let b7 = PackStr16(originParam.info.filePolicy)
-
-      let b8 = PackUint64(originParam.info.fileNumber)
-      let b9 = PackUint32(originParam.info.simOrass)
-      let b10 = PackUint32(originParam.info.opType)
-      let b11 = PackStr16(originParam.info.storeAddr)
-
-      let param = [...b1,...b2,...b3,...b4,...b5,...b6,...b7,...b8,...b9,...b10,...b11]
+      // let param = [...b1,...b2,...b3,...b4,...b5,...b6,...b7,...b8,...b9,...b10,...b11]
       // console.log('param', param);
 
       let blockInfo = await getBlockInfo()
@@ -381,15 +382,12 @@ function querySecondProgress(file) {
         "sender": getAccount().username,
         "contract": "datafilemng",
         "method": "datafilereg",
-        "param": param,
         "sig_alg": 1,
       }
 
-      getSignaturedFetchParam({fetchParam, privateKey})
+      let params = await packedParam(originParam, fetchParam, privateKey)
 
-      console.log('fetchParam', fetchParam);
-
-      BTFetch('/asset/registerFile', 'post', fetchParam)
+      BTFetch('/asset/registerFile', 'post', params)
       .then(res => {
         if (res.code == 1) {
           // 注册成功要触发一个事件，更新列表

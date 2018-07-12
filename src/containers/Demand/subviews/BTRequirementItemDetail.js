@@ -32,6 +32,7 @@ import { typeValueKeyMap } from '../../../utils/keyMaps'
 import { PackArraySize, PackStr16, PackUint32 } from '@/lib/msgpack/msgpack'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import { selectType } from '../../../utils/keyMaps'
+import { packedParam } from '../../../utils/pack'
 
 const DemandMessages = messages.Demand;
 const ReqAndAssMessages = messages.ReqAndAss;
@@ -109,7 +110,7 @@ export default class BTRequirementItemDetail extends PureComponent{
     let fileInfo = requirementInfo.exampledata.find(ele => ele.asset_id == asset_id)
 
     let originParam = {
-      "dataPromoteId": window.uuid(),
+      "dataPresaleId": window.uuid(),
       "info": {
         "userName": username,
         "assetId": asset_id,
@@ -119,23 +120,7 @@ export default class BTRequirementItemDetail extends PureComponent{
       }
     }
 
-    let b1 = PackArraySize(2)
-    let b2 = PackStr16(originParam.dataPromoteId)
-
-    let b3 = PackArraySize(5)
-
-    let b4 = PackStr16(originParam.info.userName)
-    let b5 = PackStr16(originParam.info.assetId)
-    let b6 = PackStr16(originParam.info.dataReqId)
-    let b7 = PackStr16(originParam.info.consumer)
-    let b8 = PackUint32(originParam.info.opType)
-
-    let param = [...b1,...b2,...b3,...b4,...b5,...b6,...b7,...b8]
-    console.log('param', param);
-
     let blockInfo = await getBlockInfo()
-
-    console.log('blockInfo', blockInfo);
 
     let privateKey = Buffer.from(getAccount().privateKey, 'hex')
 
@@ -145,13 +130,15 @@ export default class BTRequirementItemDetail extends PureComponent{
         "sender": username,
         "contract": "datadealmng",
         "method": "presale",
-        "param": param,
         "sig_alg": 1
     }
 
-    fetchParam = getSignaturedFetchParam({fetchParam, privateKey})
+    let params = await packedParam(originParam, fetchParam, privateKey)
 
-    BTFetch('/asset/preSaleNotice', 'post', fetchParam)
+    // console.log('params', params);
+    // console.assert(p1 == params.param, '不相等')
+
+    BTFetch('/asset/preSaleNotice', 'post', params)
     .then(res => {
       if (!res || res.code != 1) {
         throw new Error('Failed Promote')

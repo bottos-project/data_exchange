@@ -1,5 +1,5 @@
 'use strict'
-const BTPack = require('./msgpack');
+const BTPack = require('../lib/msgpack/msgpack');
 const BTCryptTool = require('bottos-crypto-js')
 // const { getSignaturedFetchParam } = require('./BTCommonApi')
 const BTFetch = require('./BTFetch');
@@ -7,7 +7,6 @@ const querystring = require('querystring');
 const config = require('./config');
 // console.log('config', config);
 // console.log('BTPack', BTPack);
-// console.log('BTCryptTool', BTCryptTool);
 
 const basicType = ['string', 'uint8', 'uint16', 'uint32', 'uint64']
 
@@ -40,6 +39,7 @@ function isBasicType(type) {
 }
 
 /**
+ * the First step
  * get .abi file content
  * @param  {String} contract contract
  * @return {Promise} Promise
@@ -50,19 +50,25 @@ function getABI(contract) {
     method: 'CoreApi.QueryAbi',
     request: JSON.stringify({contract})
   }
-  return fetch(config.service.base_url + 'rpc?' + querystring.stringify(param), {
+  // return fetch('./bottosabi/' + contract + '.abi', {
+  return fetch('http://192.168.2.189:8080/rpc?' + querystring.stringify(param), {
+  // return fetch(config.service.base_url + 'rpc?' + querystring.stringify(param), {
     method: 'POST',
+    // method: 'GET',
     headers: {
       contentType: 'application/x-www-form-urlencoded'
     }
-  }).then(res => res.json()).then(res => {
+  })
+  .then(res => res.json())
+  .then(res => {
     // console.log('QueryAbi res', res);
     if (res.errcode == 0) {
       if (res.result == '') {
         throw new Error('没有内容')
       }
       let abi = JSON.parse(res.result)
-      console.log('result', abi);
+      // console.log('result', abi);
+      console.log('result', JSON.stringify(abi, null, 1));
       return abi;
     } else {
       throw new Error(res.msg)
@@ -72,43 +78,61 @@ function getABI(contract) {
   })
 }
 
-// getABI('assetmng')
+// getABI('datadealmng')
 
+/**
+ * [_findFieldsFromStructsByName description]
+ * @param       {Array} structs [description]
+ * @param       {String} name    [description]
+ * @return      {Object}         [description]
+ */
 function _findFieldsFromStructsByName(structs, name) {
   return structs.find(strc => strc.name == name).fields
 }
 
-function parseFields(fields, did, structs) {
+/**
+ * [_findStructNameFromActionsByMethod description]
+ * @param       {Array} actions [description]
+ * @param       {String} method  [description]
+ * @return      {String}         [description]
+ */
+function _findStructNameFromActionsByMethod(actions, method) {
+  return actions.find(act => act.action_name == method).type
+}
 
+
+function _packDIDToArr(name, did, structs) {
   var array = [];
+
+  let fields = _findFieldsFromStructsByName(structs, name)
 
   const keys = Object.keys(fields)
 
-  array = array.concat(BTPack.PackArraySize(keys.length))
+  array = array.concat( Array.from( BTPack.PackArraySize(keys.length) ) )
 
-  console.log('array', array);
+  // console.log('array', array);
 
   for (let key of keys) {
     let type = fields[key]
 
     if (isBasicType(type)) {
       // 是基础类型，直接 pack
-      // packByType(type, value)
       let value = did[key]
       if (value == undefined) {
-        return console.error('type error: expected type ' + key + ', but not found.', did)
+        return console.error('Type error: expected key ' + key + ', but not found.', did)
       }
 
-      array = array.concat( packByType(type, value) )
+      let _packedArr = packByType(type, value)
+      // console.log('type, value', type, value);
+      // console.log('_packedArr', _packedArr);
+      array = array.concat( Array.from(_packedArr) )
     } else {
 
-      let fields2 = _findFieldsFromStructsByName(structs, type)
-
-      let did2 = did[key] || did.basic_info
+      let did2 = did[key] || did.basic_info || did.info
 
       // console.log('fields2, did2', fields2, did2);
 
-      let childArr = parseFields(fields2, did2, structs)
+      let childArr = _packDIDToArr(type, did2, structs)
       // console.log('childArr', childArr);
       array = array.concat( childArr )
     }
@@ -119,48 +143,53 @@ function parseFields(fields, did, structs) {
 
 }
 
-
-function packDID(did, contract, method) {
-  // console.log('did, contract, method', did, contract, method);
-  return getABI(contract).then(abi => {
-    if (abi == null) {
-      return ;
-    }
-    // console.log('abi', abi);
-    const { actions, structs } = abi
-    // console.log('actions', actions);
-    console.log('structs', structs);
-    let name = actions.find(act => act.action_name == method).type
-    let fields = _findFieldsFromStructsByName(structs, name)
-    // console.log('fields', fields);
-
-    return parseFields(fields, did, structs);
-  })
+/**
+ * the Second step
+ * @param  {Object} did    [description]
+ * @param  {Object} abi    [description]
+ * @param  {String} method [description]
+ * @return {Array}        [description]
+ */
+function packDIDWithABIandMethod(did, abi, method) {
+  const { actions, structs } = abi
+  let name = _findStructNameFromActionsByMethod(actions, method)
+  return _packDIDToArr(name, did, structs);
 }
-
-function packedParam(did, fetchParam, privateKey) {
-  const { contract, method } = fetchParam
-  fetchParam.param = packDID(did, contract, method)
-  return getSignaturedFetchParam({fetchParam, privateKey})
-}
-
-exports.packDID = packDID
-exports.packedParam = packedParam
 
 const { queryProtoEncode, messageProtoEncode } = require('../lib/proto/index');
+const message_pb = require('../lib/proto/message_pb')
 
-function getSignaturedFetchParam({fetchParam, privateKey}) {
+function _getParamSign(fetchParam, privateKey) {
   let encodeBuf = messageProtoEncode(message_pb, fetchParam)
   // let chainId = new Uint8Array(16)
   // let newMsgProto = [...encodeBuf,...chainId]
   let hashData = BTCryptTool.sha256(BTCryptTool.buf2hex(encodeBuf) + "00000000000000000000000000000000")
   let sign = BTCryptTool.sign(hashData, privateKey)
   // console.log('sign', sign);
-  fetchParam.signature = sign.toString('hex')
-  // console.log('fetchParam.signature', fetchParam.signature);
-  fetchParam.param = BTCryptTool.buf2hex(fetchParam.param)
-  return fetchParam
+  let signature = sign.toString('hex')
+  return signature;
 }
+
+function _getSignaturedFetchParam(fetchParam, privateKey) {
+  let signature = _getParamSign(fetchParam, privateKey)
+  let param = BTCryptTool.buf2hex(fetchParam.param)
+  let _fetchParam = Object.assign({}, fetchParam, {signature, param})
+  // console.log('fetchParam.signature', fetchParam.signature);
+  return _fetchParam
+}
+
+function packedParam(did, fetchParam, privateKey) {
+  const { contract, method } = fetchParam
+  return getABI(contract).then(abi => {
+    if (abi == null) return ;
+    return packDIDWithABIandMethod(did, abi, method);
+  }).then(arr => {
+    fetchParam.param = arr
+    return _getSignaturedFetchParam(fetchParam, privateKey)
+  })
+}
+
+
 
 function Pack({contract, method, username, did, blockInfo, privateKey}) {
 
@@ -190,6 +219,8 @@ Pack.isValidBlockInfo = function isValidBlockInfo(blockInfo) {
   }
 }
 
+Pack.packedParam = packedParam
+
 Pack.prototype.getABI = function () {
   return getABI(this.fetchParam.contract);
 };
@@ -200,30 +231,21 @@ Pack.prototype.getABI = function () {
  * @param  {Object} did 要 pack 的参数
  * @return {Function}     [description]
  */
-Pack.prototype._packDIDByABI = function (abi, did) {
+Pack.prototype._packDIDByABI = function (abi) {
   let method = this.fetchParam.method
-  const { actions, structs } = abi
-  let name = actions.find(act => act.action_name == method).type
-  let fields = _findFieldsFromStructsByName(structs, name)
-  // console.log('fields', fields);
-  return parseFields(fields, did, structs)
+  const did = this.did
+  return packDIDWithABIandMethod(did, abi, method)
 };
 
 Pack.prototype.process = function () {
-  pack.getABI()
-  .then(abi => {
-    let did = this.did
-    return this._packDIDByABI(abi, did)
-  })
+  let { did, fetchParam, privateKey } = this
+  return this.getABI()
+  .then(_packDIDByABI)
   .then(arr => {
-    let { fetchParam, privateKey } = this
     fetchParam.param = arr
-    return getSignaturedFetchParam({fetchParam, privateKey})
+    return _getSignaturedFetchParam(fetchParam, privateKey)
   })
 }
-// let arr = fun(did)
-// return BTCryptTool.buf2hex(arr)
-
 
 module.exports = Pack;
 

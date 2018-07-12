@@ -22,32 +22,32 @@ import * as BTCrypto from 'bottos-crypto-js'
 
 export const registAssetPack = (did)=>{
     let arr1Size = BTPack.PackArraySize(2)
-    let arrAssetId = BTPack.PackStr16(did.asset_id)
+    let arrAssetId = BTPack.PackStr16(did.assetId)
 
-    let basic_info = did.basic_info
-    let len = Object.keys(basic_info).length
+    let info = did.info
+    let len = Object.keys(info).length
 
     let arr2Size = BTPack.PackArraySize(len)
 
-    let arrUsername = BTPack.PackStr16(basic_info.user_name)
-    let arrAssetName = BTPack.PackStr16(basic_info.asset_name)
-    let arrAssetType = BTPack.PackUint64(basic_info.assetType)
-    let arrFeatureTag = BTPack.PackStr16(basic_info.featureTag)
-    // let arrSamplePath = BTPack.PackStr16(basic_info.samplePath)
-    let arrSampleHash = BTPack.PackStr16(basic_info.sampleHash)
-    // let arrStoragePath = BTPack.PackStr16(basic_info.storagePath)
-    let arrStorageHash = BTPack.PackStr16(basic_info.storageHash)
+    let arrUsername = BTPack.PackStr16(info.userName)
+    let arrAssetName = BTPack.PackStr16(info.assetName)
+    let arrAssetType = BTPack.PackUint64(info.assetType)
+    let arrFeatureTag = BTPack.PackStr16(info.featureTag)
+    // let arrSamplePath = BTPack.PackStr16(info.samplePath)
+    let arrSampleHash = BTPack.PackStr16(info.sampleHash)
+    // let arrStoragePath = BTPack.PackStr16(info.storagePath)
+    let arrStorageHash = BTPack.PackStr16(info.storageHash)
 
-    let arrExpireTime = BTPack.PackUint32(basic_info.expireTime)
-    let arrOpType = BTPack.PackUint32(basic_info.opType)
-    // console.log('price', basic_info.price)
-    let arrTokenType = BTPack.PackStr16(basic_info.token_type)
+    let arrExpireTime = BTPack.PackUint32(info.expireTime)
+    let arrOpType = BTPack.PackUint32(info.opType)
+    // console.log('price', info.price)
+    let arrTokenType = BTPack.PackStr16(info.tokenType)
 
-    let arrPrice = BTPack.PackUint64(basic_info.price)
+    // console.log('info.price', info.price);
+    let arrPrice = BTPack.PackUint64(info.price)
+    // console.log('arrPrice', arrPrice);
 
-    let arrDescription = BTPack.PackStr16(basic_info.description)
-    // let arrUploadDate = BTPack.PackUint32(basic_info.uploadDate)
-    // let arrSignature = BTPack.PackStr16(basic_info.signature)
+    let arrDescription = BTPack.PackStr16(info.description)
 
     let arrBuf = [...arr1Size,...arrAssetId,...arr2Size,...arrUsername,...arrAssetName,...arrAssetType,
         ...arrFeatureTag,...arrSampleHash,...arrStorageHash,...arrExpireTime,
@@ -63,17 +63,17 @@ export const registDemandPack = (did)=>{
     let basic_info = did.basic_info
     let len = Object.keys(basic_info).length
     let arr2Size = BTPack.PackArraySize(len)
-    let arrUsername = BTPack.PackStr16(basic_info.Username)
-    let arrReqName = BTPack.PackStr16(basic_info.RequirementName)
-    let arrReqType = BTPack.PackUint64(basic_info.RequirementType)
-    let arrFeatureTag = BTPack.PackUint64(basic_info.FeatureTag)
-    let arrSampleHash = BTPack.PackStr16(basic_info.SampleHash)
-    let arrExpireTime = BTPack.PackUint64(basic_info.ExpireTime)
-    let arrOpType = BTPack.PackUint32(basic_info.OpType)
-    let arrTokenType = BTPack.PackStr16(basic_info.token_type)
-    let arrPrice = BTPack.PackUint64(basic_info.Price)
-    let arrFavoriFlag = BTPack.PackUint32(basic_info.FavoriFlag)
-    let arrDescription = BTPack.PackStr16(basic_info.Description)
+    let arrUsername = BTPack.PackStr16(basic_info.userName)
+    let arrReqName = BTPack.PackStr16(basic_info.reqName)
+    let arrReqType = BTPack.PackUint64(basic_info.reqType)
+    let arrFeatureTag = BTPack.PackUint64(basic_info.featureTag)
+    let arrSampleHash = BTPack.PackStr16(basic_info.sampleHash)
+    let arrExpireTime = BTPack.PackUint64(basic_info.expireTime)
+    let arrOpType = BTPack.PackUint32(basic_info.opType)
+    let arrTokenType = BTPack.PackStr16(basic_info.tokenType)
+    let arrPrice = BTPack.PackUint64(basic_info.price)
+    let arrFavoriFlag = BTPack.PackUint32(basic_info.favoriFlag)
+    let arrDescription = BTPack.PackStr16(basic_info.description)
 
     let arrBuf = [...arr1Size,...arrDataReqId,...arr2Size,...arrUsername,...arrReqName,...arrReqType,...arrFeatureTag,...arrSampleHash,...arrExpireTime,
     ...arrOpType,...arrTokenType,...arrPrice,...arrFavoriFlag,...arrDescription]
@@ -82,7 +82,7 @@ export const registDemandPack = (did)=>{
 }
 
 export const transactionPack = (did)=>{
-    let arr1Size = BTPack.PackArraySize(4)
+    let arr1Size = BTPack.PackArraySize(5)
     let arrFrom = BTPack.PackStr16(did.from)
     let arrTo = BTPack.PackStr16(did.to)
     let arrTokenType = []
