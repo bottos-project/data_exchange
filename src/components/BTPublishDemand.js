@@ -21,7 +21,7 @@ import { connect } from 'react-redux'
 import moment from "moment"
 import { Input, DatePicker, Select, TimePicker, Radio, Icon, Button, Row, Col } from 'antd'
 import BTAssetList from './BTAssetList'
-import {getBlockInfo, getDataInfo, getSignaturedParam } from "../utils/BTCommonApi";
+import { getBlockInfo, getSignaturedParam, hasSensitiveWord } from "../utils/BTCommonApi";
 import BTFetch from "../utils/BTFetch";
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
@@ -150,10 +150,18 @@ class BTPublishDemand extends PureComponent{
 
     async updata(){
 
-      if (!this.state.title) {
+      const { title, textArea } = this.state
+
+      if (!title) {
           message.warning(window.localeInfo["PersonalDemand.PleaseImproveTheDemand"])
           return;
       }
+
+      if (hasSensitiveWord(title)) {
+        message.warning(window.localeInfo["ReqAndAss.SensitiveWordsInTitle"]);
+        return ;
+      }
+
 
       if (this.state.number <=0 || this.state.number >= 10000000000){
           message.warning(window.localeInfo["PersonalDemand.PleaseInputPrice"])
@@ -162,6 +170,11 @@ class BTPublishDemand extends PureComponent{
 
       if (this.state.reqType == '') {
         message.warning(window.localeInfo["PersonalDemand.PleaseChooseTheRequirementType"]);
+        return;
+      }
+
+      if (hasSensitiveWord(textArea)) {
+        message.warning(window.localeInfo["ReqAndAss.SensitiveWordsInDescription"]);
         return;
       }
 
@@ -186,7 +199,7 @@ class BTPublishDemand extends PureComponent{
         "dataReqId": window.uuid(),
         "basic_info": {
           "userName": account_info.username,
-          "reqName": this.state.title || 'requirement',
+          "reqName": title || 'requirement',
           "reqType": Number.parseInt(this.state.reqType) || 0,
           "featureTag": 1,
           "sampleHash": this.state.sample_hash || '',
@@ -195,7 +208,7 @@ class BTPublishDemand extends PureComponent{
           "tokenType": this.state.token_type,
           "price": this.state.number * Math.pow(10, 8),
           "favoriFlag": 1,
-          "description": this.state.textArea,
+          "description": textArea,
         }
       }
       // console.log('did', did);

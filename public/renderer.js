@@ -22,6 +22,10 @@ const eventName = require('../src/utils/EventName')
 const createHash = require('crypto').createHash
 const fs = require('fs');
 
+const censorwordsArr = require('./censorwords.json')
+
+global.getSensitives = () => censorwordsArr
+
 global.existsSync = fs.existsSync
 
 global.wrapFile = function(fileInfo) {

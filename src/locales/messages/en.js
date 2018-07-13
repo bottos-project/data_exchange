@@ -128,6 +128,8 @@ module.exports = {
     "ReqAndAss.NoSample":"No Sample",
     "ReqAndAss.DownLoadTheSample":"Download the Sample",
     "ReqAndAss.ExpireTime":"Expire Time:",
+    "ReqAndAss.SensitiveWordsInTitle":"Sensitive words in title",
+    "ReqAndAss.SensitiveWordsInDescription":"Sensitive Words in description",
 
     //demand
     "Demand.Demand":"Market Demand",
@@ -272,6 +274,7 @@ module.exports = {
     "PersonalAsset.FailedToUploadTheFile":"Failed To Upload the File",
     "PersonalAsset.SuccessfulToUploadTheFile":"Successful To Upload the File",
     "PersonalAsset.PleaseChooseTheAsset":"Please Choose the Asset",
+    "PersonalAsset.PleaseInputAssetName":"Please input asset name",
     "PersonalAsset.PleaseChooseTheAssetType":"Please Choose the Asset Type",
     "PersonalAsset.PleaseImproveTheInformation":"Please Improve the Information",
     "PersonalAsset.InputPrice":"Please Enter the Appropriate Price",
@@ -284,6 +287,7 @@ module.exports = {
     "PersonalAsset.Price":"Price",
     "PersonalAsset.PleaseSelect":"Please Select",
     "PersonalAsset.SelectDate":"Select Date",
+    "PersonalAsset.SensitiveWordsInTags":"Sensitive Words in tags",
 
 
     //PersonalDemand

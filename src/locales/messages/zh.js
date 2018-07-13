@@ -56,6 +56,9 @@ module.exports = {
     "Header.ImportKeyStoreFaild":"导入失败",
     "Header.AccountNameRequire":"3~16个字符 可使用a~z(全小写)、数字 需以字母开头",
 
+    "ReqAndAss.SensitiveWordsInTitle":"标题中有敏感词",
+    "ReqAndAss.SensitiveWordsInDescription":"描述中有敏感词",
+
     "Asset.ThereIsNoMarketAssetForTheTimeBeing":"暂无市场资产",
     "Asset.FailedToQueryTheMarketSource":"市场资源查询失败",
     "Asset.PleaseLogInFirst":"请先登录账户",
@@ -93,6 +96,7 @@ module.exports = {
     "PersonalAsset.FailedToUploadTheFile":"文件上传失败",
     "PersonalAsset.SuccessfulToUploadTheFile":"文件上传成功",
     "PersonalAsset.PleaseChooseTheAsset":"请选择要发布的资产",
+    "PersonalAsset.PleaseInputAssetName":"请输入资产名称",
     "PersonalAsset.PleaseChooseTheAssetType":"请选择资产类型",
     "PersonalAsset.PleaseImproveTheInformation":"请完善发布资产",
     "PersonalAsset.InputPrice":"请输入有效的价格",
@@ -105,6 +109,7 @@ module.exports = {
     "PersonalAsset.Price":"价格",
     "PersonalAsset.PleaseSelect":"请选择",
     "PersonalAsset.SelectDate":"日期选择",
+    "PersonalAsset.SensitiveWordsInTags":"标签中有敏感词",
 
     "Check.ThereIsNoDataForTheTimeBeing":"暂无数据",
     "Check.QueryFailure":"查询失败",

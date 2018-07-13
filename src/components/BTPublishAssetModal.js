@@ -22,7 +22,7 @@ import {getAccount} from "../tools/localStore";
 import {Icon, Select, Button, Input, DatePicker, TimePicker, Col, Row } from 'antd';
 import BTAssetList from './BTAssetList'
 import BTCryptTool from 'bottos-crypto-js'
-import {getBlockInfo,getDataInfo, getSignaturedParam} from '../utils/BTCommonApi'
+import {getBlockInfo, getSignaturedParam, hasSensitiveWord} from '../utils/BTCommonApi'
 import BTFetch from "../utils/BTFetch";
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
@@ -170,6 +170,22 @@ class BTPublishAssetModal extends PureComponent{
         message.warning(window.localeInfo["PersonalAsset.PleaseChooseTheAsset"]);
         return ;
       }
+
+      const { title, description, tag1, tag2, tag3 } = this.state
+      if (!title) {
+        message.warning(window.localeInfo["PersonalAsset.PleaseInputAssetName"]);
+        return ;
+      }
+
+      if (hasSensitiveWord(title)) {
+        message.warning(window.localeInfo["ReqAndAss.SensitiveWordsInTitle"]);
+        return ;
+      }
+      if (hasSensitiveWord(tag1) || hasSensitiveWord(tag2) || hasSensitiveWord(tag3)) {
+        message.warning(window.localeInfo["PersonalAsset.SensitiveWordsInTags"]);
+        return ;
+      }
+
       if(this.state.number<=0||this.state.number>=10000000000){
         message.warning(window.localeInfo["PersonalAsset.InputPrice"]);
         return;
@@ -187,6 +203,11 @@ class BTPublishAssetModal extends PureComponent{
 
       if (this.state.dataAssetType == '') {
         message.warning(window.localeInfo["PersonalAsset.PleaseChooseTheAssetType"]);
+        return;
+      }
+
+      if (hasSensitiveWord(description)) {
+        message.warning(window.localeInfo["ReqAndAss.SensitiveWordsInDescription"]);
         return;
       }
 
@@ -223,7 +244,7 @@ class BTPublishAssetModal extends PureComponent{
         "assetId": window.uuid(),
         "info": {
           "userName": account_info.username,
-          "assetName": this.state.title,
+          "assetName": title,
           "assetType": Number.parseInt(this.state.dataAssetType) || 0,
           "featureTag": featureTag,
           "sampleHash": this.state.sample_hash,
@@ -232,7 +253,7 @@ class BTPublishAssetModal extends PureComponent{
           "opType": 1,
           "tokenType": this.state.token_type,
           "price": Number(this.state.number) * Math.pow(10, 8),
-          "description": this.state.description
+          description
         }
       }
 
