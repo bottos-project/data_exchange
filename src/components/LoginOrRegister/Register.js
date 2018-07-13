@@ -198,9 +198,9 @@ class Regist extends PureComponent{
         }
 
         newuser = await packedParam(didParam, newuser, privateKey)
-        console.log('newuser', newuser);
+        // console.log('newuser', newuser);
 
-        console.assert( newuser.param === param, '不相等', param, newuser.param)
+        // console.assert( newuser.param === param, '不相等', param, newuser.param)
 
         let registParams = {
             account:{
@@ -258,7 +258,7 @@ class Regist extends PureComponent{
             this.props.requestVerificationCode()
             message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
 
-          }else if(response.code == 1004){
+          }else if(response.code == 1004 || response.code == 10103){
             console.log('response.code', response.code);
             this.props.setSpin(false)
             console.log('details', JSON.parse(res.details));

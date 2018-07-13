@@ -58,8 +58,10 @@ class BTHeader extends PureComponent{
     }
 
     logout = () => {
-      this.props.setAccountInfo(null)
-      this.props.updateFileList([])
+      const { setAccountInfo, updateFileList, setNoticeNum } = this.props
+      setAccountInfo(null)
+      updateFileList([])
+      setNoticeNum(0)
       window.message.success(window.localeInfo["Header.SuccessToLogOut"]);
     }
 

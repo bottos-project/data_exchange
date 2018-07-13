@@ -66,7 +66,7 @@ function changeIP() {
 
 }
 
-// changeIP()
+changeIP()
 
 
 Object.defineProperty(service, 'base_url', {

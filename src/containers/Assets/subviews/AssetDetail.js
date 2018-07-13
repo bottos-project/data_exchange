@@ -184,15 +184,15 @@ export default class BTAssetDetail extends PureComponent{
       	}
       }
 
-      let b1 = PackArraySize(2)
-      let b2 = PackStr16(originParam.dataExchangeId)
-
-      let b3 = PackArraySize(2)
-
-      let b4 = PackStr16(originParam.basic_info.userName)
-      let b5 = PackStr16(originParam.basic_info.assetId)
-
-      let param = [...b1,...b2,...b3,...b4,...b5]
+      // let b1 = PackArraySize(2)
+      // let b2 = PackStr16(originParam.dataExchangeId)
+      //
+      // let b3 = PackArraySize(2)
+      //
+      // let b4 = PackStr16(originParam.basic_info.userName)
+      // let b5 = PackStr16(originParam.basic_info.assetId)
+      //
+      // let param = [...b1,...b2,...b3,...b4,...b5]
 
       let fetchParam = {
         "version": 1,
@@ -200,13 +200,13 @@ export default class BTAssetDetail extends PureComponent{
         "sender": username,
         "contract": "datadealmng",
         "method": "buydata",
-        param,
+        // param,
         "sig_alg": 1
       }
 
       let params = await packedParam(originParam, fetchParam, privateKey)
 
-      console.assert( BTCryptTool.buf2hex(param) === params.param, '不相等')
+      // console.assert( BTCryptTool.buf2hex(param) === params.param, '不相等')
 
       BTFetch('/exchange/buyAsset', 'post', params)
       .then(res=>{
