@@ -49,7 +49,9 @@ function getABI(contract) {
     method: 'CoreApi.QueryAbi',
     request: JSON.stringify({contract})
   }
-  // return fetch('./bottosabi/' + contract + '.abi', {
+
+  // return fetch('./bottosabi/' + contract + '.abi').then(res => res.json())
+  return __fsReadABI(contract)
   return fetch('http://192.168.2.189:8080/rpc?' + querystring.stringify(param), {
   // return fetch(config.service.base_url + 'rpc?' + querystring.stringify(param), {
     method: 'POST',

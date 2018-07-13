@@ -21,10 +21,18 @@ const uuidv1 = require('uuid/v1');
 const eventName = require('../src/utils/EventName')
 const createHash = require('crypto').createHash
 const fs = require('fs');
+const path = require('path');
 
 const censorwordsArr = require('./censorwords.json')
 
 global.getSensitives = () => censorwordsArr
+
+global.__fsReadABI = (contract) => {
+  return new Promise(function(resolve, reject) {
+    const content = fs.readFileSync(path.join(__dirname, 'bottosabi/' + contract + '.abi'), 'utf8')
+    resolve(JSON.parse(content))
+  });
+}
 
 global.existsSync = fs.existsSync
 
