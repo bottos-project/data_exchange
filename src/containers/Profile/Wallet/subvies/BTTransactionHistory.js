@@ -110,7 +110,7 @@ class BTTransactionHistory extends Component {
           url='/user/GetTransfer'
           // options={{...getSignaturedParam(getAccount()), username: selectedAccount, token_type}}
           options={{username: selectedAccount, token_type}}
-          catchError={(err) => console.log(err)}
+          catchError={(err) => console.error(err)}
           // catchError={(err) => message.error(window.localeInfo["PersonalAsset.ThereIsNoDataForTheTimeBeing"])}
           // {...props}
         />

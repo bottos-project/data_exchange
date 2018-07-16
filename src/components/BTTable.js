@@ -19,7 +19,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Table } from 'antd';
-import { BTRowFetch } from '@/utils/BTCommonApi'
+import { BTRowFetch } from '../utils/BTCommonApi'
 
 /**
  * 这个组件被很多地方公用
