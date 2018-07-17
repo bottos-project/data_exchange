@@ -22,7 +22,7 @@ import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import {getAccount} from "../../../../tools/localStore";
 import { getDateAndTime } from "@/utils/dateTimeFormat";
-import { getSignaturedParam } from '@/utils/BTCommonApi'
+import { getSignaturedParam, lookForAsset } from '@/utils/BTCommonApi'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import { selectType } from '@/utils/keyMaps'
 import TokenSymbol from '@/components/TokenSymbol'
@@ -33,7 +33,7 @@ const PersonalAssetMessages = messages.PersonalAsset;
 
 const columns = [
   { title: <FormattedMessage {...PersonalAssetMessages.AssetName}/>, dataIndex: 'asset_name',
-    render: (item) => <span>{item}</span>
+    render: (item, record) => <a onClick={() => lookForAsset(record.asset_id, getAccount())}>{item}</a>
   },
   { title: <FormattedMessage {...PersonalAssetMessages.AssetTypePrice}/>, dataIndex: 'price',
     render: (price, record) => (

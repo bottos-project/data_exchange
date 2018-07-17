@@ -67,8 +67,7 @@ export function getSignaturedParam(account_info) {
 export function getSignaturedFetchParam({fetchParam, privateKey}) {
   let encodeBuf = messageProtoEncode(message_pb, fetchParam)
   let chainId = Buffer.from("00000000000000000000000000000000","hex")
-  let newMsgProto = new Uint8Array()
-  newMsgProto = [...encodeBuf,...chainId]
+  let newMsgProto = [...encodeBuf,...chainId]
   let hashData = BTCryptTool.sha256(BTCryptTool.buf2hex(newMsgProto))
   let sign = BTCryptTool.sign(hashData, privateKey)
   // console.log('sign', sign);
@@ -125,7 +124,7 @@ export function lookForAsset(asset_id, account_info) {
     throw new Error('Type Error')
   }
   BTFetch("/asset/queryAssetByID", "post", {
-    ...getSignaturedParam(account_info),
+    sender: account_info.username,
     asset_id
   }).then(res => {
     if (!res) return ;

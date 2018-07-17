@@ -104,7 +104,7 @@ module.exports = {
     "Login.ConfirmPassword":"Confirm Password",
     "Login.PasteTheKeyStore":"Paste the KeyStore",
     "Login.ImportTheKeyStore":"Import the KeyStore",
-    "Login.VerifyCode":"Verification",
+    "Login.VerifyCode":"Captcha",
     "Login.UseNewAccount":"Use new Accout",
     "Login.Keystore":"Keystore",
     "Login.AutoBackup":"Has saved the Keystore for you, and you can backup the Keystore",
