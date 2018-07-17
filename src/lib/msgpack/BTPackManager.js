@@ -99,16 +99,6 @@ export const transactionPack = (did) => {
     return arrBuf
 }
 
-export const favoritePack = (did) => {
-
-  let b1 = BTPack.PackArraySize(4)
-  let b2 = BTPack.PackStr16(did.userName)
-  let b3 = BTPack.PackUint32(did.opType)
-  let b4 = BTPack.PackStr16(did.goodsType)
-  let b5 = BTPack.PackStr16(did.goodsId)
-
-  return [...b1,...b2,...b3,...b4,...b5]
-}
 
 export const buyAssetGrantCreditPack = (did)=>{
 

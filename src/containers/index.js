@@ -30,8 +30,6 @@ const { packedParam } = require('../utils/pack');
 
 import {getAccount} from '../tools/localStore'
 
-import { registAssetPack } from '../lib/msgpack/BTPackManager'
-// import BTPersonalMenu from '../components/BTPersonalMenu'
 import './styles.less'
 import { Breadcrumb, Spin } from 'antd';
 import { FormattedMessage } from 'react-intl'
@@ -56,37 +54,6 @@ function itemRender(route, params, routes, paths) {
 }
 
 class App extends PureComponent {
-  componentDidMount() {
-    let did = {
-      "assetId": 'window.uuid()',
-      "info": {
-        "userName": 'usr',
-        "assetName": 'this.state.title',
-        "assetType": 12,
-        "featureTag": 'featureTag-1-2',
-        "sampleHash": 'this.state.sample_hash',
-        "storageHash": 'this.state.storage_hash',
-        "expireTime": new Date().getTime() / 1000,
-        "opType": 1,
-        "tokenType": 'BTO',
-        "price": 23 * Math.pow(10, 8),
-        "description": 'this.state.description'
-      }
-    }
-
-
-    let contract = 'assetmng',
-    method = 'assetreg';
-    // let username = getAccount().username;
-
-    // let promise = packedParam(did, contract, method)
-    // let beforePack = registAssetPack(did)
-    // // console.log('beforePack', beforePack);
-    // promise.then(res => {
-    //   res.forEach((ele, index) => console.assert(ele == beforePack[index], index, ele))
-    // })
-
-  }
 
   render() {
     const { routes, locale } = this.props

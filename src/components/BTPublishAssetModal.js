@@ -29,8 +29,6 @@ import messages from '../locales/messages'
 import moment from "moment"
 import ConfirmButton from './ConfirmButton'
 import BTTypeSelect from './BTTypeSelect'
-import * as BTSign from '../lib/sign/BTSign'
-import {registAssetPack} from '../lib/msgpack/BTPackManager'
 import BTNumberInput from './BTNumberInput'
 import { packedParam } from '../utils/pack'
 
@@ -256,17 +254,6 @@ class BTPublishAssetModal extends PureComponent{
           description
         }
       }
-
-      console.log('did info', did.info)
-      // let arrBuf = registAssetPack(did)
-      // let arrBuf = await packDID(did, contract, method)
-
-      // let params = Object.assign({}, _message)
-      // params.param = arrBuf
-      //
-      // let sign = BTSign.messageSign(params, privateKey)
-      // params.signature = sign.toString('hex')
-      // params.param = BTCryptTool.buf2hex(arrBuf)
 
       let url = '/asset/registerAsset'
       let params = await packedParam(did, _message, privateKey)
