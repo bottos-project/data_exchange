@@ -28,14 +28,12 @@ var service = {
   version:'v3'
 }
 
-
-
 function randowFromArray(arr) {
   console.assert(Array.isArray(arr))
   let len = arr.length
   let randomIndex = Math.floor(Math.random() * len)
   if (randomIndex == len) {
-    randomIndex = len -1
+    randomIndex = len - 1
   }
   // console.log('randomIndex', randomIndex);
   return arr[randomIndex];

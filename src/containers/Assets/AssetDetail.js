@@ -102,7 +102,7 @@ export default class BTAssetDetail extends PureComponent{
         "version": 1,
         ...blockInfo,
         "sender": username,
-        "contract": token_type === "BTO" ? "bottos" : "commontoken",
+        "contract": token_type === "BTO" ? "bottos" : "bottostoken",
         "method": "grantcredit",
         "sig_alg": 1
       }
@@ -143,7 +143,7 @@ export default class BTAssetDetail extends PureComponent{
         "version": 1,
         ...blockInfo,
         "sender": username,
-        "contract": token_type === "BTO" ? "bottos" : "commontoken",
+        "contract": token_type === "BTO" ? "bottos" : "bottostoken",
         "method": token_type === "BTO" ? "cancelcredit" : "deletecredit",
         "sig_alg": 1,
       }

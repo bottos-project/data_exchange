@@ -117,7 +117,7 @@ class Transaction extends PureComponent{
             "version": 1,
             ...blockInfo,
             "sender": selectedAccount,
-            "contract": token_type === "BTO" ? "bottos" : "commontoken",
+            "contract": token_type === "BTO" ? "bottos" : "bottostoken",
             "method": "transfer",
             "sig_alg": 1
             }

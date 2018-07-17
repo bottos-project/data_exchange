@@ -27,16 +27,6 @@ const censorwordsArr = require('./censorwords.json')
 
 global.getSensitives = () => censorwordsArr
 
-global.__fsReadABI = (contract) => {
-  const abiPath = path.join(__dirname, 'bottosabi', contract + '.abi')
-  return new Promise(function(resolve, reject) {
-    fs.readFile(abiPath, 'utf8', (err, data) => {
-      if (err) reject(err);
-      resolve(JSON.parse(data))
-    })
-  });
-}
-
 global.existsSync = fs.existsSync
 
 global.wrapFile = function(fileInfo) {

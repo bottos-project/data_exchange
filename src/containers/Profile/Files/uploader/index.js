@@ -392,7 +392,9 @@ function querySecondProgress(file) {
         if (res.code == 1) {
           // 注册成功要触发一个事件，更新列表
           setTimeout(() => myEmitter.emit('registerFile'), 3000);
-          window.message.success( window.localeInfo['PersonalAsset.SuccessfulToUploadTheFile'] )
+          setTimeout(function () {
+            window.message.success( window.localeInfo['PersonalAsset.SuccessfulToUploadTheFile'] )
+          }, 1000);
         } else if (res.details) {
           console.log('res.details', JSON.parse(res.details))
         }
