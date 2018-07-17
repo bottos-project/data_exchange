@@ -23,7 +23,7 @@ import App from '../containers'
 
 import BTDashboard from '../containers/Dashboard'
 import BTAssets from '../containers/Assets'
-import BTAssetDetail from '../containers/Assets/subviews/AssetDetail'
+import BTAssetDetail from '../containers/Assets/AssetDetail'
 import BTDemand from '../containers/Demand'
 import BTRequirementItemDetail from '../containers/Demand/subviews/BTRequirementItemDetail'
 import BTHistory from '../containers/History'

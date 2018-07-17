@@ -18,23 +18,23 @@
 */
 import React,{PureComponent} from 'react'
 import { Row, Col, Button, Tag, Modal, Input } from 'antd';
-import BTFetch from '../../../utils/BTFetch'
-import { getBlockInfo } from '../../../utils/BTCommonApi'
+import BTFetch from '../../utils/BTFetch'
+import { getBlockInfo } from '../../utils/BTCommonApi'
 import {FormattedMessage} from 'react-intl'
-import messages from '../../../locales/messages'
-import {getAccount} from '../../../tools/localStore'
+import messages from '../../locales/messages'
+import {getAccount} from '../../tools/localStore'
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import BTFavoriteStar from '@/components/BTFavoriteStar'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import CloseBack from '@/components/CloseBack'
 import TokenSymbol from '@/components/TokenSymbol'
-import BTTags from '../../AssetAndRequirement/BTTags'
+import BTTags from '../AssetAndRequirement/BTTags'
 import { PackArraySize, PackStr16 } from '@/lib/msgpack/msgpack'
-import {buyAssetGrantCreditPack,cancelAssetGrantCreditPack} from '../../../lib/msgpack/BTPackManager'
-import {messageSign} from '../../../lib/sign/BTSign'
+import {buyAssetGrantCreditPack,cancelAssetGrantCreditPack} from '../../lib/msgpack/BTPackManager'
+import {messageSign} from '../../lib/sign/BTSign'
 import * as BTCryptTool from 'bottos-crypto-js'
 import { arTypeKeyMap, typeValueKeyMap } from '@/utils/keyMaps'
-import { packedParam } from '../../../utils/pack'
+import { packedParam } from '../../utils/pack'
 
 const ReqAndAssMessages = messages.ReqAndAss;
 const AssetMessages = messages.Asset;
@@ -102,7 +102,7 @@ export default class BTAssetDetail extends PureComponent{
         "version": 1,
         ...blockInfo,
         "sender": username,
-        "contract": token_type === "BTO" ? "bottos" : "bottostoken",
+        "contract": token_type === "BTO" ? "bottos" : "commontoken",
         "method": "grantcredit",
         "sig_alg": 1
       }
@@ -143,7 +143,7 @@ export default class BTAssetDetail extends PureComponent{
         "version": 1,
         ...blockInfo,
         "sender": username,
-        "contract": token_type === "BTO" ? "bottos" : "bottostoken",
+        "contract": token_type === "BTO" ? "bottos" : "commontoken",
         "method": token_type === "BTO" ? "cancelcredit" : "deletecredit",
         "sig_alg": 1,
       }

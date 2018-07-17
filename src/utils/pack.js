@@ -46,14 +46,14 @@ function isBasicType(type) {
 function getABI(contract) {
   let param = {
     service: 'bottos',
-    method: 'CoreApi.QueryAbi',
+    method: 'Chain.GetAbi',
     request: JSON.stringify({contract})
   }
 
   // return fetch('./bottosabi/' + contract + '.abi').then(res => res.json())
-  return __fsReadABI(contract)
-  return fetch('http://192.168.2.189:8080/rpc?' + querystring.stringify(param), {
-  // return fetch(config.service.base_url + 'rpc?' + querystring.stringify(param), {
+  // return __fsReadABI(contract)
+  // return fetch('http://192.168.2.189:8080/rpc?' + querystring.stringify(param), {
+  return fetch(config.service.base_url + 'rpc?' + querystring.stringify(param), {
     method: 'POST',
     // method: 'GET',
     headers: {
@@ -63,7 +63,7 @@ function getABI(contract) {
   .then(res => res.json())
   .then(res => {
     // console.log('QueryAbi res', res);
-    if (res.errcode == 0) {
+    // if (res.errcode == 0) {
       if (res.result == '') {
         throw new Error('没有内容')
       }
@@ -71,11 +71,11 @@ function getABI(contract) {
       // console.log('result', abi);
       // console.log('result', JSON.stringify(abi, null, 1));
       return abi;
-    } else {
-      throw new Error(res.msg)
-      console.error('error msg', res.msg);
-      return null
-    }
+    // } else {
+    //   throw new Error(res.msg)
+    //   console.error('error msg', res.msg);
+    //   return null
+    // }
   })
 }
 
