@@ -53,6 +53,7 @@ function createWindow () {
     BrowserWindow.addDevToolsExtension(path.join(__dirname, './devtools/lmhkpmbekcpmknklioeibfkpmmfibljd/2.15.2_0'))  // Redux Developer Tools
     win.loadURL('http://localhost:3000/')
     // 打开开发者工具。
+    win.webContents.openDevTools()
 
   }else{
     win.loadURL(url.format({
@@ -62,7 +63,6 @@ function createWindow () {
     }))
   }
 
-  win.webContents.openDevTools()
 
   // const session = win.webContents.session
   // session.on('will-download', function (e, item) {
