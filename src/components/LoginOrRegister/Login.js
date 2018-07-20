@@ -23,15 +23,15 @@ import { hashHistory } from 'react-router'
 
 import BTCryptTool from 'bottos-crypto-js'
 import { Icon, Input, Button, Row, Col, Select } from 'antd'
-import BTFetch from '@/utils/BTFetch';
+import BTFetch from '../../utils/BTFetch';
 import * as headerActions from '../../redux/actions/HeaderAction'
-import BTIPcRenderer from '@/tools/BTIpcRenderer'
-import {importFile} from '@/utils/BTUtil'
+import BTIpcRenderer from '../../tools/BTIpcRenderer'
+import {importFile} from '../../utils/BTUtil'
 import ConfirmButton from '../ConfirmButton'
 import {FormattedMessage} from 'react-intl'
-import messages from '@/locales/messages'
-import {queryProtoEncode} from '@/lib/proto/index'
-import { getWorker } from '@/workerManage'
+import messages from '../../locales/messages'
+import {queryProtoEncode} from '../../lib/proto/index'
+import { getWorker } from '../../workerManage'
 import KeyStoreLogin from './KeyStoreLogin'
 
 const LoginMessages = messages.Login;
@@ -42,7 +42,7 @@ const Option = Select.Option;
 class Login extends PureComponent{
     constructor(props){
         super(props)
-        const accountList = BTIPcRenderer.getUserList()
+        const accountList = BTIpcRenderer.getUserList()
         this.state = {
             username: accountList[0],
             password: '',
@@ -62,7 +62,7 @@ class Login extends PureComponent{
           return
         }
         let account = this.state.username
-        let result = BTIPcRenderer.getKeyStore({username:account,account_name:account})
+        let result = BTIpcRenderer.getKeyStore({username:account,account_name:account})
         console.log('result', result);
         if (result.error) {
           console.error(result.error);
@@ -173,7 +173,7 @@ class Login extends PureComponent{
     // keyStore文件保存
     saveKeyStore(keyStoreObj) {
       let account = keyStoreObj.account;
-      BTIPcRenderer.saveKeyStore({username:account,account_name:account},keyStoreObj)
+      BTIpcRenderer.saveKeyStore({username:account,account_name:account},keyStoreObj)
     }
 
     changeMode = (mode) => {

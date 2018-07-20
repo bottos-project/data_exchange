@@ -92,6 +92,9 @@ const proConfig = webpackMerge(commonConfig, {
         ecma: 6,
         ie8: false,
         warnings: false,
+        compress: {
+          drop_console: true,
+        },
       },
     }),
 

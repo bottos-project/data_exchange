@@ -42,6 +42,22 @@ ipcMain.on(ipcEventName.get_key_store,(event,accountInfo)=>{
     })
 })
 
+// 删除 Keystore 文件
+ipcMain.on(ipcEventName.delete_key_store, (event, accountInfo) => {
+    let username = accountInfo.username;
+    let account_name = accountInfo.account_name;
+    let keyStorePath = path.join(accountDir, username, account_name + '.keystore');
+
+    fs.unlink(keyStorePath, error => {
+      if (error) {
+        console.error(error);
+        event.returnValue = { error }
+      } else {
+        event.returnValue = { error: null }
+      }
+    })
+})
+
 ipcMain.on(ipcEventName.import_file,(event,options)=>{
     dialog.showOpenDialog(options,(filePaths)=>{
         if(filePaths!=undefined) {
@@ -143,10 +159,10 @@ ipcMain.on(ipcEventName.export_key_store,(event,accountName,params)=>{
 ipcMain.on(ipcEventName.key_store_list,(event,username)=>{
     let keyStorePath = path.join(accountDir,username)
 
-    try{
+    try {
         let result = fs.readdirSync(keyStorePath)
         event.returnValue = result
-    }catch(error){
+    } catch (error) {
         event.returnValue = []
     }
 })

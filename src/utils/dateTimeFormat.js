@@ -51,7 +51,7 @@ export function get_ms_short(n = 7) {
 /**
  * [get_s_short 返回一个截断过的 0.1 秒级时间]
  * @param  {Number} [n=6] [description]
- * @return {[type]}       [description]
+ * @return {Number}       [description]
  */
 export function get_s_short(n = 6) {
   let ms = new Date().getTime()

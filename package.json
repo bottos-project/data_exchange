@@ -1,11 +1,11 @@
 {
   "name": "BottosWallet",
-  "version": "3.0.2",
-  "publishDate": "2018-7-12",
+  "version": "3.1.0",
+  "publishDate": "2018-7-20",
   "private": true,
   "main": "main.js",
   "homepage": ".",
-  "DEV": true,
+  "DEV": false,
   "MOCK": false,
   "description": "Bottos Wallet",
   "author": {
@@ -57,7 +57,7 @@
     "extends": null
   },
   "devDependencies": {
-    "antd": "^3.5.4",
+    "antd": "^3.7.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-plugin-import": "^1.8.0",

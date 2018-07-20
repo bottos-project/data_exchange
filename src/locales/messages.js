@@ -949,6 +949,18 @@ var messages = {
             id:"Wallet.ExportTheAccount",
             defaultMessage:"导出账号"
         },
+        DeleteKeystore:{
+            id:"Wallet.DeleteKeystore",
+            defaultMessage:"删除 Keystore"
+        },
+        SureToDeleteKeystore:{
+            id:"Wallet.SureToDeleteKeystore",
+            defaultMessage:"确定要删除吗？"
+        },
+        DeleteConfirm:{
+            id:"Wallet.DeleteConfirm",
+            defaultMessage:"这个操作不可恢复，会从软件的本地记录当中删除 Keystore 文件，请输入 Keystore 的用户名来确认。"
+        },
         PleaseEnterTheOriginalPassword:{
             id:"Wallet.PleaseEnterTheOriginalPassword",
             defaultMessage:"请输入原密码"

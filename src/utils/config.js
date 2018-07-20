@@ -17,10 +17,10 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 
-var hostname = '139.219.133.94'
+// var hostname = '139.219.133.94'
 // var hostname = '139.219.130.112'
 // var hostname = '139.219.136.155'
-// var hostname = '139.219.139.198'
+var hostname = '139.219.139.198'
 // var hostname = '139.217.202.68'
 
 var base_url = `http://${hostname}:8080/`
@@ -64,14 +64,14 @@ function changeIP() {
 
 }
 
-// changeIP()
+changeIP()
 
 
 Object.defineProperty(service, 'base_url', {
   get: function() {
-    if (window.useCustomIP === true && window.hostname != undefined) {
-      hostname = window.hostname
-    }
+    // if (window.useCustomIP === true && window.hostname != undefined) {
+    //   hostname = window.hostname
+    // }
     console.log('hostname', hostname);
     base_url = `http://${hostname}:8080/`
     return base_url
