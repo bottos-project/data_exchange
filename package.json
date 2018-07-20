@@ -1,5 +1,5 @@
 {
-  "name": "BottosWallet",
+  "name": "DataExchange",
   "version": "3.1.0",
   "publishDate": "2018-7-20",
   "private": true,
@@ -7,7 +7,7 @@
   "homepage": ".",
   "DEV": false,
   "MOCK": false,
-  "description": "Bottos Wallet",
+  "description": "Bottos data exchange APP",
   "author": {
     "name": "bottos"
   },
