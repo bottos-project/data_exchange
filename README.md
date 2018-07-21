@@ -1,4 +1,4 @@
-# ![Bottos Logo](https://github.com/Bottos-project/wallet/blob/master/pic/logo.png)
+# ![Bottos Logo](https://github.com/Bottos-project/data_exchange/blob/master/pic/logo.png)
 
 [![License](https://img.shields.io/badge/licence-GPL--3-blue.svg)](https://opensource.org/licenses/GPL-3.0)
 
