@@ -33,9 +33,6 @@ yarn-error.log*
 # zip file
 *.zip
 
-# developer tools
-/devtools
-
 # Installer
 /dist
 
