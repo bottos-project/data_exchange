@@ -32,7 +32,7 @@ import { checkCacheFile } from './uploader/continue'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import BTTable from '@/components/BTTable'
 import { getCacheFileState } from '@/utils/uploadingFileCache'
-
+import myEmitter from '../../../utils/eventEmitter'
 import ProgressList from './subviews/ProgressList'
 import './style.less'
 
@@ -45,8 +45,8 @@ const MegaByte = 1 << 20
 
 function beforeUpload(file) {
   // console.log('file.size', file.size)
-  // if (file.size > 2 * GigaByte) {
-  if (file.size > 200 * MegaByte) {
+  if (file.size > 2 * GigaByte) {
+  // if (file.size > 200 * MegaByte) {
     // 文件大小大于 2G
     // 不支持上传
     window.message.error(window.localeInfo["PersonalAsset.UploadFileSize200M"])
@@ -99,10 +99,15 @@ class BTMyAssetSet extends Component{
 
       let hadFile = this.props.fileList.find(item => item.path == file.path)
       if (hadFile && hadFile.status != 'error') {
-        return message.info('重复上传');
+        message.info('重复上传');
+        return false
       }
 
       uploader.addFile(file)
+    }
+
+    changeTableData = () => {
+      this.table.onChange(1, 12)
     }
 
     componentDidMount() {
@@ -120,11 +125,18 @@ class BTMyAssetSet extends Component{
         cachedFile.status = 'inited'
         // cachedFile.id = cachedFile.guid
         delete cachedFile.id
-        // console.log('cachedFile', cachedFile);
+        console.log('cachedFile', cachedFile);
         checkCacheFile(cachedFile)
         // cachedFile.name =
         // this.props.addFile({})
       }
+
+      // console.log('this.table', this.table);
+      myEmitter.on('registerFile', this.changeTableData)
+    }
+
+    componentWillUnmount() {
+      myEmitter.removeListener('registerFile', this.changeTableData)
     }
 
     render(){
@@ -147,6 +159,7 @@ class BTMyAssetSet extends Component{
                 </Dragger>
                 <ProgressList />
                 <BTTable
+                  ref={t => this.table = t}
                   columns={columns}
                   rowKey='file_hash'
                   url='/asset/queryUploadedData'

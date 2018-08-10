@@ -105,10 +105,10 @@ class FavoriteAssetList extends Component {
     console.log(good_info)
     // packmsg
     let favoriteParam = {
-      "Username": getAccount().username,
-      "GoodsId": good_info.goods_id,
-      "GoodsType": 'asset',
-      "OpType": 3, // 3 是删除
+      "userName": getAccount().username,
+      "opType": 3, // 3 是删除
+      "goodsType": 'asset',
+      "goodsId": good_info.goods_id,
     }
     // console.log('favoriteParam', favoriteParam);
     let fetchParam = await getFavReqParam(favoriteParam)
@@ -151,7 +151,7 @@ class FavoriteAssetList extends Component {
         goods_type: 'asset' // asset 或者 requirement
       }}
       index={this.state.index}
-      catchError={(err) => console.error(error)}
+      catchError={(err) => console.error(err)}
       dataChange={this.dataChange}
       {...this.props}
     />

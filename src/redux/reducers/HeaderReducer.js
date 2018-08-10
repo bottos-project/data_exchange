@@ -27,6 +27,7 @@ const initialState = {
   locale: initLocale,
   account_info: getAccount(),
   isloading: false,
+  notice_num: 0,
 }
 
 // var account_info = {
@@ -55,6 +56,13 @@ const headerState = (state = initialState, action) => {
         }
         return {...state, account_info: action.info}
 
+      case actionTypes.SET_MESSAGE_NUM:
+        // console.log('action.notice_num', action.notice_num);
+        return {...state, notice_num: action.notice_num}
+
+      case actionTypes.READ_MESSAGE:
+        var notice_num = state.notice_num - 1 < 0 ? 0 : state.notice_num - 1
+        return {...state, notice_num}
       default:
         return state
     }

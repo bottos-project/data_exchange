@@ -38,7 +38,22 @@ export function getDateAndTime(dataString) {
   return d.toLocaleDateString() + ' ' + d.toTimeString().slice(0, 8)
 }
 
-export function get_ms_short() {
+/**
+ * [get_ms_short 是返回一个截断过的毫秒时间]
+ * @param  {Number} n [从第 n 位开始截断]
+ * @return {Number}  [description]
+ */
+export function get_ms_short(n = 7) {
   let ms = new Date().getTime()
-  return parseInt(ms.toString().slice(8))
+  return parseInt(ms.toString().slice(n))
+}
+
+/**
+ * [get_s_short 返回一个截断过的 0.1 秒级时间]
+ * @param  {Number} [n=6] [description]
+ * @return {Number}       [description]
+ */
+export function get_s_short(n = 6) {
+  let ms = new Date().getTime()
+  return parseInt(ms.toString().slice(n, 11)) / 10
 }

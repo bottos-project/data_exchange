@@ -17,6 +17,7 @@
 
 # vscode
 /.vscode
+/.vs
 
 # misc
 .DS_Store
@@ -32,11 +33,10 @@ yarn-error.log*
 # zip file
 *.zip
 
-# developer tools
-/devtools
-
 # Installer
 /dist
 
 # yarn.lock
 /yarn.lock
+
+/public/bottosabi

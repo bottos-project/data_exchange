@@ -23,7 +23,7 @@ import App from '../containers'
 
 import BTDashboard from '../containers/Dashboard'
 import BTAssets from '../containers/Assets'
-import BTAssetDetail from '../containers/Assets/subviews/AssetDetail'
+import BTAssetDetail from '../containers/Assets/AssetDetail'
 import BTDemand from '../containers/Demand'
 import BTRequirementItemDetail from '../containers/Demand/subviews/BTRequirementItemDetail'
 import BTHistory from '../containers/History'
@@ -36,7 +36,7 @@ import BTSignIn from '../containers/SignIn'
 import BTHome from '../containers'
 import BTCollect from '../containers/Profile/Collect'
 import BTCheck from '../containers/Profile/Check'
-import BTPreSale from '../containers/Profile/PreSale'
+import BTPromote from '../containers/Profile/Promote'
 import BTProfileAsset from '../containers/Profile/Asset'
 import BTProfileNeed from '../containers/Profile/Need'
 import BTMyAssetSet from '../containers/Profile/Files'
@@ -44,6 +44,7 @@ import BTMyAssetSet from '../containers/Profile/Files'
 import BTWallet from '../containers/Profile/Wallet'
 import BTSetting from '../containers/Profile/Setting'
 import BTWalletList from '../containers/Profile/Wallet/subvies/BTWalletList'
+import BTTransactionHistory from '../containers/Profile/Wallet/subvies/BTTransactionHistory'
 
 import BTPublishDemand from '../components/BTPublishDemand'
 import BTPublishAssetModal from '../components/BTPublishAssetModal'
@@ -89,9 +90,10 @@ class RouterMap extends PureComponent {
               <Route path="walletlist" name='Walletlist' breadcrumbName='Walletlist' component={BTWalletList}>
                 <Route path="new" name='CreateNewAccount' breadcrumbName='CreateNewAccount' component={Register} />
               </Route>
+              <Route path="TransactionHistory" name='TransactionHistory' breadcrumbName='TransactionHistory' component={BTTransactionHistory} />
             </Route>
             <Route path="check" name='MyMessages' breadcrumbName='MyMessages' component={BTCheck} />
-            <Route path="presale" name='PreSale' breadcrumbName='PreSale' component={BTPreSale} />
+            <Route path="presale" name='Promote' breadcrumbName='Promote' component={BTPromote} />
             <Route path="collect" name='Collect' breadcrumbName='Collect' component={BTCollect} />
             {/* <Route path="setting" breadcrumbName='Setting' component={BTSetting} /> */}
           </Route>

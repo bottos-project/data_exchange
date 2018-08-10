@@ -18,6 +18,9 @@
 */
 import React, { Component } from 'react';
 import { Radio, Input } from 'antd';
+import {FormattedMessage} from 'react-intl'
+import messages from '../locales/messages'
+
 const RadioGroup = Radio.Group;
 
 class BTMyFileList extends Component {
@@ -39,6 +42,8 @@ class BTMyFileList extends Component {
       <Modal visible={this.props.visible}
         onOk={()=>this.handleOk()}
         onCancel={this.handleCancel}
+        okText={<FormattedMessage {...messages.OK} />}
+        cancelText={<FormattedMessage {...messages.Cancel} />}
       >
 
         <div style={{height:300,overflow:"auto",margin:20}}>

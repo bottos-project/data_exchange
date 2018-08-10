@@ -19,9 +19,9 @@
 import React, {PureComponent} from 'react'
 import { connect } from 'react-redux'
 import moment from "moment"
-import { Input, DatePicker, TimePicker, Icon, Button, Row, Col } from 'antd'
+import { Input, DatePicker, Select, TimePicker, Radio, Icon, Button, Row, Col } from 'antd'
 import BTAssetList from './BTAssetList'
-import {getBlockInfo, getDataInfo, getSignaturedParam } from "../utils/BTCommonApi";
+import { getBlockInfo, getSignaturedParam, hasSensitiveWord } from "../utils/BTCommonApi";
 import BTFetch from "../utils/BTFetch";
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
@@ -33,21 +33,24 @@ import {registDemandPack} from '../lib/msgpack/BTPackManager'
 import {messageSign} from '../lib/sign/BTSign'
 import BTCrypto from 'bottos-crypto-js'
 import BTNumberInput from './BTNumberInput'
+import { packedParam } from '../utils/pack'
 
 const PersonalDemandMessages = messages.PersonalDemand;
 const PersonalAssetMessages = messages.PersonalAsset;
 
 const { TextArea } = Input;
+const Option = Select.Option;
 
 const initialState = {
     title:"",
     textArea:"",
     number: 0,
+    token_type: 'BTO',
     dateString: moment().add(7, 'days').toString(),
     timeValue: '',
     newdata: [],
     getFileNameTemp:'',
-    reqType: ''
+    reqType: '',
 }
 
 class BTPublishDemand extends PureComponent{
@@ -56,10 +59,16 @@ class BTPublishDemand extends PureComponent{
         this.state = initialState
 
         this.onTimeChange = this.onTimeChange.bind(this)
+        this.onTokenChange = this.onTokenChange.bind(this)
     }
 
     onTimeChange(time, timeValue) {
       this.setState({ timeValue });
+    }
+
+    onTokenChange(value) {
+      // console.log('value', value);
+      this.setState({ token_type: value });
     }
 
     commitAsset(type){
@@ -141,18 +150,31 @@ class BTPublishDemand extends PureComponent{
 
     async updata(){
 
-      if (!this.state.title) {
+      const { title, textArea } = this.state
+
+      if (!title) {
           message.warning(window.localeInfo["PersonalDemand.PleaseImproveTheDemand"])
           return;
       }
+
+      if (hasSensitiveWord(title)) {
+        message.warning(window.localeInfo["ReqAndAss.SensitiveWordsInTitle"]);
+        return ;
+      }
+
 
       if (this.state.number <=0 || this.state.number >= 10000000000){
           message.warning(window.localeInfo["PersonalDemand.PleaseInputPrice"])
           return;
       }
 
-      if (this.state.reqType == '0') {
+      if (this.state.reqType == '') {
         message.warning(window.localeInfo["PersonalDemand.PleaseChooseTheRequirementType"]);
+        return;
+      }
+
+      if (hasSensitiveWord(textArea)) {
+        message.warning(window.localeInfo["ReqAndAss.SensitiveWordsInDescription"]);
         return;
       }
 
@@ -176,29 +198,34 @@ class BTPublishDemand extends PureComponent{
       let did = {
         "dataReqId": window.uuid(),
         "basic_info": {
-          "Username": account_info.username,
-          "RequirementName": this.state.title || 'requirement',
-          "RequirementType": Number.parseInt(this.state.reqType),
-          "FeatureTag": 1,
-          "SampleHash": this.state.sample_hash || '',
-          "ExpireTime": expire_time,
-          "Price": this.state.number * Math.pow(10, 8),
-          "Description": this.state.textArea,
-          "FavoriFlag": 1,
-          "OpType": 1
+          "userName": account_info.username,
+          "reqName": title || 'requirement',
+          "reqType": Number.parseInt(this.state.reqType) || 0,
+          "featureTag": 1,
+          "sampleHash": this.state.sample_hash || '',
+          "expireTime": expire_time,
+          "opType": 1,
+          "tokenType": this.state.token_type,
+          "price": this.state.number * Math.pow(10, 8),
+          "favoriFlag": 1,
+          "description": textArea,
         }
       }
       // console.log('did', did);
 
-      let packBuf = registDemandPack(did)
-      params.param = packBuf
-      let sign = messageSign(params,privateKey)
-      params.signature = sign.toString('hex')
-      params.param = BTCrypto.buf2hex(packBuf)
+      // let packBuf = registDemandPack(did)
+      // params.param = packBuf
+      // let sign = messageSign(params,privateKey)
+      // params.signature = sign.toString('hex')
+      // let param = BTCrypto.buf2hex(packBuf)
       // console.log('params.param', params.param);
 
       let url = '/requirement/Publish'
-      BTFetch(url,'POST',params)
+      let _params = await packedParam(did, params, privateKey)
+
+      // console.assert( _params.param === param, '不相等')
+
+      BTFetch(url,'POST',_params)
       .then(response => {
         if (response && response.code == 1) {
           this.setState(initialState)
@@ -240,7 +267,10 @@ class BTPublishDemand extends PureComponent{
                 />
               </Col>
               <Col span={4}>
-                <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
+                <Select onChange={this.onTokenChange} value={this.state.token_type}>
+                  <Option value="BTO">BTO</Option>
+                  <Option value="DTO">DTO</Option>
+                </Select>
               </Col>
             </Row>
 

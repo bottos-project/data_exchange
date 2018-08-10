@@ -22,7 +22,7 @@ import './styles.less';
 import { getSignaturedParam } from "@/utils/BTCommonApi";
 import { getAccount } from "@/tools/localStore";
 import { getDateAndTime } from '@/utils/dateTimeFormat'
-import TokenPNG from '@/components/TokenPNG'
+import TokenSymbol from '@/components/TokenSymbol'
 import BTTable from '@/components/BTTable'
 
 import {FormattedMessage} from 'react-intl'
@@ -37,8 +37,8 @@ const columns = [
     }},
     // { title: <FormattedMessage {...PersonalDemandMessages.FeatureTag}/>, dataIndex: 'feature_tag', key: 'type' },
     { title: <FormattedMessage {...PersonalDemandMessages.ExpectedPrice}/>, dataIndex: 'price', key: 'price' ,
-      render: (price) => <div>
-        <TokenPNG />
+      render: (price, record) => <div>
+        <TokenSymbol type={record.token_type} />
         <span>{price/Math.pow(10, 8)}</span>
       </div>
     },

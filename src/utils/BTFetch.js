@@ -17,17 +17,13 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 import config from './config.js'
-import { getAccount } from '../tools/localStore'
-import {message} from 'antd'
 const pkg = require('../../package.json')
 
-
-export default (url,method,params,options={
+const BTFetch = (url, method, params, options = {
     full_path:false,
-    service:'service',
-    token:false
-})=>{
-    message.destroy()
+    service:'service'
+}) => {
+    window.message.destroy()
     let blockchain = config.blockchain;
     let service = config.service;
     let mock = config.mock;
@@ -36,14 +32,7 @@ export default (url,method,params,options={
     if(pkg.MOCK){
         reqUrl = mock.base_url+url
     }else{
-        reqUrl = service.base_url + service.version+url
-    }
-
-    // 设置token
-    let account = getAccount()
-    let token = ''
-    if(account&&account.token){
-        token = account.token;
+        reqUrl = service.base_url + service.version + url
     }
 
     // 如果自己写的全路径，直接用全路径
@@ -54,7 +43,6 @@ export default (url,method,params,options={
         method: methodUpStr,
         headers: {
             'Content-Type': 'application/json',
-            token
         }
     };
 
@@ -107,3 +95,5 @@ const getUrlencode = (params)=>{
     }
     return str;
 }
+
+export default BTFetch

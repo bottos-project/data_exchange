@@ -29,6 +29,7 @@ const HeaderMessages = messages.Header;
 
 import CustomTabBar from '../CustomTabBar'
 
+import BTFetch from '@/utils/BTFetch';
 
 const keyMap = {
   Login: <FormattedMessage {...HeaderMessages.Login} />,
@@ -39,15 +40,37 @@ class LoginOrRegister extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeKey: 'Login'
+      activeKey: 'Login',
+      verify_data:'', // 验证码图片
+      verify_id: '', // 验证码 id
     };
   }
+
   handleChange = (key) => {
     this.setState({
       activeKey: key
     });
   }
+
+  requestVerificationCode = () => {
+    BTFetch('/user/getVerify', 'get').then(res => {
+      if (res && res.code == 1) {
+        const { verify_data, verify_id } = res.data
+        this.setState({ verify_data, verify_id })
+      }
+    })
+  }
+
+  componentDidMount(){
+    this.requestVerificationCode()
+  }
+
   render() {
+    const { verify_data, verify_id } = this.state
+    const verifyParams = {
+      verify_data, verify_id,
+      requestVerificationCode: this.requestVerificationCode
+    }
     return (
       <div className='container column' style={{height: '100%'}}>
         <CustomTabBar onChange={this.handleChange} keyMap={keyMap} activeKey={this.state.activeKey} />
@@ -55,10 +78,14 @@ class LoginOrRegister extends Component {
           <Tabs
             defaultActiveKey="Login"
             activeKey={this.state.activeKey}
-            >
-              <TabPane tab={<FormattedMessage {...HeaderMessages.Login} />} key="Login"><Login /></TabPane>
-              <TabPane tab={<FormattedMessage {...HeaderMessages.Register} />} key="Register"><Register /></TabPane>
-            </Tabs>
+          >
+            <TabPane tab={<FormattedMessage {...HeaderMessages.Login} />} key="Login">
+              {this.state.activeKey == 'Login' && <Login {...verifyParams} />}
+            </TabPane>
+            <TabPane tab={<FormattedMessage {...HeaderMessages.Register} />} key="Register">
+              {this.state.activeKey == 'Register' && <Register {...verifyParams} />}
+            </TabPane>
+          </Tabs>
         </div>
       </div>
     );

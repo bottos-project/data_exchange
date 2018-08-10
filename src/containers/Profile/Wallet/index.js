@@ -48,10 +48,14 @@ class BTWallet extends PureComponent {
 
     componentDidMount(){
       this.setLoginState()
+      const { isLogin, account_info, selectAccount } = this.props
+      if (isLogin) {
+        selectAccount(account_info.username)
+      }
     }
 
     setLoginState(){
-      const { account_info, isLogin, setAccountList } = this.props
+      const { isLogin, setAccountList } = this.props
       if (isLogin) {
         let walletList = BTIpcRenderer.getKeyStoreList()
         let accountList = []
@@ -60,7 +64,7 @@ class BTWallet extends PureComponent {
             accountList.push(item.slice(0,-9))
           }
         })
-        console.log('walletList', walletList);
+        // console.log('walletList', walletList);
         // console.log('accountList', accountList);
         setAccountList(accountList)
         this.setState({
@@ -102,7 +106,7 @@ class BTWallet extends PureComponent {
             </Link>
           </CustomTabBar>
 
-          <BTCointList className="flex" />
+          <BTCointList />
         </div>
       )
 

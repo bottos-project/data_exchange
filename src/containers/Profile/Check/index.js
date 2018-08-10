@@ -17,6 +17,7 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 import React from 'react'
+import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 import { Button } from 'antd'
 
@@ -24,6 +25,7 @@ import { getDateAndTime } from '@/utils/dateTimeFormat'
 import { getAccount } from "@/tools/localStore";
 import { getSignaturedParam } from '@/utils/BTCommonApi'
 import BTTable from '@/components/BTTable'
+import { readMessage } from '@/redux/actions/HeaderAction'
 
 import BTFetch from "@/utils/BTFetch";
 
@@ -31,54 +33,80 @@ import messages from '@/locales/messages'
 import {FormattedMessage} from 'react-intl'
 const CheckMessages = messages.Check;
 
-function lookFor(asset_id) {
-  BTFetch("/asset/queryAssetByID", "post", {
-    ...getSignaturedParam(getAccount()),
-    asset_id
-  }).then(res => {
-    if (!res) return ;
-    if (res.code == 1 && res.data != null) {
-      hashHistory.push({
-        pathname: '/assets/detail',
-        state: res.data
-      })
-    } else {
-      window.message.error(window.localeInfo["Check.QueryFailure"])
-    }
-  })
-  .catch(error=>{
-      window.message.error(window.localeInfo["Check.QueryFailure"])
-  })
-}
 
-const columns = [
-  { title: <FormattedMessage {...CheckMessages.AssetID}/>, dataIndex: 'asset_name',
-    render:(item) => <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
-  },
-  { title: <FormattedMessage {...CheckMessages.Consumer}/>, dataIndex: 'consumer' },
-  { title: <FormattedMessage {...CheckMessages.DataPresaleId}/>, dataIndex: 'data_req_name',
-    render:(item) => <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
-  },
-  { title: <FormattedMessage {...CheckMessages.DataTime}/>, dataIndex: 'time',
-    render: getDateAndTime
-  },
-  // { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username', key:'user_name' },
-  { title: <FormattedMessage {...CheckMessages.View}/>, dataIndex:'asset_id',
-    render:(asset_id) => <Button onClick={()=> lookFor(asset_id)}>
-      <FormattedMessage {...CheckMessages.View}/>
-    </Button>
-  }
-]
 
 function BTCheck(props) {
+  function lookFor(asset_id, notice_id, isRead) {
+    BTFetch("/asset/queryAssetByID", "post", {
+      ...getSignaturedParam(getAccount()),
+      asset_id
+    }).then(res => {
+      if (!res) return ;
+      if (res.code == 1 && res.data != null) {
+        hashHistory.push({
+          pathname: '/assets/detail',
+          state: res.data
+        })
+      } else {
+        window.message.error(window.localeInfo["Check.QueryFailure"])
+      }
+    })
+    .catch(error=>{
+      window.message.error(window.localeInfo["Check.QueryFailure"])
+    })
+
+    if (isRead == 0) {
+      BTFetch("/asset/ModifyMyNoticeStatus", "post", {
+        ...getSignaturedParam(getAccount()),
+        noticeId: notice_id
+      }).then(res => {
+        if (res.code == 1) {
+          props.readMessage()
+        }
+      }).catch(err => console.error(err))
+    }
+    
+  }
+
+  const columns = [
+    { title: <FormattedMessage {...CheckMessages.AssetID}/>, dataIndex: 'asset_name',
+      render:(item) => <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
+    },
+    { title: <FormattedMessage {...CheckMessages.Consumer}/>, dataIndex: 'username' },
+    { title: <FormattedMessage {...CheckMessages.DataPromoteId}/>, dataIndex: 'data_req_name',
+      render:(item) => <span>{item.length<25?item:item.substring(0,25)+'...'}</span>
+    },
+    { title: <FormattedMessage {...CheckMessages.DataTime}/>, dataIndex: 'time',
+      render: getDateAndTime
+    },
+    // { title: <FormattedMessage {...CheckMessages.UserName}/>, dataIndex: 'username', key:'user_name' },
+    { title: <FormattedMessage {...CheckMessages.View}/>, dataIndex:'asset_id',
+      render: (asset_id, record) => {
+        const { isRead, notice_id } = record
+        let style = isRead == 0 ? {fontWeight: 700} : null
+        return <Button style={style} onClick={()=> lookFor(asset_id, notice_id, isRead)}>
+          <FormattedMessage {...CheckMessages.View} />
+        </Button>
+      }
+    }
+  ]
+
   return <BTTable
     columns={columns}
     rowKey='asset_id'
     url='/asset/queryMyNotice'
     options={getSignaturedParam(getAccount())}
-    catchError={(err) => message.error(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])}
+    catchError={(err) => window.message.warn(window.localeInfo["Check.ThereIsNoDataForTheTimeBeing"])}
     {...props}
   />
 }
 
-export default BTCheck
+const mapDispatchToProps = (dispatch) => {
+  return {
+    readMessage() {
+      dispatch( readMessage() )
+    }
+  }
+}
+
+export default connect(null, mapDispatchToProps)(BTCheck)

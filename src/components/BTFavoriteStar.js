@@ -18,21 +18,18 @@
 */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getBlockInfo, getSignaturedFetchParam } from "@/utils/BTCommonApi";
+import { getBlockInfo } from "@/utils/BTCommonApi";
 import BTFetch from "@/utils/BTFetch";
 import { Spin, Icon } from 'antd'
 // 这个是缓存收藏信息的
 import {getAccount} from "@/tools/localStore";
 import collectionState, { getTimeSecond } from "@/tools/sessionStorage";
 // 下面是加签的 api
-import { favoritePack } from '@/lib/msgpack/BTPackManager'
+import { packedParam } from '../utils/pack'
 
-const lockTimeSecond = 10
+const lockTimeSecond = 5
 
 export async function getFavReqParam(favoriteParam) {
-
-  let param = favoritePack(favoriteParam)
-  // console.log('param', param);
   let blockInfo = await getBlockInfo()
 
   let fetchParam = {
@@ -41,14 +38,13 @@ export async function getFavReqParam(favoriteParam) {
     "sender": getAccount().username,
     "contract": "favoritemng",
     "method": "favoritepro",
-    param,
+    // param,
     "sig_alg": 1
   }
 
   let privateKey = Buffer.from(getAccount().privateKey, 'hex')
   // console.log('privateKey', privateKey);
-
-  return getSignaturedFetchParam({fetchParam, privateKey})
+  return await packedParam(favoriteParam, fetchParam, privateKey)
 }
 
 class BTFavoriteStar extends Component {
@@ -102,17 +98,17 @@ class BTFavoriteStar extends Component {
       return;
     }
 
-    var OpType = 1
+    var opType = 1
     if (method == 'delete') {
-      OpType = 3
+      opType = 3
     }
 
     // packmsg
     let favoriteParam = {
-      "Username": getAccount().username,
-      "GoodsId": this.props.id,
-      "GoodsType": this.props.type,
-      OpType
+      "userName": getAccount().username,
+      opType,
+      "goodsType": this.props.type,
+      "goodsId": this.props.id,
     }
 
     this.lockCollect(lockTimeSecond)
@@ -125,7 +121,7 @@ class BTFavoriteStar extends Component {
       if (!res || res.code != 1) {
         throw new Error('')
       }
-      if (OpType == 1) {
+      if (opType == 1) {
         window.message.success(window.localeInfo["Asset.SuccessfulCollect"])
         this.setState({isFavorite: true})
       } else {
@@ -135,7 +131,7 @@ class BTFavoriteStar extends Component {
       }
     })
     .catch(err => {
-      if (OpType == 1) {
+      if (opType == 1) {
         window.message.error(window.localeInfo["Asset.FailedCollect"])
       } else {
 

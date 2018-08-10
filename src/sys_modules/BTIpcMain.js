@@ -16,17 +16,19 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-const {app,ipcMain,dialog} = require('electron')
+const {app,BrowserWindow,ipcMain,dialog} = require('electron')
 const fs = require('fs')
 const appPath = app.getPath("userData");
 const {ipcEventName} = require('../utils/EventName')
 const path = require("path")
+const accountDir = path.join(appPath, 'account')
+// console.log('accountDir', accountDir);
 
 //  获取keystore文件
 ipcMain.on(ipcEventName.get_key_store,(event,accountInfo)=>{
     let userName = accountInfo.username;
     let accountName = accountInfo.account_name;
-    let keyStorePath = path.join(appPath,userName+'/'+accountName+'.keystore');
+    let keyStorePath = path.join(accountDir,userName,accountName+'.keystore');
     fs.readFile(keyStorePath,'utf8',(error,result)=>{
         if(error){
             event.returnValue = {
@@ -37,6 +39,22 @@ ipcMain.on(ipcEventName.get_key_store,(event,accountInfo)=>{
             let keyStoreObj = JSON.parse(result)
             event.returnValue = {error,keyStoreObj}
         }
+    })
+})
+
+// 删除 Keystore 文件
+ipcMain.on(ipcEventName.delete_key_store, (event, accountInfo) => {
+    let username = accountInfo.username;
+    let account_name = accountInfo.account_name;
+    let keyStorePath = path.join(accountDir, username, account_name + '.keystore');
+
+    fs.unlink(keyStorePath, error => {
+      if (error) {
+        console.error(error);
+        event.returnValue = { error }
+      } else {
+        event.returnValue = { error: null }
+      }
     })
 })
 
@@ -78,7 +96,10 @@ ipcMain.on(ipcEventName.import_file,(event,options)=>{
 })
 
 ipcMain.on(ipcEventName.mkdir,(event,username)=>{
-    let dirpath = path.join(appPath,username)
+    if(!fs.existsSync(accountDir)){
+        fs.mkdirSync(accountDir)
+    }
+    let dirpath = path.join(accountDir,username)
     let isExists = fs.existsSync(dirpath)
     if(isExists){
         event.returnValue = true;
@@ -93,7 +114,7 @@ ipcMain.on(ipcEventName.mkdir,(event,username)=>{
 })
 
 ipcMain.on(ipcEventName.exists,(event,filePath)=>{
-    let realPath = path.join(appPath,filePath)
+    let realPath = path.join(accountDir,filePath)
     let isExists = fs.existsSync(realPath)
     event.returnValue = isExists;
 })
@@ -102,14 +123,18 @@ ipcMain.on(ipcEventName.save_key_store,(event,accountInfo,params)=>{
     let userName = accountInfo.username;
     let accountName = accountInfo.account_name;
 
-    // console.log({appPath,userName})
-    let dirPath = path.join(appPath,userName);
+    console.log('accountInfo', accountInfo);
+    console.log('accountDir', accountDir);
+    console.log('userName', userName);
+
+    let dirPath = path.join(accountDir,userName);
+    console.log('dirPath', dirPath);
     let isDirExists = fs.existsSync(dirPath)
     if(!isDirExists){
         fs.mkdirSync(dirPath)
     }
 
-    let keyStorePath = path.join(appPath,userName+'/'+accountName+'.keystore')
+    let keyStorePath = path.join(dirPath, accountName+'.keystore')
     let keyStoreStr = JSON.stringify(params)
     try{
         fs.writeFileSync(keyStorePath,keyStoreStr)
@@ -132,11 +157,26 @@ ipcMain.on(ipcEventName.export_key_store,(event,accountName,params)=>{
 })
 
 ipcMain.on(ipcEventName.key_store_list,(event,username)=>{
-    let keyStorePath = path.join(appPath,username)
+    let keyStorePath = path.join(accountDir,username)
 
-    try{
+    try {
         let result = fs.readdirSync(keyStorePath)
         event.returnValue = result
+    } catch (error) {
+        event.returnValue = []
+    }
+})
+
+ipcMain.on(ipcEventName.user_list, (event)=>{
+    try{
+        let result = fs.readdirSync(accountDir)
+        let list = []
+        for (let name of result) {
+          if ( fs.statSync( path.join(accountDir, name) ).isDirectory() ) {
+            list.push(name)
+          }
+        }
+        event.returnValue = list
     }catch(error){
         event.returnValue = []
     }

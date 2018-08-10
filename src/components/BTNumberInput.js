@@ -19,7 +19,18 @@
 import React, {PureComponent} from 'react'
 import {Input,Tooltip} from 'antd'
 
-console.log({})
+/**
+ * 是否超过小数点后 n 位
+ * @param  {[type]}  value [description]
+ * @return {Boolean}       [description]
+ */
+function isDecimalExceedsLimit(value, n) {
+  let decimal = value.split('.')[1]
+  if (decimal == undefined || decimal.length <= n) {
+    return false;
+  }
+  return true;
+}
 
 export default class BTNumberInput extends PureComponent{
     constructor(props){
@@ -40,10 +51,13 @@ export default class BTNumberInput extends PureComponent{
         }else if(value > Math.pow(10,9)){
             this.setState({visible:true,title:window.localeInfo["Wallet.NumberIsTooBig"]})
             return
+        // }else if(isDecimalExceedsLimit(value, 6)){
+        //     this.setState({visible:true,title:window.localeInfo["Wallet.NumberIsTooBig"]})
+        //     return
         }else{
             this.setState({visible:false})
             this.props.onChange(e)
-        } 
+        }
     }
 
     onBlur(){

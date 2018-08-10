@@ -19,32 +19,30 @@
 import React,{PureComponent} from 'react'
 import { connect } from 'react-redux'
 import {getAccount} from "../tools/localStore";
-// import BTUploadAsset from './BTUploadAsset'
-// import messages from '../locales/messages'
-import {Icon, Modal, Radio, Select, Button, Input, DatePicker, TimePicker, Cascader, Col, Row } from 'antd';
+import {Icon, Select, Button, Input, DatePicker, TimePicker, Col, Row } from 'antd';
 import BTAssetList from './BTAssetList'
 import BTCryptTool from 'bottos-crypto-js'
-import {getBlockInfo,getDataInfo, getSignaturedParam} from '../utils/BTCommonApi'
+import {getBlockInfo, getSignaturedParam, hasSensitiveWord} from '../utils/BTCommonApi'
 import BTFetch from "../utils/BTFetch";
-import {options} from '../utils/option'
 import {FormattedMessage} from 'react-intl'
 import messages from '../locales/messages'
 import moment from "moment"
 import ConfirmButton from './ConfirmButton'
 import BTTypeSelect from './BTTypeSelect'
-import * as BTSign from '../lib/sign/BTSign'
-import {registAssetPack} from '../lib/msgpack/BTPackManager'
 import BTNumberInput from './BTNumberInput'
+import { packedParam } from '../utils/pack'
 
 const PersonalAssetMessages = messages.PersonalAsset;
 const HeaderMessages = messages.Header;
 
 const { TextArea } = Input;
+const Option = Select.Option;
 
 const initState = {
   title:'',
   number:'0',
   description:'',
+  token_type: 'BTO',
   tag1:'',
   tag2:'',
   tag3:'',
@@ -67,6 +65,7 @@ class BTPublishAssetModal extends PureComponent{
         this.state = initState
 
         this.onTimeChange = this.onTimeChange.bind(this)
+        this.onTokenChange = this.onTokenChange.bind(this)
     }
 
     onChangeDataAssetType = (value) => {
@@ -102,6 +101,11 @@ class BTPublishAssetModal extends PureComponent{
 
     onTimeChange(time, timeValue) {
       this.setState({ timeValue });
+    }
+
+    onTokenChange(value) {
+      // console.log('value', value);
+      this.setState({ token_type: value });
     }
 
     title(e){
@@ -164,6 +168,22 @@ class BTPublishAssetModal extends PureComponent{
         message.warning(window.localeInfo["PersonalAsset.PleaseChooseTheAsset"]);
         return ;
       }
+
+      const { title, description, tag1, tag2, tag3 } = this.state
+      if (!title) {
+        message.warning(window.localeInfo["PersonalAsset.PleaseInputAssetName"]);
+        return ;
+      }
+
+      if (hasSensitiveWord(title)) {
+        message.warning(window.localeInfo["ReqAndAss.SensitiveWordsInTitle"]);
+        return ;
+      }
+      if (hasSensitiveWord(tag1) || hasSensitiveWord(tag2) || hasSensitiveWord(tag3)) {
+        message.warning(window.localeInfo["PersonalAsset.SensitiveWordsInTags"]);
+        return ;
+      }
+
       if(this.state.number<=0||this.state.number>=10000000000){
         message.warning(window.localeInfo["PersonalAsset.InputPrice"]);
         return;
@@ -179,8 +199,13 @@ class BTPublishAssetModal extends PureComponent{
         return;
       }
 
-      if (this.state.dataAssetType == '0') {
+      if (this.state.dataAssetType == '') {
         message.warning(window.localeInfo["PersonalAsset.PleaseChooseTheAssetType"]);
+        return;
+      }
+
+      if (hasSensitiveWord(description)) {
+        message.warning(window.localeInfo["ReqAndAss.SensitiveWordsInDescription"]);
         return;
       }
 
@@ -191,12 +216,13 @@ class BTPublishAssetModal extends PureComponent{
 
       // console.log('blockInfo', blockInfo);
 
+      const [contract, method] = ['assetmng', 'assetreg']
       let _message = {
         "version": 1,
         ...blockInfo,
         "sender": account_info.username,
-        "contract": "assetmng",
-        "method": "assetreg",
+        contract,
+        method,
         "sig_alg": 1
       }
 
@@ -204,32 +230,33 @@ class BTPublishAssetModal extends PureComponent{
       let expire_time_string = this.state.dateString + ' ' + (this.state.timeValue ? this.state.timeValue : '')
       let expire_time = new Date(expire_time_string).getTime() / 1000
 
+      // console.log('expire_time', expire_time);
+      // 用来确保 expire_time 是一个有效的时间戳
+      if (expire_time == 0 || Number.isNaN(expire_time)) {
+        console.warn('Invalid expire_time', expire_time);
+        expire_time = (new Date().getTime() / 1000).toFixed()
+        expire_time == Number(expire_time) + 7 * 24 * 3600
+      }
+
       let did = {
-        "asset_id": window.uuid(),
-        "basic_info": {
-          "username": account_info.username,
-          "assetName": this.state.title,
-          "assetType": Number.parseInt(this.state.dataAssetType),
+        "assetId": window.uuid(),
+        "info": {
+          "userName": account_info.username,
+          "assetName": title,
+          "assetType": Number.parseInt(this.state.dataAssetType) || 0,
           "featureTag": featureTag,
           "sampleHash": this.state.sample_hash,
           "storageHash": this.state.storage_hash,
           "expireTime": expire_time,
           "opType": 1,
+          "tokenType": this.state.token_type,
           "price": Number(this.state.number) * Math.pow(10, 8),
-          "description": this.state.description
+          description
         }
       }
 
-      console.log('did basic_info', did.basic_info)
-      let arrBuf = registAssetPack(did)
-      let params = Object.assign({}, _message)
-      params.param = arrBuf
-
-      let sign = BTSign.messageSign(params, privateKey)
-      params.signature = sign.toString('hex')
-      params.param = BTCryptTool.buf2hex(arrBuf)
-
       let url = '/asset/registerAsset'
+      let params = await packedParam(did, _message, privateKey)
 
       BTFetch(url,'POST',params)
       .then(response=>{
@@ -246,13 +273,17 @@ class BTPublishAssetModal extends PureComponent{
     }
 
     dataPicker = (date, dateString) => {
+      console.log('dateString', dateString);
       this.setState({ dateString })
     }
 
     render() {
+
+      const { newdata, exampledata, getFileNameTemp, getFileName } = this.state
+
       return (
         <div className='route-children-container route-children-bg'>
-          <BTAssetList  ref={(ref)=>this.assetListModal = ref} newdata={this.state.newdata} handleFile={(fileName)=>this.getFileName(fileName)}/>
+          <BTAssetList  ref={(ref)=>this.assetListModal = ref} newdata={newdata} handleFile={(fileName)=>this.getFileName(fileName)}/>
           <div className="uploadAsset">
             <h2 className='route-children-container-title'>
               <FormattedMessage {...HeaderMessages.PublishAsset}/>
@@ -264,16 +295,16 @@ class BTPublishAssetModal extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.UploadTheSample}/>
               </Col>
               <Col span={18}>
-                <Button type='primary' examplefile={this.state.exampledata} onClick={()=>this.commitAsset('assetTemp')}>
+                <Button type='primary' examplefile={exampledata} onClick={()=>this.commitAsset('assetTemp')}>
                   <Icon type="cloud-upload" />
                   <FormattedMessage {...PersonalAssetMessages.SetScreeningSample}/>
                 </Button>
                 <span className='filename'>{
-                    this.state.getFileNameTemp.length <= 24
+                    getFileNameTemp.length <= 24
                     ?
-                    this.state.getFileNameTemp
+                    getFileNameTemp
                     :
-                    this.state.getFileNameTemp.split('.')[0].substring(0, 8)+'...'+this.state.getFileNameTemp.split('.')[1]
+                    getFileNameTemp.split('.')[0].substring(0, 8)+'...'+getFileNameTemp.split('.').pop()
                 }</span>
               </Col>
             </Row>
@@ -284,16 +315,16 @@ class BTPublishAssetModal extends PureComponent{
                 <FormattedMessage {...PersonalAssetMessages.UploadTheAsset}/>
               </Col>
               <Col span={18}>
-                <Button type='primary' exampledata={this.state.exampledata} onClick={()=>this.commitAsset('asset')}>
+                <Button type='primary' exampledata={exampledata} onClick={()=>this.commitAsset('asset')}>
                   <Icon type="cloud-upload" />
                   <FormattedMessage {...PersonalAssetMessages.SetScreeningFile}/>
                 </Button>
                 <span className='filename'>{
-                  this.state.getFileName.length<=14
+                  getFileName.length <= 24
                   ?
-                  this.state.getFileName
+                  getFileName
                   :
-                  this.state.getFileName.split('.')[0].substring(0,5)+'...'+this.state.getFileName.split('.')[1]
+                  getFileName.split('.')[0].substring(0, 8)+'...'+getFileName.split('.').pop()
                 }</span>
               </Col>
             </Row>
@@ -319,7 +350,10 @@ class BTPublishAssetModal extends PureComponent{
                 />
               </Col>
               <Col span={4}>
-                <img src="./img/token.png" style={{width:20,height:20,margin:5}} alt=""/>
+                <Select onChange={this.onTokenChange} value={this.state.token_type}>
+                  <Option value="BTO">BTO</Option>
+                  <Option value="DTO">DTO</Option>
+                </Select>
               </Col>
             </Row>
 
@@ -346,10 +380,6 @@ class BTPublishAssetModal extends PureComponent{
               </Col>
               <Col span={12}>
                 <BTTypeSelect value={this.state.dataAssetType} onChange={this.onChangeDataAssetType} />
-                {/* <Cascader value={this.state.cascader}
-                  options={options}
-                  placeholder={window.localeInfo["PersonalAsset.PleaseSelect"]}
-                /> */}
               </Col>
             </Row>
 

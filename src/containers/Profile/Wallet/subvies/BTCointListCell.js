@@ -17,6 +17,7 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 import React, { PureComponent } from 'react'
+import { Link } from 'react-router'
 import { Button } from 'antd'
 import TransactionForm from './BTTransaction'
 import { FormattedMessage } from 'react-intl'
@@ -30,7 +31,7 @@ export default class BTCointListCell extends PureComponent{
         super(props)
         this.state = {
           visible: false,
-          balance: props.balance
+          balance: props.value
         }
     }
 
@@ -53,33 +54,43 @@ export default class BTCointListCell extends PureComponent{
     componentWillReceiveProps(nextProps) {
       // nextProps.balance
       this.setState({
-        balance: nextProps.balance
+        balance: nextProps.value
       });
     }
 
     render(){
-      let { balance } = this.state;
+      let { balance, visible } = this.state;
+      const {token_type, selectedAccount} = this.props
+
       return (
         <div className="container column">
             <div className="container route-children-bg accountItem">
               <div className="flex accountLeft">
                   <div>
-                      <span className="font25 colorTitle">{"BTO"}</span>
+                      <span className="font25 colorTitle">{token_type}</span>
                       <span>
                           <FormattedMessage {...WalletMessages.AvailableCash}/>
                       </span>
                   </div>
                   <div className="font25 colorRed">{balance/Math.pow(10, 8)}</div>
               </div>
-              <Button type="primary" onClick={()=>this.transaction()}>
-                <FormattedMessage {...WalletMessages.Transfer} />
-              </Button>
+              <div className='accountRight'>
+                <Button type="primary">
+                  <Link to={{ pathname: '/profile/wallet/TransactionHistory', query: { token_type, balance, selectedAccount } }} >
+                    <FormattedMessage {...WalletMessages.TransactionHistory} />
+                  </Link>
+                </Button>
+                <Button type="primary" onClick={()=>this.transaction()}>
+                  <FormattedMessage {...WalletMessages.Transfer} />
+                </Button>
+              </div>
             </div>
-            <BTTransitionHeight show={this.state.visible} height={220} style={{marginBottom:20}}>
+            <BTTransitionHeight show={visible} height={230}>
               <TransactionForm
                 closeModal={()=>this.onHandleCancel()}
-                account_name={this.props.account_name}
+                token_type={token_type}
                 balanceReduce={this.balanceReduce}
+                balance={balance}
               />
             </BTTransitionHeight>
         </div>

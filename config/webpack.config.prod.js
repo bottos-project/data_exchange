@@ -86,16 +86,15 @@ const proConfig = webpackMerge(commonConfig, {
 
   plugins: [
 
-    // new webpack.LoaderOptionsPlugin({
-    //   debug: true
-    // }),
-
     new UglifyJSPlugin({
       parallel: true,
       uglifyOptions: {
         ecma: 6,
         ie8: false,
         warnings: false,
+        compress: {
+          drop_console: true,
+        },
       },
     }),
 
@@ -122,7 +121,12 @@ const proConfig = webpackMerge(commonConfig, {
         minifyCSS: true,
         minifyURLs: true,
       },
-    })
+    }),
+
+    new webpack.DllReferencePlugin({
+      context: paths.appNodeModules,
+      manifest: require('./libs-manifest.json'),
+    }),
 
   ],
 });

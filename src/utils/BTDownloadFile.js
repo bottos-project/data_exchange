@@ -16,9 +16,16 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-export const file_server = 'http://139.219.139.198:8080/v3'
+const { service } = require('./config')
+import BTIPcRenderer from '../tools/BTIpcRenderer'
+import store from '@/redux/store'
+import { addDownloadRecord } from '@/redux/actions/downloadAction'
+import { basename } from 'path'
+
+// console.log('service', service);
 
 export const BTFileFetch = (url, fetchParam) => {
+  var file_server = service.base_url + service.version
   return fetch(file_server + url, {
     method: 'POST',
     body: JSON.stringify(fetchParam),
@@ -30,7 +37,7 @@ export const BTFileFetch = (url, fetchParam) => {
 
 function getDownloadFileIP(guid) {
   return BTFileFetch('/data/getStorageIP', {guid}).then(res => {
-    console.log('getStorageIP res', res);
+    // console.log('getStorageIP res', res);
     // let _snode_ip = 私钥解密后的 snode_ip
     // ip 字段中，sguid 其实是 chunk
     // snode_ip 是加密后的，要通过私钥解密
@@ -40,7 +47,7 @@ function getDownloadFileIP(guid) {
         throw new Error('Invalid storage address!')
       }
       let addr = JSON.parse(res.storage_addr)
-      console.log('addr', addr);
+      // console.log('addr', addr);
       let ip = addr.map(({sguid, snode_ip}) => ({
         sguid: guid + sguid,
         snode_ip
@@ -54,7 +61,7 @@ function getDownloadFileIP(guid) {
 
 function getFileDownloadURL(param, filename) {
   BTFileFetch('/data/getFileDownloadURL', param).then(res => {
-    console.log('getFileDownLoadURL res', res);
+    // console.log('getFileDownLoadURL res', res);
     if (res.message == 'OK' || res.result == '200') {
       let a = document.createElement('a');
       a.href = res.url
@@ -65,12 +72,78 @@ function getFileDownloadURL(param, filename) {
 }
 
 
-export async function BTDownloadFile(guid, username) {
+function getFileSliceDownloadURL(param) {
+  return BTFileFetch('/data/getFileSliceDownloadURL', param).then(res => {
+    // console.log('getFileDownLoadURL res', res);
+    if (res.message == 'OK' || res.result == '200') {
+      console.log('res url', res.url);
+      return res.url;
+    }
+  })
+}
+
+
+export async function BTDownloadFile(guid, username, opt) {
+  // var { filename, ...param } = await getDownloadFileIP(guid)
+  // if (!param) {
+  //   return window.message.error('get download file fail')
+  // }
+  // return getFileDownloadURL({...param, username}, filename)
+
   // console.log('arguments', arguments);
   // const [guid, username] = arguments
-  let { filename, ...param } = await getDownloadFileIP(guid)
-  if (!param) {
+  let { filename, ip } = await getDownloadFileIP(guid)
+  if (!ip) {
     return window.message.error('get download file fail')
   }
-  return getFileDownloadURL({...param, username}, filename)
+
+  // return getFileSliceDownloadURL({ip, username})
+  // let urlList = await BTFileFetch('/data/getFileSliceDownloadURL', {ip, username})
+  let urlList = await getFileSliceDownloadURL({ip, username})
+  if (!urlList) {
+    return window.message.error('get download file fail')
+  }
+
+  console.log('urlList', urlList);
+
+  // let fPath = BTIPcRenderer.getFileDownLoadPath(, filename, urlList)
+  let title = 'file download'
+  electron.remote.dialog.showSaveDialog({
+    title, defaultPath: filename
+  }, filePath => {
+    if (!filePath) {
+      // 如果 filePath 不存在，就是没有选
+      // return 掉
+      console.log('filePath 不存在，就是没有选', filePath);
+      return ;
+    }
+
+    // console.log('basename(filePath)', basename(filePath));
+
+    let params = {
+      filePath,
+      urlList,
+      guid,
+    }
+    BTIPcRenderer.fileDownLoad(params)
+
+    params.status = 'ready'
+
+    store.dispatch( addDownloadRecord(params) )
+    // console.log('fPath', fPath);
+  })
+  //
+  // if (!fPath) {
+  //   return ;
+  // }
+  //
+  // let newFilename = fPath.filename
+  // console.log('newFilename', newFilename);
+
+  return ;
+  // let { filename, ...param } = await getDownloadFileIP(guid)
+  // if (!param) {
+  //   return window.message.error('get download file fail')
+  // }
+  // return getFileDownloadURL({...param, username}, filename)
 }

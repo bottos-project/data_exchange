@@ -18,7 +18,7 @@
 */
 import React from 'react';
 import { FormattedMessage } from 'react-intl'
-import messages from '@/locales/messages'
+import messages from '../locales/messages'
 
 const AssetMessage = messages.Asset
 

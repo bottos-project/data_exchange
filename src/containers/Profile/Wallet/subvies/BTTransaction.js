@@ -30,6 +30,8 @@ import BTNumberInput from '../../../../components/BTNumberInput'
 import ConfirmButton from '@/components/ConfirmButton'
 import { getWorker } from '@/workerManage'
 import {transactionPack} from '../../../../lib/msgpack/BTPackManager'
+import myEmitter from '../../../../utils/eventEmitter'
+import TokenSymbol from '@/components/TokenSymbol'
 
 import { SIGPOLL } from 'constants';
 import * as BTCrypto from 'bottos-crypto-js'
@@ -50,36 +52,47 @@ const formItemLayout = {
 
 
 class Transaction extends PureComponent{
-    constructor(props){
-        super(props)
-    }
 
     async onHandleSubmit(){
         let {resetFields} = this.props.form
-        let account_name = this.props.account_name
-        let blockInfo = await getBlockInfo()
+        // let account_info = this.props.account_info
+        let selectedAccount = this.props.selectedAccount
+        let token_type = this.props.token_type
         let localStorage = window.localStorage
 
-        let accountInfo = JSON.parse(localStorage.account_info)
-        let username = accountInfo.username
         const { getFieldDecorator,getFieldsValue,getFieldValue,setFields,setFieldsValue } = this.props.form;
         let fieldValues = getFieldsValue()
 
         let quantity = Number(fieldValues.quantity)
         if(!fieldValues.to){
-            window.message.error(window.localeInfo["Wallet.PleaseEnterTheTargetAccount"])
-
-            return}
+          window.message.error(window.localeInfo["Wallet.PleaseEnterTheTargetAccount"])
+          return
+        }
+        if (fieldValues.to == selectedAccount) {
+          window.message.error(window.localeInfo["Wallet.CannotTransferToSelf"])
+          return
+        }
         if(!quantity){
-            window.message.error(window.localeInfo["Wallet.PleaseEnterTheMoneyToBeTransferred"])
-            return}
+          window.message.error(window.localeInfo["Wallet.PleaseEnterTheMoneyToBeTransferred"])
+          return
+        }
         if(!fieldValues.password) {
-            window.message.error(window.localeInfo["Wallet.PleaseEnterThePassword"])
-            return}
-        if(quantity<=0){
-            window.message.error(window.localeInfo["Wallet.PleaseEnterAvalidTransferAmount"])
-            return}
-        let keyStoreResult = BTIPcRenderer.getKeyStore({username:username,account_name:account_name})
+          window.message.error(window.localeInfo["Wallet.PleaseEnterThePassword"])
+          return
+        }
+        if (quantity <= 0) {
+          window.message.error(window.localeInfo["Wallet.PleaseEnterAvalidTransferAmount"])
+          return
+        }
+        if (quantity * Math.pow(10,8) > this.props.balance) {
+          window.message.error(window.localeInfo["Wallet.PleaseEnterAvalidTransferAmount"])
+          return
+        }
+
+        let blockInfo = await getBlockInfo()
+
+        let keyStoreResult = BTIPcRenderer.getKeyStore({username: selectedAccount, account_name: selectedAccount})
+        console.log('keyStoreResult', keyStoreResult);
         let keyStoreObj = keyStoreResult.keyStoreObj
         // 开启遮罩
         this.props.setSpin(true)
@@ -94,17 +107,17 @@ class Transaction extends PureComponent{
             let privateKeyStr = data.privateKey
             let privateKey = Buffer.from(privateKeyStr,'hex')
             let did = {
-                "from": account_name,
+                "from": selectedAccount,
                 "to": fieldValues.to,
-                "price": quantity * Math.pow(10,8),
-                "remark": "April's rent"
+                token_type,
+                "price": quantity * Math.pow(10,8)
             }
             let didBuf = transactionPack(did)
             let fetchParam = {
             "version": 1,
             ...blockInfo,
-            "sender": account_name,
-            "contract": "bottos",
+            "sender": selectedAccount,
+            "contract": token_type === "BTO" ? "bottos" : "bottostoken",
             "method": "transfer",
             "sig_alg": 1
             }
@@ -112,6 +125,8 @@ class Transaction extends PureComponent{
             fetchParam.param = didBuf
             getSignaturedFetchParam({fetchParam, privateKey})
             let url = '/user/transfer'
+
+            // return ;
             BTFetch(url,'POST', fetchParam)
             .then(res=>{
               if (!res) {
@@ -120,14 +135,21 @@ class Transaction extends PureComponent{
               if (res.code == 1) {
                   message.success(window.localeInfo["Wallet.SuccessfulToTransferAccounts"])
                   this.props.balanceReduce(quantity)
+                  setTimeout(() => {
+                    // 在一秒之后触发 transfer 事件
+                    myEmitter.emit('transfer', res);
+                  }, 1000);
                   resetFields()
-              } else if (res.code == 10102) {
+              } else if (res.code == 10105) {
                   message.error(window.localeInfo["Wallet.TheTargetAccountIsInexistence"])
+              } else {
+                throw new Error('transfer error')
               }
               this.props.setSpin(false)
             }).catch(error=>{
-              message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
+              console.error('err', error);
               this.props.setSpin(false)
+              window.message.error(window.localeInfo["Wallet.FailedToTransferAccounts"])
             })
         }
 
@@ -138,51 +160,69 @@ class Transaction extends PureComponent{
     }
 
     render(){
-        const { getFieldDecorator } = this.props.form;
-        return(
-            <div className='transaction-form-container route-children-bg'>
-              <Form onSubmit={()=>this.onHandleSubmit()} style={{marginTop: 25}}>
-                <Row>
-                  <Col span='18'>
-                    <FormItem label={<FormattedMessage {...WalletMessages.TargetAccount}/>} {...formItemLayout}>
-                      {getFieldDecorator('to', {
-                        rules: [{ required: true, message: '请填写对方账号!' }],
-                      })(<Input />)}
-                    </FormItem>
+      const { getFieldDecorator } = this.props.form;
+      return (
+        <div className='transaction-form-container'>
+          <Form className='route-children-bg'
+            onSubmit={()=>this.onHandleSubmit()}
+            style={{marginTop: 5, paddingTop: 20}}
+            >
+            <Row>
+              <Col span='18'>
+                <FormItem label={<FormattedMessage {...WalletMessages.TargetAccount}/>} {...formItemLayout}>
+                  {getFieldDecorator('to', {
+                    rules: [{ required: true, message: '请填写对方账号!' }],
+                  })(<Input />)}
+                </FormItem>
 
-                    <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout} onValuesChange={console.log("onValuesChange")}>
-                      {getFieldDecorator('quantity', { rules: [{ required: true, message: '请填写转账金额!' }], })(
-                        <BTNumberInput />
-                      )}
-                      {/* <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div> */}
-                    </FormItem>
+                <FormItem label={<FormattedMessage {...WalletMessages.TransferAmount}/>} {...formItemLayout} onValuesChange={console.log("onValuesChange")}>
+                  {getFieldDecorator('quantity', { rules: [{ required: true, message: '请填写转账金额!' }], })(
+                    <BTNumberInput />
+                    // {/* <React.Fragment><BTNumberInput /> {<TokenSymbol type={this.props.token_type} />}</React.Fragment> */}
+                  )}
+                  {/* <div><span style={{color:'purple',fontSize:20,marginLeft:10}}>{this.props.coinName}</span></div> */}
+                  <TokenSymbol type={this.props.token_type} />
+                </FormItem>
 
-                    <FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
-                      {getFieldDecorator('password', {
-                        rules: [{ required: true, message: '请填写账号密码!' }],
-                      })(<Input type="password"/>)}
-                    </FormItem>
-                  </Col>
-                  <Col span='6'>
-                    <div className="container marginRight" style={{ height: 100, paddingTop: 60, paddingLeft: 30 }}>
-                        <ConfirmButton onClick={()=>this.onHandleSubmit()}>
-                            <FormattedMessage {...WalletMessages.Submit}/>
-                        </ConfirmButton>
-                    </div>
-                  </Col>
-                </Row>
-                  {/**<FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
-                      {getFieldDecorator('password', {
-                          rules: [{ required: true, message: '请填写账户密码!' }],
-                      })(<Input type="password"/>)}
-                  </FormItem>**/}
-              </Form>
-            </div>
-        )
+                <FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
+                  {getFieldDecorator('password', {
+                    rules: [{ required: true, message: '请填写账号密码!' }],
+                  })(<Input type="password"/>)}
+                </FormItem>
+              </Col>
+              <Col span='6'>
+                <div className="container marginRight" style={{ height: 100, paddingTop: 60, paddingLeft: 30 }}>
+                    <ConfirmButton onClick={()=>this.onHandleSubmit()}>
+                        <FormattedMessage {...WalletMessages.Submit}/>
+                    </ConfirmButton>
+                </div>
+              </Col>
+            </Row>
+              {/**<FormItem label={<FormattedMessage {...WalletMessages.Password}/>} {...formItemLayout}>
+                  {getFieldDecorator('password', {
+                      rules: [{ required: true, message: '请填写账户密码!' }],
+                  })(<Input type="password"/>)}
+              </FormItem>**/}
+          </Form>
+        </div>
+      )
     }
 }
 
 const TransactionForm = Form.create()(Transaction)
+
+TransactionForm.propTypes = {
+  token_type: PropTypes.oneOf(['BTO', 'DTO']),
+  selectedAccount: PropTypes.string.isRequired,
+  balance: PropTypes.number.isRequired,
+};
+
+
+const mapStateToProps = (state) => {
+  const account_info = state.headerState.account_info
+  const { selectedAccount } = state.walletState
+  return { account_info, selectedAccount }
+}
 
 const mapDispatchToProps = (dispatch) => {
     return {
@@ -192,4 +232,4 @@ const mapDispatchToProps = (dispatch) => {
     }
 }
 
-export default connect(null,mapDispatchToProps)(TransactionForm)
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionForm)

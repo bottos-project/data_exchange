@@ -16,15 +16,78 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-module.exports = {
-    service:{
-        base_url:'http://139.219.139.198:8080/',
-        // base_url:'http://139.219.133.94:8080/',
-        // base_url:'http://139.217.202.68:8080/',
-        version:'v3'
-    },
-    mock:{
-        base_url:"http://192.168.9.242:8080/v3"
-        // base_url:"http://192.168.9.223:8080/v3"
+
+// var hostname = '139.219.133.94'
+// var hostname = '139.219.130.112'
+// var hostname = '139.219.136.155'
+var hostname = '139.219.139.198'
+// var hostname = '139.217.202.68'
+
+var base_url = `http://${hostname}:8080/`
+var service = {
+  version:'v3'
+}
+
+function randowFromArray(arr) {
+  console.assert(Array.isArray(arr))
+  let len = arr.length
+  let randomIndex = Math.floor(Math.random() * len)
+  if (randomIndex == len) {
+    randomIndex = len - 1
+  }
+  // console.log('randomIndex', randomIndex);
+  return arr[randomIndex];
+}
+
+function changeIP() {
+
+  fetch(base_url + service.version + '/dashboard/GetNodeIp', {
+    method: 'POST',
+    contentType: 'application/json',
+    body: JSON.stringify({ page_num: 1, page_size: 8})
+  }).then(res => res.json()).then(res => {
+    if (res.code != 1) {
+      throw new Error('Failed to GetNodeIp')
     }
+    // console.log('res', res);
+    let data = res.data
+    let IPInfoList = data.row
+    // console.log('IPInfoList', IPInfoList);
+    if (!IPInfoList) {
+      throw new Error('IP error')
+    }
+    let info = randowFromArray(IPInfoList)
+    // console.log('info', info);
+    hostname = info.ip
+    console.log('hostname', hostname);
+  })
+
+}
+
+changeIP()
+
+
+Object.defineProperty(service, 'base_url', {
+  get: function() {
+    // if (window.useCustomIP === true && window.hostname != undefined) {
+    //   hostname = window.hostname
+    // }
+    console.log('hostname', hostname);
+    base_url = `http://${hostname}:8080/`
+    return base_url
+  },
+  set: function(newValue) {
+    base_url = newValue
+  },
+  enumerable : true,
+  configurable : true
+})
+
+
+module.exports = {
+  service,
+  mock:{
+    base_url:"http://192.168.9.242:8080/v3"
+    // base_url:"http://192.168.9.223:8080/v3"
+  }
 }

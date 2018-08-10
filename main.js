@@ -16,10 +16,12 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 const path = require('path')
 const url = require('url')
 const pkg = require('./package.json')
+// 下载模块
+const registerMultipleDownload = require('./src/sys_modules/BTElectron-dl');
 
 // 保持一个对于 window 对象的全局引用，如果你不这样做，
 // 当 JavaScript 对象被垃圾回收， window 会被自动地关闭
@@ -62,29 +64,23 @@ function createWindow () {
   }
 
 
-  win.webContents.session.on('will-download', (event, item, webContents) => {
-    // 设置保存路径,使Electron不提示保存对话框。
-    // item.setSavePath('/tmp/save.pdf')
-
-    item.on('updated', (event, state) => {
-      if (state === 'interrupted') {
-        console.log('Download is interrupted but can be resumed')
-      } else if (state === 'progressing') {
-        if (item.isPaused()) {
-          console.log('Download is paused')
-        } else {
-          console.log(`Received bytes: ${item.getReceivedBytes()}`)
-        }
-      }
-    })
-    item.once('done', (event, state) => {
-      if (state === 'completed') {
-        console.log('Download successfully')
-      } else {
-        console.log(`Download failed: ${state}`)
-      }
-    })
-  })
+  // const session = win.webContents.session
+  // session.on('will-download', function (e, item) {
+  //   var timeStamp = new Date().getTime()
+  //
+  //   item.on('updated', (event, state) => {
+  //     let receivedBytes = item.getReceivedBytes()
+  //     if (receivedBytes == 0) {
+  //       timeStamp = new Date().getTime()
+  //       console.log('start', timeStamp / 1000 + 's');
+  //     }
+  //     console.log('update receivedBytes', receivedBytes);
+  //   })
+  //   item.on('done', (event, state) => {
+  //     console.log('done', (new Date().getTime() - timeStamp) / 1000 + 's');
+  //   })
+  // });
+  registerMultipleDownload(win)
 
   win.once('ready-to-show', () => {
     win.show()
@@ -127,3 +123,6 @@ app.on('activate', () => {
 
 // 文件模块
 const BTIpcMain = require('./src/sys_modules/BTIpcMain')
+
+// downloadMultiple()
+// electron-packager . walletTest --platform=win32 --arch=x64 --prune=true --ignore=[/dist/, /src/, /devtools/, /config/]

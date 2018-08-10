@@ -23,10 +23,12 @@ import {FormattedMessage} from 'react-intl'
 import BTTags from '../../AssetAndRequirement/BTTags'
 import {getAccount} from "../../../tools/localStore";
 import { typeValueKeyMap } from '../../../utils/keyMaps'
-import TokenPNG from '@/components/TokenPNG'
+import TokenSymbol from '@/components/TokenSymbol'
+import { getDateAndTime } from '@/utils/dateTimeFormat'
 
 import messages from '../../../locales/messages'
 const AssetMessages = messages.Asset;
+const ReqAndAssMessages = messages.ReqAndAss;
 
 class AssetlistItem extends Component {
 
@@ -76,9 +78,13 @@ class AssetlistItem extends Component {
                   {data.username}
                 </div>
                 <div>
-                  <FormattedMessage {...AssetMessages.ExpectedPrice}/>
+                  <FormattedMessage {...AssetMessages.ExpectedPrice} />
                   <span>{data.price/Math.pow(10, 8)}</span>
-                  <TokenPNG />
+                  <TokenSymbol type={data.token_type} />
+                </div>
+                <div>
+                  <FormattedMessage {...ReqAndAssMessages.ExpireTime} />
+                  <span>{getDateAndTime(data.expire_time)}</span>
                 </div>
                 <BTTags tags={tagsArr} />
             </div>

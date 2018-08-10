@@ -16,7 +16,8 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-import React,{PureComponent} from 'react'
+import React, { PureComponent } from 'react'
+import { connect } from 'react-redux'
 import {Modal,Input,Button} from 'antd'
 import BTIpcRenderer from '../../../../tools/BTIpcRenderer'
 import BTCryptTool from 'bottos-crypto-js'
@@ -25,34 +26,49 @@ import messages from '../../../../locales/messages'
 import {FormattedMessage} from 'react-intl'
 const WalletMessages = messages.Wallet;
 
-export default class BTWalletItem extends PureComponent{
+class BTWalletItem extends PureComponent{
     constructor(props){
         super(props)
         this.state = {
             visible:false,
+            deleteVisible: false,
+            confirmAccount: '',
+            canDelete: false,
             password:'',
             newPassword:'',
             reNewPassword:''
         }
     }
 
-    changePwd(accountName){
-        // let keyStore = BTIpcRenderer.getKeyStore(accountName)
-        this.setState({visible:true})
+
+    showDeleteModal = () => {
+      this.setState({
+        deleteVisible: true
+      });
     }
 
-    exportAccount(accountName){
-        let localStorage = window.localStorage
-        let account_info = JSON.parse(localStorage.account_info)
-        let username = account_info.username
-        let account_name = accountName
-        let result = BTIpcRenderer.getKeyStore({username,account_name})
-        if(result.error){
-            window.message.error(window.localeInfo["Header.FailedToExportedThekeystore"]);
-            return
-        }
-        BTIpcRenderer.exportKeyStore(accountName,result.keyStoreObj)
+    inputAccount = (event) => {
+      let value = event.target.value
+      // console.log('value', value);
+      this.setState({
+        confirmAccount: value,
+        canDelete: value === this.props.accountName
+      });
     }
+
+    deleteKeystore = () => {
+      const { account_info, accountName } = this.props
+      let username = account_info.username
+      let result = BTIpcRenderer.getKeyStore({username:username,account_name:accountName})
+      console.log('result', result);
+      if (result.error) {
+        console.error(result.error);
+        return ;
+      } else {
+        return result.keyStoreObj
+      }
+    }
+
 
     onHandleOk(){
         if(this.state.password == '') {window.message.error(window.localeInfo['Wallet.PleaseEnterTheOriginalPassword']);return}
@@ -86,27 +102,41 @@ export default class BTWalletItem extends PureComponent{
     }
 
     onHandleCancel(){
-        this.setState({
-            visible:false,
-            password:'',
-            newPassword:'',
-            reNewPassword:''
-        })
+      this.setState({
+        visible:false,
+        password:'',
+        newPassword:'',
+        reNewPassword:''
+      })
     }
 
     render(){
         return(
           <div className="container route-children-bg accountItem">
 
-            <Modal
+            <Modal visible={this.state.deleteVisible}
+              title={<FormattedMessage {...WalletMessages.SureToDeleteKeystore} />}
+              onOk={this.deleteKeystore}
+              onCancel={()=>this.setState({deleteVisible: false})}
+              okText={<FormattedMessage {...messages.OK} />}
+              cancelText={<FormattedMessage {...messages.Cancel} />}
+              okButtonProps={{ disabled: !this.state.canDelete }}
+            >
+              <FormattedMessage {...WalletMessages.DeleteConfirm} />
+              <Input value={this.state.confirmAccount} onChange={this.inputAccount} />
+            </Modal>
+
+            {/* <Modal
                 visible={this.state.visible}
                 onOk={()=>this.onHandleOk()}
                 onCancel={()=>this.onHandleCancel()}
+                okText={<FormattedMessage {...messages.OK} />}
+                cancelText={<FormattedMessage {...messages.Cancel} />}
             >
                 <Input style={{marginTop:20,marginBottom:20}} type="password" placeholder={window.localeInfo['Wallet.PleaseEnterTheOriginalPassword']} value={this.state.password} onChange={(e)=>this.setState({password:e.target.value})}/>
                 <Input style={{marginBottom:20}} type="password" placeholder={window.localeInfo['Wallet.PleaseEnterTheNewPassword']} value={this.state.newPassword} onChange={(e)=>this.setState({newPassword:e.target.value})}/>
                 <Input type="password" placeholder={window.localeInfo['Wallet.PleaseEnterTheNewPasswordAgain']} value={this.state.reNewPassword} onChange={(e)=>this.setState({reNewPassword:e.target.value})}/>
-            </Modal>
+            </Modal> */}
 
             <div className="flex accountLeft">
                 <div>
@@ -121,15 +151,22 @@ export default class BTWalletItem extends PureComponent{
             </div>
 
             <div>
-                {/* <Button className="marginRight" type="primary" onClick={()=>this.changePwd(this.props.accountName)}>
-                    <FormattedMessage {...WalletMessages.ModifyThePassword}/>
-                </Button> */}
                 <Button type="primary" onClick={()=>this.exportAccount(this.props.accountName)}>
                     <FormattedMessage {...WalletMessages.ExportTheAccount }/>
                 </Button>
+                {/* <Button style={{marginLeft: 20}} type="danger" onClick={this.showDeleteModal}>
+                  <FormattedMessage {...WalletMessages.DeleteKeystore}/>
+                </Button> */}
             </div>
 
           </div>
         )
     }
 }
+
+const mapStateToProps = (state) => {
+  const { account_info } = state.headerState
+  return { account_info }
+}
+
+export default connect(mapStateToProps)(BTWalletItem)

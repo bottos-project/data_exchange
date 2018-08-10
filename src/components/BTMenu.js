@@ -51,7 +51,7 @@ function BTPersonalMenu({routeName}) {
     'file': 'ProfileFile',
     'wallet': 'Wallet',
     'check': 'MyMessages',
-    'presale': 'PreSale',
+    'presale': 'Promote',
     'collect': 'Collect',
   }
   var list = []

@@ -27,7 +27,7 @@ const {ipcEventName} = window.eventName;
  */
 const getKeyStore = (accountInfo)=>{
     let responst = ipcRenderer.sendSync(ipcEventName.get_key_store,accountInfo);
-    console.log({responst})
+    // console.log('responst', responst)
     return responst
 }
 
@@ -40,7 +40,7 @@ const isExists = (path)=>{
 }
 
 const saveKeyStore = (accountInfo,params)=>{
-     return ipcRenderer.sendSync(ipcEventName.save_key_store,accountInfo,params)
+    return ipcRenderer.sendSync(ipcEventName.save_key_store,accountInfo,params)
 }
 
 const importFile = ()=>{
@@ -58,11 +58,30 @@ const getKeyStoreList = ()=>{
     return keyStoreList
 }
 
+const getUserList = ()=>{
+    let userList = ipcRenderer.sendSync(ipcEventName.user_list);
+    return userList
+}
+
+const fileDownLoad = ({filePath, urlList, guid}) => {
+  // console.log('ipcEventName.file_download', ipcEventName.file_download);
+  let params = {filePath, urlList, guid}
+  ipcRenderer.send(ipcEventName.file_download, params);
+}
+
+const deleteDownLoadCache = ({dirname, urlList, guid}) => {
+  let params = {dirname, urlList, guid}
+  ipcRenderer.send(ipcEventName.delete_download_cache, params);
+}
+
 export default {
     getKeyStore,
     saveKeyStore,
     importFile,
     exportKeyStore,
+    getUserList,
     getKeyStoreList,
     mkdir,
+    fileDownLoad,
+    deleteDownLoadCache
 }

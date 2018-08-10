@@ -18,14 +18,14 @@
 */
 import React,{PureComponent} from 'react'
 import { Icon } from 'antd';
-import { getSignaturedParam } from "../../../../utils/BTCommonApi";
+import { getSignaturedParam, lookForAsset } from "../../../../utils/BTCommonApi";
 import {FormattedMessage} from 'react-intl'
 import messages from '../../../../locales/messages'
 import {getAccount} from "../../../../tools/localStore";
 import { getDateAndTime } from '@/utils/dateTimeFormat'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
 import { selectType } from '@/utils/keyMaps'
-import TokenPNG from '@/components/TokenPNG'
+import TokenSymbol from '@/components/TokenSymbol'
 import BTTable from '@/components/BTTable'
 
 const PersonalAssetMessages = messages.PersonalAsset;
@@ -34,17 +34,18 @@ const columns = [
   {
     title: <FormattedMessage {...PersonalAssetMessages.AssetName}/>,
     dataIndex: 'asset_name',
-    render: (item) => {
-      return <span title={item}>
+    render: (item, record) => {
+      const asset_id = record.asset_id
+      return <a title={item} onClick={() => lookForAsset(asset_id, getAccount())}>
          {item.length < 25? item:item.substring(0,25)+'...'}
-      </span>
+      </a>
     }
   },
   {
     title: <FormattedMessage {...PersonalAssetMessages.ExpectedPrice}/>,
     dataIndex: 'price',
-    render: (price) => <div>
-      <TokenPNG />
+    render: (price, record) => <div>
+      <TokenSymbol type={record.token_type} />
       <span>{price/Math.pow(10, 8)}</span>
     </div>
   },

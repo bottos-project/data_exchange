@@ -23,10 +23,6 @@ import BTWalletItem from './BTWalletItem'
 import BTAccountListHeader from './BTAccountListHeader'
 
 class BTWalletList extends PureComponent{
-    constructor(props){
-        super(props)
-    }
-
     render() {
       if ( React.isValidElement(this.props.children) ) {
         return <div className='route-children-bg' style={{flexGrow: 1}}>{this.props.children}</div>

@@ -25,4 +25,13 @@ import { message } from 'antd'
 message.config({top: 100, duration: 2, maxCount: 1})
 window.message = message
 
+document.addEventListener('dragover', function (e) {
+  // console.log('dragover e', e);
+  e.preventDefault()
+})
+document.addEventListener('drop', function (e) {
+  // console.log('drop e', e);
+  e.preventDefault()
+})
+
 ReactDOM.render(<App />, document.getElementById('root'));

@@ -26,9 +26,14 @@ ul,li{
   -webkit-box-orient: vertical;
 }
 
-#root {
+#root, .noscroll-content {
   height: 100%;
   overflow: hidden;
+}
+
+.scroll-content {
+  height: 100%;
+  overflow-y: auto;
 }
 
 .dib {

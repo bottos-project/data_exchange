@@ -17,6 +17,7 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 import BTFetch from './BTFetch'
+import { hashHistory } from 'react-router'
 
 
 // 获取data信息
@@ -42,12 +43,16 @@ export const getBlockInfo = async()=>{
     return params
 }
 
-const { queryProtoEncode, messageProtoEncode } = require('@/lib/proto/index');
-const query_pb = require('@/lib/proto/query_pb')
-const message_pb = require('@/lib/proto/message_pb')
+const { queryProtoEncode, messageProtoEncode } = require('../lib/proto/index');
+const query_pb = require('../lib/proto/query_pb')
+const message_pb = require('../lib/proto/message_pb')
 const BTCryptTool = require('bottos-crypto-js')
 
-export function getSignaturedParam({username, privateKey}) {
+export function getSignaturedParam(account_info) {
+  if (account_info == null) {
+    return console.error('account_info error')
+  }
+  const {username, privateKey} = account_info
   if (typeof username != 'string' || typeof privateKey != 'string') {
     console.error('type error');
   }
@@ -62,8 +67,7 @@ export function getSignaturedParam({username, privateKey}) {
 export function getSignaturedFetchParam({fetchParam, privateKey}) {
   let encodeBuf = messageProtoEncode(message_pb, fetchParam)
   let chainId = Buffer.from("00000000000000000000000000000000","hex")
-  let newMsgProto = new Uint8Array()
-  newMsgProto = [...encodeBuf,...chainId]
+  let newMsgProto = [...encodeBuf,...chainId]
   let hashData = BTCryptTool.sha256(BTCryptTool.buf2hex(newMsgProto))
   let sign = BTCryptTool.sign(hashData, privateKey)
   // console.log('sign', sign);
@@ -108,3 +112,52 @@ export function BTRowFetch(url, param) {
     }
   })
 };
+
+
+/**
+ * 查找 asset 信息
+ * @param {String} asset_id [description]
+ */
+export function lookForAsset(asset_id, account_info) {
+  if (typeof asset_id != 'string' || account_info == null) {
+    window.message.error(window.localeInfo["Check.QueryFailure"])
+    throw new Error('Type Error')
+  }
+  BTFetch("/asset/queryAssetByID", "post", {
+    sender: account_info.username,
+    asset_id
+  }).then(res => {
+    if (!res) return ;
+    if (res.code == 1 && res.data != null) {
+      hashHistory.push({
+        pathname: '/assets/detail',
+        state: res.data
+      })
+    } else {
+      window.message.error(window.localeInfo["Check.QueryFailure"])
+    }
+  })
+  .catch(error=>{
+    window.message.error(window.localeInfo["Check.QueryFailure"])
+  })
+
+}
+
+/**
+ * 是否包含敏感词
+ * @param  {String}  text [description]
+ * @return {Boolean}      [description]
+ */
+export function hasSensitiveWord(text) {
+  if (typeof text != 'string') {
+    console.error('Type Error: expected string but ', typeof text);
+  }
+  const censorwordsArr = window.getSensitives()
+  for (let word of censorwordsArr) {
+    let pattern = new RegExp(word)
+    if (pattern.test(text)) {
+      return true;
+    }
+  }
+  return false;
+}

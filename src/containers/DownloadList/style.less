@@ -1,0 +1,126 @@
+.download-list-simple {
+  position: absolute;
+  top: 0;
+  right: -415px;
+  // bottom: 5px;
+  // margin-top: 80px;
+  width: 400px;
+  // max-height: 400px;
+  height: 100%;
+  background-color: #fafafa;
+  z-index: 1000;
+  transition: right .3s ease-out;
+  border: 1px solid #94bff3;
+}
+
+.download-list-simple.visible {
+  right: 0;
+}
+
+.download-list-simple > .ant-collapse {
+  position: relative;
+}
+.download-list-simple > .download-list-out {
+  position: absolute;
+  top: 50%;
+  left: -15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  width: 15px;
+  transform: translateY(-50%);
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  background-color: #dbdbdb;
+  cursor: pointer;
+  border: 1px solid #94bff3;
+}
+
+.download-list-collapse-panel .ant-collapse-content-box {
+  height: calc(100vh - 96px);
+  overflow-y: auto;
+}
+
+.download-list-collapse-panel .ant-collapse-content {
+  background-color: #f2f5f9;
+}
+
+.ant-collapse>.ant-collapse-item>.ant-collapse-header:focus {
+  outline: none;
+}
+
+// 下面是 每条 item 相关的样式
+.download-list-item {
+  position: relative;
+  width: 100%;
+  padding: 6px 10px 8px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.download-item-icon {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: #EFF2F6;
+  width: 80px;
+  height: 54px;
+  border-radius: 5px;
+}
+
+.download-item-info-container {
+  margin-left: 85px;
+  height: 58px;
+}
+
+.download-item-info-container > .inexistence {
+  text-decoration: line-through;
+  color: #aaa;
+}
+
+.download-list-item-status {
+  position: absolute;
+  right: 30px;
+}
+
+.download-list-item-open {
+  cursor: pointer;
+  i:hover {
+    background-color: lightblue;
+  }
+
+}
+
+.download-list-toggle-icon {
+  position: absolute;
+  top: 3px;
+  right: 8px;
+  cursor: pointer;
+  font-size: 24px;
+  > i:hover {
+    background-color: lightblue;
+  }
+}
+
+.download-item-delete {
+  position: absolute;
+  right: 5px;
+  top: 40px;
+  cursor: pointer;
+  color: #3A9BFF;
+}
+
+.black-modal {
+  position: fixed;
+  display: none;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(33, 33, 33, 0.2);
+  z-index: 999;
+  &.visible {
+    display: block;
+  }
+}

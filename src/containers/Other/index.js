@@ -45,21 +45,6 @@ class BTOther extends PureComponent{
     }
 
     componentDidMount(){
-        // BTFetch('/dashboard/GetNodeInfos','GET').then(res => {
-        //     if (res && res.code == 1) {
-        //         if (res.data == null) {
-        //             return ;
-        //         }
-        //         let node = [];
-        //         for(let i of res.data){
-        //             node.push(i.address.split('|'));
-        //         }
-        //         this.props.setNodeInfos(res.data)
-        //         this.setState({
-        //             map:node,
-        //         })
-        //     }
-        // }).catch(error=>error)
         this.getMaps()
     }
 
@@ -69,10 +54,12 @@ class BTOther extends PureComponent{
       BTFetch(url,'GET').then(response=>{
           if(response && response.code==1){
               let data = response.data
-              this.setState({nodes:data,Total_Nodes:data.length})
+              // let nodes = data.row
+              // let Total_Nodes = data.row_count
+              this.setState({nodes: data, Total_Nodes: data.length})
           }
-      }).catch(error=>{
-          // console.log({error})
+      }).catch(error => {
+        console.error(error);
       })
     }
 
@@ -84,8 +71,9 @@ class BTOther extends PureComponent{
       // } else if (routeParams.name == 'alltransaction') {
       //   return <BTOtherExchange />
       // }
-      if ( React.isValidElement(this.props.children) ) {
-        return this.props.children
+      const { locale, children } = this.props
+      if ( React.isValidElement(children) ) {
+        return children
       }
 
       return (
@@ -94,7 +82,7 @@ class BTOther extends PureComponent{
               <BTOtherAllBlock Total_Nodes={this.state.Total_Nodes}/>
           </div>
           <div>
-              <BTMap node={this.state.nodes} />
+              <BTMap node={this.state.nodes} locale={locale} />
           </div>
           <Row gutter={16}>
             <Col span={12}>
@@ -129,4 +117,9 @@ class BTOther extends PureComponent{
     }
 }
 
-export default connect()(BTOther)
+const mapStateToProps = (state) => {
+  const { locale } = state.headerState
+  return { locale }
+}
+
+export default connect(mapStateToProps)(BTOther)

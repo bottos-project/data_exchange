@@ -23,8 +23,11 @@ import { connect } from 'react-redux'
 import './styles.less'
 import * as headerActions from '../redux/actions/HeaderAction'
 import { updateFileList } from '../redux/actions/uploaderAction'
-import {Button, Modal, Menu, Dropdown, Icon } from 'antd'
+import { toggleVisible } from '../redux/actions/downloadAction'
+import {Button, Modal, Menu, Dropdown, Icon, Badge } from 'antd'
 import { injectIntl, FormattedMessage, defineMessages } from 'react-intl';
+import { getSignaturedParam } from "../utils/BTCommonApi";
+import {getAccount} from "../tools/localStore";
 import BTFetch from '../utils/BTFetch'
 import {importFile,exportFile} from '../utils/BTUtil'
 import BTIpcRenderer from '../tools/BTIpcRenderer'
@@ -55,17 +58,19 @@ class BTHeader extends PureComponent{
     }
 
     logout = () => {
-      this.props.setAccountInfo(null)
-      this.props.updateFileList([])
+      const { setAccountInfo, updateFileList, setNoticeNum } = this.props
+      setAccountInfo(null)
+      updateFileList([])
+      setNoticeNum(0)
       window.message.success(window.localeInfo["Header.SuccessToLogOut"]);
     }
 
     menu() {
         return <Menu>
             <Menu.Item key="1">
-              <a href="#" onClick={this.logout}>
+              <Link to="/dashboard" onClick={this.logout}>
                   <FormattedMessage {...HeaderMessages.Logout}/>
-              </a>
+              </Link>
             </Menu.Item>
         </Menu>
     }
@@ -95,6 +100,12 @@ class BTHeader extends PureComponent{
         )
     }
 
+    toggleDownloadVisible = () => {
+      let {downloadsVisible, toggleVisible} = this.props
+      console.log('downloadsVisible', downloadsVisible);
+      toggleVisible(!downloadsVisible)
+    }
+
     setLocale = () => {
         let storage = window.localStorage;
         let locale = storage.getItem('locale');
@@ -110,9 +121,16 @@ class BTHeader extends PureComponent{
 
     }
 
+    componentDidMount() {
+      const { account_info, getUnread } = this.props
+      if (account_info) {
+        getUnread(account_info)
+      }
+    }
+
     render() {
       // console.log('btheader render');
-        const { account_info } = this.props
+        const { account_info, downloadingNumber, notice_num } = this.props
         return(
             <div className="container header">
               {/* <div style={{position: 'absolute', top: 0, right: 10}}>v: {pkg.version}</div> */}
@@ -124,11 +142,11 @@ class BTHeader extends PureComponent{
                 <div className="loginBtnStyle">
                   <Link to='/publishAsset' onClick={this.checkAccount} >
                     <img src='./img/publishAsset.svg' />
-                    <FormattedMessage {...HeaderMessages.PublishAsset}/>
+                    <div><FormattedMessage {...HeaderMessages.PublishAsset}/></div>
                   </Link>
                   <Link to='/publishDemand' onClick={this.checkAccount}>
                     <img src='./img/publishDemand.svg' />
-                    <FormattedMessage {...HeaderMessages.PublishDemand}/>
+                    <div><FormattedMessage {...HeaderMessages.PublishDemand}/></div>
                   </Link>
                   {
                     account_info != null
@@ -144,23 +162,30 @@ class BTHeader extends PureComponent{
                     :
 
                     <Link to='/loginOrRegister'>
-                      <div className='flex center' style={{width: 47, height: 47}}>
+                      <div className='flex center' style={{width: 37, height: 37, textAlign: 'center'}}>
                         <img src='./img/profile.svg' />
                       </div>
-                      <FormattedMessage {...MenuMessages.LoginOrRegister}/>
+                      <div><FormattedMessage {...MenuMessages.LoginOrRegister}/></div>
                     </Link>
 
                   }
-
-                  <Link to='/profile/wallet' onClick={this.checkAccount}>
+                  {/* <Link to='/profile/wallet' onClick={this.checkAccount}>
                     <img src='./img/wallet.svg' />
-                    <FormattedMessage {...MenuMessages.Wallet} />
+                    <div><FormattedMessage {...MenuMessages.Wallet} /></div>
+                  </Link> */}
+                  <Link to='/profile/check' onClick={this.checkAccount}>
+                    <Badge count={notice_num}>
+                      <img src='./img/check.svg' />
+                    </Badge>
+                    <div><FormattedMessage {...MenuMessages.MyMessages} /></div>
                   </Link>
 
-                  <Link to='/profile/check' onClick={this.checkAccount}>
-                    <img src='./img/check.svg' />
-                    <FormattedMessage {...MenuMessages.MyMessages} />
-                  </Link>
+                  <a onClick={this.toggleDownloadVisible}>
+                    <Badge count={downloadingNumber}>
+                      <img src='./img/downloads.svg' style={{margin: 4}} />
+                    </Badge>
+                    <div><FormattedMessage {...MenuMessages.Download} /></div>
+                  </a>
 
                 </div>
                 <div className='switch-locate'>
@@ -175,12 +200,14 @@ class BTHeader extends PureComponent{
 
 
 const mapStateToProps = (state) => {
-  const { account_info, locale } = state.headerState
-  return { account_info, locale }
+  const { account_info, locale, notice_num } = state.headerState
+  const { visible: downloadsVisible, downloads } = state.downloadState
+  const downloadingNumber = downloads.filter(d => d.status == 'downloading').length
+  return { account_info, locale, notice_num, downloadsVisible, downloadingNumber }
 }
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({...headerActions, updateFileList}, dispatch)
+  return bindActionCreators({...headerActions, updateFileList, toggleVisible}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BTHeader)

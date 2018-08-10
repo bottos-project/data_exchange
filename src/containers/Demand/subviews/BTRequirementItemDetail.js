@@ -17,7 +17,7 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 import BTFetch from "../../../utils/BTFetch";
-import { getBlockInfo, getSignaturedParam, getSignaturedFetchParam } from "../../../utils/BTCommonApi";
+import { getBlockInfo, getSignaturedParam } from "../../../utils/BTCommonApi";
 import React,{PureComponent} from 'react'
 import { Carousel, Button, Tag, Input } from 'antd';
 import {FormattedMessage} from 'react-intl'
@@ -26,13 +26,17 @@ import BTAssetRadioGroup from './BTAssetRadioGroup'
 import { getDateAndTime } from '../../../utils/dateTimeFormat'
 import {getAccount} from "../../../tools/localStore";
 import CloseBack from '@/components/CloseBack'
+import TokenSymbol from '@/components/TokenSymbol'
 import BTFavoriteStar from '@/components/BTFavoriteStar'
 import { typeValueKeyMap } from '../../../utils/keyMaps'
 import { PackArraySize, PackStr16, PackUint32 } from '@/lib/msgpack/msgpack'
 import { BTDownloadFile } from '@/utils/BTDownloadFile'
-const DemandMessages = messages.Demand;
-const { TextArea } = Input;
+import { selectType } from '../../../utils/keyMaps'
+import { packedParam } from '../../../utils/pack'
 
+const DemandMessages = messages.Demand;
+const ReqAndAssMessages = messages.ReqAndAss;
+const { TextArea } = Input;
 
 export default class BTRequirementItemDetail extends PureComponent{
   constructor(props){
@@ -116,23 +120,7 @@ export default class BTRequirementItemDetail extends PureComponent{
       }
     }
 
-    let b1 = PackArraySize(2)
-    let b2 = PackStr16(originParam.dataPresaleId)
-
-    let b3 = PackArraySize(5)
-
-    let b4 = PackStr16(originParam.info.userName)
-    let b5 = PackStr16(originParam.info.assetId)
-    let b6 = PackStr16(originParam.info.dataReqId)
-    let b7 = PackStr16(originParam.info.consumer)
-    let b8 = PackUint32(originParam.info.opType)
-
-    let param = [...b1,...b2,...b3,...b4,...b5,...b6,...b7,...b8]
-    console.log('param', param);
-
     let blockInfo = await getBlockInfo()
-
-    console.log('blockInfo', blockInfo);
 
     let privateKey = Buffer.from(getAccount().privateKey, 'hex')
 
@@ -142,13 +130,15 @@ export default class BTRequirementItemDetail extends PureComponent{
         "sender": username,
         "contract": "datadealmng",
         "method": "presale",
-        "param": param,
         "sig_alg": 1
     }
 
-    fetchParam = getSignaturedFetchParam({fetchParam, privateKey})
+    let params = await packedParam(originParam, fetchParam, privateKey)
 
-    BTFetch('/asset/preSaleNotice', 'post', fetchParam)
+    // console.log('params', params);
+    // console.assert(p1 == params.param, '不相等')
+
+    BTFetch('/asset/preSaleNotice', 'post', params)
     .then(res => {
       if (!res || res.code != 1) {
         throw new Error('Failed Promote')
@@ -185,44 +175,46 @@ export default class BTRequirementItemDetail extends PureComponent{
 
                   <div className="headAndShop">
                     <h1>{data.requirement_name}</h1>
-                    {/* <BTFavoriteStar isFavorite={data.is_collection} type='requirement' id={data.requirement_id} /> */}
+                    <BTFavoriteStar isFavorite={data.is_collection} type='requirement' id={data.requirement_id} />
                   </div>
 
                   <p>
-                      <FormattedMessage {...DemandMessages.Publisher}/>
+                      <FormattedMessage {...DemandMessages.Publisher} />
                       {data.username}
                   </p>
-                  {/*<p>
-                      <span>
-                       <FormattedMessage {...DemandMessages.AssetType}/>
-                      </span>
-                      {data.feature_tag}
-                  </p>*/}
                   <p>
-                      <span>
-                          <FormattedMessage {...DemandMessages.ExpectedPrice}/>
-                      </span>
-                      {data.price/Math.pow(10, 8)}
-                      <img src="./img/token.png" width='18' style={{paddingLeft:'4px'}} alt=""/>
+                    <FormattedMessage {...DemandMessages.RequirementType} />
+                    {selectType[data.req_type]}
                   </p>
                   <p>
-                      <span>
-                          <FormattedMessage {...DemandMessages.ExpireTime}/>
-                      </span>
+                      <FormattedMessage {...DemandMessages.ExpectedPrice}/>
+                      {data.price/Math.pow(10, 8)}
+                      <TokenSymbol type={data.token_type} />
+                  </p>
+                  <p>
+                      <FormattedMessage {...ReqAndAssMessages.ExpireTime}/>
                       {getDateAndTime(data.expire_time)}
                   </p>
                 </div>
                 <ul>
                    <li>
-                        <Button type="primary" onClick={this.download}>
-                            <FormattedMessage {...DemandMessages.DownLoadTheSample}/>
-                        </Button>
+                     {
+                       data.sample_hash
+                       ?
+                       <Button type="primary" onClick={this.download}>
+                         <FormattedMessage {...ReqAndAssMessages.DownLoadTheSample}/>
+                       </Button>
+                       :
+                       <Button disabled>
+                         <FormattedMessage {...ReqAndAssMessages.NoSample}/>
+                       </Button>
+                     }
                     </li>
                     <li>
                       {
                         data.is_presale ?
                         <Button disabled>
-                          <FormattedMessage {...DemandMessages.HavePresale}/>
+                          <FormattedMessage {...DemandMessages.HavePromote}/>
                         </Button>
                         :
                         <Button type="primary" onClick={()=>this.commitAsset()}>

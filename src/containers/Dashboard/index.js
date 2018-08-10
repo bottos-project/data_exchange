@@ -200,7 +200,7 @@ export default class BTDashboard extends PureComponent {
             }
           }
         }
-        // console.log('obj', obj);
+        // console.log('GetAllTypeTotal obj', obj);
         this.setState(obj);
       });
       //注册人数

@@ -22,11 +22,19 @@ import { connect } from 'react-redux'
 
 import BTHeader from '../components/BTHeader'
 import BTMenu from '../components/BTMenu'
-// import BTPersonalMenu from '../components/BTPersonalMenu'
+import DownloadList from './DownloadList'
+
+const { packedParam } = require('../utils/pack');
+// const Pack = require('../utils/pack');
+// console.log('Pack', Pack);
+
+import {getAccount} from '../tools/localStore'
+
 import './styles.less'
 import { Breadcrumb, Spin } from 'antd';
 import { FormattedMessage } from 'react-intl'
 import messages from '../locales/messages'
+
 const MenuMessages = messages.Menu;
 const HeaderMessages = messages.Header;
 
@@ -46,6 +54,7 @@ function itemRender(route, params, routes, paths) {
 }
 
 class App extends PureComponent {
+
   render() {
     const { routes, locale } = this.props
     const routeName = routes[routes.length - 1].name || 'Profile'
@@ -88,6 +97,7 @@ class App extends PureComponent {
                 </div>
                 {this.props.children}
               </div>
+              <DownloadList />
           </div>
       </div>
     )

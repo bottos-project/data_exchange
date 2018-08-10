@@ -16,12 +16,12 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-import React,{PureComponent} from 'react'
+import React, { PureComponent } from 'react'
 import { connect } from 'react-redux'
-import {List,Button} from 'antd'
+import { List } from 'antd'
 import BTFetch from '../../../../utils/BTFetch';
-import messages from '../../../../locales/messages'
-import {getAccount} from "../../../../tools/localStore";
+// import { getSignaturedParam } from '../../../../utils/BTCommonApi'
+// import messages from '../../../../locales/messages'
 import BTCointListCell from './BTCointListCell'
 
 class BTCointList extends PureComponent{
@@ -40,35 +40,57 @@ class BTCointList extends PureComponent{
     componentDidMount() {
       const { account_info, selectedAccount } = this.props
       this.getUserBalance(selectedAccount || account_info.username)
+
+      // BTFetch('/user/GetBalance', 'POST', {username: account_info.username})
+      // .then()
+
     }
 
-    getUserBalance(account_name) {
-        console.log("getUserBalance", account_name)
+    getUserBalance(username) {
+        // console.log("getUserBalance", username)
 
-        let url = '/user/GetAccountInfo'
-        let params = { account_name }
+        let url = '/user/GetBalance'
+        let params = {
+          username
+        }
         BTFetch(url,'POST',params)
           .then(res => {
-              let balanceList = []
-              if(res && res.code==1){
-                  let data = res.data
-                  balanceList.push(data)
-                  this.setState({balanceList})
-              }else{
-                  messages.error('failed')
+            if (!res || res.code != 1) {
+              let err = new Error('Get balance error!')
+              err.res = res
+              throw err
+            }
+            let balanceList = []
+            console.log('res', res);
+            if (Array.isArray(res.data)) {
+              balanceList = res.data
+            }
+            this.setState({balanceList})
+          }).catch(err => {
+            // console.error(err);
+            if (err.res) {
+              let res = err.res
+              if (res.code == 1006) {
+                try {
+                  console.error(JSON.parse(res.details));
+                } catch (e) {
+                  message.error('failed')
+                }
               }
-          }).catch(error=>{
-              messages.error('failed')
+
+            } else {
+              message.error('failed')
+            }
           })
     }
 
     render() {
       return(
         <List
-          style={{flex: 1}}
+          // style={{flexGrow: 1}}
           dataSource={this.state.balanceList}
           renderItem={(item)=>{
-            return <BTCointListCell {...item}/>
+            return <BTCointListCell {...item} selectedAccount={this.props.selectedAccount} />
           }}
         />
       )

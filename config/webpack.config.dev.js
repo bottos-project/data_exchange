@@ -67,12 +67,6 @@ const devConfig = webpackMerge(commonConfig, {
 
   plugins: [
 
-    new webpack.LoaderOptionsPlugin({
-      debug: true
-    }),
-
-    new webpack.NamedModulesPlugin(),
-
     new HtmlWebpackPlugin({
       template: paths.appHtml,
     })
@@ -84,6 +78,9 @@ const devConfig = webpackMerge(commonConfig, {
     compress: true,
     hot: true,
     port: 3000,
+    // proxy: {
+    //   '/bottosabi': 'http://localhost:3000/bottosabi'
+    // }
   }
 
 });

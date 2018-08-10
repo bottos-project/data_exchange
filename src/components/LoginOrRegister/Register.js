@@ -32,6 +32,7 @@ import messages from '@/locales/messages'
 import {messageProtoEncode} from '@/lib/proto/index'
 import {getBlockInfo} from '@/utils/BTCommonApi'
 import { getWorker } from '@/workerManage'
+import { packedParam } from '../../utils/pack'
 
 const msgpack = require('@/lib/msgpack/msgpack')
 
@@ -60,9 +61,11 @@ function BTRegistSuccess({username, keystoreObj}) {
         <FormattedMessage {...HeaderMessages.YourAccountHasBeenRegisteredSuccessfully}/>
       </p>
 
-      <div style={{margin: '0 5%'}}>
+      <div style={{margin: '15px 5%'}}>
         <TextArea rows={8} readOnly defaultValue={cryptStr} />
       </div>
+
+      <p><FormattedMessage {...LoginMessages.AutoBackup} /></p>
 
       <Row type='flex' justify='space-around' style={{marginTop: 20}}>
         <Button type='primary' onClick={copyToClipboard}>
@@ -95,8 +98,6 @@ class Regist extends PureComponent{
         super(props);
         this.state = {
             user_type: 0,
-            verify_data:'', // 验证码图片
-            verify_id: '', // 验证码 id
             isRegistered: false,
             // 下面两个是 BTRegistSuccess 需要的参数
             username: '',
@@ -127,7 +128,7 @@ class Regist extends PureComponent{
     }
 
     async onHandleSubmit(e) {
-        console.log("onHandleSubmit")
+        // console.log("onHandleSubmit")
         e.preventDefault()
         message.destroy();
         const { getFieldsValue } = this.props.form;
@@ -179,12 +180,12 @@ class Regist extends PureComponent{
 
         // console.log('注册');
         // did
-        let didParam = this.getDid(username,keys)
-        let arrSize = msgpack.PackArraySize(2)
-        let arrid = msgpack.PackStr16(didParam.Didid)
-        let arrStr = msgpack.PackStr16(JSON.stringify(didParam.Didinfo))
-        // let len = arrSize.byteLength + arrid.byteLength + arrStr.byteLength
-        let buf = [...arrSize,...arrid,...arrStr]
+        let didParam = this.getDid(username, keys)
+
+        // let arrSize = msgpack.PackArraySize(2)
+        // let arrid = msgpack.PackStr16(didParam.didid)
+        // let arrStr = msgpack.PackStr16(didParam.info)
+        // let buf = [...arrSize,...arrid,...arrStr]
 
         let newuser = {
             version:1,
@@ -192,13 +193,14 @@ class Regist extends PureComponent{
             sender: username,
             contract:"usermng",
             method:"reguser",
-            param: buf,
+            // param: buf,
             sig_alg:1
         }
 
-        let signObj = this.getSign(keys,newuser)
-        newuser.param = BTCryptTool.buf2hex(buf)
-        newuser.signature = signObj.toString('hex')
+        newuser = await packedParam(didParam, newuser, privateKey)
+        // console.log('newuser', newuser);
+
+        // console.assert( newuser.param === param, '不相等', param, newuser.param)
 
         let registParams = {
             account:{
@@ -206,7 +208,7 @@ class Regist extends PureComponent{
                 Pubkey:keys.publicKey.toString('hex')
             },
             user:newuser,
-            verify_id:this.state.verify_id,
+            verify_id:this.props.verify_id,
             verify_value:verificationCode
         }
 
@@ -241,6 +243,7 @@ class Regist extends PureComponent{
               this.registSuccess({username, keystoreObj})
               this.clearFields()
               this.props.setSpin(false)
+              this.props.requestVerificationCode()
               message.success(window.localeInfo["Header.YourRegistrationHasBeenSuccessfullyCompleted"]);
             }
 
@@ -252,19 +255,19 @@ class Regist extends PureComponent{
 
           }else if(response.code == 1001){
             this.props.setSpin(false)
-            this.requestVerificationCode()
+            this.props.requestVerificationCode()
             message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
 
-          }else if(response.code == 1004){
+          }else if(response.code == 1004 || response.code == 10103){
             console.log('response.code', response.code);
             this.props.setSpin(false)
             console.log('details', JSON.parse(res.details));
-            this.requestVerificationCode()
+            this.props.requestVerificationCode()
             message.error(window.localeInfo["Header.AccountHasAlreadyExisted"]);
           }else{
             this.props.setSpin(false)
             console.log('details', JSON.parse(res.details));
-            this.requestVerificationCode()
+            this.props.requestVerificationCode()
             message.error(window.localeInfo["Header.FailedRegister"]);
           }
 
@@ -280,8 +283,8 @@ class Regist extends PureComponent{
         let publicKeyStr = publicKey.toString('hex')
         let didid = "did:bot:"+publicKeyStr.slice(0,32)
         let didParam = {
-            "Didid": didid, // account公钥截取前32位
-            "Didinfo": {
+            didid, // account公钥截取前32位
+            info: {
                 "@context": "https://bottos.org/did/v1",
                 "nameBase58": accountName,  // 当前用户名
                 "version": "0.1",
@@ -312,26 +315,14 @@ class Regist extends PureComponent{
         let hash = BTCryptTool.sha256(JSON.stringify(didParam))
 
         let signature = BTCryptTool.sign(hash,privateKey)
-        didParam.Didinfo.signature = {
+        didParam.info.signature = {
             "type": "EcdsaVerificationKey2018",
             "created": new Date().getTime(),
             "creator": didid,  // 谁签名写谁的
             "signatureValue": signature.toString('hex')
         }
+        didParam.info = JSON.stringify(didParam.info)
         return didParam
-    }
-
-    getSign(keys,msg){
-        let signObj = Object.assign({},msg)
-        let priKey = keys.privateKey
-        const message_pb = require('@/lib/proto/message_pb')
-        let encodeBuf = messageProtoEncode(message_pb,msg)
-        let chainId = Buffer.from("00000000000000000000000000000000","hex")
-        let newMsgProto = new Uint8Array()
-        newMsgProto = [...encodeBuf,...chainId]
-        let hash = BTCryptTool.sha256(BTCryptTool.buf2hex(newMsgProto))
-        let sign = BTCryptTool.sign(hash,priKey)
-        return sign
     }
 
     handleRadioChange = (e) => {
@@ -339,23 +330,6 @@ class Regist extends PureComponent{
         this.setState({
             user_type: e.target.value,
         })
-    }
-
-    requestVerificationCode = () => {
-
-      BTFetch('/user/getVerify', 'get').then(res => {
-        if(res && res.code==1){
-            this.setState({
-                verify_data:res.data.verify_data,
-                verify_id:res.data.verify_id
-            })
-        }
-      })
-
-    }
-
-    componentDidMount() {
-      this.requestVerificationCode()
     }
 
     render() {
@@ -410,12 +384,12 @@ class Regist extends PureComponent{
                       }
                     </Col>
                     <Col span={7}>
-                      {this.state.verify_data
+                      {this.props.verify_data
                         ?
                         <img height='28px'
                           style={{marginBottom: 6, cursor: 'pointer'}}
-                          onClick={this.requestVerificationCode}
-                          src={this.state.verify_data} />
+                          onClick={this.props.requestVerificationCode}
+                          src={this.props.verify_data} />
                         :
                         <Icon type='spin' />
                       }

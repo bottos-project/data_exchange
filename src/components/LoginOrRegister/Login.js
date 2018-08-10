@@ -16,89 +16,76 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-import React,{PureComponent} from 'react'
+import React, {PureComponent} from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 
 import BTCryptTool from 'bottos-crypto-js'
-import { Icon, Input, Button, message, Row, Col } from 'antd'
-import BTFetch from '@/utils/BTFetch';
-import { getAccount } from '@/tools/localStore'
-import { setAccountInfo, setSpin } from '@/redux/actions/HeaderAction'
-import BTIPcRenderer from '@/tools/BTIpcRenderer'
-import {importFile} from '@/utils/BTUtil'
+import { Icon, Input, Button, Row, Col, Select } from 'antd'
+import BTFetch from '../../utils/BTFetch';
+import * as headerActions from '../../redux/actions/HeaderAction'
+import BTIpcRenderer from '../../tools/BTIpcRenderer'
+import {importFile} from '../../utils/BTUtil'
 import ConfirmButton from '../ConfirmButton'
 import {FormattedMessage} from 'react-intl'
-import messages from '@/locales/messages'
-import {queryProtoEncode} from '@/lib/proto/index'
-import { getWorker } from '@/workerManage'
+import messages from '../../locales/messages'
+import {queryProtoEncode} from '../../lib/proto/index'
+import { getWorker } from '../../workerManage'
+import KeyStoreLogin from './KeyStoreLogin'
 
 const LoginMessages = messages.Login;
 const HeaderMessages = messages.Header;
 const { TextArea } = Input;
-const electron = window.electron
-const clipboard = electron.clipboard
-
+const Option = Select.Option;
 
 class Login extends PureComponent{
     constructor(props){
         super(props)
-
+        const accountList = BTIpcRenderer.getUserList()
         this.state = {
-            username: '',
+            username: accountList[0],
             password: '',
             keyStore: null,
-            verify_data:'',
-            verify_id:'',
-            verify_code:''
+            verify_code:'',
+            mode: 'username', // username or keystore
+            accountList
         }
 
         this.onHandleUnlock = this.onHandleUnlock.bind(this)
     }
 
-    componentDidMount(){
-        this.requestVerificationCode()
-    }
-
-    requestVerificationCode = () => {
-
-        BTFetch('/user/getVerify', 'get').then(res => {
-          if(res && res.code==1){
-              this.setState({
-                  verify_data:res.data.verify_data,
-                  verify_id:res.data.verify_id
-              })
-          }
-        })
-
+    getKeyStoreObj() {
+      if (this.state.mode == 'username') {
+        if(this.state.username==''){
+          message.error(window.localeInfo["Header.PleaseSelectTheAccount"]);
+          return
+        }
+        let account = this.state.username
+        let result = BTIpcRenderer.getKeyStore({username:account,account_name:account})
+        console.log('result', result);
+        if (result.error) {
+          console.error(result.error);
+          return ;
+        } else {
+          return result.keyStoreObj
+        }
+      } else {
+        return JSON.parse(this.state.keyStore);
       }
+
+    }
 
     async onHandleUnlock(){
         message.destroy()
-        // if(this.state.username==''){
-        //     message.error(window.localeInfo["Header.PleaseEnterTheUserName"]);
-        //     return
-        // }
 
         if(this.state.password == ''){
             message.error(window.localeInfo["Header.PleaseEnterThePassword"]);
             return
         }
-        let keyStoreObj = JSON.parse(this.state.keyStore)
+        let keyStoreObj = this.getKeyStoreObj()
         let username = keyStoreObj.account;
         let password = this.state.password;
-        // let blockInfo = await this.getBlockInfo();
-
-        // if(!(blockInfo&&blockInfo.code=="0")) {
-        //     message.error(window.localeInfo["Header.LoginFailure"]);
-        //     return
-        // }
-
-        // let data = await this.getDataInfo(username)
-        // if(!(data && data.code=="0")){
-        //     message.error(window.localeInfo["Header.LoginFailure"]);
-        //     return
-        // }
 
         this.props.setSpin(true)
 
@@ -119,24 +106,26 @@ class Login extends PureComponent{
           let params = {
             ...signature,
             username,
-            verify_id:this.state.verify_id,
+            verify_id:this.props.verify_id,
             verify_value:this.state.verify_code
           }
 
           let url = '/user/login'
           BTFetch(url,'POST',params)
           .then(response => {
-            console.log({response})
+            console.log('response', response)
             if (response) {
               if (response && response.code == 1) {
                 window.message.success(window.localeInfo["Header.LoginSucceed"])
                 let accountInfo = {username,privateKey}
                 this.props.setAccountInfo(accountInfo)
+                this.saveKeyStore(keyStoreObj)
                 hashHistory.push('/profile/asset')
               } else if (response.code==1001) {
-                this.requestVerificationCode()
+                this.props.requestVerificationCode()
                 message.warning(window.localeInfo["Header.VerificationCodeWrong"]);
               } else if (response.code==1000 && typeof response.details == 'string') {
+                this.props.requestVerificationCode()
                 try {
                   let details = JSON.parse(response.details)
                   if (details.errcode == 10204) {
@@ -148,6 +137,7 @@ class Login extends PureComponent{
                   message.error(window.localeInfo["Header.LoginFailure"]);
                 }
               } else {
+                this.props.requestVerificationCode()
                 message.error(window.localeInfo["Header.LoginFailure"]);
               }
             }
@@ -155,18 +145,19 @@ class Login extends PureComponent{
           }).catch(error=>{
             this.props.setSpin(false)
             message.error(window.localeInfo["Header.LoginFailure"]);
+            console.error(error);
           })
 
         }
 
         myWorker.onerror = (e) => {
           console.error(e);
+          this.props.requestVerificationCode()
           window.message.error(window.localeInfo["Header.TheWrongPassword"]);
           this.props.setSpin(false)
         }
 
     }
-
 
     getSignature(username,privateKeyStr){
         let privateKey = Buffer.from(privateKeyStr,'hex')
@@ -179,69 +170,22 @@ class Login extends PureComponent{
        return {signature,random}
     }
 
-    // 获取区块信息
-    async getBlockInfo(){
-        let reqUrl = '/user/GetBlockInfo'
-        return await BTFetch(reqUrl,'GET')
-    }
-
-    // 获取data信息
-    async getDataInfo(username){
-        let reqUrl = '/user/GetDataBin'
-        let params = {
-            "code":"usermng",
-            "action":"userlogin",
-            "args":{
-                "user_name":username,
-                "random_num":Math.round(Math.random()*1000)
-            }
-        }
-        return await BTFetch(reqUrl,'POST',params)
-    }
-
-    importKeyStore = () => {
-      let keyStoreInfo = BTIPcRenderer.importFile()
-      if(!keyStoreInfo.error){
-        let keyStoreObj = keyStoreInfo.result
-        this.setState({
-          keyStore: keyStoreObj,
-          username: keyStoreInfo.username
-        })
-        window.message.success(window.localeInfo["Header.ImportKeyStoreSuccess"])
-      }else{
-        message.error(window.localeInfo["Header.ImportKeyStoreFaild"])
-      }
-    }
-
-    parseKeystore = ()=>{
-        let keyStore = clipboard.readText()
-        console.log({keyStore})
-        this.setState({
-            keyStore:keyStore
-        })
-    }
-
     // keyStore文件保存
-    saveKeyStore(keyStoreObj){
-        if(keyStoreObj.error){
-            message.error(keyStoreObj.error)
-            return;
-        }
-        if(this.state.password==''){
-            message.error(window.localeInfo["Header.PleaseEnterThePassword"]);
-            return;
-        }
+    saveKeyStore(keyStoreObj) {
+      let account = keyStoreObj.account;
+      BTIpcRenderer.saveKeyStore({username:account,account_name:account},keyStoreObj)
+    }
 
-        try{
-            let keyStoreStr = BTCryptTool.aesDecrypto(keyStoreObj,this.state.password);
-            let keyStore = JSON.parse(keyStoreStr)
-            let account_name = keyStore.account_name;
-            // return;
-            console.log("saveKeyStore____________")
-            BTIPcRenderer.saveKeyStore({username:account_name,account_name:account_name},keyStoreObj)
-        }catch(error){
-            message.error(window.localeInfo["Header.ThePasswordAndTheKeystoreDoNotMatch"]);
-        }
+    changeMode = (mode) => {
+      this.setState({mode})
+    }
+
+    changeKeyStore = (keyStore) => {
+      this.setState({keyStore})
+    }
+
+    changeAccount = (username) => {
+      this.setState({username})
     }
 
     render() {
@@ -249,42 +193,47 @@ class Login extends PureComponent{
         maxWidth: 560,
         marginTop: 20,
       }
+
+      // console.log('this.state.accountList', this.state.accountList);
+      let list = this.state.accountList.map(acc => {
+        return <Option key={acc}>{acc}</Option>
+      })
+      // list.push(<Option key={1}>adfadfadfadf</Option>)
+
       return (
         <div className="container column login-container">
+
           <div className='route-children-container-title'><FormattedMessage {...HeaderMessages.Login} /></div>
-          <Row style={rowStyle}>
-            <Col span={5} style={{ textAlign: 'right' }}>
-              <span className='label'><FormattedMessage {...LoginMessages.Keystore} /></span>
-            </Col>
-            <Col span={18}>
-              <TextArea
-                disabled={!!this.state.username}
-                placeholder={window.localeInfo["Header.PleaseEnterTheKeystore"]}
-                rows={6}
-                value={this.state.keyStore}
-                onChange={(e)=>this.setState({keyStore:e.target.value})}
-              />
-            </Col>
-          </Row>
 
-          {this.state.username && <div className='flex center'>
-            <Icon type="file" />{this.state.username}.keystore
-          </div>}
-
-          <Row style={rowStyle}>
-            {/* <Col span={5} style={{height: '100%'}}></Col> */}
-            <Col span={18} offset={5}>
-              <Row type='flex' justify='space-around'>
-                <Button type='primary' onClick={this.parseKeystore}>
-                  <FormattedMessage {...LoginMessages.PasteTheKeyStore}/>
+          {
+            this.state.mode == 'keystore'
+            ?
+            <KeyStoreLogin
+              changeMode={this.changeMode}
+              changeKeyStore={this.changeKeyStore}
+              keyStore={this.state.keyStore}
+              mode={this.state.mode}
+            />
+            :
+            <Row style={rowStyle}>
+              <Col span={5} style={{ textAlign: 'right' }}>
+                <span className='label'><FormattedMessage {...LoginMessages.Account} /></span>
+              </Col>
+              <Col span={12}>
+                <Select defaultValue={this.state.username} onChange={this.changeAccount} style={{width: '100%'}} placeholder={window.localeInfo["Header.PleaseSelectTheAccount"]}>
+                  {list}
+                </Select>
+                {/* <Input placeholder={window.localeInfo["Header.PleaseSelectTheAccount"]} className="marginRight" onChange={(e)=>{}}/> */}
+              </Col>
+              <Col offset={1} span={5}>
+                <Button onClick={this.changeMode.bind(this, 'keystore')}>
+                  <FormattedMessage {...LoginMessages.UseNewAccount} />
                 </Button>
+              </Col>
+            </Row>
 
-                <Button type='primary' onClick={this.importKeyStore}>
-                  <FormattedMessage {...LoginMessages.ImportTheKeyStore}/>
-                </Button>
-              </Row>
-            </Col>
-          </Row>
+          }
+
 
           <Row style={rowStyle}>
             <Col span={5} style={{ textAlign: 'right' }}>
@@ -296,24 +245,24 @@ class Login extends PureComponent{
           </Row>
 
           <Row style={rowStyle}>
-                <Col span={5} style={{ textAlign: 'right' }}>
-                    <span className="label"><FormattedMessage {...LoginMessages.VerifyCode} /></span>
-                </Col>
-                <Col span={11}>
-                    <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} className="marginRight" onChange={(e)=>{this.setState({verify_code:e.target.value})}}/>
-                </Col>
-                <Col span={8}>
-                    {this.state.verify_data
-                    ?
-                    <img height='28px'
-                        style={{marginBottom: 6, cursor: 'pointer'}}
-                        onClick={this.requestVerificationCode}
-                        src={this.state.verify_data} />
-                    :
-                    <Icon type='spin' style={{backgroundColor:'red'}}/>
-                    }
-                </Col>
-           </Row>
+              <Col span={5} style={{ textAlign: 'right' }}>
+                  <span className="label"><FormattedMessage {...LoginMessages.VerifyCode} /></span>
+              </Col>
+              <Col span={11}>
+                  <Input placeholder={window.localeInfo["Header.PleaseEnterTheVerificationCode"]} className="marginRight" onChange={(e)=>{this.setState({verify_code:e.target.value})}} onPressEnter={this.onHandleUnlock} />
+              </Col>
+              <Col span={8}>
+                  {this.props.verify_data
+                  ?
+                  <img height='28px'
+                      style={{marginBottom: 6, cursor: 'pointer'}}
+                      onClick={this.props.requestVerificationCode}
+                      src={this.props.verify_data} />
+                  :
+                  <Icon type='spin' style={{backgroundColor:'red'}}/>
+                  }
+              </Col>
+          </Row>
 
           <div className='flex center marginTop'>
             <ConfirmButton onClick={this.onHandleUnlock}><FormattedMessage {...HeaderMessages.Login} /></ConfirmButton>
@@ -323,17 +272,8 @@ class Login extends PureComponent{
     }
 }
 
-
 const mapDispatchToProps = (dispatch) => {
-    return {
-        setAccountInfo(info) {
-            dispatch( setAccountInfo(info) )
-        },
-        setSpin(isloading) {
-          dispatch(setSpin(isloading))
-        }
-
-    }
+  return bindActionCreators(headerActions, dispatch)
 }
 
 export default connect(null, mapDispatchToProps)(Login)

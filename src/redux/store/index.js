@@ -16,10 +16,22 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-import {createStore} from 'redux'
+import { applyMiddleware, createStore } from 'redux';
+import thunk from 'redux-thunk'
+
 import rootReducer from '../reducers'
 
+// console.log('process.env.NODE_ENV', process.env.NODE_ENV);
+let middleware = [ thunk ]
+if (process.env.NODE_ENV !== 'production') {
+  let logger = require('redux-logger').logger
+  middleware = [ ...middleware, logger ]
+}
+
+// console.log('middleware', middleware);
+
 const store = createStore(rootReducer,
-    window.devToolsExtension ? window.devToolsExtension() : undefined
+    // window.devToolsExtension()
+    applyMiddleware(...middleware)
 )
 export default store

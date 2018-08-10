@@ -23,14 +23,17 @@ import debounce from 'lodash.debounce'
 import store from '@/redux/store'
 import {getAccount} from "@/tools/localStore";
 
-import { addFile, deleteFile, updateFile, updateUploadProgress } from '@/redux/actions/uploaderAction'
-import { get_ms_short } from '@/utils/dateTimeFormat'
+import { addFile, deleteFile, updateFile } from '@/redux/actions/uploaderAction'
+import { get_ms_short, get_s_short } from '@/utils/dateTimeFormat'
 import BTFetch from '@/utils/BTFetch'
-import { getBlockInfo, getSignaturedFetchParam } from "@/utils/BTCommonApi";
+import { getBlockInfo } from "@/utils/BTCommonApi";
 import { BTFileFetch } from '@/utils/BTDownloadFile'
 import { PackArraySize, PackStr16, PackUint32, PackUint64 } from '@/lib/msgpack/msgpack'
-import { getCacheFileState } from '@/utils/uploadingFileCache'
+import { getCacheFileState, deleteFileCache } from '@/utils/uploadingFileCache'
+import { packedParam } from '../../../../utils/pack'
 
+import myEmitter from '@/utils/eventEmitter'
+// console.log('myEmitter', myEmitter);
 // const fs = __non_webpack_require__('fs');
 // console.log('fs', fs);
 // 文件上传流程
@@ -42,6 +45,8 @@ import { getCacheFileState } from '@/utils/uploadingFileCache'
 // 6. 进度查询及缓存，显示进度条
 // 7. 上传成功向后端注册文件
 
+var timeStamp = 0;
+
 const GigaByte = Math.pow(2, 30)
 const MegaByte = 1 << 20
 
@@ -52,9 +57,10 @@ function calculateSlicedFileSize(size) {
     return 200 * MegaByte
   } else if (size > 500 * MegaByte) {
     return 150 * MegaByte;
+  } else if (size > 200 * MegaByte) {
+    return 100 * MegaByte;
   }
-  return 40 * MegaByte;
-  return 100 * MegaByte;
+  return 50 * MegaByte;
 }
 
 // 负责将文件切片。
@@ -120,6 +126,7 @@ var uploader = WebUploader.create({
     server: 'http://localhost:9000/',
     // auto: true,
     sendAsBinary: true,
+    threads: 2,
     method: 'PUT',
     chunked: true,
     attachInfoToQuery: false,
@@ -128,7 +135,7 @@ var uploader = WebUploader.create({
 })
 
 // console.log('WebUploader', WebUploader);
-console.log('uploader', uploader);
+// console.log('uploader', uploader);
 
 // 在文件入队之前触发
 // 文件切片信息在此获取
@@ -185,13 +192,15 @@ function getUploadURL(file) {
         store.dispatch( updateFile(file) )
         return
       }
+      timeStamp = get_s_short()
+      console.log('upload timeStamp', timeStamp);
       return uploader.upload(file)
 
     } else {
       console.log('res', res);
       file.status = 'error'
       store.dispatch( updateFile(file) )
-      window.message.error(res.status)
+      window.message.error(res.status || res.detail)
     }
   }).catch(err => {
     console.error('getFileUploadURL error', err);
@@ -214,7 +223,7 @@ async function handleFileQueued(file) {
   // return
   file.hashList = hashList
 
-  console.log('文件大小', file.size);
+  console.log('文件大小', file.size, WebUploader.formatSize(file.size));
   // console.log('hashList', hashList);
   // 3. 将 hashList 发到后端校验
   BTFileFetch('/data/fileCheck', {hash: hashList})
@@ -232,7 +241,9 @@ async function handleFileQueued(file) {
       if (res.is_exist == 1) {
         // console.log('文件已存在', res);
         message.info(window.localeInfo['File.FileExisted'])
-        store.dispatch( deleteFile(file.id) )
+        store.dispatch( deleteFile(file) )
+        console.log('res.merkle_root_hash', res.merkle_root_hash);
+        deleteFileCache(res.merkle_root_hash)
       } else {
         window.message.error(res.status || window.localeInfo['File.FileExisted'])
         file.status = 'error'
@@ -245,7 +256,7 @@ async function handleFileQueued(file) {
     console.error('fileCheck catch err', err);
     window.message.error(window.localeInfo['File.UploadFail'])
     uploader.removeFile(file)
-    store.dispatch( deleteFile(file.id) )
+    store.dispatch( deleteFile(file) )
   })
 
 }
@@ -286,12 +297,13 @@ function progressChange(file, percentage) {
   //   querySecondProgress(file)
   // }
   if (percentage < 1) {
-    store.dispatch( updateUploadProgress(file.guid, percentage * uploadSuccessPercent) )
+    // store.dispatch( updateUploadProgress(file.guid, percentage * uploadSuccessPercent) )
+    myEmitter.emit('uploadProgress', file.guid, percentage * uploadSuccessPercent);
   }
 
 }
 
-var percent_throttled = throttle(progressChange, 200)
+var percent_throttled = throttle(progressChange, 500)
 
 uploader.on( 'uploadProgress', percent_throttled)
 
@@ -318,9 +330,12 @@ function querySecondProgress(file) {
       setTimeout(querySecondProgress.bind(null, file), 3000);
     } else if ( res.result == 200 && chunks == res.storage_done ) {
       // 说明存储的等于 上传完成的
-      console.log('上传真的完成');
+      // console.log('上传真的完成', get_s_short() - timeStamp + 's');
+      console.log('记录最终时间，不注册', get_s_short() - timeStamp + 's');
+      // return
       file.status = 'done'
-      store.dispatch( updateUploadProgress(guid, 100) )
+      // store.dispatch( updateUploadProgress(guid, 100) )
+      myEmitter.emit('uploadProgress', guid, 100);
       store.dispatch( updateFile(file) )
 
       // 成功之后的文件注册
@@ -333,28 +348,28 @@ function querySecondProgress(file) {
           "fileName": file.name || 'name',
           "filePolicy": "policytest",
           "fileNumber": 1,
-          "simOrass": 0,
+          "simorass": 0,
       		"opType": 1,
           "storeAddr": JSON.stringify(storeAddr)
         }
       }
 
-      let b1 = PackArraySize(2)
-      let b2 = PackStr16(originParam.fileHash)
+      // let b1 = PackArraySize(2)
+      // let b2 = PackStr16(originParam.fileHash)
+      //
+      // let b3 = PackArraySize(8)
+      //
+      // let b4 = PackStr16(originParam.info.userName)
+      // let b5 = PackUint64(originParam.info.fileSize)
+      // let b6 = PackStr16(originParam.info.fileName)
+      // let b7 = PackStr16(originParam.info.filePolicy)
+      //
+      // let b8 = PackUint64(originParam.info.fileNumber)
+      // let b9 = PackUint32(originParam.info.simorass)
+      // let b10 = PackUint32(originParam.info.opType)
+      // let b11 = PackStr16(originParam.info.storeAddr)
 
-      let b3 = PackArraySize(8)
-
-      let b4 = PackStr16(originParam.info.userName)
-      let b5 = PackUint64(originParam.info.fileSize)
-      let b6 = PackStr16(originParam.info.fileName)
-      let b7 = PackStr16(originParam.info.filePolicy)
-
-      let b8 = PackUint64(originParam.info.fileNumber)
-      let b9 = PackUint32(originParam.info.simOrass)
-      let b10 = PackUint32(originParam.info.opType)
-      let b11 = PackStr16(originParam.info.storeAddr)
-
-      let param = [...b1,...b2,...b3,...b4,...b5,...b6,...b7,...b8,...b9,...b10,...b11]
+      // let param = [...b1,...b2,...b3,...b4,...b5,...b6,...b7,...b8,...b9,...b10,...b11]
       // console.log('param', param);
 
       let blockInfo = await getBlockInfo()
@@ -367,18 +382,19 @@ function querySecondProgress(file) {
         "sender": getAccount().username,
         "contract": "datafilemng",
         "method": "datafilereg",
-        "param": param,
         "sig_alg": 1,
       }
 
-      getSignaturedFetchParam({fetchParam, privateKey})
+      let params = await packedParam(originParam, fetchParam, privateKey)
 
-      console.log('fetchParam', fetchParam);
-
-      BTFetch('/asset/registerFile', 'post', fetchParam)
+      BTFetch('/asset/registerFile', 'post', params)
       .then(res => {
         if (res.code == 1) {
-          window.message.success( window.localeInfo['PersonalAsset.SuccessfulToUploadTheFile'] )
+          // 注册成功要触发一个事件，更新列表
+          setTimeout(() => myEmitter.emit('registerFile'), 3000);
+          setTimeout(function () {
+            window.message.success( window.localeInfo['PersonalAsset.SuccessfulToUploadTheFile'] )
+          }, 1000);
         } else if (res.details) {
           console.log('res.details', JSON.parse(res.details))
         }
@@ -387,7 +403,8 @@ function querySecondProgress(file) {
     } else {
       console.log('上传没有真的完成');
       let restPercent = res.storage_done / chunks * (100 - uploadSuccessPercent)
-      store.dispatch( updateUploadProgress(guid, uploadSuccessPercent + restPercent) )
+      // store.dispatch( updateUploadProgress(guid, uploadSuccessPercent + restPercent) )
+      myEmitter.emit('uploadProgress', guid, uploadSuccessPercent + restPercent);
 
       setTimeout(querySecondProgress.bind(null, file), 3000);
       // setTimeout(getDownloadFileIP.bind(null, guid), 1000);
@@ -400,6 +417,7 @@ function querySecondProgress(file) {
 }
 
 uploader.on( 'uploadSuccess', function (file) {
+  console.log('uploadSuccess，记录时间', get_s_short() - timeStamp + 's');
   setTimeout(querySecondProgress.bind(null, file), 1000)
 });
 

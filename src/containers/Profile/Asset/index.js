@@ -17,6 +17,9 @@
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
 import React, { PureComponent } from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { getUnread } from '../../../redux/actions/HeaderAction'
 import { Tabs } from 'antd';
 const TabPane = Tabs.TabPane;
 import './styles.less';
@@ -35,17 +38,25 @@ const keyMap = [
   <FormattedMessage {...PersonalAssetMessages.HaveBoughtAsset} />,
 ]
 
-export default class BTProfileAsset extends PureComponent{
+class BTProfileAsset extends PureComponent{
   constructor(props) {
     super(props);
     this.state = {
       activeKey: '0'
     };
   }
+
   handleChange = (key) => {
     this.setState({
       activeKey: key
     });
+  }
+
+  componentDidMount() {
+    const { account_info, getUnread } = this.props
+    if (account_info) {
+      getUnread(account_info)
+    }
   }
 
   render(){
@@ -68,3 +79,14 @@ export default class BTProfileAsset extends PureComponent{
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  const { account_info } = state.headerState
+  return { account_info }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return bindActionCreators({getUnread}, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BTProfileAsset)

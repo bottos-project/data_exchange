@@ -16,7 +16,22 @@
   You should have received a copy of the GNU General Public License
   along with Bottos. If not, see <http://www.gnu.org/licenses/>.
 */
-module.exports = {
+
+// function model(id, defaultMessage) {
+//   return { id, defaultMessage }
+// }
+//
+// function assignMessage(id, defaultMessage) {
+//   let parsedID = id.split('.')
+//   for (var i = 0; i < parsedID.length; i++) {
+//     if (messages[id[i]] == undefined) {
+//       messages[id[i]] = {}
+//     }
+//
+//   }
+// }
+
+var messages = {
     OK:{
       id:"OK",
       defaultMessage:"确定",
@@ -86,6 +101,10 @@ module.exports = {
             id:'Menu.MyMessages',
             defaultMessage:'消息'
         },
+        Download:{
+            id:'Menu.Download',
+            defaultMessage:'下载'
+        },
         LoginOrRegister:{
             id:'Menu.LoginOrRegister',
             defaultMessage:'登录/注册'
@@ -105,6 +124,10 @@ module.exports = {
         Walletlist:{
           id:'Menu.Walletlist',
           defaultMessage:'钱包列表'
+        },
+        TransactionHistory:{
+          id:'Menu.TransactionHistory',
+          defaultMessage:'转账记录'
         },
     },
     Header:{
@@ -136,8 +159,8 @@ module.exports = {
             id:"Header.MyMessages",
             defaultMessage:"消息"
         },
-        PreSale:{
-            id:'Menu.PreSale',
+        Promote:{
+            id:'Menu.Promote',
             defaultMessage:'推销'
         },
         Setting:{
@@ -269,9 +292,31 @@ module.exports = {
             id:"Login.VerifyCode",
             defaultMessage:'验证码'
         },
+        UseNewAccount:{
+            id:"Login.UseNewAccount",
+            defaultMessage:'使用新账户'
+        },
         Keystore:{
             id:"Login.Keystore",
             defaultMessage:"Keystore"
+        },
+        AutoBackup:{
+            id:"Login.AutoBackup",
+            defaultMessage:"已自动保存 Keystore，您可以再次手动备份"
+        }
+    },
+    ReqAndAss:{
+        NoSample:{
+            id:"ReqAndAss.NoSample",
+            defaultMessage:"无样例文件",
+        },
+        DownLoadTheSample:{
+            id:'ReqAndAss.DownLoadTheSample',
+            defaultMessage:'下载样例'
+        },
+        ExpireTime:{
+            id:'ReqAndAss.ExpireTime',
+            defaultMessage:'有效时间：'
         }
     },
     Demand:{
@@ -303,6 +348,10 @@ module.exports = {
             id:'Demand.AssetType',
             defaultMessage:'资产类型：'
         },
+        RequirementType:{
+            id:'Demand.RequirementType',
+            defaultMessage:'需求类型：'
+        },
         ExpectedPrice:{
             id:'Demand.ExpectedPrice',
             defaultMessage:'期望价格：'
@@ -311,16 +360,12 @@ module.exports = {
             id:'Demand.FailureTime',
             defaultMessage:'下架时间：'
         },
-        DownLoadTheSample:{
-            id:'Demand.DownLoadTheSample',
-            defaultMessage:'下载样例'
-        },
         ProvideTheAsset:{
             id:'Demand.ProvideTheAsset',
             defaultMessage:'推销资产'
         },
-        HavePresale:{
-            id:'Demand.HavePresale',
+        HavePromote:{
+            id:'Demand.HavePromote',
             defaultMessage:'已推销'
         },
         DataDescription:{
@@ -357,10 +402,6 @@ module.exports = {
             id:'Asset.ExpectedPrice',
             defaultMessage:'期望价格：'
         },
-        ExpireTime:{
-            id:'Asset.ExpireTime',
-            defaultMessage:'有效时间：'
-        },
         BuyAssets:{
             id:'Asset.BuyAssets',
             defaultMessage:'购买资产'
@@ -368,10 +409,6 @@ module.exports = {
         HaveBought:{
             id:'Asset.HaveBought',
             defaultMessage:'已购买'
-        },
-        DownLoadTheSample:{
-            id:'Asset.DownLoadTheSample',
-            defaultMessage:'下载样例'
         },
         NoSample:{
             id:'Asset.NoSample',
@@ -541,6 +578,22 @@ module.exports = {
             id:"File.UploadSuccess",
             defaultMessage:"上传成功"
         },
+        DeleteTask:{
+            id:"File.DeleteTask",
+            defaultMessage:"删除任务"
+        },
+        Downloading:{
+            id:"File.Downloading",
+            defaultMessage:"下载中"
+        },
+        Complete:{
+            id:"File.Complete",
+            defaultMessage:"已完成"
+        },
+        SureToDelete:{
+            id:"File.SureToDelete",
+            defaultMessage:"确定要删除这个任务吗？"
+        }
     },
     PersonalAsset:{
         PersonalAsset:{
@@ -880,6 +933,10 @@ module.exports = {
         },
     },
     Wallet:{
+        Back:{
+            id:"Wallet.Back",
+            defaultMessage:"返回"
+        },
         ModifyThePassword:{
             id:"Wallet.ModifyThePassword",
             defaultMessage:"修改密码"
@@ -891,6 +948,18 @@ module.exports = {
         ExportTheAccount:{
             id:"Wallet.ExportTheAccount",
             defaultMessage:"导出账号"
+        },
+        DeleteKeystore:{
+            id:"Wallet.DeleteKeystore",
+            defaultMessage:"删除 Keystore"
+        },
+        SureToDeleteKeystore:{
+            id:"Wallet.SureToDeleteKeystore",
+            defaultMessage:"确定要删除吗？"
+        },
+        DeleteConfirm:{
+            id:"Wallet.DeleteConfirm",
+            defaultMessage:"这个操作不可恢复，会从软件的本地记录当中删除 Keystore 文件，请输入 Keystore 的用户名来确认。"
         },
         PleaseEnterTheOriginalPassword:{
             id:"Wallet.PleaseEnterTheOriginalPassword",
@@ -940,6 +1009,10 @@ module.exports = {
             id:"Wallet.Transfer",
             defaultMessage:"转账"
         },
+        TransactionHistory:{
+            id:"Wallet.TransactionHistory",
+            defaultMessage:"转账记录"
+        },
         Token:{
             id:"Wallet.Token",
             defaultMessage:"代币"
@@ -966,7 +1039,7 @@ module.exports = {
         },
         AvailableCash:{
             id:"Wallet.AvailableCash",
-            defaultMessage:"可用现金"
+            defaultMessage:"可用金额"
         },
         CreateNewAccount:{
             id:"Wallet.CreateNewAccount",
@@ -1002,8 +1075,8 @@ module.exports = {
             id:"Check.Consumer",
             defaultMessage:"推销者"
         },
-        DataPresaleId:{
-            id:"Check.DataPresaleId",
+        DataPromoteId:{
+            id:"Check.DataPromoteId",
             defaultMessage:"需求名称"
         },
         DataTime:{
@@ -1023,10 +1096,12 @@ module.exports = {
             defaultMessage:"我的消息"
         }
     },
-    Presale:{
+    Promote:{
         Consumer:{
-            id:"Presale.Consumer",
+            id:"Promote.Consumer",
             defaultMessage:"需求者"
         },
     }
-};
+}
+
+module.exports = messages

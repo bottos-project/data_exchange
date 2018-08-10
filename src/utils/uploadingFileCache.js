@@ -30,6 +30,7 @@ function addFileCache(fileInfo) {
 export function deleteFileCache(guid) {
   let filesGuidArr = getCacheFileState()
   let index = filesGuidArr.findIndex(file => file.guid == guid)
+  console.log('index', index);
   if (index == -1) return ;
 
   filesGuidArr.splice(index, 1)
@@ -47,6 +48,9 @@ export function cacheFileState(file) {
     // 从记录当中找到了
     let filesGuidArr = getCacheFileState()
     if (filesGuidArr.findIndex(file => file.guid == guid) > -1) {
+      return ;
+    }
+    if (!guid) {
       return ;
     }
     const fileInfo = fileCacheKeysFilter(file)

@@ -93,7 +93,7 @@ class BTAccountListHeader extends PureComponent{
           let isSave = BTIpcRenderer.saveKeyStore({username,account_name:this.state.account_name},this.state.keyStoreObj)
           if (isSave) {
             this.props.addAccount(this.state.account_name)
-            window.message.success(window.localeInfo["Header.ImportSuccess"])
+            window.message.success(window.localeInfo["Wallet.ImportSuccess"])
 
           } else {
             message.error("failed")
@@ -131,6 +131,8 @@ class BTAccountListHeader extends PureComponent{
             visible={this.state.visible}
             onOk={()=>this.onHandleOk()}
             onCancel={()=>this.onHandleCancel()}
+            okText={<FormattedMessage {...messages.OK} />}
+            cancelText={<FormattedMessage {...messages.Cancel} />}
           >
             <Button onClick={()=>this.importKeyStore()}>
               <FormattedMessage {...WalletMessages.ImportTheKeyStore}/>
